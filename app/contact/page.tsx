@@ -3,6 +3,7 @@ import Link from "next/link"
 import { CaseConsentement, ChampTexte, ChampZone } from "@/components/forms/Champs"
 import { Formulaire } from "@/components/forms/Formulaire"
 import { IconeReseau } from "@/components/marque/IconesReseaux"
+import { CarteContact } from "@/components/territoire/CarteContact"
 import { PageHero } from "@/components/ui/PageHero"
 import { site } from "@/config/site"
 import { reseauxActifs } from "@/config/socialLinks"
@@ -91,6 +92,9 @@ export default function PageContact() {
             ))}
           </ul>
         )}
+        <div className="mt-8">
+          <CarteContact />
+        </div>
       </section>
 
       <section aria-labelledby="titre-ecrire" className="conteneur pb-20">

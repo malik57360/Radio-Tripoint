@@ -26,6 +26,8 @@ const csp = [
   // Le flux et les podcasts peuvent être servis par un hébergeur audio externe (Radioking…).
   "media-src 'self' https: blob:",
   `connect-src 'self'${dev ? " ws:" : ""}`,
+  // Cartes intégrées : OpenStreetMap (territoire) et Google Maps (contact, au clic).
+  "frame-src https://www.openstreetmap.org https://maps.google.com https://www.google.com",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",

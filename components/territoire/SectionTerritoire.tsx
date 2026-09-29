@@ -1,4 +1,4 @@
-import { SchemaTerritoire } from "./SchemaTerritoire"
+import { CarteTerritoire } from "./CarteTerritoire"
 
 const pays = [
   { code: "FR", nom: "France", lieux: "Sierck-les-Bains · Apach · Thionville · Moselle" },
@@ -43,7 +43,7 @@ export function SectionTerritoire({ titreNiveau: Titre = "h2" }: { titreNiveau?:
           </ul>
         </div>
         <div className="mx-auto w-full max-w-[34rem]">
-          <SchemaTerritoire />
+          <CarteTerritoire />
         </div>
       </div>
     </section>

@@ -86,6 +86,11 @@ export default function Confidentialite() {
             radio, qui reçoit, comme tout serveur web, votre adresse IP le temps de la lecture. Les
             liens de partage (Facebook, X, WhatsApp) ne chargent rien tant que vous ne cliquez pas.
           </p>
+          <p>
+            Cartes : la carte du territoire est fournie par OpenStreetMap, qui ne dépose pas de
+            cookie publicitaire. Le plan de la page Contact est fourni par Google Maps, qui peut en
+            déposer : il ne se charge que si vous cliquez sur « Afficher le plan ».
+          </p>
           <BoutonGererCookies />
         </ProseLegale>
       </div>
