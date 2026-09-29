@@ -11,9 +11,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 # Notes pour `radio-tripoint`
 
 Site de **Radio Tripoint** (radio et média des Trois Frontières). Application
-Next.js 16 **autonome** : son `package.json`, son `node_modules`, son
-déploiement. Ne rien importer depuis `../` — et le dépôt parent (Vesti)
-exclut ce dossier de son `tsc` et de son `eslint`.
+Next.js 16, seule dans son dépôt (extraite de Vesti avec son historique).
 
 ## La règle qui prime : ne rien inventer
 

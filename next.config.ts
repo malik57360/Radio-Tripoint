@@ -37,8 +37,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   poweredByHeader: false,
-  // Le dépôt parent (Vesti) a son propre package-lock.json : sans cette
-  // ligne, Turbopack le prend pour racine et embarque son proxy.ts.
+  // Racine explicite : si ce dossier se retrouve un jour sous un autre
+  // projet qui a son propre package-lock.json, Turbopack ne remonte pas.
   turbopack: {
     root: path.resolve(process.cwd()),
   },

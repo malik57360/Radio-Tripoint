@@ -13,7 +13,6 @@ aucun traceur, aucun service tiers obligatoire.
 ## Démarrer
 
 ```bash
-cd radio-tripoint
 npm install
 cp .env.example .env.local        # tout est facultatif
 npm run dev                       # http://localhost:3000
