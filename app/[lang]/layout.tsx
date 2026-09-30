@@ -5,6 +5,7 @@ import { Footer } from "@/components/layout/Footer"
 import { Header } from "@/components/layout/Header"
 import { scriptTheme } from "@/components/layout/ThemeToggle"
 import { DirectAuto } from "@/components/radio/DirectAuto"
+import { Guide } from "@/components/guide/Guide"
 import { LecteurBarre } from "@/components/radio/LecteurBarre"
 import { Consentement } from "@/components/rgpd/Consentement"
 import { JsonLd } from "@/components/ui/JsonLd"
@@ -121,6 +122,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           </main>
           <Footer />
           <LecteurBarre grille={grille} />
+          <Guide />
           <DirectAuto />
           <Consentement />
           <JsonLd data={jsonLdOrganisation(l)} />

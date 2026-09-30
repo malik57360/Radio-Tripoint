@@ -144,6 +144,20 @@ export default async function Confidentialite() {
               lb: "D'Donnéeë ginn esou laang gespäichert, wéi et fir d'Veraarbechtung vun Ärer Ufro néideg ass, an duerno geläscht. D'Umeldunge fir den Newsletter ginn bis zu Ärer Ofmeldung gespäichert.",
             })}
           </p>
+          <h2 id="guide">
+            {t({
+              fr: "Le guide « Tripo »",
+              de: "Der Guide „Tripo“",
+              lb: "De Guide „Tripo“",
+            })}
+          </h2>
+          <p>
+            {t({
+              fr: "Les questions posées au guide sont transmises, sans votre nom ni votre adresse IP, au service d'intelligence artificielle Claude (Anthropic, États-Unis) via Vercel AI Gateway, uniquement pour produire la réponse ; le guide peut aussi lancer des recherches sur le web. Radio Tripoint ne conserve pas ces conversations : elles restent dans l'onglet de votre navigateur et disparaissent à sa fermeture. N'y indiquez pas de données personnelles.",
+              de: "Die Fragen an den Guide werden ohne Ihren Namen und ohne Ihre IP-Adresse an den KI-Dienst Claude (Anthropic, USA) über Vercel AI Gateway übermittelt, ausschließlich um die Antwort zu erstellen; der Guide kann dazu auch im Web suchen. Radio Tripoint speichert diese Gespräche nicht: Sie bleiben im Tab Ihres Browsers und verschwinden, wenn Sie ihn schließen. Geben Sie dort keine persönlichen Daten ein.",
+              lb: "D'Froen un de Guide ginn, ouni Ären Numm an ouni Är IP-Adress, un de KI-Déngscht Claude (Anthropic, USA) iwwer Vercel AI Gateway geschéckt, just fir d'Äntwert ze maachen; de Guide kann dofir och um Web sichen. Radio Tripoint späichert dës Gespréicher net: si bleiwen am Tab vun Ärem Browser a verschwannen, wann Dir en zoumaacht. Gitt do keng perséinlech Donnéeën un.",
+            })}
+          </p>
           <h2>{t({ fr: "Vos droits", de: "Ihre Rechte", lb: "Är Rechter" })}</h2>
           <p>
             {t({
