@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Archivo, Newsreader } from "next/font/google"
 import { BandeauDemo } from "@/components/layout/BandeauDemo"
@@ -125,6 +126,8 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           {process.env.GUIDE_ACTIF === "1" && <Guide />}
           <DirectAuto />
           <Consentement />
+          {/* Mesure d'audience Vercel : sans cookie ni donnée personnelle. */}
+          <Analytics />
           <JsonLd data={jsonLdOrganisation(l)} />
         </FournisseurLangue>
       </body>

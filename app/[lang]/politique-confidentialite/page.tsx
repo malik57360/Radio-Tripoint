@@ -198,6 +198,15 @@ export default async function Confidentialite() {
               })}
             </p>
           )}
+          {!analytics.script && (
+            <p>
+              {t({
+                fr: "Pour connaître sa fréquentation (pages vues, pays, type d'appareil), le site utilise Vercel Web Analytics : une mesure sans cookie, qui n'enregistre ni votre adresse IP ni aucune donnée permettant de vous identifier, et dont les statistiques sont agrégées.",
+                de: "Um die Nutzung zu kennen (Seitenaufrufe, Land, Gerätetyp), verwendet die Website Vercel Web Analytics: eine Messung ohne Cookies, die weder Ihre IP-Adresse noch Daten speichert, mit denen Sie identifiziert werden könnten; die Statistiken sind zusammengefasst.",
+                lb: "Fir ze wëssen, wéi vill de Site besicht gëtt (Säiten, Land, Apparat), benotzt en Vercel Web Analytics: eng Moossung ouni Cookien, déi weder Är IP-Adress nach Donnéeë späichert, mat deenen een Iech identifizéiere kéint; d'Statistike sinn zesummegefaasst.",
+              })}
+            </p>
+          )}
           <p>
             {t({
               fr: "L'écoute du direct et des podcasts fait appel au serveur de diffusion audio de la radio, qui reçoit, comme tout serveur web, votre adresse IP le temps de la lecture. Les liens de partage (Facebook, X, WhatsApp) ne chargent rien tant que vous ne cliquez pas.",
