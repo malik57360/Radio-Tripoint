@@ -1,0 +1,88 @@
+import type { TradArticle } from "../../types"
+
+export const actualites01: Record<string, TradArticle> = {
+  "leon-xiv-a-metz-une-journee-historique-au-coeur-de-l-europe": {
+    titre: "De Leo XIV. zu Metz: en historeschen Dag am Häerz vun Europa.",
+    chapeau:
+      "Metz huet e Méindeg, de 28. September, mam Besuch vum Poopst Leo XIV., der leschter Etapp vu senger apostolescher Rees a Frankräich, en aussergewéinlechen Dag erlieft.",
+    corps: [
+      "Metz huet e Méindeg, de 28. September, mam Besuch vum Poopst Leo XIV., der leschter Etapp vu senger apostolescher Rees a Frankräich, en aussergewéinlechen Dag erlieft. E Besuch am Zeeche vum Fridden, vum Dialog an der europäescher Eenheet.",
+      "Mueres zu Metz ukomm, ass de Poopst an de Kongresszenter Robert Schuman gaang, fir en interreliéist Treffen, an huet duerno un enger Begéinung iwwer „d'Wuerzele vun Europa fir Fridden an Eenheet“ deelgeholl. D'Wiel vu Metz hat eng staark symbolesch Bedeitung, well d'Stad enk mat der europäescher Geschicht an dem Undenken un de Robert Schuman verbonnen ass.",
+      "Eng Begéinung am Häerz vun der Groussregioun",
+      "Ronderëm de Poopst an de President Emmanuel Macron ware vill europäesch Perséinlechkeeten ugereest, dorënner de Grand-Duc Guillaume an d'Grande-Duchesse Stéphanie vu Lëtzebuerg, de lëtzebuergesche Premierminister Luc Frieden, de Prënz Albert II. an d'Prinzessin Charlène vu Monaco, souwéi d'saarlännesch Ministerpresidentin Anke Rehlinger. Och de fréiere President vun der Europäescher Kommissioun Jean-Claude Juncker war do.",
+      "Eng besonnesch staark Vertriedung fir eng Regioun wéi eis, wou Frankräich, Lëtzebuerg an Däitschland all Dag Wand u Wand liewen.",
+      "Eng Mass an der Kathedral Saint-Étienne",
+      "Nomëttes huet de Leo XIV. an der Kathedral Saint-Étienne virun enger grousser Zuel vu Gleewegen d'Mass gefeiert. Den Emmanuel Macron, deen am Ufank net sollt dobäi sinn, huet schlussendlech un der Zeremonie deelgeholl.",
+      "Vum Treffe mat de reliéise Verantwortleche bis zur Ried iwwer Europa an der Feier an der Kathedral huet dësen Dag zu Metz Spiritualitéit, Geschicht an europäesch Dimensioun verbonnen.",
+      "Fir Metz an déi ganz Groussregioun bleift de Besuch vum Leo XIV. e besonnesch prägende Moment vum Joer 2026.",
+    ],
+  },
+  "le-pape-a-30-km-de-chez-nous-pourquoi-leon-xiv-a-choisi-metz-pour-parler-de": {
+    titre:
+      "De Poopst 30 km vun eis ewech: Firwat de Leo XIV. Metz gewielt huet, fir am Dräilännereck iwwer Fridden ze schwätzen.",
+    chapeau: "Metz empfänkt de Poopst Leo XIV. e Méindeg, de 28. September 2026.",
+    corps: [
+      "Metz empfänkt de Poopst Leo XIV. e Méindeg, de 28. September 2026. Et ass déi lescht Etapp vu senger éischter grousser apostolescher Rees a Frankräich, vum Freideg, 25., bis e Méindeg, 28. September 2026.",
+      "No Paräis a Lourdes ass d'Wiel op Metz gefall. An dat ass keen Zoufall.",
+      "Eng Regioun, déi vu Kricher gezeechent ass an haut e Symbol vu Versöhnung ass",
+      "Um véierten Dag vu senger apostolescher Rees a Frankräich huet de Leo XIV. Metz gewielt, fir do eng Ried iwwer d'Wuerzele vun Europa, iwwer Fridden an Eenheet ze halen.",
+      "Dës Grenzregioun tëscht Frankräich an Däitschland, déi vu Kricher gezeechent ass, steet haut fir Begéinung a Versöhnung. E Message, deen direkt d'Leit zu Sierck-les-Bains, Perl, Schengen an Apach uschwätzt, déi dës Grenzen all Dag iwwerquéieren.",
+      "No dem offizielle Programm, deen den Hellege Stull verëffentlecht huet, kënnt de Poopst e Freideg, de 25. September, moies zu Paräis un a verléisst Frankräich e Méindeg, de 28. September, owes vum Flughafe Metz-Nancy-Lorraine aus.",
+      "En Detail, deen alles seet",
+      "Zu Metz steet de Besuch vum Poopst am Zeechen vun Europa a vum Fridden. E staarkt Symbol ass schonn eraus: De Poopst soll d'Mass op engem Altor feieren, deen aus der Bronze vun ale däitsche Kanoune gemaach gouf. Waffen, déi zu engem Altor vum Fridde ginn, e puer Kilometer vun eis ewech.",
+      "Dir wëllt vum Dräilännereck aus dohinner?",
+      "Et ass dat Evenement, dat zënter Jore am noosten bei eis ass. Hei déi praktesch Infoe fir e Méindeg:",
+      [
+        "Vu Sierck-les-Bains / Perl: Rechent mat 35 bis 45 Minutte mam Auto bis op Metz. Benotzt Covoiturage a Park-and-Ride-Parkingen, eng enorm Logistik ass virgesinn.",
+        "Mam Zuch: TER-Verbindung vun Apach a Bouzonville.",
+        "Wann Dir net dohinner kënnt: D'Evenement gëtt live op KTO iwwerdroen, dat all d'Etappe weist.",
+      ],
+    ],
+  },
+  "carburant-5-astuces-pour-reduire-ses-depenses-quand-on-habite-pres-de-la": {
+    titre: "BENZIN: 5 TIPPS, FIR BEI DER GRENZ U SPRITKäschten ZE SPUEREN.",
+    chapeau: "De Präis vum Brennstoff weit ëmmer méi schwéier am Budget vun de Stéit.",
+    corps: [
+      "De Präis vum Brennstoff weit ëmmer méi schwéier am Budget vun de Stéit. Fir d'Leit an der Groussregioun, déi reegelméisseg iwwer d'Grenz fueren, fir ze schaffen, anzekafen oder hir Kanner ze begleeden, ass den Auto dacks schwéier ze ersetzen. Mä e puer Gewunnechte kënnen hëllefen, d'Rechnung ze senken.",
+      "1. E puer Kilometer méi fueren, fir zu Lëtzebuerg ze tanken",
+      "Fir d'Leit aus dem Dräilännereck kann Lëtzebuerg beim Brennstoff eng interessant Alternativ sinn. Jee no Period a Präisënnerscheed kënnen e puer Kilometer méi Spuermoossnamen erméiglechen.",
+      "Mä Opgepasst: D'Käschte vum zousätzleche Wee muss een ëmmer mat ausrechnen. 20 Kilometer méi ze fueren, just fir e puer Cent pro Liter ze spueren, rentéiert sech net onbedéngt.",
+      "2. Op de Vëlo ëmklammen … wann d'Distanz et erlaabt",
+      "Fir kuerz Weeër am Alldag kann de Vëlo eng richteg Alternativ zum Auto sinn.",
+      "Brout sichen, op d'Aarbecht fueren, wann se no ass, d'Kanner begleeden oder aner lokal Weeër mam Vëlo maachen – dat senkt direkt de Spritverbrauch.",
+      "A fir méi laang Distanze kann en E-Bike d'Méiglechkeeten nach erweideren.",
+      "3. Un de Covoiturage denken",
+      "Wa méi Leit all Dag dee selwechte Wee fueren, firwat net den Auto deelen?",
+      "De Covoiturage deelt d'Spritkäschten an reduzéiert gläichzäiteg d'Zuel vun Autoen op de Stroossen.",
+      "An de Grenzregiounen, wou vill Aarbechter all Dag déi selwecht Stroossen tëscht Frankräich, Däitschland a Lëtzebuerg fueren, kann dës Léisung besonnesch interessant sinn.",
+      "4. Den ëffentlechen Transport virzéien",
+      "Busser, Zich a grenziwwerschreidend Verbindungen kënnen och hëllefen, den Auto an der Garage ze loossen.",
+      "Jee no Wunn- an Aarbechtsplaz kann d'Kombinatioun vu verschiddenen Transportmëttel heiansdo méi bëlleg sinn, wéi all Dag de ganze Wee mam Auto ze fueren.",
+      "Eng einfach Gewunnecht: reegelméisseg d'Käschte vun enger Autosfahrt mat deene vun engem Abo oder engem Ticket fir den ëffentlechen Transport vergläichen.",
+      "5. Mam Patron iwwer Teletravail schwätzen",
+      "Wann de Beruff et erlaabt, kann och den Teletravail en direkten Effekt op de Spritbudget hunn.",
+      "Een oder zwee Deeg Teletravail d'Woch bedeiten e puer Fahrte manner am Mount. Fir Frontalieren, déi heiansdo all Dag e puer Dosen Kilometer fueren, ka sech d'Spuermoossnam séier bemierkbar maachen.",
+      "Selbstverständlech hänkt d'Méiglechkeet vum Teletravail vum Beruff, vun der Firma a vun de Reegelen of, déi fir Frontalieren gëllen.",
+      "Um Enn: All vermidde Fahrt zielt",
+      "Mat der Entwécklung vun de Spritpräisser gëtt et net onbedéngt eng eenzeg Léisung. Dacks ass et d'Zomm vu klengen Ännerungen, déi d'Rechnung senkt: auswielen, wou een tankt, Fahrten deelen, méi dacks den ëffentlechen Transport huelen oder verschidden Autosfahrte limitéieren.",
+      "An enger Regioun, wou d'Grenzen all Dag iwwerquéiert ginn, ka säi Mobilitéitsverhalen nei ze denken also fir d'Stéit zu enger richteger wirtschaftlecher Fro ginn.",
+    ],
+  },
+  "jeunesse-europeenne-entre-inquietude-et-espoir-pour-l-avenir": {
+    titre: "Europäesch Jugend: tëscht Suergen an Hoffnung fir d'Zukunft.",
+    chapeau:
+      "Liewenskäschten, Aarbecht, Klima, Sécherheet … vill jonk Europäer kucken mat enger gewësser Suerg an d'Zukunft.",
+    corps: [
+      "Liewenskäschten, Aarbecht, Klima, Sécherheet … vill jonk Europäer kucken mat enger gewësser Suerg an d'Zukunft. Mä dës Generatioun gëtt d'Hoffnung dofir net op.",
+      "Jonk sinn an Europa heescht haut och, sech an engem Kontext vu ville Onsécherheeten eng Zukunft virzestellen. Europäesch Ëmfroe weisen, datt Liewenskäschten, Ëmwelt, Aarbecht a Sécherheetsfroen eng wichteg Plaz bei de Suerge vun de 16- bis 30-Järegen hunn. Am leschten Eurobarometer iwwer d'Jugend nennen 40 % déi steigend Präisser an d'Liewenskäschten als eng vun hire gréisste Suerge fir d'Zukunft.",
+      "D'Klima bleift och e wichtegt Thema, genee wéi den Zougank zu Aarbecht a Wunneng. Déi befrote Jonk wënschen sech virun allem, datt Europa méi fir d'Wirtschaft, d'Schafe vun Aarbechtsplazen, d'Ëmwelt an de soziale Schutz mécht.",
+      "Mä hannert dëse Suergen steet och e richtege Wëllen, un d'Zukunft ze gleewen. Déi neiste europäesch Donnéeë weisen, datt déi 15- bis 30-Järeg zu de Generatioune gehéieren, déi dem europäesche Projet am positivste géigeniwwerstinn. Am Eurobarometer vum Hierscht 2025 waren 65 % vun de Jonken optimistesch iwwer d'Zukunft vun der Europäescher Unioun an 80 % iwwer hir eege Zukunft an déi vun hirer Famill.",
+      "An an der Groussregioun?",
+      "A Frankräich, Däitschland a Lëtzebuerg kréien dës Froen eng besonnesch Dimensioun. Studéieren, eng Aarbecht fannen, eng Wunneng fannen, Grenzen iwwerquéieren oder eng Famill grënnen – fir vill Jonker aus eiser Regioun ass dat Alldag.",
+      "Wovunner hunn d'Jonk aus der Groussregioun also wierklech Angscht? A wat gëtt hinnen nach Vertrauen an d'Zukunft?",
+      "Och dat ass d'Roll vun engem Lokalradio wéi Radio Tripoint: dëser Generatioun nozelauschteren, hir Suergen ze verstoen an hir d'Wuert ze ginn.",
+      "Eng besuergt Jugend, vläicht. Mä ganz sécher keng Jugend ouni Hoffnung.",
+      "Quellen: Eurobarometer – Europäesch Kommissioun / Europäescht Parlament.",
+    ],
+  },
+}

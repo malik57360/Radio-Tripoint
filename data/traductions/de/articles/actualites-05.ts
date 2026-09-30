@@ -1,0 +1,105 @@
+import type { TradArticle } from "../../types"
+
+export const actualites05: Record<string, TradArticle> = {
+  "fete-du-chateau-2026-retour-sur-une-edition-pas-comme-les-autres": {
+    titre: "Burgfest 2026: Rückblick auf eine ganz besondere Ausgabe.",
+    chapeau: "Das Burgfest 2026 ist vorbei.",
+    corps: [
+      "Das Burgfest 2026 ist vorbei. Für diese besondere Ausgabe, mit der der Verein auch sein 30-jähriges Bestehen feierte, hat Radio Tripoint Marie Triffaut, Schatzmeisterin des Vereins, getroffen, um auf das Wochenende, die Entscheidungen dieses Jahres, den Einsatz der Ehrenamtlichen und die Reaktionen des Publikums zurückzublicken.",
+      "Radio Tripoint: Guten Tag, Frau Triffaut. Das Burgfest ist gerade zu Ende gegangen. Welche erste Bilanz ziehen Sie?",
+      "Marie Triffaut: Diese Ausgabe ist sehr gut gelaufen. Wir hatten vor allem sehr gute Rückmeldungen von den Gruppen und Ausstellern, die von unserem Empfang und unserer Organisation begeistert waren.",
+      "Auf Seiten der Besucher waren die Rückmeldungen, die wir bekommen haben, größtenteils sehr positiv. Viele sagten, sie seien glücklich und beeindruckt von dem, was ihnen geboten wurde.",
+      "Einige Mittelalter-Fans waren allerdings enttäuscht. Aber das Projekt dieses Jahres bestand gerade darin, mit den Konventionen zu brechen, insbesondere um die 30 Jahre des Vereins zu feiern.",
+      "Radio Tripoint: Das Wochenende war auch von einem Gewitter geprägt. Wie sind Sie damit umgegangen?",
+      "Marie Triffaut: Das Gewitter hat uns nicht verschont, aber wir haben uns schnell wieder gefangen. Der Dienstleister hat unglaublich schnell reagiert.",
+      "Wir hatten auch eine sehr schöne Überraschung: Menschen sind spontan gekommen, nachdem sie unsere Beiträge gesehen hatten, um uns zu helfen. Darunter waren ehemalige Ehrenamtliche, aber auch Menschen, die sich noch nie ehrenamtlich engagiert hatten.",
+      "Radio Tripoint: Welche Rolle spielen die Ehrenamtlichen für die Burg und den Verein?",
+      "Marie Triffaut: Ohne den Verein hätte die Burg vor 30 Jahren vielleicht eine ungewisse Zukunft gehabt. Und ohne Ehrenamtliche gibt es keinen Verein.",
+      "Die einen ohne die anderen – in diesem Bauwerk sind wir nichts.",
+      "Ich möchte ihnen deshalb noch einmal danken und allen meinen Kolleginnen und Kollegen im Vorstand zu ihrer unglaublichen ehrenamtlichen Arbeit gratulieren. Sie haben ein ganzes Jahr an dieser Veranstaltung gearbeitet.",
+      "Wir sind ein Team!",
+      "Radio Tripoint: Ein letztes Wort an das Publikum, das an diesem Wochenende gekommen ist?",
+      "Marie Triffaut: Danke an das Publikum, das uns an diesem Wochenende besucht hat!",
+      "Wir hoffen, dass die Reise durch die Gänge der Zeit sie mitgerissen hat und dass uns die Mittelalter-Fans nicht allzu übel nehmen, dass wir unsere Gewohnheiten verlassen haben.",
+      "Wir jedenfalls hatten riesigen Spaß!",
+      "Und obwohl das Feuerwerk leider nicht stattfinden konnte, hat das Publikum für ein wahres Feuerwerk gesorgt!",
+      "Radio Tripoint dankt Marie Triffaut für dieses Gespräch sowie allen Ehrenamtlichen, Gruppen, Ausstellern und Teilnehmenden, die diese Ausgabe 2026 des Burgfests zum Leben erweckt haben.",
+    ],
+  },
+  "horen-sie-auch-seit-einigen-tagen-explosionsgerausche-in-perl": {
+    titre: "Hören Sie auch seit einigen Tagen Explosionsgeräusche in Perl?",
+    chapeau:
+      "Seit einigen Tagen können Anwohner in und rund um Perl immer wieder laute Knallgeräusche aus den Weinbergen hören.",
+    corps: [
+      "Seit einigen Tagen können Anwohner in und rund um Perl immer wieder laute Knallgeräusche aus den Weinbergen hören. Die Geräusche können durchaus wie Schüsse wirken und für einen Moment für Verunsicherung sorgen.",
+      "Doch was steckt dahinter?",
+      "Bei den Geräuschen handelt es sich vermutlich um sogenannte Vogelschreckkanonen. Diese Geräte werden von Winzern eingesetzt, um Vögel und andere Tiere von den Weinreben fernzuhalten und die Trauben vor Schäden zu schützen.",
+      "Gerade in dieser Zeit, in der die Trauben reifen und die Weinlese näher rückt, versuchen die Winzer, ihre Ernte bestmöglich zu schützen.",
+      "Für Anwohner können die regelmäßigen Knallgeräusche natürlich überraschend sein. Wer sie derzeit in den Weinbergen rund um Perl hört, muss deshalb nicht gleich von Schüssen ausgehen.",
+      "Kurz gesagt: Was nach Schüssen klingt, könnte in den Weinbergen schlicht dem Schutz der Trauben dienen.",
+      "Radio Tripoint – Ihre lokale Stimme im Dreiländereck.",
+    ],
+  },
+  "belgique-17-ans-de-prison-pour-une-justice-rendue-soi-meme": {
+    titre: "Belgien: 17 Jahre Haft für Selbstjustiz.",
+    chapeau: "Ein Fall, der für viel Aufsehen sorgt.",
+    corps: [
+      "Ein Fall, der für viel Aufsehen sorgt. In Namur ist Grégory Lenoci wegen versuchten Mordes zu 17 Jahren Haft verurteilt worden, nachdem er seinen Nachbarn brutal angegriffen hatte.",
+      "Die Tat ereignete sich am 24. Juli 2025 in Jambes. Lenoci verdächtigte seinen Nachbarn, seinen Stiefsohn sexuell missbraucht zu haben. Nachdem er seinen Verdacht den Behörden gemeldet hatte, beschloss er, den Nachbarn selbst zur Rede zu stellen.",
+      "Die Konfrontation eskalierte zu einem Angriff von äußerster Brutalität, der das Opfer schwer behindert zurückließ.",
+      "Vor Gericht erklärte Grégory Lenoci, er habe die Kontrolle verloren, und bestritt, seinen Nachbarn töten zu wollen. Das Gericht wertete die Tat dennoch als versuchten Mord und verhängte eine Strafe von 17 Jahren Haft.",
+      "Der Fall löst in Belgien zahlreiche Reaktionen aus und entfacht eine heikle Debatte neu: Kann man den Zorn eines Angehörigen verstehen, der ein Kind in Gefahr glaubt, und zugleich Selbstjustiz verurteilen?",
+      "Eine Frage, die weit über diesen Fall hinausgeht: Wo endet Schutz und wo beginnt Rache?",
+    ],
+  },
+  "verkehrsbehinderungen-wegen-bauarbeiten-an-der-l177-l178": {
+    titre: "Verkehrsbehinderungen wegen Bauarbeiten an der L177/L178.",
+    chapeau:
+      "ORSCHOLZ – Die Bauarbeiten am Knotenpunkt L177/L178 sorgen derzeit für Verkehrsbehinderungen und zusätzlichen Ausweichverkehr in Orscholz.",
+    corps: [
+      "ORSCHOLZ – Die Bauarbeiten am Knotenpunkt L177/L178 sorgen derzeit für Verkehrsbehinderungen und zusätzlichen Ausweichverkehr in Orscholz.",
+      "Nach Angaben der Gemeinde Mettlach sind mehrere Wohnstraßen durch das erhöhte Verkehrsaufkommen betroffen. Autofahrer werden gebeten, vorsichtig zu fahren, Geschwindigkeitsbegrenzungen einzuhalten und mehr Zeit für ihre Fahrt einzuplanen.",
+      "Im Zuge der Arbeiten wird unter anderem die Ampelanlage erneuert. Die neue verkehrsabhängige Steuerung soll künftig den Verkehrsfluss verbessern und die Sicherheit erhöhen.",
+      "Bis zum Abschluss der Arbeiten bittet die Gemeinde Anwohner und Verkehrsteilnehmer um Verständnis und gegenseitige Rücksichtnahme.",
+      "Quelle: Gemeinde Mettlach – 17. August 2026",
+      "Radio Tripoint – Das Medium, das Frankreich, Luxemburg und Deutschland verbindet.",
+    ],
+  },
+  "dossier-special-incendies-fumees-ce-que-l-on-sait": {
+    titre: "SONDERDOSSIER — BRÄNDE & RAUCH: WAS WIR WISSEN.",
+    chapeau:
+      "Seit mehreren Tagen halten mehrere Brände die Einsatzkräfte in der Großregion in Atem.",
+    corps: [
+      "Seit mehreren Tagen halten mehrere Brände die Einsatzkräfte in der Großregion in Atem. An diesem Montag, 17. August, wird die Lage in Belgien, in Deutschland und bis in unsere Grenzregion, wo der Rauch deutlich zu spüren war, weiterhin genau verfolgt.",
+      "Hohes Venn: fast 3.000 Hektar zerstört",
+      "Im Hohen Venn, nahe der deutschen Grenze, hat das Feuer bereits rund 3.000 Hektar Vegetation vernichtet – der größte Brand in der jüngeren Geschichte Belgiens.",
+      "Regen und Windstille haben am Montagmorgen eine leichte Besserung gebracht, doch die Lage bleibt heikel. Glutnester halten sich tief in den Torfböden, was das Löschen besonders schwierig macht.",
+      "In Monschau, auf deutscher Seite, mussten rund dreißig Einwohner vorsorglich ihre Häuser verlassen. Am späten Nachmittag melden die Behörden weiterhin starke Rauchentwicklung und empfehlen örtlich, Türen und Fenster geschlossen zu halten.\nSaarland: Brand in Hüttigweiler unter Kontrolle",
+      "In Hüttigweiler bei Illingen waren rund 18 Hektar von einem weiteren großen Brand betroffen.",
+      "Das Feuer ist inzwischen unter Kontrolle, aber noch nicht vollständig gelöscht. Die Löscharbeiten mussten jedoch vorübergehend unterbrochen werden, weil möglicherweise Munition aus dem Zweiten Weltkrieg im Boden liegt. Der Kampfmittelräumdienst war vor Ort.",
+      "Rauch weit über die Brandherde hinaus zu spüren",
+      "Die Folgen sind noch Dutzende, ja Hunderte Kilometer von den wichtigsten Brandherden entfernt sichtbar.",
+      "Der SWR bestätigt insbesondere, dass Rauch aus Belgien in die Region Trier zurückgekehrt ist, mit Gerüchen, die bis in Teile von Rheinland-Pfalz wahrnehmbar sind.",
+      "Auf französischer Seite haben mehrere Einwohner und Gemeinden der Moselle Radio Tripoint ebenfalls Brandgeruch, Rauch oder einen stark verschleierten Himmel gemeldet.",
+      "Ähnliche Rückmeldungen erreichten uns aus dem Dreiländereck und aus der Nähe der deutschen Grenze.",
+      "Wichtig ist daher der Hinweis, dass Brandgeruch oder ein verschleierter Himmel nicht unbedingt bedeuten, dass es in unmittelbarer Nähe brennt: Rauch kann durch Wind und Wetterlage über weite Strecken getragen werden.",
+      "Vorsicht in der gesamten Großregion",
+      "Die Lage entwickelt sich weiterhin schnell. Bei starkem Rauch sollte man sich möglichst wenig aussetzen und die Hinweise der örtlichen Behörden befolgen.",
+      "Diese Nachricht kommt zu einem Zeitpunkt, an dem Radio Tripoint am 17. August seine Präventionskampagne zum Schutz unserer Wälder und Naturräume abschließt – eine Erinnerung daran, wie wichtig es mehr denn je ist, beim Brandrisiko wachsam zu bleiben.",
+      "Radio Tripoint, das grenzüberschreitende Radio",
+      "Artikel aktualisiert am 17. August 2026 am späten Nachmittag.",
+    ],
+  },
+  "rauchentwicklung-im-saarland-das-wissen-wir": {
+    titre: "Rauchentwicklung im Saarland: Das wissen wir.",
+    chapeau:
+      "Seit Samstagabend wird in Teilen des Saarlandes eine deutliche Rauchentwicklung sowie Brandgeruch wahrgenommen.",
+    corps: [
+      "Seit Samstagabend wird in Teilen des Saarlandes eine deutliche Rauchentwicklung sowie Brandgeruch wahrgenommen. Die Integrierte Leitstelle Saarland hatte deshalb eine Warninformation für die Bevölkerung herausgegeben.",
+      "Nach den bislang vorliegenden Informationen stammt der Rauch nicht von einem größeren Brand im Saarland, sondern wird aus Richtung Belgien in die Region getragen.",
+      "Die Behörden haben die Warnung inzwischen aktualisiert: Nach aktuellem Stand besteht keine Gefahr für die Bevölkerung.",
+      "Dennoch wird empfohlen, bei stärkerer Rauch- oder Geruchsbelastung vorsorglich Fenster und Türen geschlossen zu halten und die offiziellen Informationen der Behörden zu verfolgen.",
+      "Radio Tripoint verfolgt die Entwicklung weiter und informiert bei neuen Erkenntnissen.",
+    ],
+  },
+}

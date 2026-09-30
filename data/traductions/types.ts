@@ -1,5 +1,4 @@
 import type { Categorie, CategorieSlug } from "@/types/category"
-import type { Bloc } from "@/types/media"
 
 /**
  * Traductions du contenu. Le français (data/*.ts) fait foi ; chaque langue
@@ -9,7 +8,12 @@ import type { Bloc } from "@/types/media"
 export interface TradArticle {
   titre: string
   chapeau: string
-  corps?: Bloc[]
+  /**
+   * Corps traduit, bloc par bloc, dans l'ordre de l'original : une chaîne
+   * pour un paragraphe, un intertitre ou une citation, un tableau pour une
+   * liste. Le type de chaque bloc vient de l'original ; les photos aussi.
+   */
+  corps: (string | string[])[]
   /** Texte alternatif du visuel principal. */
   alt?: string
 }

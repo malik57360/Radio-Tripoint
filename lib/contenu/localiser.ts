@@ -10,10 +10,23 @@ import type { Langue } from "@/lib/i18n/langues"
 import type { Article } from "@/types/article"
 import type { Categorie, CategorieSlug } from "@/types/category"
 import type { Evenement } from "@/types/event"
+import type { Bloc } from "@/types/media"
 import type { Episode } from "@/types/podcast"
 import type { Emission } from "@/types/show"
 
 const tables: Partial<Record<Langue, Traductions>> = { de, lb }
+
+/** Remplace le texte de chaque bloc par sa traduction, en gardant les types et les photos. */
+function traduireCorps(corps: Bloc[], textes: (string | string[])[]): Bloc[] {
+  let i = 0
+  return corps.map((b) => {
+    if (b.type === "image") return b
+    const x = textes[i++]
+    if (x === undefined) return b
+    if (b.type === "liste") return Array.isArray(x) ? { ...b, elements: x } : b
+    return typeof x === "string" ? { ...b, texte: x } : b
+  })
+}
 
 export function localiserArticle(a: Article, l: Langue): Article {
   const t = tables[l]?.articles[a.slug]
@@ -22,7 +35,7 @@ export function localiserArticle(a: Article, l: Langue): Article {
     ...a,
     titre: t.titre,
     chapeau: t.chapeau,
-    corps: t.corps ?? a.corps,
+    corps: traduireCorps(a.corps, t.corps),
     visuel: a.visuel && t.alt ? { ...a.visuel, alt: t.alt } : a.visuel,
   }
 }

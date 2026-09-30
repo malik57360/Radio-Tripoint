@@ -1,0 +1,88 @@
+import type { TradArticle } from "../../types"
+
+export const actualites01: Record<string, TradArticle> = {
+  "leon-xiv-a-metz-une-journee-historique-au-coeur-de-l-europe": {
+    titre: "Leo XIV. in Metz: ein historischer Tag im Herzen Europas.",
+    chapeau:
+      "Metz hat am Montag, 28. September, mit dem Besuch von Papst Leo XIV., der letzten Station seiner Apostolischen Reise nach Frankreich, einen außergewöhnlichen Tag erlebt.",
+    corps: [
+      "Metz hat am Montag, 28. September, mit dem Besuch von Papst Leo XIV., der letzten Station seiner Apostolischen Reise nach Frankreich, einen außergewöhnlichen Tag erlebt. Ein Besuch im Zeichen des Friedens, des Dialogs und der europäischen Einheit.",
+      "Am Vormittag in Metz angekommen, begab sich der Papst in das Kongresszentrum Robert Schuman zu einem interreligiösen Treffen und nahm anschließend an einer Begegnung zum Thema „Die Wurzeln Europas für Frieden und Einheit“ teil. Die Wahl von Metz war hochsymbolisch, denn die Stadt ist eng mit der europäischen Geschichte und dem Andenken an Robert Schuman verbunden.",
+      "Eine Begegnung im Herzen der Großregion",
+      "Rund um den Papst und Präsident Emmanuel Macron waren zahlreiche europäische Persönlichkeiten angereist, darunter Großherzog Guillaume und Großherzogin Stéphanie von Luxemburg, der luxemburgische Premierminister Luc Frieden, Fürst Albert II. und Fürstin Charlène von Monaco sowie die saarländische Ministerpräsidentin Anke Rehlinger. Auch der frühere Präsident der Europäischen Kommission Jean-Claude Juncker war anwesend.",
+      "Eine besonders starke Vertretung für eine Region wie unsere, in der Frankreich, Luxemburg und Deutschland im Alltag Tür an Tür leben.",
+      "Eine Messe in der Kathedrale Saint-Étienne",
+      "Am Nachmittag feierte Leo XIV. in der Kathedrale Saint-Étienne die Messe vor zahlreichen Gläubigen. Emmanuel Macron, der ursprünglich nicht an der Feier teilnehmen sollte, war schließlich dabei.",
+      "Vom Treffen mit den Religionsvertretern über die Rede zu Europa bis zur Feier in der Kathedrale verband dieser Tag in Metz Spiritualität, Geschichte und europäische Dimension.",
+      "Für Metz und die gesamte Großregion wird der Besuch von Leo XIV. als ein besonders prägender Moment des Jahres 2026 in Erinnerung bleiben.",
+    ],
+  },
+  "le-pape-a-30-km-de-chez-nous-pourquoi-leon-xiv-a-choisi-metz-pour-parler-de": {
+    titre:
+      "Der Papst 30 km von uns entfernt: Warum Leo XIV. Metz gewählt hat, um im Dreiländereck über Frieden zu sprechen.",
+    chapeau: "Metz empfängt Papst Leo XIV. am Montag, 28. September 2026.",
+    corps: [
+      "Metz empfängt Papst Leo XIV. am Montag, 28. September 2026. Es ist die letzte Station seiner ersten großen Apostolischen Reise nach Frankreich, die von Freitag, 25., bis Montag, 28. September 2026 stattfindet.",
+      "Nach Paris und Lourdes fiel die Wahl auf Metz. Und das ist kein Zufall.",
+      "Eine von Kriegen gezeichnete Region, heute ein Symbol der Versöhnung",
+      "Am vierten Tag seiner Apostolischen Reise nach Frankreich hat Leo XIV. Metz gewählt, um dort eine Rede über die Wurzeln Europas, über Frieden und Einheit zu halten.",
+      "Diese von Kriegen gezeichnete Grenzregion zwischen Frankreich und Deutschland steht heute für Begegnung und Versöhnung. Eine Botschaft, die die Menschen in Sierck-les-Bains, Perl, Schengen und Apach unmittelbar anspricht, die diese Grenzen jeden Tag überqueren.",
+      "Nach dem vom Heiligen Stuhl veröffentlichten offiziellen Programm kommt der Papst am Freitag, 25. September, morgens in Paris an und verlässt Frankreich am Montag, 28. September, abends vom Flughafen Metz-Nancy-Lorraine aus.",
+      "Ein Detail, das alles sagt",
+      "In Metz steht der Besuch des Papstes im Zeichen Europas und des Friedens. Ein starkes Symbol ist bereits durchgesickert: Der Papst soll die Messe an einem Altar feiern, der aus der Bronze alter deutscher Kanonen gefertigt wurde. Waffen, verwandelt in einen Altar des Friedens – wenige Kilometer von uns entfernt.",
+      "Sie möchten aus dem Dreiländereck hinfahren?",
+      "Es ist das nächstgelegene Großereignis seit Jahren. Hier die praktischen Infos für Montag:",
+      [
+        "Von Sierck-les-Bains / Perl: Rechnen Sie mit 35 bis 45 Minuten Autofahrt nach Metz. Nutzen Sie Fahrgemeinschaften und Park-and-Ride-Parkplätze, eine riesige Logistik ist vorgesehen.",
+        "Mit dem Zug: TER-Verbindung ab Apach und Bouzonville.",
+        "Wenn Sie nicht hinfahren können: Das Ereignis wird live auf KTO übertragen, das alle Etappen zeigt.",
+      ],
+    ],
+  },
+  "carburant-5-astuces-pour-reduire-ses-depenses-quand-on-habite-pres-de-la": {
+    titre: "KRAFTSTOFF: 5 TIPPS, UM AN DER GRENZE SPRITKOSTEN ZU SPAREN.",
+    chapeau: "Der Spritpreis belastet das Haushaltsbudget immer stärker.",
+    corps: [
+      "Der Spritpreis belastet das Haushaltsbudget immer stärker. Für die Menschen in der Großregion, die regelmäßig die Grenze überqueren, um zu arbeiten, einzukaufen oder ihre Kinder zu begleiten, ist das Auto oft schwer zu ersetzen. Doch einige Gewohnheiten können helfen, die Rechnung zu senken.",
+      "1. Ein paar Kilometer mehr fahren, um in Luxemburg zu tanken",
+      "Für die Bewohner des Dreiländerecks kann Luxemburg beim Kraftstoff eine interessante Alternative sein. Je nach Zeitraum und Preisunterschied können ein paar zusätzliche Kilometer Ersparnisse bringen.",
+      "Aber Vorsicht: Die Kosten für den zusätzlichen Weg sollte man immer mitrechnen. 20 Kilometer mehr zu fahren, nur um ein paar Cent pro Liter zu sparen, lohnt sich nicht unbedingt.",
+      "2. Aufs Fahrrad umsteigen … wenn die Entfernung es erlaubt",
+      "Für kurze Alltagswege kann das Fahrrad eine echte Alternative zum Auto sein.",
+      "Brot holen, zur Arbeit fahren, wenn sie in der Nähe liegt, die Kinder begleiten oder andere lokale Wege mit dem Rad erledigen – das senkt den Spritverbrauch direkt.",
+      "Und für längere Strecken kann ein E-Bike die Möglichkeiten zusätzlich erweitern.",
+      "3. An Fahrgemeinschaften denken",
+      "Wenn mehrere Personen jeden Tag dieselbe Strecke fahren, warum nicht das Auto teilen?",
+      "Fahrgemeinschaften verteilen die Spritkosten und reduzieren zugleich die Zahl der Fahrzeuge auf den Straßen.",
+      "In Grenzregionen, in denen viele Beschäftigte täglich dieselben Strecken zwischen Frankreich, Deutschland und Luxemburg fahren, kann diese Lösung besonders interessant sein.",
+      "4. Öffentliche Verkehrsmittel bevorzugen",
+      "Busse, Züge und grenzüberschreitende Verbindungen können ebenfalls helfen, das Auto stehen zu lassen.",
+      "Je nach Wohn- und Arbeitsort kann die Kombination mehrerer Verkehrsmittel manchmal günstiger sein, als die gesamte Strecke täglich mit dem Auto zu fahren.",
+      "Eine einfache Gewohnheit: regelmäßig die Kosten einer Autofahrt mit denen eines Abos oder Tickets für den öffentlichen Verkehr vergleichen.",
+      "5. Mit dem Arbeitgeber über Homeoffice sprechen",
+      "Wenn der Beruf es zulässt, kann auch Homeoffice direkte Auswirkungen auf das Spritbudget haben.",
+      "Ein oder zwei Homeoffice-Tage pro Woche bedeuten mehrere Fahrten weniger im Monat. Für Grenzgänger, die täglich manchmal mehrere Dutzend Kilometer zurücklegen, kann die Ersparnis schnell erheblich werden.",
+      "Natürlich hängt die Möglichkeit zum Homeoffice vom Beruf, vom Unternehmen und von den für Grenzgänger geltenden Regeln ab.",
+      "Fazit: Jede vermiedene Fahrt zählt",
+      "Angesichts der Entwicklung der Spritpreise gibt es nicht unbedingt die eine Lösung. Oft ist es die Summe kleiner Veränderungen, die die Rechnung senkt: wählen, wo man tankt, Fahrten teilen, öfter öffentliche Verkehrsmittel nutzen oder manche Autofahrten einschränken.",
+      "In einer Region, in der die Grenzen täglich überquert werden, kann das Überdenken der eigenen Mobilität für Haushalte also zu einer echten wirtschaftlichen Frage werden.",
+    ],
+  },
+  "jeunesse-europeenne-entre-inquietude-et-espoir-pour-l-avenir": {
+    titre: "Europas Jugend: zwischen Sorge und Hoffnung für die Zukunft.",
+    chapeau:
+      "Lebenshaltungskosten, Arbeit, Klima, Sicherheit … viele junge Europäerinnen und Europäer blicken mit einer gewissen Sorge in die Zukunft.",
+    corps: [
+      "Lebenshaltungskosten, Arbeit, Klima, Sicherheit … viele junge Europäerinnen und Europäer blicken mit einer gewissen Sorge in die Zukunft. Doch diese Generation gibt die Hoffnung deshalb nicht auf.",
+      "Jung sein in Europa heißt heute auch, sich in einem von vielen Unsicherheiten geprägten Umfeld eine Zukunft auszumalen. Europäische Umfragen zeigen, dass Lebenshaltungskosten, Umwelt, Arbeit und Sicherheitsfragen einen wichtigen Platz unter den Sorgen der 16- bis 30-Jährigen einnehmen. Im jüngsten Eurobarometer zur Jugend nennen 40 % steigende Preise und Lebenshaltungskosten als eine ihrer größten Sorgen für die Zukunft.",
+      "Auch das Klima bleibt ein wichtiges Thema, ebenso wie der Zugang zu Arbeit und Wohnraum. Die befragten Jugendlichen wünschen sich vor allem, dass Europa mehr für Wirtschaft, Arbeitsplätze, Umwelt und sozialen Schutz tut.",
+      "Doch hinter diesen Sorgen steht auch ein echter Wille, an die Zukunft zu glauben. Die jüngsten europäischen Daten zeigen, dass die 15- bis 30-Jährigen zu den Generationen gehören, die dem europäischen Projekt am positivsten gegenüberstehen. Im Eurobarometer vom Herbst 2025 zeigten sich 65 % der Jugendlichen optimistisch, was die Zukunft der Europäischen Union angeht, und 80 %, was ihre eigene Zukunft und die ihrer Familie betrifft.",
+      "Und in der Großregion?",
+      "In Frankreich, Deutschland und Luxemburg haben diese Fragen eine besondere Dimension. Studieren, eine Arbeit finden, wohnen, Grenzen überqueren oder eine Familie gründen – für viele junge Menschen in unserer Region ist das Alltag.",
+      "Wovor haben die Jugendlichen der Großregion also wirklich Angst? Und was gibt ihnen noch Vertrauen in die Zukunft?",
+      "Auch das ist die Aufgabe eines Lokalradios wie Radio Tripoint: dieser Generation zuzuhören, ihre Sorgen zu verstehen und ihr eine Stimme zu geben.",
+      "Eine besorgte Jugend, vielleicht. Aber ganz sicher keine Jugend ohne Hoffnung.",
+      "Quellen: Eurobarometer – Europäische Kommission / Europäisches Parlament.",
+    ],
+  },
+}

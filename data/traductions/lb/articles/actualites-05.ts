@@ -1,0 +1,105 @@
+import type { TradArticle } from "../../types"
+
+export const actualites05: Record<string, TradArticle> = {
+  "fete-du-chateau-2026-retour-sur-une-edition-pas-comme-les-autres": {
+    titre: "Buergfest 2026: Réckbléck op eng Editioun wéi keng aner.",
+    chapeau: "D’Buergfest 2026 ass eriwwer.",
+    corps: [
+      "D’Buergfest 2026 ass eriwwer. Fir dës besonnesch Editioun, déi och déi 30 Joer vum Veräin markéiert huet, huet Radio Tripoint d’Marie Triffaut, Tresorière vum Veräin, getraff, fir op de Weekend, d’Choixen vun dësem Joer, den Asaz vun de Benevollen an d’Reaktioune vum Public zréckzekucken.",
+      "Radio Tripoint: Moien, Madame Triffaut. D’Buergfest ass grad op en Enn gaangen. Wéi eng éischt Bilan zitt Dir?",
+      "Marie Triffaut: Dës Editioun ass ganz gutt gelaf. Mir haten virun allem ganz gutt Réckmeldunge vun de Gruppen an den Aussteller, déi begeeschtert vun eisem Accueil an eiser Organisatioun waren.",
+      "Bei de Visiteure waren d’Réckmeldungen, déi mir kritt hunn, gréisstendeels ganz positiv. Vill hu gesot, si wieren houfreg an impressionéiert vun deem, wat hinnen ugebuede gouf.",
+      "E puer Mëttelalter-Fans waren awer enttäuscht. Mee de Projet vun dësem Joer war grad, mat de Gewunnechten ze briechen, virun allem fir déi 30 Joer vum Veräin ze feieren.",
+      "Radio Tripoint: De Weekend war och vun engem Donnerwieder geprägt. Wéi sidd Dir domat ëmgaangen?",
+      "Marie Triffaut: D’Donnerwieder huet eis net verschount, mee mir hu séier reagéiert. De Prestataire war onheemlech reaktiv.",
+      "Mir haten och eng ganz schéin Iwwerraschung: Leit sinn spontan komm, nodeems se eis Publikatioune gesinn haten, fir eis ze hëllefen. Et waren al Benevollen do, awer och Leit, déi nach ni benevoll gehollef haten.",
+      "Radio Tripoint: Wéi eng Plaz hunn d’Benevollen am Liewe vun der Buerg an dem Veräin?",
+      "Marie Triffaut: Ouni de Veräin hätt d’Buerg viru 30 Joer vläicht eng onsécher Zukunft gehat. An ouni Benevollen gëtt et kee Veräin.",
+      "Déi eng ouni déi aner – an dësem Gebai si mir näischt.",
+      "Ech wëll hinnen dofir nach eng Kéier Merci soen, an all menge Kolleegen aus dem Comité fir hir onheemlech benevoll Aarbecht gratuléieren. Si schaffen zënter engem ganze Joer un dëser Manifestatioun.",
+      "Mir sinn eng Equipe!",
+      "Radio Tripoint: E leschte Wuert fir de Public, deen dëse Weekend komm ass?",
+      "Marie Triffaut: Merci dem Public, deen eis dëse Weekend besicht huet!",
+      "Mir hoffen, datt d’Rees duerch d’Gäng vun der Zäit si matgerappt huet, an datt d’Mëttelalter-Fans eis net ze vill iwwelhuelen, datt mir aus eise Gewunnechten erausgaange sinn.",
+      "Mir op jiddwer Fall hu vill Spaass gehat!",
+      "An och wann de Freedefeier leider net konnt stattfannen, huet de Public d’Plaz a Brand gesat!",
+      "Radio Tripoint seet dem Marie Triffaut Merci fir dëst Gespréich, an alle Benevollen, Gruppen, Aussteller an Deelhuelen, déi dës Editioun 2026 vum Buergfest lieweg gemaach hunn.",
+    ],
+  },
+  "horen-sie-auch-seit-einigen-tagen-explosionsgerausche-in-perl": {
+    titre: "Héiert Dir och zënter e puer Deeg Explosiounsgeräischer zu Perl?",
+    chapeau:
+      "Zënter e puer Deeg kënnen d’Awunner zu Perl an ronderëm ëmmer nees haart Knäll aus de Wéngerten héieren.",
+    corps: [
+      "Zënter e puer Deeg kënnen d’Awunner zu Perl an ronderëm ëmmer nees haart Knäll aus de Wéngerten héieren. D’Geräischer kënne wierklech wéi Schëss klingen a fir e Moment fir Onsécherheet suergen.",
+      "Mee wat stécht dohannert?",
+      "Bei de Geräischer handelt et sech wahrscheinlech ëm sougenannt Vullekanounen. Dës Apparater gi vu Wënzer benotzt, fir Vullen an aner Déieren vun de Rief ewechzehalen an d’Drauwe virun Schued ze schützen.",
+      "Grad an dëser Zäit, wou d’Drauwe reif ginn an d’Wéngerlies méi no kënnt, probéieren d’Wënzer hir Ernt esou gutt wéi méiglech ze schützen.",
+      "Fir d’Awunner kënnen déi regelméisseg Knäll natierlech iwwerraschend sinn. Wien se de Moment an de Wéngerten ronderëm Perl héiert, muss dofir net direkt u Schëss denken.",
+      "Kuerz gesot: wat wéi Schëss klëngt, kéint an de Wéngerten einfach de Schutz vun den Drauwe sinn.",
+      "Radio Tripoint – Är lokal Stëmm am Dräilännereck.",
+    ],
+  },
+  "belgique-17-ans-de-prison-pour-une-justice-rendue-soi-meme": {
+    titre: "Belsch: 17 Joer Prisong fir Selbstjustiz.",
+    chapeau: "Eng Affär, déi vill Kaméidi mécht.",
+    corps: [
+      "Eng Affär, déi vill Kaméidi mécht. Zu Namur ass de Grégory Lenoci wéinst Mordversuch zu 17 Joer Prisong veruerteelt ginn, nodeems hie säin Noper brutal attackéiert hat.",
+      "D’Fakte ginn op den 24. Juli 2025 zréck, zu Jambes. De Lenoci hat säin Noper verdächtegt, säi Stéifjong sexuell mëssbraucht ze hunn. Nodeems hien säi Verdacht den Autoritéite gemellt hat, huet hie beschloss, den Noper selwer ze konfrontéieren.",
+      "D’Konfrontatioun ass zu enger Aggressioun vun extremer Gewalt ausgeaart, no där d’Affer schwéier behënnert ass.",
+      "Um Geriicht huet de Grégory Lenoci erkläert, hien hätt d’Kontroll verluer, an huet bestridden, datt hie säin Noper ëmbrénge wollt. D’Justiz huet trotzdeem de Mordversuch zréckbehalen an eng Strof vu 17 Joer Prisong ausgeschwat.",
+      "D’Affär léist an der Belsch vill Reaktiounen aus a bréngt eng delikat Debatt nees op den Dësch: Kann een d’Roserei vun engem Familljemember verstoen, deen denkt, datt e Kand a Gefor ass, an trotzdeem Selbstjustiz veruerteelen?",
+      "Eng Fro, déi wäit iwwer dës Affär erausgeet: wou hält de Schutz op a wou fänkt d’Rache un?",
+    ],
+  },
+  "verkehrsbehinderungen-wegen-bauarbeiten-an-der-l177-l178": {
+    titre: "Verkéiersbehënnerunge wéinst Bauaarbechten op der L177/L178.",
+    chapeau:
+      "ORSCHOLZ – D’Bauaarbechten um Kräizungspunkt L177/L178 suerge momentan fir Verkéiersbehënnerungen an zousätzlechen Ausweichverkéier zu Orscholz.",
+    corps: [
+      "ORSCHOLZ – D’Bauaarbechten um Kräizungspunkt L177/L178 suerge momentan fir Verkéiersbehënnerungen an zousätzlechen Ausweichverkéier zu Orscholz.",
+      "No Informatioune vun der Gemeng Mettlach si verschidde Wunnstroossen duerch de méi groussen Trafic betraff. D’Automobiliste gi gebieden, virsiichteg ze fueren, d’Vitesselimitten anzehalen a méi Zäit fir hir Fahrt anzeplangen.",
+      "Am Kader vun den Aarbechte gëtt ënner anerem d’Luuchtenanlag erneiert. Déi nei, verkéiersofhängeg Steierung soll an Zukunft de Verkéiersfloss verbesseren an d’Sécherheet erhéijen.",
+      "Bis d’Aarbechten ofgeschloss sinn, freet d’Gemeng d’Awunner an d’Verkéiersdeelhuelen ëm Versteesdemech a géigesäitege Respekt.",
+      "Quell: Gemeng Mettlach – 17. August 2026",
+      "Radio Tripoint – de Medium, dee Frankräich, Lëtzebuerg an Däitschland verbënnt.",
+    ],
+  },
+  "dossier-special-incendies-fumees-ce-que-l-on-sait": {
+    titre: "SPEZIALDOSSIER — BRÄNN & FËMM: WAT MIR WËSSEN.",
+    chapeau:
+      "Zënter e puer Deeg halen e puer Bränn d’Rettungsdéngschter an der Groussregioun staark op Trapp.",
+    corps: [
+      "Zënter e puer Deeg halen e puer Bränn d’Rettungsdéngschter an der Groussregioun staark op Trapp. Dëse Méindeg, 17. August, gëtt d’Situatioun an der Belsch, an Däitschland a bis an eis grenziwwerschreidend Regioun, wou de Fëmm staark ze spieren war, weider genee suivéiert.",
+      "Héich Venn: bal 3.000 Hektar zerstéiert",
+      "Am Héije Venn, no bei der däitscher Grenz, huet d’Feier schonn ongeféier 3.000 Hektar Vegetatioun zerstéiert – dat gréisste Feier an der rezenter Geschicht vun der Belsch.",
+      "De Reen an de feelende Wand hunn e Méindeg de Moien eng liicht Verbesserung bruecht, mee d’Situatioun bleift delikat. Glutnäschter halen sech déif an de Tuerfbuedem, wat d’Läschen ganz komplizéiert mécht.",
+      "Zu Monschau, op der däitscher Säit, hu ronn drësseg Awunner virsiichtshalber missen hiert Heem verloossen. Um spéide Nomëtteg mellen d’Autoritéiten nach ëmmer vill Fëmm a recommandéieren lokal, Dieren a Fënsteren zouzehalen.\nSaarland: D’Feier zu Hüttigweiler ënner Kontroll",
+      "Zu Hüttigweiler bei Illingen waren ongeféier 18 Hektar vun engem anere grousse Feier betraff.",
+      "D’Feier ass elo ënner Kontroll, mee nach net ganz geläscht. D’Läschaarbechte goufen awer temporär ënnerbrach, well eventuell Munitioun aus dem Zweete Weltkrich am Buedem läit. Den Déminage war op der Plaz.",
+      "Fëmm, deen ee wäit iwwer d’Bränn eraus spiert",
+      "D’Konsequenze gesäit een nach Dosende, jo Honnerte Kilometer vun de wichtegste Brandhären ewech.",
+      "De SWR bestätegt ënner anerem, datt de Fëmm aus der Belsch nees an d’Regioun Tréier komm ass, mat Gerécher, déi bis an en Deel vu Rheinland-Pfalz ze spieren sinn.",
+      "Op der franséischer Säit hunn och e puer Awunner a Gemengen aus der Moselle Radio Tripoint Brandgeroch, Fëmm oder e staark verschleierten Himmel gemellt.",
+      "Ähnlech Reaktiounen hu mir aus dem Dräilännereck an no bei der däitscher Grenz kritt.",
+      "Et ass also wichteg drun ze erënneren, datt e Brandgeroch oder e verschleierten Himmel net onbedéngt bedeit, datt et direkt an der Géigend brennt: de Fëmm kann duerch de Wand an d’Wiederkonditiounen iwwer grouss Distanzen transportéiert ginn.",
+      "Virsiicht an der ganzer Groussregioun",
+      "D’Situatioun entwéckelt sech nach ëmmer séier. Bei vill Fëmm ass et besser, sech sou wéineg wéi méiglech auszesetzen an d’Consignen vun de lokalen Autoritéiten ze suivéieren.",
+      "Dës Nouvelle kënnt och grad dann, wou Radio Tripoint den 17. August seng Präventiounscampagne zum Schutz vun eise Bëscher an Naturraim ofschléisst – eng Erënnerung drun, wéi wichteg et méi wéi jee ass, beim Brandrisiko opmierksam ze bleiwen.",
+      "Radio Tripoint, de grenziwwerschreidende Radio",
+      "Artikel aktualiséiert den 17. August 2026 um spéide Nomëtteg.",
+    ],
+  },
+  "rauchentwicklung-im-saarland-das-wissen-wir": {
+    titre: "Fëmm am Saarland: Dat wësse mir.",
+    chapeau:
+      "Zënter e Samschdeg den Owend gëtt an Deeler vum Saarland däitlech Fëmm a Brandgeroch wouergeholl.",
+    corps: [
+      "Zënter e Samschdeg den Owend gëtt an Deeler vum Saarland däitlech Fëmm a Brandgeroch wouergeholl. D’Integréiert Leitstell Saarland hat dofir eng Warninformatioun fir d’Bevëlkerung erausginn.",
+      "No den Informatiounen, déi bis elo virleien, kënnt de Fëmm net vun engem gréissere Feier am Saarland, mee gëtt aus der Richtung Belsch an d’Regioun gedroen.",
+      "D’Autoritéiten hunn d’Warnung an der Tëschenzäit aktualiséiert: nom aktuelle Stand besteet keng Gefor fir d’Bevëlkerung.",
+      "Trotzdeem gëtt recommandéiert, bei méi staarkem Fëmm oder Geroch virsiichtshalber Fënsteren an Dieren zouzehalen an déi offiziell Informatioune vun den Autoritéiten ze suivéieren.",
+      "Radio Tripoint suivéiert d’Entwécklung weider an informéiert, soubal et Neies gëtt.",
+    ],
+  },
+}

@@ -1,0 +1,90 @@
+import type { TradArticle } from "../../types"
+
+export const artCulture: Record<string, TradArticle> = {
+  "arnold-vi-de-sierck-quand-sierck-ecrivait-une-page-de-l-histoire-europeenne": {
+    titre: "Arnold VI. von Sierck: Als Sierck europäische Geschichte schrieb.",
+    chapeau:
+      "Heute ist Sierck-les-Bains eine kleine Stadt an der Mosel, am Ufer des Flusses und nur wenige Kilometer von Luxemburg und Deutschland entfernt.",
+    corps: [
+      "Heute ist Sierck-les-Bains eine kleine Stadt an der Mosel, am Ufer des Flusses und nur wenige Kilometer von Luxemburg und Deutschland entfernt.",
+      "Doch hinter ihren Stadtmauern und ihrer Burg verbirgt sich eine viel größere Geschichte.",
+      "Im 15. Jahrhundert hallt der Name Sierck bis in die höchsten Kreise des Heiligen Römischen Reiches.",
+      "Und im Mittelpunkt dieser Geschichte steht ein Mann: Arnold VI. von Sierck.",
+      "Ein mächtiger Herr des Sierckgaus",
+      "Arnold VI. entstammt der bedeutenden Familie der Herren von Sierck und lebt in einer Region, die schon damals strategisch zwischen Lothringen, Luxemburg und den deutschen Landen liegt.",
+      "Sein Einfluss reicht weit über Sierck hinaus.",
+      "1419 erhält er vom Herzog von Lothringen die Erlaubnis, auf dem Meinsberg oberhalb von Manderen eine neue Festung zu bauen.",
+      "Diese Festung gibt es noch heute.",
+      "Wir kennen sie heute unter einem anderen Namen: Schloss Malbrouck.",
+      "So geht eines der bekanntesten Denkmäler der Mosel direkt auf die Geschichte der Familie von Sierck zurück.",
+      "Von Sierck bis an die Spitze des Reiches",
+      "Noch spektakulärer wird die Geschichte mit seinem Sohn, Jakob von Sierck.",
+      "Für eine geistliche Laufbahn bestimmt, wird Jakob im 15. Jahrhundert Erzbischof von Trier.",
+      "In jener Zeit bedeutet das Amt des Erzbischofs von Trier nicht nur, ein wichtiges kirchliches Gebiet zu leiten.",
+      "Er wird zugleich Kurfürst des Heiligen Römischen Reiches.",
+      "Ein Titel, der einem äußerst kleinen Kreis vorbehalten ist, der unter anderem an der Wahl des Herrschers des Reiches mitwirken darf.",
+      "Der Sohn eines Herrn von Sierck gelangt so in eines der mächtigsten Ämter des mittelalterlichen Europas.",
+      "Eine europäische Geschichte … die hier begann",
+      "Das ist wohl, was diese Geschichte so faszinierend macht.",
+      "Wenn wir heute durch Sierck-les-Bains, Manderen, Perl, Schengen oder die Nachbardörfer fahren, bewegen wir uns in einer Region, die schon vor Jahrhunderten am Kreuzungspunkt großer europäischer Einflüsse lag.",
+      "Die Grenzen haben sich verändert.",
+      "Die Staaten haben sich verändert.",
+      "Doch die strategische Lage unserer Region ist geblieben.",
+      "Und die Geschichte Arnolds VI. und der Familie von Sierck erinnert uns an eines:",
+      "Lange bevor man von der „Großregion“ oder von grenzüberschreitenden Räumen sprach, reichte unsere Geschichte schon über Grenzen hinaus.",
+      "Eine Geschichte, die man diese Woche neu entdecken kann",
+      "Wenige Tage vor dem Burgfest von Sierck am 22. und 23. August ist das auch eine Gelegenheit, dieses Erbe, an dem wir oft täglich vorbeigehen, mit anderen Augen zu sehen.",
+      "Denn hinter den Steinen der Burg von Sierck verbirgt sich eine Geschichte, die uns direkt mit mehreren Jahrhunderten europäischer Geschichte verbindet.",
+    ],
+  },
+  "melamine-une-nouvelle-emission-pour-donner-la-parole-aux-diasporas-de-la-grande": {
+    titre: "Mélamine: eine neue Sendung, die den Diasporas der Großregion eine Stimme gibt.",
+    chapeau: "Die Großregion ist ein Land der Begegnungen.",
+    corps: [
+      "Die Großregion ist ein Land der Begegnungen. Jeden Tag leben, arbeiten und gründen Tausende Frauen und Männer aus Afrika, Portugal, Kap Verde, Italien, Indien und vielen anderen Ländern zwischen Frankreich, Luxemburg und Deutschland.",
+      "In Luxemburg macht allein die portugiesische Gemeinschaft mehr als 13 % der Bevölkerung aus, während auch die italienische, französische, indische und afrikanische Gemeinschaft zum kulturellen und wirtschaftlichen Reichtum des Landes beitragen.",
+      "Auch in der Mosel gibt es viele Menschen mit Migrationsgeschichte, darunter Menschen aus Italien, Portugal, Nordafrika und Subsahara-Afrika, die seit Jahrzehnten zum Leben in der Region beitragen.",
+      "Dennoch sind ihre Lebenswege, Erfolge und Initiativen noch viel zu wenig sichtbar.",
+      "Genau deshalb startet Radio Tripoint Mélamine – Die Stimmen der Diaspora.",
+      "Eine Sendung, die denjenigen eine Stimme gibt, die unternehmen, sich engagieren, erschaffen und jeden Tag zur Dynamik unserer Grenzregion beitragen.",
+      "Weil jede Geschichte es verdient, gehört zu werden.",
+      "Weil jeder Lebensweg inspirieren kann.",
+      "Und weil Sichtbarkeit Chancen schafft.",
+      "🎙️ Sie möchten Ihre Geschichte erzählen, Ihre Tätigkeit vorstellen oder Ihren Verein bekannt machen?",
+      "Kontaktieren Sie uns: info@radio-tripoint-officiel.com",
+      "Radio Tripoint – das grenzüberschreitende Medium, das Ihnen Sichtbarkeit gibt.",
+    ],
+  },
+  "au-dela-de-la-frontiere-une-exposition-entre-memoire-et-europe-au-schengen": {
+    titre:
+      "„Jenseits der Grenze“: eine Ausstellung zwischen Erinnerung und Europa im Schengen Museum.",
+    chapeau:
+      "Vom 15. Juni bis zum 13. September 2026 zeigt das Schengen Museum die Ausstellung „Jenseits der Grenze“ der deutschen Künstler Silke Markefka und Nikolai Vogel.",
+    corps: [
+      "Vom 15. Juni bis zum 13. September 2026 zeigt das Schengen Museum die Ausstellung „Jenseits der Grenze“ der deutschen Künstler Silke Markefka und Nikolai Vogel. Sie ist an einem geschichtsträchtigen Ort zu sehen: an Bord der Prinzessin Marie-Astrid Europa, dem Schiff, auf dem 1985 das Schengener Abkommen unterzeichnet wurde.",
+      "Mit rund zwanzig Installationen aus Malerei, Text und Klangarbeiten laden die beiden Künstler zum Nachdenken über den Wandel der Grenzen in Europa ein. Ihr Projekt entstand nach einer Reise 2008 und 2009 entlang der ehemaligen deutschen Grenzen, zu einer Zeit, in der die Grenzposten nach und nach verschwanden.",
+      "Die Werke von Silke Markefka greifen diese Landschaften in einer Malerei auf, die mit der Erinnerung und den verschiedenen Schichten der Zeit spielt. Nikolai Vogel ergänzt diesen Ansatz mit Tonaufnahmen und literarischer Arbeit, die die Besucher in die Atmosphäre dieser heute veränderten Orte zurückversetzen.",
+      "Am Ort selbst gezeigt, an dem die Idee eines Europas ohne Grenzen entstand, lädt die Ausstellung jeden ein, über unsere gemeinsame Geschichte nachzudenken und über den Platz, den Grenzen in unserer Gesellschaft noch einnehmen.",
+      "Praktische Informationen:",
+      [
+        "Ort: Schengen Museum (Luxemburg)",
+        "Ausstellung: vom 15. Juni bis zum 13. September 2026",
+        "Öffnungszeiten: täglich von 10 bis 18 Uhr",
+      ],
+    ],
+  },
+  "i-am-from-there-un-film-qui-fait-de-la-poesie-un-espace-de-reconstruction": {
+    titre: "„I Am From There …“: ein Film, der die Poesie zu einem Ort des Neuanfangs macht.",
+    chapeau:
+      "Die Regisseurin Lila Ben Saâla stellt derzeit ihren Spielfilm „I Am From There …“ fertig, einen humanistischen Dokumentarfilm über Jugendliche, die durch Kunst und Poesie – insbesondere das Werk des palästinensischen Dichters Mahmoud Darwisch – wieder zu sich finden.",
+    corps: [
+      "Die Regisseurin Lila Ben Saâla stellt derzeit ihren Spielfilm „I Am From There …“ fertig, einen humanistischen Dokumentarfilm über Jugendliche, die durch Kunst und Poesie – insbesondere das Werk des palästinensischen Dichters Mahmoud Darwisch – wieder zu sich finden.",
+      "Die Dreharbeiten sind abgeschlossen, und das Projekt tritt in seine letzte Phase ein: Schnitt und Fertigstellung, mit dem Ziel einer Veröffentlichung in Frankreich und international. Dafür wurde eine Crowdfunding-Kampagne gestartet, um die nötigen Mittel zusammenzubringen.",
+      "Mit diesem Film möchte die Regisseurin zeigen, dass Kultur zu einem echten Werkzeug für Resilienz, Hoffnung und Zugehörigkeit werden kann. Weit mehr als ein bloßes Zeugnis stellt „I Am From There …“ die Kraft der Worte und des künstlerischen Schaffens in den Mittelpunkt, um Lebenswege neu aufzubauen.",
+      "Das Projekt ist zutiefst humanistisch und grenzüberschreitend angelegt und greift den Austausch von Geschichten, Sprachen und Empfindungen über Grenzen hinweg auf. Eine Einladung, engagiertes Kino zu entdecken, in dem die Poesie zu einer universellen Sprache wird.",
+      "Wer mehr erfahren möchte, findet unten den Link zu den Präsentationsvideos des Projekts. Und wer die Fertigstellung des Films unterstützen möchte, findet auch einen Link zur Crowdfunding-Kampagne.",
+      "https://youtube.com/@thereingaza?si=TfBILJ4ZyEqV0M4-",
+      "https://www.gofundme.com/f/this-film-needs-you",
+    ],
+  },
+}
