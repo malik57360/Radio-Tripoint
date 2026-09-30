@@ -56,11 +56,13 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
     ? (programme?.emission.nom ?? radioConfig.radioName)
     : (l.episode?.titre ?? "")
   const ligne2 = direct
-    ? l.titreEnCours
-      ? [l.titreEnCours.artiste, l.titreEnCours.titre].filter(Boolean).join(" — ")
-      : programme
-        ? radioConfig.radioName
-        : "France · Luxembourg · Allemagne"
+    ? l.attenteGeste && !joue && !charge
+      ? "Touchez la page pour lancer le direct"
+      : l.titreEnCours
+        ? [l.titreEnCours.artiste, l.titreEnCours.titre].filter(Boolean).join(" — ")
+        : programme
+          ? radioConfig.radioName
+          : "France · Luxembourg · Allemagne"
     : (l.episode?.sousTitre ?? "Podcast")
 
   const IconeVolume = l.muet || l.volume === 0 ? VolumeX : l.volume < 0.5 ? Volume1 : Volume2
@@ -89,6 +91,7 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
         <button
           type="button"
           onClick={basculer}
+          data-controle-lecteur
           aria-label={joue || charge ? "Pause" : direct ? "Écouter le direct" : "Lire l'épisode"}
           className={cn(
             "grid size-11 flex-none place-items-center rounded-full transition-colors",

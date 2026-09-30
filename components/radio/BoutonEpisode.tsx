@@ -27,6 +27,7 @@ export function BoutonEpisode({
       <button
         type="button"
         onClick={agir}
+        data-controle-lecteur
         aria-label={label}
         aria-pressed={joue}
         className={cn(
@@ -49,6 +50,7 @@ export function BoutonEpisode({
     <button
       type="button"
       onClick={agir}
+      data-controle-lecteur
       aria-label={label}
       aria-pressed={joue}
       className={cn(

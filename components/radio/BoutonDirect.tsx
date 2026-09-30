@@ -22,6 +22,7 @@ export function BoutonDirect({
     <button
       type="button"
       onClick={basculerDirect}
+      data-controle-lecteur
       aria-pressed={actif}
       aria-label={actif ? "Mettre le direct en pause" : "Écouter Radio Tripoint en direct"}
       className={cn(

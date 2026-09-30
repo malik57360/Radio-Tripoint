@@ -38,6 +38,8 @@ export interface EtatLecteur {
   position: number
   dureeMedia: number
   titreEnCours: TitreEnCours | null
+  /** Démarrage auto refusé par le navigateur : on attend le premier geste. */
+  attenteGeste: boolean
 }
 
 const CLE_VOLUME = "rt:volume"
@@ -52,6 +54,7 @@ const ETAT_INITIAL: EtatLecteur = {
   position: 0,
   dureeMedia: 0,
   titreEnCours: null,
+  attenteGeste: false,
 }
 
 let etat: EtatLecteur = ETAT_INITIAL
@@ -139,27 +142,77 @@ function metadonneesSysteme() {
   }
 }
 
-async function demarrer(src: string) {
+async function demarrer(
+  src: string,
+  { silencieux = false } = {},
+): Promise<"ok" | "bloque" | "erreur" | "annule"> {
   const a = element()
   maj({ statut: "loading", erreur: null })
   a.src = src
   try {
     await a.play()
     metadonneesSysteme()
+    maj({ attenteGeste: false })
+    return "ok"
   } catch (e) {
     const nom = (e as DOMException)?.name
     // AbortError = une autre lecture a été demandée entre-temps : normal.
-    if (nom === "AbortError") return
+    if (nom === "AbortError") return "annule"
+    if (silencieux && nom === "NotAllowedError") {
+      // Démarrage automatique refusé : pas d'erreur affichée, on attend un geste.
+      a.removeAttribute("src")
+      a.load()
+      maj({ statut: "idle", erreur: null, attenteGeste: true })
+      return "bloque"
+    }
     maj({
       statut: "error",
       erreur:
         nom === "NotAllowedError" ? "bloque" : navigator.onLine === false ? "reseau" : "lecture",
     })
+    return nom === "NotAllowedError" ? "bloque" : "erreur"
   }
 }
 
 /** Lance le direct. */
+const CLE_PAUSE = "rt:pause-volontaire"
+
+function pauseVolontaire(): boolean {
+  try {
+    return sessionStorage.getItem(CLE_PAUSE) === "1"
+  } catch {
+    return false
+  }
+}
+function noterPauseVolontaire(oui: boolean) {
+  try {
+    if (oui) sessionStorage.setItem(CLE_PAUSE, "1")
+    else sessionStorage.removeItem(CLE_PAUSE)
+  } catch {
+    /* stockage indisponible : sans conséquence */
+  }
+}
+
+/**
+ * Démarrage automatique du direct à l'arrivée sur le site. Les navigateurs
+ * refusent souvent le son sans geste du visiteur : dans ce cas, aucune
+ * erreur n'est affichée et `attenteGeste` passe à vrai (le premier geste
+ * sur la page lancera le direct, voir components/radio/DirectAuto.tsx).
+ * Ne fait rien si le flux n'est pas configuré, si quelque chose joue déjà,
+ * ou si le visiteur a mis en pause pendant sa visite.
+ */
+export async function demarrerDirectAuto(): Promise<"ok" | "bloque" | "rien"> {
+  if (!radioConfig.streamUrl || pauseVolontaire()) return "rien"
+  if (etat.statut === "playing" || etat.statut === "loading" || etat.source === "episode")
+    return "rien"
+  maj({ source: "direct", episode: null, position: 0, dureeMedia: 0 })
+  const sep = radioConfig.streamUrl.includes("?") ? "&" : "?"
+  const r = await demarrer(`${radioConfig.streamUrl}${sep}t=${Date.now()}`, { silencieux: true })
+  return r === "bloque" ? "bloque" : r === "ok" ? "ok" : "rien"
+}
+
 export async function ecouterDirect() {
+  noterPauseVolontaire(false)
   if (!radioConfig.streamUrl) {
     maj({ source: "direct", episode: null, statut: "error", erreur: "non-configure" })
     return
@@ -180,6 +233,7 @@ export async function ecouterEpisode(ep: EpisodeEnLecture) {
 }
 
 export function pause() {
+  noterPauseVolontaire(true)
   if (!audio) return
   audio.pause()
   if (etat.source === "direct") {
