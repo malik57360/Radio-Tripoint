@@ -65,6 +65,13 @@ async function telecharger(url) {
 }
 
 await mkdir(dossier, { recursive: true })
+// Les textes alternatifs sont écrits à la main dans photos.ts : on les garde.
+const altsExistants = new Map()
+try {
+  const actuel = await readFile(path.join(racine, "data/articles/photos.ts"), "utf8")
+  for (const [, src, alt] of actuel.matchAll(/"src": "([^"]+)",\s*"alt": "((?:[^"\\]|\\.)*)"/g))
+    altsExistants.set(src, JSON.parse(`"${alt}"`))
+} catch {}
 const resultat = {}
 const echecs = []
 
@@ -75,7 +82,13 @@ for (const { slug, photos } of manifeste) {
     const fichier = path.join(dossier, nom + ext)
     try {
       if (!existsSync(fichier)) {
-        const brut = await telecharger(url)
+        // Webador ne garde pas toujours la variante « -high » : on se
+        // rabat alors sur « -standard », même photo en plus petit.
+        const brut = await telecharger(url).catch((e) =>
+          url.includes("-high.") && e.message === "HTTP 404"
+            ? telecharger(url.replace("-high.", "-standard."))
+            : Promise.reject(e),
+        )
         const sortie = sharp
           ? await sharp(brut)
               .rotate()
@@ -88,7 +101,7 @@ for (const { slug, photos } of manifeste) {
       const [largeur, hauteur] = dimensions(await readFile(fichier))
       ;(resultat[slug] ??= []).push({
         src: `/media/articles/${nom}${ext}`,
-        alt: "",
+        alt: altsExistants.get(`/media/articles/${nom}${ext}`) ?? "",
         largeur,
         hauteur,
       })
@@ -108,7 +121,8 @@ const entete = `import type { Visuel } from "@/types/media"
  *
  * FICHIER GÉNÉRÉ par \`node scripts/importer-photos-webador.mjs\`, qui
  * télécharge les photos listées dans \`scripts/photos-webador.json\` vers
- * \`public/media/articles/\`. Vide tant qu'il n'a pas tourné.
+ * \`public/media/articles/\`. Les textes alternatifs (\`alt\`) s'écrivent à
+ * la main ici ; le script les conserve quand il est relancé.
  */
 export const photos: Record<string, Visuel[]> = `
 await writeFile(
