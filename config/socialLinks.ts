@@ -13,7 +13,7 @@ export const socialLinks: Record<ReseauSocial, string> = {
   facebook: "",
   instagram: "",
   telegram: "",
-  tiktok: "",
+  tiktok: "https://www.tiktok.com/@radiotripoint",
   youtube: "",
   x: "",
 }
