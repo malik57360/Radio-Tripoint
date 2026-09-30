@@ -118,7 +118,9 @@ export async function POST(request: Request) {
   }).catch(() => null)
 
   if (!amont || !amont.ok || !amont.body) {
-    console.error(`[guide] passerelle indisponible (${amont?.status ?? "réseau"})`)
+    // Message d'erreur de la passerelle seulement (jamais la conversation).
+    const detail = amont ? (await amont.text().catch(() => "")).slice(0, 300) : ""
+    console.error(`[guide] passerelle indisponible (${amont?.status ?? "réseau"}) ${detail}`)
     return json({ erreur: "indisponible" }, 502)
   }
 
