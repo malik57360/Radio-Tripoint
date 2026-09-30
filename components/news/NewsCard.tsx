@@ -10,8 +10,12 @@ import { Visuel } from "@/components/ui/Visuel"
 export function MetaArticle({ article, className }: { article: Article; className?: string }) {
   return (
     <p className={cn("text-encre-3 flex flex-wrap items-center gap-x-2 text-[0.8rem]", className)}>
-      <time dateTime={article.publieLe}>{dateRelative(article.publieLe)}</time>
-      <span aria-hidden>·</span>
+      {article.publieLe && (
+        <>
+          <time dateTime={article.publieLe}>{dateRelative(article.publieLe)}</time>
+          <span aria-hidden>·</span>
+        </>
+      )}
       <span>{tempsLecture(article.corps)} min de lecture</span>
     </p>
   )

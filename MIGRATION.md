@@ -54,10 +54,11 @@ Conservées à l'identique (aucune redirection nécessaire) : `/actualites`,
 `/contact`, `/publicite`, `/agenda`, `/art-culture`, `/actu-music`,
 `/actu-people`, `/mode-style`, `/sport`.
 
-**À faire avant la bascule DNS** : exporter la liste complète des URL
-indexées (Google Search Console → Pages, ou `site:radio-tripoint-officiel.fr`)
-et ajouter une ligne au tableau `redirections` de `next.config.ts` pour
-chaque ancienne page d'article qui a une équivalente.
+**Articles** : sur l'ancien site, les articles n'ont pas de page propre.
+Ils sont empilés sur les pages de rubrique (`/actualites`, `/sport`…), que
+le sitemap Webador est seul à lister. Il n'y a donc aucune URL d'article à
+rediriger : les URL de rubrique ci-dessus suffisent. Les articles repris
+sont dans `data/articles/` (un fichier par rubrique).
 
 ## Reprendre le contenu
 

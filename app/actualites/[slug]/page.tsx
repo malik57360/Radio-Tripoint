@@ -88,9 +88,11 @@ export default async function PageArticle(props: PageProps<"/actualites/[slug]">
             <span className="text-encre font-semibold">
               {a.auteur ?? "La rédaction de Radio Tripoint"}
             </span>
-            <time dateTime={a.publieLe}>
-              {dateLongue(a.publieLe)} à {heure(a.publieLe)}
-            </time>
+            {a.publieLe && (
+              <time dateTime={a.publieLe}>
+                {dateLongue(a.publieLe)} à {heure(a.publieLe)}
+              </time>
+            )}
             {a.modifieLe && <span>Mis à jour le {dateLongue(a.modifieLe)}</span>}
             <span className="inline-flex items-center gap-1.5">
               <Clock className="size-3.5" aria-hidden /> {tempsLecture(a.corps)} min de lecture

@@ -38,7 +38,11 @@ export function metadataPage(o: Options): Metadata {
       description: o.description,
       ...(images ? { images } : {}),
       ...(o.type === "article"
-        ? { publishedTime: o.publieLe, modifiedTime: o.modifieLe ?? o.publieLe, section: o.section }
+        ? {
+            ...(o.publieLe ? { publishedTime: o.publieLe } : {}),
+            ...((o.modifieLe ?? o.publieLe) ? { modifiedTime: o.modifieLe ?? o.publieLe } : {}),
+            section: o.section,
+          }
         : {}),
     },
     twitter: {

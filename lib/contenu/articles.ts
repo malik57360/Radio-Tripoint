@@ -10,9 +10,22 @@ import type { CategorieSlug } from "@/types/category"
 import { normaliser } from "@/lib/utils/texte"
 import { modeDemo } from "./demo"
 
+/**
+ * Du plus récent au plus ancien : par date quand les deux en ont une, sinon
+ * par rang sur l'ancien site (`ordre`). Un article daté passe devant un
+ * article non daté de même rang ; l'ordre d'origine départage le reste.
+ */
+function comparer(a: Article, b: Article): number {
+  if (a.publieLe && b.publieLe) return b.publieLe.localeCompare(a.publieLe)
+  const oa = a.ordre ?? (a.publieLe ? 0 : Number.MAX_SAFE_INTEGER)
+  const ob = b.ordre ?? (b.publieLe ? 0 : Number.MAX_SAFE_INTEGER)
+  if (oa !== ob) return oa - ob
+  return Number(Boolean(b.publieLe)) - Number(Boolean(a.publieLe))
+}
+
 function tous(): Article[] {
   const liste = modeDemo ? [...articlesReels, ...articlesDemo] : articlesReels
-  return [...liste].sort((a, b) => b.publieLe.localeCompare(a.publieLe))
+  return [...liste].sort(comparer)
 }
 
 export interface Page<T> {

@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((a) => !a.demo)
       .map((a) => ({
         url: u(`/actualites/${a.slug}`),
-        lastModified: a.modifieLe ?? a.publieLe,
+        ...((a.modifieLe ?? a.publieLe) ? { lastModified: a.modifieLe ?? a.publieLe } : {}),
         changeFrequency: "weekly" as const,
         priority: 0.7,
       })),

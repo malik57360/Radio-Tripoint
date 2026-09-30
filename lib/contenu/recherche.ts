@@ -33,7 +33,9 @@ export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
       type: "article" as const,
       titre: a.titre,
       href: `/actualites/${a.slug}`,
-      contexte: `${categories[a.categorie].nom} · ${dateLongue(a.publieLe)}`,
+      contexte: a.publieLe
+        ? `${categories[a.categorie].nom} · ${dateLongue(a.publieLe)}`
+        : categories[a.categorie].nom,
       extrait: a.chapeau,
       titreN: normaliser(a.titre),
       corpsN: normaliser(
