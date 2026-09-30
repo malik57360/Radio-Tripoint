@@ -48,9 +48,15 @@ export const site = {
 
   /** Mentions légales : à compléter par l'éditeur. */
   legal: {
-    formeJuridique: null as string | null,
-    siret: null as string | null,
-    directeurPublication: null as string | null,
+    // Registre national des entreprises (recherche-entreprises.api.gouv.fr),
+    // SIRET fourni et confirmé par Radio Tripoint.
+    raisonSociale: "Riviera Lifestyle Group" as string | null,
+    formeJuridique: "SAS (société par actions simplifiée)" as string | null,
+    siegeSocial: "50 avenue des Champs-Élysées, 75008 Paris" as string | null,
+    siret: "102 029 873 00019" as string | null,
+    // Pour une société, la loi (art. 93-2, loi du 29 juillet 1982) désigne
+    // son représentant légal : ici le président de la SAS au registre.
+    directeurPublication: "Georges Emmanuel Mathas, président" as string | null,
     hebergeur: {
       nom: "Vercel Inc.",
       adresse: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",

@@ -31,9 +31,11 @@ export default function MentionsLegales() {
             E-mail : <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>
           </p>
           <ul>
+            {l.raisonSociale && <li>Société éditrice : {l.raisonSociale}</li>}
             <li>
               Forme juridique : <ACompleter valeur={l.formeJuridique} />
             </li>
+            {l.siegeSocial && <li>Siège social : {l.siegeSocial}</li>}
             <li>
               SIRET : <ACompleter valeur={l.siret} />
             </li>
