@@ -13,6 +13,7 @@ export function EventCard({
   evenement: Evenement
   titreNiveau?: "h2" | "h3"
 }) {
+  const quand = e.horaires ?? (e.journee ? null : heure(e.debut))
   return (
     <article className="carte group border-trait grid grid-cols-[4.5rem_1fr] gap-5 border-t pt-5">
       <p className="flex flex-col items-start leading-none">
@@ -35,7 +36,12 @@ export function EventCard({
         </Titre>
         <p className="text-encre-2 mt-1.5 line-clamp-2 text-[0.95rem]">{e.description}</p>
         <p className="text-encre-3 mt-2 text-[0.8rem] font-semibold">
-          <time dateTime={e.debut}>{heure(e.debut)}</time> · {e.lieu}
+          {quand && (
+            <>
+              <time dateTime={e.debut}>{quand}</time> ·{" "}
+            </>
+          )}
+          {e.lieu}
         </p>
       </div>
     </article>

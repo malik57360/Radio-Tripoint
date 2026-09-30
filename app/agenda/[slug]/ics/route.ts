@@ -18,6 +18,15 @@ export async function GET(_: Request, ctx: RouteContext<"/agenda/[slug]/ics">) {
   const e = await evenementParSlug(slug)
   if (!e) return new Response("Introuvable", { status: 404 })
   const fin = e.fin ?? new Date(new Date(e.debut).getTime() + 2 * 3600_000).toISOString()
+  // Sans heure publiée : événement « journée entière » (fin exclusive, lendemain).
+  const lendemain = (d: string) =>
+    new Date(Date.parse(d.slice(0, 10)) + 86_400_000).toISOString().slice(0, 10).replace(/-/g, "")
+  const dates = e.journee
+    ? [
+        `DTSTART;VALUE=DATE:${e.debut.slice(0, 10).replace(/-/g, "")}`,
+        `DTEND;VALUE=DATE:${lendemain(e.fin ?? e.debut)}`,
+      ]
+    : [`DTSTART:${ics(e.debut)}`, `DTEND:${ics(fin)}`]
   const corps = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -25,8 +34,7 @@ export async function GET(_: Request, ctx: RouteContext<"/agenda/[slug]/ics">) {
     "BEGIN:VEVENT",
     `UID:${e.slug}@${new URL(site.url).host}`,
     `DTSTAMP:${ics(new Date().toISOString())}`,
-    `DTSTART:${ics(e.debut)}`,
-    `DTEND:${ics(fin)}`,
+    ...dates,
     `SUMMARY:${echapper(e.titre)}`,
     `DESCRIPTION:${echapper(e.description)}`,
     `LOCATION:${echapper([e.lieu, e.adresse, e.ville].filter(Boolean).join(", "))}`,

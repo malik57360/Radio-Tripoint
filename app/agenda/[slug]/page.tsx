@@ -64,7 +64,9 @@ export default async function PageEvenement(props: PageProps<"/agenda/[slug]">) 
               visuel={e.visuel}
               repli={{ mot: e.ville, surmot: "Agenda", teinte: "accent", taille: "grand" }}
               ratio="aspect-[16/9]"
-              sizes="(min-width: 1024px) 55vw, 100vw"
+              ratioNaturel
+              className="max-w-[36rem]"
+              sizes="(min-width: 1024px) 36rem, 100vw"
               preload
             />
           </div>
@@ -78,13 +80,19 @@ export default async function PageEvenement(props: PageProps<"/agenda/[slug]">) 
             <p className="surtitre text-encre-3">{jourSemaine(e.debut)}</p>
             <p className="titre-affiche mt-1 text-[2.4rem]">{dateLongue(e.debut)}</p>
             <ul className="mt-6 space-y-4 text-[0.95rem]">
-              <li className="flex gap-3">
-                <Clock className="text-encre-3 mt-0.5 size-5 flex-none" aria-hidden />
-                <span>
-                  {heure(e.debut)}
-                  {e.fin && <> – {heure(e.fin)}</>}
-                </span>
-              </li>
+              {(e.horaires || !e.journee) && (
+                <li className="flex gap-3">
+                  <Clock className="text-encre-3 mt-0.5 size-5 flex-none" aria-hidden />
+                  <span>
+                    {e.horaires ?? (
+                      <>
+                        {heure(e.debut)}
+                        {e.fin && <> – {heure(e.fin)}</>}
+                      </>
+                    )}
+                  </span>
+                </li>
+              )}
               <li className="flex gap-3">
                 <MapPin className="text-encre-3 mt-0.5 size-5 flex-none" aria-hidden />
                 <span>{lieu}</span>
