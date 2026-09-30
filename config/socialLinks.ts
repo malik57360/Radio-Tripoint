@@ -10,7 +10,7 @@
 export type ReseauSocial = "facebook" | "instagram" | "telegram" | "tiktok" | "youtube" | "x"
 
 export const socialLinks: Record<ReseauSocial, string> = {
-  facebook: "",
+  facebook: "https://www.facebook.com/RadioTripoint",
   instagram: "https://www.instagram.com/radio_tripoint/",
   telegram: "",
   tiktok: "https://www.tiktok.com/@radiotripoint",
