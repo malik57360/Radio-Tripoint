@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { envoyerCourriel } from "@/lib/formulaires/courriel"
 import { autoriser } from "@/lib/formulaires/limiteur"
 import { choisir, estLangue, type Langue, type Trad } from "@/lib/i18n/langues"
 import {
@@ -11,7 +12,8 @@ import {
 
 /**
  * Réception des formulaires. Chaîne : anti-robot (champ piège + délai) →
- * limite de débit → validation/nettoyage Zod → pièce jointe → webhook.
+ * limite de débit → validation/nettoyage Zod → pièce jointe → e-mail
+ * (Resend) ou webhook.
  * Aucune donnée personnelle n'est écrite dans les journaux.
  */
 const DELAI_MIN_MS = 2500
@@ -85,9 +87,9 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
             statut: "invalide",
             champs: {
               piece_jointe: dire({
-                fr: "Fichier trop lourd (5 Mo maximum).",
-                de: "Datei zu groß (höchstens 5 MB).",
-                lb: "Fichier ze grouss (maximal 5 MB).",
+                fr: "Fichier trop lourd (4 Mo maximum).",
+                de: "Datei zu groß (höchstens 4 MB).",
+                lb: "Fichier ze grouss (maximal 4 MB).",
               }),
             },
           },
@@ -107,29 +109,42 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
     }
   }
 
-  // 5. Transmission. Sans webhook configuré, on le dit : le client propose l'e-mail.
+  // 5. Transmission : e-mail via Resend en priorité, sinon webhook. Sans
+  // l'un ni l'autre, on le dit : le client propose l'e-mail.
+  const cleResend = process.env.RESEND_API_KEY
   const webhook = process.env.FORM_WEBHOOK_URL
-  if (!webhook) return json({ statut: "non-configure" }, 503)
-
-  const envoi = new FormData()
-  envoi.set("formulaire", t)
-  envoi.set("objet", objetsMail[t])
-  envoi.set("recu_le", new Date().toISOString())
-  envoi.set("langue", l)
-  for (const [k, v] of Object.entries(resultat.data)) if (v !== undefined) envoi.set(k, String(v))
-  if (fichier)
-    envoi.set("piece_jointe", fichier, fichier.name.replace(/[^\w.\- ]+/g, "_").slice(0, 120))
+  if (!cleResend && !webhook) return json({ statut: "non-configure" }, 503)
 
   try {
-    const r = await fetch(webhook, {
-      method: "POST",
-      body: envoi,
-      headers: process.env.FORM_WEBHOOK_TOKEN
-        ? { "X-Webhook-Token": process.env.FORM_WEBHOOK_TOKEN }
-        : undefined,
-      signal: AbortSignal.timeout(10_000),
-    })
-    if (!r.ok) throw new Error(`webhook ${r.status}`)
+    if (cleResend) {
+      await envoyerCourriel({
+        cle: cleResend,
+        type: t,
+        objet: objetsMail[t],
+        langue: l,
+        champs: resultat.data,
+        fichier,
+      })
+    } else if (webhook) {
+      const envoi = new FormData()
+      envoi.set("formulaire", t)
+      envoi.set("objet", objetsMail[t])
+      envoi.set("recu_le", new Date().toISOString())
+      envoi.set("langue", l)
+      for (const [k, v] of Object.entries(resultat.data))
+        if (v !== undefined) envoi.set(k, String(v))
+      if (fichier)
+        envoi.set("piece_jointe", fichier, fichier.name.replace(/[^\w.\- ]+/g, "_").slice(0, 120))
+      const r = await fetch(webhook, {
+        method: "POST",
+        body: envoi,
+        headers: process.env.FORM_WEBHOOK_TOKEN
+          ? { "X-Webhook-Token": process.env.FORM_WEBHOOK_TOKEN }
+          : undefined,
+        signal: AbortSignal.timeout(10_000),
+      })
+      if (!r.ok) throw new Error(`webhook ${r.status}`)
+    }
   } catch (e) {
     // Journal minimal, sans aucune donnée du formulaire.
     console.error(`[formulaires] échec de transmission (${t}) :`, (e as Error).message)

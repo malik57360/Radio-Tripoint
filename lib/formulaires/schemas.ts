@@ -192,12 +192,12 @@ export type TypeFormulaire = keyof typeof schemas
 export const typesFormulaire = Object.keys(schemas) as TypeFormulaire[]
 
 export const PIECE_JOINTE = {
-  tailleMax: 5 * 1024 * 1024,
+  tailleMax: 4 * 1024 * 1024, // Vercel refuse les requêtes de plus de 4,5 Mo
   types: ["image/jpeg", "image/png", "image/webp", "application/pdf"],
   libelle: {
-    fr: "JPG, PNG, WebP ou PDF · 5 Mo maximum",
-    de: "JPG, PNG, WebP oder PDF · höchstens 5 MB",
-    lb: "JPG, PNG, WebP oder PDF · maximal 5 MB",
+    fr: "JPG, PNG, WebP ou PDF · 4 Mo maximum",
+    de: "JPG, PNG, WebP oder PDF · höchstens 4 MB",
+    lb: "JPG, PNG, WebP oder PDF · maximal 4 MB",
   } as Trad,
 }
 

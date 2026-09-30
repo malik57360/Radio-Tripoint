@@ -123,6 +123,13 @@ export default async function Confidentialite() {
               lb: "Dës Donnéeë déngen nëmmen dozou, op Är Ufro z'äntweren, déi iwwermëttelt Informatioun ze verschaffen oder Iech den Newsletter ze schécken. D'Veraarbechtung baséiert op Ärer Zoustëmmung, déi iwwer d'Kästchen vun all Formulaire agefaange gëtt. Si ginn net verkaf, net weiderginn an ni ouni Är Zoustëmmung publizéiert.",
             })}
           </p>
+          <p>
+            {t({
+              fr: "Le contenu des formulaires, pièce jointe comprise, est acheminé jusqu'à notre boîte e-mail par le service d'envoi Resend (Resend, Inc., États-Unis), qui agit comme simple transporteur et n'en fait aucun autre usage.",
+              de: "Der Inhalt der Formulare, einschließlich Anhang, wird über den Versanddienst Resend (Resend, Inc., USA) in unser E-Mail-Postfach übermittelt. Resend handelt dabei nur als Übermittler und nutzt die Daten zu keinem anderen Zweck.",
+              lb: "Den Inhalt vun de Formulairen, mat Unhank, gëtt iwwer de Versanddéngscht Resend (Resend, Inc., USA) an eis E-Mail-Këscht geschéckt. Resend ass dobäi just Transporteur a benotzt d'Donnéeë fir näischt anescht.",
+            })}
+          </p>
           <h2>
             {t({
               fr: "Durée de conservation",
