@@ -6,7 +6,6 @@ import { Header } from "@/components/layout/Header"
 import { scriptTheme } from "@/components/layout/ThemeToggle"
 import { DirectAuto } from "@/components/radio/DirectAuto"
 import { LecteurBarre } from "@/components/radio/LecteurBarre"
-import { WidgetDirect } from "@/components/radio/WidgetDirect"
 import { Consentement } from "@/components/rgpd/Consentement"
 import { JsonLd } from "@/components/ui/JsonLd"
 import { site } from "@/config/site"
@@ -102,7 +101,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Footer />
         <LecteurBarre grille={grille} />
         <DirectAuto />
-        <WidgetDirect />
         <Consentement />
         <JsonLd data={jsonLdOrganisation()} />
       </body>

@@ -49,7 +49,7 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
     ? programmeEnCours(grille, new Date(maintenant), radioConfig.timeZone)
     : null
 
-  const joue = l.statut === "playing" || (l.source === "direct" && l.widgetOuvert)
+  const joue = l.statut === "playing"
   const charge = l.statut === "loading"
   const direct = l.source === "direct"
   const ligne1 = direct
@@ -92,15 +92,7 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
           type="button"
           onClick={basculer}
           data-controle-lecteur
-          aria-label={
-            direct && l.widgetOuvert
-              ? "Fermer le lecteur du direct"
-              : joue || charge
-                ? "Pause"
-                : direct
-                  ? "Écouter le direct"
-                  : "Lire l'épisode"
-          }
+          aria-label={joue || charge ? "Pause" : direct ? "Écouter le direct" : "Lire l'épisode"}
           className={cn(
             "grid size-11 flex-none place-items-center rounded-full transition-colors",
             direct
