@@ -7,7 +7,8 @@ export type Jour = "lundi" | "mardi" | "mercredi" | "jeudi" | "vendredi" | "same
 export interface Creneau {
   jour: Jour
   debut: string
-  fin: string
+  /** Heure de fin, si la radio la publie. Sans elle, le créneau n'affiche que le début. */
+  fin?: string
 }
 
 export interface Emission extends Demo {

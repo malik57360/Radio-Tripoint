@@ -35,7 +35,8 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
         </h2>
         {actuel && (
           <span className="surtitre text-nuit-encre-2 tabular-nums">
-            {libelleHeure(actuel.creneau.debut)} — {libelleHeure(actuel.creneau.fin)}
+            {libelleHeure(actuel.creneau.debut)}
+            {actuel.creneau.fin && <> — {libelleHeure(actuel.creneau.fin)}</>}
           </span>
         )}
       </div>
@@ -73,7 +74,9 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
         {suivant && suivant.emission.slug !== actuel?.emission.slug ? (
           <p className="text-nuit-encre-2 text-sm">
             Ensuite · <span className="text-nuit-encre font-semibold">{suivant.emission.nom}</span>{" "}
-            <span className="tabular-nums">à {libelleHeure(suivant.creneau.debut)}</span>
+            <span className="tabular-nums">
+              {suivant.creneau.jour} à {libelleHeure(suivant.creneau.debut)}
+            </span>
           </p>
         ) : (
           <Link href="/emissions" className="lien-fleche text-nuit-encre-2 hover:text-nuit-encre">

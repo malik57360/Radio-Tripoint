@@ -3,17 +3,18 @@ import type { Emission } from "@/types/show"
 /**
  * Émissions publiées sur le site actuel (« Nos émissions »).
  *
- * Règle : aucun horaire, animateur ou description n'est inventé. Les
- * champs `creneaux: []` et `presentation: null` s'affichent « à venir » ;
- * les compléter ici suffit à alimenter la carte, la page émission, la
- * section « En ce moment » et les données structurées.
+ * Présentations et horaires repris tels quels de l'ancienne page « Nos
+ * émissions ». Elle ne donne qu'une heure de début, jamais de fin : les
+ * créneaux n'ont donc pas de `fin`, et aucune durée n'est inventée. Une
+ * émission sans horaire publié garde `creneaux: []`.
  */
 export const emissions: Emission[] = [
   {
     slug: "generation-z",
     nom: "Génération Z",
     accroche: "Le rendez-vous des 15-17 ans.",
-    presentation: null,
+    presentation:
+      "Génération Z est une émission dynamique et engagée dédiée aux jeunes de 15 à 17 ans. Elle donne la parole à une génération connectée, consciente et en pleine construction, en abordant les sujets qui font leur quotidien.",
     thematique: "Jeunesse",
     creneaux: [],
     teinte: "accent",
@@ -21,8 +22,9 @@ export const emissions: Emission[] = [
   {
     slug: "on-vous-donne-la-parole",
     nom: "On Vous Donne la Parole",
-    accroche: null,
-    presentation: null,
+    accroche: "Aller à la rencontre des gens et leur donner la parole.",
+    presentation:
+      "À vous la parole est une émission de terrain tournée au cœur du pays des trois frontières (France, Luxembourg, Allemagne). Le principe est simple : aller à la rencontre des gens et leur donner la parole, librement, sur les sujets qui les concernent.",
     thematique: "Parole aux auditeurs",
     creneaux: [],
     teinte: "encre",
@@ -30,38 +32,43 @@ export const emissions: Emission[] = [
   {
     slug: "bien-etre-therapies-alternatives",
     nom: "Bien-être & Thérapies Alternatives",
-    accroche: null,
-    presentation: null,
+    accroche:
+      "Des approches naturelles, complémentaires et préventives pour améliorer la qualité de vie.",
+    presentation:
+      "Chaque semaine, nous explorons des approches naturelles, complémentaires et préventives pour améliorer la qualité de vie.",
     thematique: "Bien-être",
-    creneaux: [],
+    creneaux: [{ jour: "dimanche", debut: "14:00" }],
     teinte: "sable",
   },
   {
     slug: "histoire-memoire-regionale",
     nom: "Histoire & Mémoire Régionale",
-    accroche: null,
-    presentation: null,
+    accroche: "Les histoires, les lieux et les personnages qui ont marqué notre région.",
+    presentation:
+      "Chaque semaine, redécouvrez les histoires, les lieux et les personnages qui ont marqué notre région. Un moment simple et authentique pour faire vivre la mémoire locale à l'antenne.",
     thematique: "Histoire",
     categorie: "art-culture",
-    creneaux: [],
+    creneaux: [{ jour: "mercredi", debut: "20:00" }],
     teinte: "nuit",
   },
   {
     slug: "talents-du-coin",
     nom: "Talents du coin !",
-    accroche: null,
-    presentation: null,
+    accroche: "À la rencontre des talents d'ici et d'ailleurs.",
+    presentation:
+      "Nous partons à la rencontre des talents d'ici et d'ailleurs. Musique, art, artisanat ou performance : chaque épisode est une immersion dans un univers unique.",
     thematique: "Talents locaux",
-    creneaux: [],
+    creneaux: [{ jour: "dimanche", debut: "16:00" }],
     teinte: "accent",
   },
   {
     slug: "ole-ole",
     nom: "Olé Olé",
-    accroche: null,
-    presentation: null,
+    accroche: "L'émission sans filtre de Radio Tripoint.",
+    presentation:
+      "Cash et Trash est l'émission sans filtre de Radio Tripoint. Chaque dimanche à 22h, place à des discussions crues, des sujets tabous, du divertissement adulte et une ambiance caliente assumée. Ici, on parle vrai, on rigole fort… et rien n'est interdit (sauf aux mineurs).",
     thematique: "À l'antenne",
-    creneaux: [],
+    creneaux: [{ jour: "dimanche", debut: "22:00" }],
     teinte: "sable",
   },
 ]

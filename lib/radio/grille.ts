@@ -39,6 +39,8 @@ export function programmeEnCours(
   const { jour, minutes } = horloge(date, timeZone)
   for (const e of emissions) {
     for (const c of e.creneaux) {
+      // Sans heure de fin publiée, on ne peut pas affirmer qu'une émission est à l'antenne.
+      if (!c.fin) continue
       if (c.jour === jour && minutes >= enMinutes(c.debut) && minutes < enMinutes(c.fin)) {
         return { emission: { slug: e.slug, nom: e.nom, thematique: e.thematique }, creneau: c }
       }
@@ -79,7 +81,7 @@ export function libelleCreneaux(creneaux: Creneau[]): string[] {
   // Regroupe les jours qui partagent le même horaire.
   const parHoraire = new Map<string, Jour[]>()
   for (const c of creneaux) {
-    const k = `${c.debut}–${c.fin}`
+    const k = `${c.debut}–${c.fin ?? ""}`
     parHoraire.set(k, [...(parHoraire.get(k) ?? []), c.jour])
   }
   return [...parHoraire.entries()].map(([k, jours]) => {
@@ -89,6 +91,6 @@ export function libelleCreneaux(creneaux: Creneau[]): string[] {
       tries.length === 7
         ? "Tous les jours"
         : tries.map((x) => x[0].toUpperCase() + x.slice(1)).join(", ")
-    return `${j} · ${libelleHeure(d)} – ${libelleHeure(f)}`
+    return f ? `${j} · ${libelleHeure(d)} – ${libelleHeure(f)}` : `${j} · ${libelleHeure(d)}`
   })
 }
