@@ -15,7 +15,9 @@ export const themesPodcast: { valeur: ThemePodcast | "toutes"; libelle: string }
 
 function tous(): Episode[] {
   const liste = modeDemo ? [...episodesReels, ...episodesDemo] : episodesReels
-  return [...liste].sort((a, b) => b.publieLe.localeCompare(a.publieLe))
+  return [...liste].sort(
+    (a, b) => (b.publieLe ?? "").localeCompare(a.publieLe ?? "") || (b.ordre ?? 0) - (a.ordre ?? 0),
+  )
 }
 
 export async function listerEpisodes(

@@ -21,8 +21,9 @@ export async function generateMetadata(props: PageProps<"/podcasts/[slug]">) {
   const { slug } = await props.params
   const ep = await episodeParSlug(slug)
   if (!ep) return { title: "Épisode introuvable" }
+  const emission = ep.emission ? await emissionParSlug(ep.emission) : null
   return metadataPage({
-    titre: ep.titre,
+    titre: emission ? `${ep.titre} — ${emission.nom}` : ep.titre,
     description: ep.description,
     chemin: `/podcasts/${ep.slug}`,
     noindex: ep.demo,
@@ -78,7 +79,12 @@ export default async function PageEpisode(props: PageProps<"/podcasts/[slug]">) 
             {ep.titre}
           </h1>
           <p className="text-encre-3 mt-4 text-sm">
-            <time dateTime={ep.publieLe}>{dateLongue(ep.publieLe)}</time> · {duree(ep.duree)}
+            {ep.publieLe && (
+              <>
+                <time dateTime={ep.publieLe}>{dateLongue(ep.publieLe)}</time> ·{" "}
+              </>
+            )}
+            {duree(ep.duree)}
           </p>
           <div className="mt-8">
             <BoutonEpisode

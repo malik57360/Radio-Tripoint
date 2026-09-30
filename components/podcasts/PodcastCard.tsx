@@ -37,7 +37,11 @@ export function PodcastCard({
           </Link>
         </Titre>
         <p className="text-encre-3 mt-1 text-[0.8rem]">
-          <time dateTime={episode.publieLe}>{dateLongue(episode.publieLe)}</time> ·{" "}
+          {episode.publieLe && (
+            <>
+              <time dateTime={episode.publieLe}>{dateLongue(episode.publieLe)}</time> ·{" "}
+            </>
+          )}
           {duree(episode.duree)}
         </p>
       </div>

@@ -49,7 +49,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     ...episodes
       .filter((e) => !e.demo)
-      .map((e) => ({ url: u(`/podcasts/${e.slug}`), lastModified: e.publieLe, priority: 0.6 })),
+      .map((e) => ({
+        url: u(`/podcasts/${e.slug}`),
+        ...(e.publieLe ? { lastModified: e.publieLe } : {}),
+        priority: 0.6,
+      })),
     ...evenements
       .filter((e) => !e.demo)
       .map((e) => ({ url: u(`/agenda/${e.slug}`), lastModified: e.debut, priority: 0.6 })),

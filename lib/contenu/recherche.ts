@@ -55,7 +55,7 @@ export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
       type: "podcast" as const,
       titre: p.titre,
       href: `/podcasts/${p.slug}`,
-      contexte: `Podcast · ${dateLongue(p.publieLe)}`,
+      contexte: p.publieLe ? `Podcast · ${dateLongue(p.publieLe)}` : "Podcast",
       extrait: p.description,
       titreN: normaliser(p.titre),
       corpsN: normaliser(p.description),

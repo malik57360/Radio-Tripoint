@@ -135,7 +135,7 @@ export function jsonLdEpisode(ep: Episode, emission?: Emission | null) {
     "@type": "PodcastEpisode",
     name: ep.titre,
     description: ep.description,
-    datePublished: ep.publieLe,
+    ...(ep.publieLe ? { datePublished: ep.publieLe } : {}),
     timeRequired: dureeIso(ep.duree),
     url: urlAbsolue(`/podcasts/${ep.slug}`),
     associatedMedia: {
