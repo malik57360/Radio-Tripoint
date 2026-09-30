@@ -18,7 +18,10 @@ function enLigne(texte: string, cle: string): ReactNode[] {
     if (m[1]) {
       morceaux.push(<strong key={k}>{m[1]}</strong>)
     } else {
-      const [, , libelle, url] = m
+      const libelle = m[2]
+      // Un lien absolu vers le site lui-même redevient un lien interne.
+      const url =
+        m[3].replace(/^https?:\/\/(www\.)?radio-tripoint(-officiel\.fr|\.vercel\.app)/i, "") || "/"
       if (url.startsWith("/") && !url.startsWith("//")) {
         morceaux.push(
           <Link key={k} href={url} className="font-semibold underline underline-offset-2">

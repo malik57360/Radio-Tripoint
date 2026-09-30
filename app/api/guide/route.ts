@@ -48,9 +48,10 @@ type Message = { role: "user" | "assistant"; content: string }
 type EvenementSSE = {
   type?: string
   index?: number
-  content_block?: { type?: string }
+  content_block?: Record<string, unknown> & { type?: string }
   delta?: {
     type?: string
+    stop_reason?: string
     text?: string
     partial_json?: string
     citation?: { url?: string; title?: string }
@@ -100,104 +101,134 @@ export async function POST(request: Request) {
   // agenda, langue) la suit.
   const { fixe, variable } = await consignesGuide(l)
 
-  const amont = await fetch(cible.url, {
-    method: "POST",
-    headers: {
-      ...cible.entetes,
-      "Content-Type": "application/json",
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: cible.modele,
-      max_tokens: 1200,
-      stream: true,
-      system: [
-        { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
-        { type: "text", text: variable },
-      ],
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-          max_uses: 3,
-          user_location: {
-            type: "approximate",
-            city: "Sierck-les-Bains",
-            region: "Grand Est",
-            country: "FR",
-            timezone: "Europe/Paris",
+  const appeler = (conversation: unknown[]) =>
+    fetch(cible.url, {
+      method: "POST",
+      headers: {
+        ...cible.entetes,
+        "Content-Type": "application/json",
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
+        model: cible.modele,
+        max_tokens: 1500,
+        stream: true,
+        system: [
+          { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
+          { type: "text", text: variable },
+        ],
+        tools: [
+          {
+            type: "web_search_20250305",
+            name: "web_search",
+            max_uses: 4,
+            user_location: {
+              type: "approximate",
+              city: "Sierck-les-Bains",
+              region: "Grand Est",
+              country: "FR",
+              timezone: "Europe/Paris",
+            },
           },
-        },
-      ],
-      messages,
-    }),
-    signal: AbortSignal.timeout(55_000),
-  }).catch(() => null)
+        ],
+        messages: conversation,
+      }),
+      signal: AbortSignal.timeout(55_000),
+    }).catch(() => null)
 
-  if (!amont || !amont.ok || !amont.body) {
+  const premier = await appeler(messages)
+  if (!premier || !premier.ok || !premier.body) {
     // Message d'erreur de la passerelle seulement (jamais la conversation).
-    const detail = amont ? (await amont.text().catch(() => "")).slice(0, 300) : ""
-    console.error(`[guide] passerelle indisponible (${amont?.status ?? "réseau"}) ${detail}`)
+    const detail = premier ? (await premier.text().catch(() => "")).slice(0, 300) : ""
+    console.error(`[guide] passerelle indisponible (${premier?.status ?? "réseau"}) ${detail}`)
     return json({ erreur: "indisponible" }, 502)
   }
 
   const encodeur = new TextEncoder()
   const decodeur = new TextDecoder()
-  const lecteur = amont.body.getReader()
   const vues = new Set<string>()
+  let lecteurCourant: ReadableStreamDefaultReader<Uint8Array> | null = null
 
   const flux = new ReadableStream<Uint8Array>({
     async start(ctrl) {
       const envoyer = (o: object) => ctrl.enqueue(encodeur.encode(JSON.stringify(o) + "\n"))
-      let tampon = ""
-      // Entrée JSON de l'outil de recherche, reçue par morceaux.
-      const entreesOutil = new Map<number, string>()
+      let conversation: unknown[] = messages
+      let reponse: Response | null = premier
       try {
-        for (;;) {
-          const { done, value } = await lecteur.read()
-          if (done) break
-          tampon += decodeur.decode(value, { stream: true })
-          let i: number
-          while ((i = tampon.indexOf("\n\n")) >= 0) {
-            const bloc = tampon.slice(0, i)
-            tampon = tampon.slice(i + 2)
-            const ligne = bloc.split("\n").find((x) => x.startsWith("data:"))
-            if (!ligne) continue
-            let ev: EvenementSSE
-            try {
-              ev = JSON.parse(ligne.slice(5))
-            } catch {
-              continue
-            }
-            if (ev.type === "content_block_start" && ev.content_block?.type === "server_tool_use") {
-              entreesOutil.set(ev.index ?? -1, "")
-            } else if (ev.type === "content_block_delta") {
-              const d = ev.delta ?? {}
-              if (d.type === "text_delta" && d.text) envoyer({ t: "texte", v: d.text })
-              else if (d.type === "input_json_delta" && entreesOutil.has(ev.index ?? -1))
-                entreesOutil.set(
-                  ev.index ?? -1,
-                  (entreesOutil.get(ev.index ?? -1) ?? "") + (d.partial_json ?? ""),
-                )
-              else if (d.type === "citations_delta" && d.citation?.url) {
-                const { url, title } = d.citation
-                if (!vues.has(url)) {
-                  vues.add(url)
-                  envoyer({ t: "source", url, titre: String(title ?? url).slice(0, 140) })
-                }
-              }
-            } else if (ev.type === "content_block_stop" && entreesOutil.has(ev.index ?? -1)) {
+        // La recherche web peut « mettre en pause » le tour (stop_reason
+        // pause_turn) : on renvoie alors le début de réponse pour qu'il
+        // reprenne, deux fois au plus.
+        for (let tour = 0; tour < 3 && reponse?.body; tour++) {
+          const lecteur = reponse.body.getReader()
+          lecteurCourant = lecteur
+          // Blocs de la réponse, reconstitués pour une éventuelle reprise.
+          const blocs: Record<string, unknown>[] = []
+          const entreesOutil = new Map<number, string>()
+          let arret = ""
+          let tampon = ""
+          for (;;) {
+            const { done, value } = await lecteur.read()
+            if (done) break
+            tampon += decodeur.decode(value, { stream: true })
+            let i: number
+            while ((i = tampon.indexOf("\n\n")) >= 0) {
+              const brut = tampon.slice(0, i)
+              tampon = tampon.slice(i + 2)
+              const ligne = brut.split("\n").find((x) => x.startsWith("data:"))
+              if (!ligne) continue
+              let ev: EvenementSSE
               try {
-                const q = JSON.parse(entreesOutil.get(ev.index ?? -1) || "{}").query
-                if (q) envoyer({ t: "recherche", v: String(q).slice(0, 120) })
+                ev = JSON.parse(ligne.slice(5))
               } catch {
-                /* entrée incomplète : on n'affiche rien */
+                continue
               }
-              entreesOutil.delete(ev.index ?? -1)
-            } else if (ev.type === "error") {
-              console.error("[guide] erreur de flux :", ev.error?.type)
-              envoyer({ t: "erreur", v: "flux" })
+              const n = ev.index ?? -1
+              if (ev.type === "content_block_start" && ev.content_block) {
+                blocs[n] = structuredClone(ev.content_block)
+                if (ev.content_block.type === "server_tool_use") entreesOutil.set(n, "")
+              } else if (ev.type === "content_block_delta") {
+                const d = ev.delta ?? {}
+                const b = blocs[n]
+                if (d.type === "text_delta" && d.text) {
+                  if (b) b.text = String(b.text ?? "") + d.text
+                  envoyer({ t: "texte", v: d.text })
+                } else if (d.type === "input_json_delta" && entreesOutil.has(n)) {
+                  entreesOutil.set(n, (entreesOutil.get(n) ?? "") + (d.partial_json ?? ""))
+                } else if (d.type === "citations_delta" && d.citation) {
+                  if (b) b.citations = [...((b.citations as unknown[]) ?? []), d.citation]
+                  const { url, title } = d.citation
+                  if (url && !vues.has(url)) {
+                    vues.add(url)
+                    envoyer({ t: "source", url, titre: String(title ?? url).slice(0, 140) })
+                  }
+                }
+              } else if (ev.type === "content_block_stop" && entreesOutil.has(n)) {
+                try {
+                  const entree = JSON.parse(entreesOutil.get(n) || "{}")
+                  if (blocs[n]) blocs[n].input = entree
+                  if (entree.query)
+                    envoyer({ t: "recherche", v: String(entree.query).slice(0, 120) })
+                } catch {
+                  /* entrée incomplète : on n'affiche rien */
+                }
+                entreesOutil.delete(n)
+              } else if (ev.type === "message_delta") {
+                arret = ev.delta?.stop_reason ?? arret
+              } else if (ev.type === "error") {
+                console.error("[guide] erreur de flux :", ev.error?.type)
+                envoyer({ t: "erreur", v: "flux" })
+              }
             }
+          }
+          if (arret !== "pause_turn") {
+            if (arret && arret !== "end_turn") console.error(`[guide] arrêt : ${arret}`)
+            break
+          }
+          conversation = [...conversation, { role: "assistant", content: blocs.filter(Boolean) }]
+          reponse = await appeler(conversation)
+          if (!reponse?.ok) {
+            console.error(`[guide] reprise impossible (${reponse?.status ?? "réseau"})`)
+            break
           }
         }
         envoyer({ t: "fin" })
@@ -208,7 +239,7 @@ export async function POST(request: Request) {
       }
     },
     cancel() {
-      lecteur.cancel().catch(() => {})
+      lecteurCourant?.cancel().catch(() => {})
     },
   })
 
