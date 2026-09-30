@@ -42,6 +42,8 @@ export interface EtatLecteur {
   attenteGeste: boolean
   /** Mode sans flux brut : le widget Radioking est affiché. */
   widgetOuvert: boolean
+  /** Le flux brut n'a pas pu être lu : le direct passe par le widget. */
+  fluxEnPanne: boolean
 }
 
 const CLE_VOLUME = "rt:volume"
@@ -58,6 +60,7 @@ const ETAT_INITIAL: EtatLecteur = {
   titreEnCours: null,
   attenteGeste: false,
   widgetOuvert: false,
+  fluxEnPanne: false,
 }
 
 let etat: EtatLecteur = ETAT_INITIAL
@@ -115,6 +118,10 @@ function element(): HTMLAudioElement {
   audio.addEventListener("error", () => {
     // Un src vidé volontairement (arrêt du direct) déclenche aussi `error`.
     if (!audio?.getAttribute("src")) return
+    if (etat.source === "direct" && radioConfig.widgetUrl && navigator.onLine !== false) {
+      basculerSurWidget(!tentativeAuto && !etat.attenteGeste)
+      return
+    }
     maj({ statut: "error", erreur: navigator.onLine === false ? "reseau" : "lecture" })
   })
   return audio
@@ -145,10 +152,14 @@ function metadonneesSysteme() {
   }
 }
 
+/** Vrai pendant une tentative de démarrage automatique (aucun panneau imposé). */
+let tentativeAuto = false
+
 async function demarrer(
   src: string,
   { silencieux = false } = {},
 ): Promise<"ok" | "bloque" | "erreur" | "annule"> {
+  tentativeAuto = silencieux
   const a = element()
   maj({ statut: "loading", erreur: null })
   a.src = src
@@ -167,6 +178,16 @@ async function demarrer(
       a.load()
       maj({ statut: "idle", erreur: null, attenteGeste: true })
       return "bloque"
+    }
+    if (
+      nom !== "NotAllowedError" &&
+      etat.source === "direct" &&
+      radioConfig.widgetUrl &&
+      navigator.onLine !== false
+    ) {
+      // Flux brut illisible : le widget officiel prend le relais.
+      basculerSurWidget(!silencieux)
+      return "erreur"
     }
     maj({
       statut: "error",
@@ -205,7 +226,7 @@ function noterPauseVolontaire(oui: boolean) {
  * ou si le visiteur a mis en pause pendant sa visite.
  */
 export async function demarrerDirectAuto(): Promise<"ok" | "bloque" | "rien"> {
-  if (!radioConfig.streamUrl || pauseVolontaire()) return "rien"
+  if (!radioConfig.streamUrl || etat.fluxEnPanne || pauseVolontaire()) return "rien"
   if (etat.statut === "playing" || etat.statut === "loading" || etat.source === "episode")
     return "rien"
   maj({ source: "direct", episode: null, position: 0, dureeMedia: 0 })
@@ -215,7 +236,27 @@ export async function demarrerDirectAuto(): Promise<"ok" | "bloque" | "rien"> {
 }
 
 /** Sans flux brut, le direct passe par le widget officiel Radioking. */
-export const modeWidget = !radioConfig.streamUrl && Boolean(radioConfig.widgetUrl)
+export function modeWidget(): boolean {
+  return Boolean(radioConfig.widgetUrl) && (!radioConfig.streamUrl || etat.fluxEnPanne)
+}
+
+/**
+ * Le flux brut ne répond pas : on bascule sur le widget officiel, sans
+ * message d'erreur. `ouvrir` : le visiteur venait de demander le direct.
+ */
+function basculerSurWidget(ouvrir: boolean) {
+  if (audio) {
+    audio.removeAttribute("src")
+    audio.load()
+  }
+  maj({
+    fluxEnPanne: true,
+    statut: "idle",
+    erreur: null,
+    attenteGeste: false,
+    widgetOuvert: ouvrir,
+  })
+}
 
 export function fermerWidget() {
   maj({ widgetOuvert: false, statut: "idle" })
@@ -223,7 +264,7 @@ export function fermerWidget() {
 
 export async function ecouterDirect() {
   noterPauseVolontaire(false)
-  if (modeWidget) {
+  if (modeWidget()) {
     // Couper un éventuel épisode : un seul son à la fois.
     if (audio) {
       audio.pause()
@@ -285,14 +326,14 @@ export async function reprendre() {
 
 /** Bouton lecture/pause générique : agit sur la source courante. */
 export function basculer() {
-  if (modeWidget && etat.source === "direct") return basculerDirect()
+  if (modeWidget() && etat.source === "direct") return basculerDirect()
   if (etat.statut === "playing" || etat.statut === "loading") pause()
   else void reprendre()
 }
 
 /** Bouton « direct » : lance le direct, ou le coupe s'il joue déjà. */
 export function basculerDirect() {
-  if (modeWidget) {
+  if (modeWidget()) {
     if (etat.widgetOuvert) fermerWidget()
     else void ecouterDirect()
     return

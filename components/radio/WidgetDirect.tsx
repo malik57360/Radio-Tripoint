@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react"
 import { radioConfig } from "@/config/radioConfig"
-import { fermerWidget, modeWidget } from "@/lib/radio/moteur"
+import { fermerWidget } from "@/lib/radio/moteur"
 import { useLecteur } from "@/lib/radio/useLecteur"
 
 /**
@@ -12,7 +12,7 @@ import { useLecteur } from "@/lib/radio/useLecteur"
  */
 export function WidgetDirect() {
   const { widgetOuvert } = useLecteur()
-  if (!modeWidget || !widgetOuvert) return null
+  if (!widgetOuvert) return null
   return (
     <div
       role="dialog"
