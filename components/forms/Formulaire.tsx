@@ -2,8 +2,9 @@
 
 import { AlertCircle, CheckCircle2, Loader2, Mail } from "lucide-react"
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react"
+import { useT } from "@/components/i18n/Langue"
 import { site } from "@/config/site"
-import { objetsMail, schemas, type TypeFormulaire } from "@/lib/formulaires/schemas"
+import { creerSchemas, objetsMail, type TypeFormulaire } from "@/lib/formulaires/schemas"
 import { cn } from "@/lib/utils/cn"
 
 type Etat =
@@ -35,6 +36,7 @@ export function Formulaire({
   className?: string
   compact?: boolean
 }) {
+  const t = useT()
   const [etat, setEtat] = useState<Etat>({ s: "repos" })
   const [erreurs, setErreurs] = useState<Record<string, string>>({})
   // Horodatage anti-robot. Pas dans un <input type="hidden"> : React
@@ -65,11 +67,12 @@ export function Formulaire({
     const form = e.currentTarget
     const donnees = new FormData(form)
     donnees.set("_t", String(debut.current))
+    donnees.set("_langue", t.langue)
     const brut: Record<string, string> = {}
     for (const [k, v] of donnees.entries())
       if (typeof v === "string" && !k.startsWith("_") && k !== "site_web") brut[k] = v
 
-    const r = schemas[type].safeParse(brut)
+    const r = creerSchemas(t.langue)[type].safeParse(brut)
     if (!r.success) {
       const champs: Record<string, string> = {}
       for (const i of r.error.issues) {
@@ -101,11 +104,24 @@ export function Formulaire({
       } else {
         setEtat({
           s: "erreur",
-          message: d.message ?? "L'envoi a échoué. Réessayez dans un instant.",
+          message:
+            d.message ??
+            t({
+              fr: "L'envoi a échoué. Réessayez dans un instant.",
+              de: "Das Senden ist fehlgeschlagen. Versuchen Sie es gleich noch einmal.",
+              lb: "D'Schécken ass feelgeschloen. Probéiert et gläich nach eng Kéier.",
+            }),
         })
       }
     } catch {
-      setEtat({ s: "erreur", message: "Pas de connexion. Vérifiez votre réseau et réessayez." })
+      setEtat({
+        s: "erreur",
+        message: t({
+          fr: "Pas de connexion. Vérifiez votre réseau et réessayez.",
+          de: "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
+          lb: "Keng Verbindung. Kontrolléiert Äert Netz a probéiert nach eng Kéier.",
+        }),
+      })
     }
   }
 
@@ -123,7 +139,11 @@ export function Formulaire({
           onClick={() => setEtat({ s: "repos" })}
           className="lien mt-4 text-sm font-semibold"
         >
-          Envoyer un autre message
+          {t({
+            fr: "Envoyer un autre message",
+            de: "Weitere Nachricht senden",
+            lb: "Nach e Message schécken",
+          })}
         </button>
       </div>
     )
@@ -139,7 +159,17 @@ export function Formulaire({
             className="bg-erreur-fond mb-6 flex items-start gap-2 p-4 text-sm font-medium"
           >
             <AlertCircle className="mt-0.5 size-4 flex-none" aria-hidden />
-            {nbErreurs === 1 ? "Un champ est à corriger." : `${nbErreurs} champs sont à corriger.`}
+            {nbErreurs === 1
+              ? t({
+                  fr: "Un champ est à corriger.",
+                  de: "Ein Feld muss korrigiert werden.",
+                  lb: "Ee Feld muss verbessert ginn.",
+                })
+              : `${nbErreurs} ${t({
+                  fr: "champs sont à corriger.",
+                  de: "Felder müssen korrigiert werden.",
+                  lb: "Felder musse verbessert ginn.",
+                })}`}
           </p>
         )}
         {/* Anti-robot : invisible pour les humains, rempli par les robots. */}
@@ -159,7 +189,9 @@ export function Formulaire({
             className="btn btn-plein min-h-12 self-start !px-6 disabled:opacity-60"
           >
             {etat.s === "envoi" && <Loader2 className="size-4 animate-spin" aria-hidden />}
-            {etat.s === "envoi" ? "Envoi…" : libelleEnvoi}
+            {etat.s === "envoi"
+              ? t({ fr: "Envoi…", de: "Senden…", lb: "Schécken…" })
+              : libelleEnvoi}
           </button>
           <div aria-live="polite">
             {etat.s === "erreur" && (
@@ -169,12 +201,27 @@ export function Formulaire({
             )}
             {etat.s === "non-configure" && (
               <div className="border-alerte bg-surface border-l-4 p-4 text-sm">
-                <p className="font-semibold">L&apos;envoi en ligne n&apos;est pas encore activé.</p>
+                <p className="font-semibold">
+                  {t({
+                    fr: "L'envoi en ligne n'est pas encore activé.",
+                    de: "Der Online-Versand ist noch nicht aktiviert.",
+                    lb: "Den Online-Versand ass nach net aktivéiert.",
+                  })}
+                </p>
                 <p className="text-encre-2 mt-1">
-                  Votre message est prêt : envoyez-le depuis votre messagerie.
+                  {t({
+                    fr: "Votre message est prêt : envoyez-le depuis votre messagerie.",
+                    de: "Ihre Nachricht ist bereit: Senden Sie sie aus Ihrem E-Mail-Programm.",
+                    lb: "Äre Message ass prett: Schéckt en aus Ärem E-Mail-Programm.",
+                  })}
                 </p>
                 <a href={etat.mailto} className="btn btn-trait mt-3 !min-h-10">
-                  <Mail className="size-4" aria-hidden /> Envoyer par e-mail
+                  <Mail className="size-4" aria-hidden />{" "}
+                  {t({
+                    fr: "Envoyer par e-mail",
+                    de: "Per E-Mail senden",
+                    lb: "Per E-Mail schécken",
+                  })}
                 </a>
               </div>
             )}

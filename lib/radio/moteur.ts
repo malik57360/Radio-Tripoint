@@ -122,7 +122,8 @@ function metadonneesSysteme() {
   const titre =
     etat.source === "episode"
       ? (etat.episode?.titre ?? radioConfig.radioName)
-      : (etat.titreEnCours?.titre ?? `${radioConfig.radioName} — en direct`)
+      : (etat.titreEnCours?.titre ??
+        `${radioConfig.radioName} — ${document.documentElement.lang === "fr" ? "en direct" : "live"}`)
   const artiste =
     etat.source === "episode"
       ? (etat.episode?.sousTitre ?? radioConfig.radioName)

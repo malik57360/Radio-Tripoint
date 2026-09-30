@@ -7,6 +7,8 @@ import {
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from "react"
+import { useT } from "@/components/i18n/Langue"
+import type { Trad } from "@/lib/i18n/langues"
 import { cn } from "@/lib/utils/cn"
 import { useErreurChamp } from "./Formulaire"
 
@@ -27,11 +29,16 @@ function Cadre({
   children: ReactNode
   className?: string
 }) {
+  const t = useT()
   return (
     <div className={className}>
       <label htmlFor={id} className="etiquette">
         {libelle}
-        {facultatif && <span className="text-encre-3 ml-1.5 font-normal">(facultatif)</span>}
+        {facultatif && (
+          <span className="text-encre-3 ml-1.5 font-normal">
+            ({t({ fr: "facultatif", de: "optional", lb: "fakultativ" })})
+          </span>
+        )}
       </label>
       {children}
       {aide && !erreur && (
@@ -128,9 +135,16 @@ export function ChampChoix({
   facultatif,
   className,
   options,
+  libelles,
   ...p
-}: Base & SelectHTMLAttributes<HTMLSelectElement> & { options: readonly string[] }) {
+}: Base &
+  SelectHTMLAttributes<HTMLSelectElement> & {
+    options: readonly string[]
+    /** Libellé affiché par valeur (la valeur envoyée ne change pas). */
+    libelles?: Record<string, Trad>
+  }) {
   const id = useId()
+  const t = useT()
   const erreur = useErreurChamp(name)
   return (
     <Cadre
@@ -156,11 +170,11 @@ export function ChampChoix({
         {...p}
       >
         <option value="" disabled>
-          Choisir…
+          {t({ fr: "Choisir…", de: "Auswählen…", lb: "Auswielen…" })}
         </option>
         {options.map((o) => (
           <option key={o} value={o}>
-            {o}
+            {libelles?.[o] ? t(libelles[o]) : o}
           </option>
         ))}
       </select>

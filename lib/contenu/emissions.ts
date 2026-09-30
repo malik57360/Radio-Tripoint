@@ -1,6 +1,8 @@
 import { emissions as emissionsReelles } from "@/data/shows"
 import { grilleDemo } from "@/data/demo"
+import type { Langue } from "@/lib/i18n/langues"
 import type { Emission } from "@/types/show"
+import { localiserEmission } from "./localiser"
 import { modeDemo } from "./demo"
 
 function toutes(): Emission[] {
@@ -12,10 +14,11 @@ function toutes(): Emission[] {
   }))
 }
 
-export async function listerEmissions(): Promise<Emission[]> {
-  return toutes()
+export async function listerEmissions(l: Langue = "fr"): Promise<Emission[]> {
+  return toutes().map((e) => localiserEmission(e, l))
 }
 
-export async function emissionParSlug(slug: string): Promise<Emission | null> {
-  return toutes().find((e) => e.slug === slug) ?? null
+export async function emissionParSlug(slug: string, l: Langue = "fr"): Promise<Emission | null> {
+  const e = toutes().find((x) => x.slug === slug)
+  return e ? localiserEmission(e, l) : null
 }

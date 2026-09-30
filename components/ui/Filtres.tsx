@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
 
 /** Puces de filtre sous forme de liens : fonctionnent sans JavaScript, partageables, indexables. */
 export function Filtres({

@@ -1,5 +1,6 @@
 "use client"
 
+import { useT } from "@/components/i18n/Langue"
 import { Loader2, Pause, Play } from "lucide-react"
 import { basculerDirect } from "@/lib/radio/moteur"
 import { useLecteur } from "@/lib/radio/useLecteur"
@@ -14,9 +15,15 @@ export function BoutonDirect({
   className?: string
 }) {
   const { source, statut } = useLecteur()
+  const t = useT()
   const actif = source === "direct" && statut === "playing"
   const charge = source === "direct" && statut === "loading"
-  const libelle = actif ? "En écoute" : charge ? "Connexion…" : "Écouter en direct"
+  const enEcoute = t({ fr: "En écoute", de: "Läuft", lb: "Leeft" })
+  const libelle = actif
+    ? enEcoute
+    : charge
+      ? t({ fr: "Connexion…", de: "Verbinden…", lb: "Verbannen…" })
+      : t({ fr: "Écouter en direct", de: "Live hören", lb: "Live lauschteren" })
 
   return (
     <button
@@ -24,7 +31,19 @@ export function BoutonDirect({
       onClick={basculerDirect}
       data-controle-lecteur
       aria-pressed={actif}
-      aria-label={actif ? "Mettre le direct en pause" : "Écouter Radio Tripoint en direct"}
+      aria-label={
+        actif
+          ? t({
+              fr: "Mettre le direct en pause",
+              de: "Livestream pausieren",
+              lb: "Live-Stream pauséieren",
+            })
+          : t({
+              fr: "Écouter Radio Tripoint en direct",
+              de: "Radio Tripoint live hören",
+              lb: "Radio Tripoint live lauschteren",
+            })
+      }
       className={cn(
         "btn btn-direct",
         taille === "compact" && "min-h-10 !px-3.5 !text-[0.72rem]",
@@ -41,7 +60,9 @@ export function BoutonDirect({
       )}
       {taille === "compact" ? (
         <>
-          <span className="sm:hidden lg:inline xl:hidden">{actif ? "En écoute" : "Direct"}</span>
+          <span className="sm:hidden lg:inline xl:hidden">
+            {actif ? enEcoute : t({ fr: "Direct", de: "Live", lb: "Live" })}
+          </span>
           <span className="hidden sm:inline lg:hidden xl:inline">{libelle}</span>
         </>
       ) : (

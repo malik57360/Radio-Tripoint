@@ -2,12 +2,15 @@
 
 import { Check, Link2, Share2 } from "lucide-react"
 import { useState } from "react"
+import { useT } from "@/components/i18n/Langue"
 import { IconeReseau } from "@/components/marque/IconesReseaux"
 
 export function ShareButtons({ url, titre }: { url: string; titre: string }) {
   const [copie, setCopie] = useState(false)
+  const tr = useT()
   const u = encodeURIComponent(url)
   const t = encodeURIComponent(titre)
+  const partagerSur = tr({ fr: "Partager sur", de: "Teilen auf", lb: "Deelen op" })
   const liens = [
     {
       nom: "Facebook",
@@ -22,7 +25,10 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
       setCopie(true)
       setTimeout(() => setCopie(false), 2200)
     } catch {
-      window.prompt("Copiez le lien :", url)
+      window.prompt(
+        tr({ fr: "Copiez le lien :", de: "Link kopieren:", lb: "Link kopéieren:" }),
+        url,
+      )
     }
   }
   const partageNatif = async () => {
@@ -36,14 +42,16 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
     "grid size-11 place-items-center rounded-full border border-trait text-encre-2 transition-colors hover:border-encre hover:text-encre"
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <span className="surtitre text-encre-3 mr-2">Partager</span>
+      <span className="surtitre text-encre-3 mr-2">
+        {tr({ fr: "Partager", de: "Teilen", lb: "Deelen" })}
+      </span>
       {liens.map((l) => (
         <a
           key={l.nom}
           href={l.href}
           target="_blank"
           rel="noopener"
-          aria-label={`Partager sur ${l.nom}`}
+          aria-label={`${partagerSur} ${l.nom}`}
           className={classe}
         >
           <IconeReseau reseau={l.reseau} className="size-[1.1rem]" />
@@ -53,7 +61,7 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
         href={`https://wa.me/?text=${t}%20${u}`}
         target="_blank"
         rel="noopener"
-        aria-label="Partager sur WhatsApp"
+        aria-label={`${partagerSur} WhatsApp`}
         className={classe}
       >
         <svg viewBox="0 0 24 24" className="size-[1.1rem]" fill="currentColor" aria-hidden>
@@ -63,7 +71,11 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
       <button
         type="button"
         onClick={copier}
-        aria-label={copie ? "Lien copié" : "Copier le lien"}
+        aria-label={
+          copie
+            ? tr({ fr: "Lien copié", de: "Link kopiert", lb: "Link kopéiert" })
+            : tr({ fr: "Copier le lien", de: "Link kopieren", lb: "Link kopéieren" })
+        }
         className={classe}
       >
         {copie ? (
@@ -75,13 +87,23 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
       <button
         type="button"
         onClick={partageNatif}
-        aria-label="Autres options de partage"
+        aria-label={tr({
+          fr: "Autres options de partage",
+          de: "Weitere Teilen-Optionen",
+          lb: "Aner Méiglechkeeten ze deelen",
+        })}
         className={`${classe} sm:hidden`}
       >
         <Share2 className="size-[1.1rem]" aria-hidden />
       </button>
       <span role="status" className="sr-only">
-        {copie ? "Lien copié dans le presse-papiers" : ""}
+        {copie
+          ? tr({
+              fr: "Lien copié dans le presse-papiers",
+              de: "Link in die Zwischenablage kopiert",
+              lb: "Link an d'Tëschenoflag kopéiert",
+            })
+          : ""}
       </span>
     </div>
   )

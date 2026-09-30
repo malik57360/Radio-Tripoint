@@ -2,6 +2,7 @@
 
 import { MapPin, Navigation } from "lucide-react"
 import { useState } from "react"
+import { useT } from "@/components/i18n/Langue"
 import { adresseLigne, site } from "@/config/site"
 
 /**
@@ -11,13 +12,14 @@ import { adresseLigne, site } from "@/config/site"
  */
 export function CarteContact() {
   const [afficher, setAfficher] = useState(false)
+  const t = useT()
   const requete = encodeURIComponent(adresseLigne)
   return (
     <div className="border-trait relative aspect-[4/3] w-full overflow-hidden border sm:aspect-[16/9]">
       {afficher ? (
         <iframe
-          src={`https://maps.google.com/maps?q=${requete}&z=16&output=embed`}
-          title={`Plan : ${adresseLigne}`}
+          src={`https://maps.google.com/maps?q=${requete}&z=16&output=embed&hl=${t.langue === "fr" ? "fr" : "de"}`}
+          title={`${t({ fr: "Plan", de: "Karte", lb: "Kaart" })} : ${adresseLigne}`}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
           className="absolute inset-0 h-full w-full border-0"
@@ -26,13 +28,13 @@ export function CarteContact() {
         <div className="bg-nuit text-nuit-encre absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
           <MapPin size={32} className="text-nuit-accent" aria-hidden />
           <p className="titre-carte text-lg">
-            {site.contact.adresse.lieu}, {site.contact.adresse.rue}
+            {t(site.contact.adresse.lieu)}, {site.contact.adresse.rue}
             <br />
             {site.contact.adresse.codePostal} {site.contact.adresse.ville}
           </p>
           <div className="flex flex-wrap justify-center gap-2">
             <button type="button" onClick={() => setAfficher(true)} className="btn btn-accent">
-              Afficher le plan
+              {t({ fr: "Afficher le plan", de: "Karte anzeigen", lb: "Kaart weisen" })}
             </button>
             <a
               href={site.contact.itineraire}
@@ -40,12 +42,16 @@ export function CarteContact() {
               rel="noopener"
               className="btn btn-nuit"
             >
-              <Navigation className="size-4" aria-hidden /> Itinéraire
+              <Navigation className="size-4" aria-hidden />{" "}
+              {t({ fr: "Itinéraire", de: "Route", lb: "Wee" })}
             </a>
           </div>
           <p className="text-nuit-encre-2 max-w-sm text-xs">
-            Le plan est fourni par Google Maps, qui peut déposer des cookies. Il ne se charge que si
-            vous cliquez.
+            {t({
+              fr: "Le plan est fourni par Google Maps, qui peut déposer des cookies. Il ne se charge que si vous cliquez.",
+              de: "Die Karte stammt von Google Maps, das Cookies setzen kann. Sie wird nur geladen, wenn Sie klicken.",
+              lb: "D'Kaart kënnt vu Google Maps, dat Cookie setze kann. Si gëtt eréischt gelueden, wann Dir klickt.",
+            })}
           </p>
         </div>
       )}

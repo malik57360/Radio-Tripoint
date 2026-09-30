@@ -1,9 +1,10 @@
-import { categories } from "@/data/categories"
+import { choisir, type Langue } from "@/lib/i18n/langues"
 import { dateLongue } from "@/lib/utils/dates"
 import { normaliser } from "@/lib/utils/texte"
 import { tousArticles } from "./articles"
 import { listerEmissions } from "./emissions"
 import { tousEvenements } from "./evenements"
+import { categoriesLangue } from "./localiser"
 import { listerEpisodes } from "./podcasts"
 import type { Resultat } from "./recherche-types"
 
@@ -15,18 +16,20 @@ export { libellesTypes, type Resultat, type TypeResultat } from "./recherche-typ
  * Suffisant pour quelques milliers d'éléments ; au-delà, brancher un
  * moteur (Algolia, Meilisearch, Postgres FTS) derrière cette fonction.
  */
-export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
+export async function rechercher(q: string, limite = 40, l: Langue = "fr"): Promise<Resultat[]> {
   const termes = normaliser(q)
     .split(/\s+/)
     .filter((t) => t.length > 1)
   if (termes.length === 0) return []
 
   const [articles, emissions, episodes, evenements] = await Promise.all([
-    tousArticles(),
-    listerEmissions(),
-    listerEpisodes(),
-    tousEvenements(),
+    tousArticles(l),
+    listerEmissions(l),
+    listerEpisodes({ langue: l }),
+    tousEvenements(l),
   ])
+  const categories = categoriesLangue(l)
+  const libelle = (t: { fr: string; de: string; lb: string }) => choisir(t, l)
 
   const candidats: (Resultat & { titreN: string; corpsN: string })[] = [
     ...articles.map((a) => ({
@@ -34,7 +37,7 @@ export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
       titre: a.titre,
       href: `/actualites/${a.slug}`,
       contexte: a.publieLe
-        ? `${categories[a.categorie].nom} · ${dateLongue(a.publieLe)}`
+        ? `${categories[a.categorie].nom} · ${dateLongue(a.publieLe, l)}`
         : categories[a.categorie].nom,
       extrait: a.chapeau,
       titreN: normaliser(a.titre),
@@ -46,7 +49,7 @@ export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
       type: "emission" as const,
       titre: e.nom,
       href: `/emissions/${e.slug}`,
-      contexte: `Émission · ${e.thematique}`,
+      contexte: `${libelle({ fr: "Émission", de: "Sendung", lb: "Sendung" })} · ${e.thematique}`,
       extrait: e.accroche ?? undefined,
       titreN: normaliser(e.nom),
       corpsN: normaliser(`${e.accroche ?? ""} ${e.presentation ?? ""} ${e.thematique}`),
@@ -55,7 +58,7 @@ export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
       type: "podcast" as const,
       titre: p.titre,
       href: `/podcasts/${p.slug}`,
-      contexte: p.publieLe ? `Podcast · ${dateLongue(p.publieLe)}` : "Podcast",
+      contexte: p.publieLe ? `Podcast · ${dateLongue(p.publieLe, l)}` : "Podcast",
       extrait: p.description,
       titreN: normaliser(p.titre),
       corpsN: normaliser(p.description),
@@ -64,7 +67,7 @@ export async function rechercher(q: string, limite = 40): Promise<Resultat[]> {
       type: "evenement" as const,
       titre: ev.titre,
       href: `/agenda/${ev.slug}`,
-      contexte: `${ev.ville} · ${dateLongue(ev.debut)}`,
+      contexte: `${ev.ville} · ${dateLongue(ev.debut, l)}`,
       extrait: ev.description,
       titreN: normaliser(ev.titre),
       corpsN: normaliser(`${ev.description} ${ev.ville} ${ev.lieu}`),

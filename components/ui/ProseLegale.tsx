@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { traducteur } from "@/lib/i18n/serveur"
 
 export function ProseLegale({ children }: { children: ReactNode }) {
   return (
@@ -9,11 +10,16 @@ export function ProseLegale({ children }: { children: ReactNode }) {
 }
 
 /** Information à fournir par l'éditeur : visible, jamais inventée. */
-export function ACompleter({ valeur }: { valeur: string | null }) {
+export async function ACompleter({ valeur }: { valeur: string | null }) {
   if (valeur) return <>{valeur}</>
+  const t = await traducteur()
   return (
     <span className="border-alerte text-alerte border border-dashed px-1.5 text-sm font-semibold">
-      à compléter par l&apos;éditeur
+      {t({
+        fr: "à compléter par l'éditeur",
+        de: "vom Herausgeber zu ergänzen",
+        lb: "vum Editeur auszefëllen",
+      })}
     </span>
   )
 }

@@ -1,11 +1,12 @@
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
 import { BoutonEpisode } from "@/components/radio/BoutonEpisode"
 import { Visuel } from "@/components/ui/Visuel"
+import { traducteur } from "@/lib/i18n/serveur"
 import { dateLongue, duree } from "@/lib/utils/dates"
 import type { Episode } from "@/types/podcast"
 
 /** Ligne d'épisode : pochette, titre, émission, date, durée, lecture immédiate. */
-export function PodcastCard({
+export async function PodcastCard({
   episode,
   emissionNom,
   titreNiveau: Titre = "h3",
@@ -14,6 +15,7 @@ export function PodcastCard({
   emissionNom?: string
   titreNiveau?: "h2" | "h3"
 }) {
+  const t = await traducteur()
   return (
     <article className="carte group grid grid-cols-[4.5rem_1fr_auto] items-center gap-4 py-4 sm:grid-cols-[6rem_1fr_auto] sm:gap-5">
       <Visuel
@@ -29,7 +31,11 @@ export function PodcastCard({
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-2">
           <span className="badge">{emissionNom ?? "Podcast"}</span>
-          {episode.demo && <span className="badge-exemple">Exemple</span>}
+          {episode.demo && (
+            <span className="badge-exemple">
+              {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+            </span>
+          )}
         </p>
         <Titre className="carte-titre titre-carte mt-1 line-clamp-2 text-[1.05rem] sm:text-[1.15rem]">
           <Link href={`/podcasts/${episode.slug}`} className="carte-lien">
@@ -39,7 +45,8 @@ export function PodcastCard({
         <p className="text-encre-3 mt-1 text-[0.8rem]">
           {episode.publieLe && (
             <>
-              <time dateTime={episode.publieLe}>{dateLongue(episode.publieLe)}</time> ·{" "}
+              <time dateTime={episode.publieLe}>{dateLongue(episode.publieLe, t.langue)}</time>{" "}
+              ·{" "}
             </>
           )}
           {duree(episode.duree)}

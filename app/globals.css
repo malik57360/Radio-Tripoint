@@ -795,3 +795,11 @@
 .couverture[data-teinte="sable"] {
   box-shadow: inset 0 0 0 1px var(--trait);
 }
+
+/* Allemand et luxembourgeois : mots composés longs (« Dräilännereck »).
+   Césure si le navigateur la connaît, sinon coupure plutôt que débordement. */
+:lang(de) :is(.titre-affiche, .titre-page, .titre-section, .titre-carte),
+:lang(lb) :is(.titre-affiche, .titre-page, .titre-section, .titre-carte) {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}

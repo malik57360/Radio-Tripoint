@@ -1,23 +1,58 @@
 "use client"
 
 import { ArrowUpRight, Mail, Phone, Search, X } from "lucide-react"
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
 import { usePathname } from "next/navigation"
 import { estActif, navPlus, navRubriques } from "@/config/navigation"
 import { site } from "@/config/site"
 import { reseauxActifs } from "@/config/socialLinks"
+import { useT } from "@/components/i18n/Langue"
+import { ListeLangues } from "@/components/i18n/SelecteurLangue"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
+import type { Trad } from "@/lib/i18n/langues"
 import { IconeReseau } from "@/components/marque/IconesReseaux"
 import { Logo } from "@/components/marque/Logo"
 import { Tripoint } from "@/components/marque/Tripoint"
 import { cn } from "@/lib/utils/cn"
 import { Dialogue } from "./Dialogue"
 
-const essentiels = [
-  { libelle: "Actualités", href: "/actualites", detail: "Le fil des Trois Frontières" },
-  { libelle: "Émissions", href: "/emissions", detail: "Nos rendez-vous à l'antenne" },
-  { libelle: "Podcasts", href: "/podcasts", detail: "Replays et épisodes" },
-  { libelle: "Agenda", href: "/agenda", detail: "Sortir dans la région" },
+const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
+  {
+    libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten" },
+    href: "/actualites",
+    detail: {
+      fr: "Le fil des Trois Frontières",
+      de: "Nachrichten aus dem Dreiländereck",
+      lb: "Neiegkeeten aus dem Dräilännereck",
+    },
+  },
+  {
+    libelle: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" },
+    href: "/emissions",
+    detail: {
+      fr: "Nos rendez-vous à l'antenne",
+      de: "Unsere Sendungen im Programm",
+      lb: "Eis Rendez-vousen um Radio",
+    },
+  },
+  {
+    libelle: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts" },
+    href: "/podcasts",
+    detail: {
+      fr: "Replays et épisodes",
+      de: "Wiederholungen und Folgen",
+      lb: "Replays an Episoden",
+    },
+  },
+  {
+    libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda" },
+    href: "/agenda",
+    detail: {
+      fr: "Sortir dans la région",
+      de: "Ausgehen in der Region",
+      lb: "Erausgoen an der Regioun",
+    },
+  },
 ]
 
 export function MobileMenu({
@@ -30,6 +65,7 @@ export function MobileMenu({
   ouvrirRecherche: () => void
 }) {
   const pathname = usePathname()
+  const t = useT()
   const reseaux = reseauxActifs()
 
   return (
@@ -47,13 +83,21 @@ export function MobileMenu({
           point={false}
         />
         <div className="conteneur flex h-16 flex-none items-center justify-between">
-          <Link href="/" onClick={fermer} aria-label="Radio Tripoint — accueil">
+          <Link
+            href="/"
+            onClick={fermer}
+            aria-label={t({
+              fr: "Radio Tripoint — accueil",
+              de: "Radio Tripoint — Startseite",
+              lb: "Radio Tripoint — Startsäit",
+            })}
+          >
             <Logo sombre taille={48} className="size-12" />
           </Link>
           <button
             type="button"
             onClick={fermer}
-            aria-label="Fermer le menu"
+            aria-label={t({ fr: "Fermer le menu", de: "Menü schließen", lb: "Menü zoumaachen" })}
             className="hover:bg-nuit-3 grid size-11 place-items-center rounded-full"
           >
             <X className="size-6" aria-hidden />
@@ -69,14 +113,17 @@ export function MobileMenu({
                 fermer()
                 ouvrirRecherche()
               }}
-              aria-label="Rechercher"
+              aria-label={t({ fr: "Rechercher", de: "Suchen", lb: "Sichen" })}
               className="border-nuit-trait hover:border-nuit-encre grid size-14 flex-none place-items-center rounded-full border"
             >
               <Search className="size-5" aria-hidden />
             </button>
           </div>
 
-          <nav aria-label="Menu principal" className="mt-8">
+          <nav
+            aria-label={t({ fr: "Menu principal", de: "Hauptmenü", lb: "Haaptmenü" })}
+            className="mt-8"
+          >
             <ul className="border-nuit-trait border-t">
               {essentiels.map((l) => (
                 <li key={l.href} className="border-nuit-trait border-b">
@@ -88,9 +135,9 @@ export function MobileMenu({
                   >
                     <span>
                       <span className="titre-affiche group-aria-[current=page]:text-nuit-accent block text-[2rem]">
-                        {l.libelle}
+                        {t(l.libelle)}
                       </span>
-                      <span className="text-nuit-encre-2 mt-1 block text-sm">{l.detail}</span>
+                      <span className="text-nuit-encre-2 mt-1 block text-sm">{t(l.detail)}</span>
                     </span>
                     <ArrowUpRight
                       className="text-nuit-encre-2 size-6 flex-none transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
@@ -101,7 +148,9 @@ export function MobileMenu({
               ))}
             </ul>
 
-            <p className="surtitre text-nuit-encre-2 mt-9">Rubriques</p>
+            <p className="surtitre text-nuit-encre-2 mt-9">
+              {t({ fr: "Rubriques", de: "Rubriken", lb: "Rubriken" })}
+            </p>
             <ul className="mt-3 grid grid-cols-2 gap-x-4">
               {navRubriques
                 .filter((l) => !essentiels.some((e) => e.href === l.href))
@@ -115,7 +164,7 @@ export function MobileMenu({
                         "hover:text-nuit-accent aria-[current=page]:text-nuit-accent block py-2.5 text-[1.05rem] font-semibold",
                       )}
                     >
-                      {l.libelle}
+                      {t(l.libelle)}
                     </Link>
                   </li>
                 ))}
@@ -132,7 +181,7 @@ export function MobileMenu({
                       onClick={fermer}
                       className="hover:text-nuit-accent block py-2.5 text-[1.05rem] font-semibold"
                     >
-                      {l.libelle}
+                      {t(l.libelle)}
                     </Link>
                   </li>
                 ))}
@@ -142,11 +191,24 @@ export function MobileMenu({
                   onClick={fermer}
                   className="hover:text-nuit-accent block py-2.5 text-[1.05rem] font-semibold"
                 >
-                  Nous signaler une info
+                  {t({
+                    fr: "Nous signaler une info",
+                    de: "Eine Info melden",
+                    lb: "Eng Info mellen",
+                  })}
                 </Link>
               </li>
             </ul>
           </nav>
+
+          <div className="mt-10">
+            <p className="surtitre text-nuit-encre-2">
+              {t({ fr: "Langue", de: "Sprache", lb: "Sprooch" })}
+            </p>
+            <div className="mt-3">
+              <ListeLangues sombre />
+            </div>
+          </div>
 
           <div className="border-nuit-trait mt-10 flex flex-col gap-3 border-t pt-6 text-sm">
             <a

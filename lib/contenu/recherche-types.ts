@@ -1,3 +1,5 @@
+import type { Trad } from "@/lib/i18n/langues"
+
 export type TypeResultat = "article" | "emission" | "podcast" | "evenement"
 
 export interface Resultat {
@@ -8,9 +10,9 @@ export interface Resultat {
   extrait?: string
 }
 
-export const libellesTypes: Record<TypeResultat, string> = {
-  article: "Articles",
-  emission: "Émissions",
-  podcast: "Podcasts",
-  evenement: "Agenda",
+export const libellesTypes: Record<TypeResultat, Trad> = {
+  article: { fr: "Articles", de: "Artikel", lb: "Artikelen" },
+  emission: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" },
+  podcast: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts" },
+  evenement: { fr: "Agenda", de: "Agenda", lb: "Agenda" },
 }

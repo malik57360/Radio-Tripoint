@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto"
 import { autoriser } from "@/lib/formulaires/limiteur"
+import { choisir, estLangue, type Langue, type Trad } from "@/lib/i18n/langues"
 import {
   PIECE_JOINTE,
+  creerSchemas,
   objetsMail,
-  schemas,
   typesFormulaire,
   type TypeFormulaire,
 } from "@/lib/formulaires/schemas"
@@ -31,6 +32,9 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
     return json({ statut: "erreur", message: "Requête invalide." }, 400)
   }
 
+  const l: Langue = estLangue(donnees.get("_langue")) ? (donnees.get("_langue") as Langue) : "fr"
+  const dire = (x: Trad) => choisir(x, l)
+
   // 1. Anti-robot. Un robot reçoit un faux succès : il n'apprend rien.
   const piege = String(donnees.get("site_web") ?? "")
   const debut = Number(donnees.get("_t") ?? 0)
@@ -46,7 +50,11 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
     return json(
       {
         statut: "erreur",
-        message: "Trop d'envois en peu de temps. Réessayez dans quelques minutes.",
+        message: dire({
+          fr: "Trop d'envois en peu de temps. Réessayez dans quelques minutes.",
+          de: "Zu viele Sendungen in kurzer Zeit. Versuchen Sie es in einigen Minuten erneut.",
+          lb: "Ze vill Sendungen a kuerzer Zäit. Probéiert et an e puer Minutten nach eng Kéier.",
+        }),
       },
       429,
     )
@@ -56,7 +64,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
   const brut: Record<string, string> = {}
   for (const [k, v] of donnees.entries())
     if (typeof v === "string" && !k.startsWith("_") && k !== "site_web") brut[k] = v
-  const resultat = schemas[t].safeParse(brut)
+  const resultat = creerSchemas(l)[t].safeParse(brut)
   if (!resultat.success) {
     const champs: Record<string, string> = {}
     for (const e of resultat.error.issues) {
@@ -73,14 +81,25 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
     if (f instanceof File && f.size > 0) {
       if (f.size > PIECE_JOINTE.tailleMax)
         return json(
-          { statut: "invalide", champs: { piece_jointe: "Fichier trop lourd (5 Mo maximum)." } },
+          {
+            statut: "invalide",
+            champs: {
+              piece_jointe: dire({
+                fr: "Fichier trop lourd (5 Mo maximum).",
+                de: "Datei zu groß (höchstens 5 MB).",
+                lb: "Fichier ze grouss (maximal 5 MB).",
+              }),
+            },
+          },
           422,
         )
       if (!PIECE_JOINTE.types.includes(f.type))
         return json(
           {
             statut: "invalide",
-            champs: { piece_jointe: `Format non accepté (${PIECE_JOINTE.libelle}).` },
+            champs: {
+              piece_jointe: `${dire({ fr: "Format non accepté", de: "Format nicht akzeptiert", lb: "Format net akzeptéiert" })} (${dire(PIECE_JOINTE.libelle)}).`,
+            },
           },
           422,
         )
@@ -96,6 +115,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
   envoi.set("formulaire", t)
   envoi.set("objet", objetsMail[t])
   envoi.set("recu_le", new Date().toISOString())
+  envoi.set("langue", l)
   for (const [k, v] of Object.entries(resultat.data)) if (v !== undefined) envoi.set(k, String(v))
   if (fichier)
     envoi.set("piece_jointe", fichier, fichier.name.replace(/[^\w.\- ]+/g, "_").slice(0, 120))
@@ -116,7 +136,11 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
     return json(
       {
         statut: "erreur",
-        message: "L'envoi a échoué de notre côté. Réessayez, ou écrivez-nous directement.",
+        message: dire({
+          fr: "L'envoi a échoué de notre côté. Réessayez, ou écrivez-nous directement.",
+          de: "Das Senden ist bei uns fehlgeschlagen. Versuchen Sie es erneut oder schreiben Sie uns direkt.",
+          lb: "D'Schécken ass bei eis feelgeschloen. Probéiert et nach eng Kéier oder schreift eis direkt.",
+        }),
       },
       502,
     )

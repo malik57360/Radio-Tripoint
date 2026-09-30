@@ -1,14 +1,18 @@
 import { evenements as evenementsReels } from "@/data/events"
 import { evenementsDemo } from "@/data/demo"
 import type { Evenement } from "@/types/event"
+import type { Langue } from "@/lib/i18n/langues"
 import { cleJour } from "@/lib/utils/dates"
+import { localiserEvenement } from "./localiser"
 import { modeDemo } from "./demo"
 
 export type Periode = "tout" | "aujourdhui" | "semaine" | "mois"
 
-function tous(): Evenement[] {
+function tous(l: Langue = "fr"): Evenement[] {
   const liste = modeDemo ? [...evenementsReels, ...evenementsDemo] : evenementsReels
-  return [...liste].sort((a, b) => a.debut.localeCompare(b.debut))
+  return [...liste]
+    .sort((a, b) => a.debut.localeCompare(b.debut))
+    .map((e) => localiserEvenement(e, l))
 }
 
 /** Un événement reste « à venir » jusqu'à sa fin (ou la fin de son jour). */
@@ -18,11 +22,11 @@ function nonTermine(e: Evenement, maintenant: Date): boolean {
 }
 
 export async function listerEvenements(
-  options: { periode?: Periode; ville?: string } = {},
+  options: { periode?: Periode; ville?: string; langue?: Langue } = {},
   maintenant = new Date(),
 ) {
-  const { periode = "tout", ville } = options
-  let liste = tous().filter((e) => nonTermine(e, maintenant))
+  const { periode = "tout", ville, langue = "fr" } = options
+  let liste = tous(langue).filter((e) => nonTermine(e, maintenant))
   if (ville) liste = liste.filter((e) => e.ville === ville)
   const jour = cleJour(maintenant)
   const limite = (jours: number) => cleJour(new Date(maintenant.getTime() + jours * 86_400_000))
@@ -37,10 +41,10 @@ export async function villesAgenda(): Promise<string[]> {
   return [...new Set(tous().map((e) => e.ville))].sort((a, b) => a.localeCompare(b, "fr"))
 }
 
-export async function evenementParSlug(slug: string): Promise<Evenement | null> {
-  return tous().find((e) => e.slug === slug) ?? null
+export async function evenementParSlug(slug: string, l: Langue = "fr"): Promise<Evenement | null> {
+  return tous(l).find((e) => e.slug === slug) ?? null
 }
 
-export async function tousEvenements(): Promise<Evenement[]> {
-  return tous()
+export async function tousEvenements(l: Langue = "fr"): Promise<Evenement[]> {
+  return tous(l)
 }

@@ -1,17 +1,20 @@
 import { ArrowRight } from "lucide-react"
 import Image from "next/image"
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
 import { site } from "@/config/site"
 import { Tripoint } from "@/components/marque/Tripoint"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { EnCeMoment } from "@/components/radio/EnCeMoment"
+import { traducteur } from "@/lib/i18n/serveur"
 import type { GrilleClient } from "@/lib/radio/types"
 
 /**
  * Le studio : fond nuit, grand titre, module du direct. Pas de hauteur
  * plein écran vide — le direct est visible sans défiler, même sur 320 px.
  */
-export function Hero({ grille }: { grille: GrilleClient }) {
+export async function Hero({ grille }: { grille: GrilleClient }) {
+  const t = await traducteur()
+  const [fr, lu, de] = t(site.pays)
   return (
     <section
       aria-labelledby="titre-accueil"
@@ -41,29 +44,47 @@ export function Hero({ grille }: { grille: GrilleClient }) {
         <div>
           <p className="surtitre text-nuit-encre-2 flex items-center gap-3">
             <span className="bg-nuit-accent h-px w-8" aria-hidden />
-            La radio transfrontalière<span className="hidden sm:inline"> · Sierck-les-Bains</span>
+            {t(site.baseline)}
+            <span className="hidden sm:inline"> · Sierck-les-Bains</span>
           </p>
           <h1
             id="titre-accueil"
             className="titre-affiche mt-5 text-[clamp(2.6rem,1.2rem+6.4vw,6.4rem)]"
           >
-            La radio qui fait vibrer <span className="text-nuit-accent">les Trois Frontières.</span>
+            {t({
+              fr: "La radio qui fait vibrer",
+              de: "Das Radio, das",
+              lb: "De Radio, deen",
+            })}{" "}
+            <span className="text-nuit-accent">
+              {t({
+                fr: "les Trois Frontières.",
+                // Traits d'union conditionnels : le mot tient sur un téléphone.
+                de: "das Drei\u00adländer\u00adeck bewegt.",
+                lb: "d'Dräi\u00adlänner\u00adeck beweegt.",
+              })}
+            </span>
           </h1>
           <p className="text-nuit-encre-2 mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.95rem] font-semibold tracking-[0.02em] sm:text-base">
-            <span>France</span>
+            <span>{fr}</span>
             <span className="text-nuit-accent" aria-hidden>
               ·
             </span>
-            <span>Luxembourg</span>
+            <span>{lu}</span>
             <span className="text-nuit-accent" aria-hidden>
               ·
             </span>
-            <span>Allemagne</span>
+            <span>{de}</span>
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <BoutonDirect taille="grand" />
             <Link href="/emissions" className="btn btn-nuit min-h-14 !px-6">
-              Découvrir nos émissions <ArrowRight className="size-4" aria-hidden />
+              {t({
+                fr: "Découvrir nos émissions",
+                de: "Unsere Sendungen entdecken",
+                lb: "Eis Sendungen entdecken",
+              })}{" "}
+              <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
         </div>

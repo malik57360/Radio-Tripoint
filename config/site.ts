@@ -1,3 +1,5 @@
+import type { Trad } from "@/lib/i18n/langues"
+
 /**
  * Identité et coordonnées. Seules les informations publiées par Radio
  * Tripoint figurent ici ; un champ `null` est une information que
@@ -10,21 +12,39 @@ export const site = {
     /\/$/,
     "",
   ),
-  signature: "La radio qui fait vibrer les Trois Frontières.",
+  signature: {
+    fr: "La radio qui fait vibrer les Trois Frontières.",
+    de: "Das Radio, das das Dreiländereck zum Klingen bringt.",
+    lb: "De Radio, deen d'Dräilännereck zum Vibréiere bréngt.",
+  } as Trad,
   /** Mentions portées par le logo officiel. */
-  baseline: "La radio transfrontalière",
-  promessePro: "Nous vous donnons une visibilité transfrontalière",
-  description:
-    "Radio et média transfrontalier entre la France, le Luxembourg et l'Allemagne : actualités locales, émissions, podcasts, sport, culture et agenda des Trois Frontières, depuis Sierck-les-Bains.",
-  langue: "fr-FR",
-  pays: ["France", "Luxembourg", "Allemagne"] as const,
+  baseline: {
+    fr: "La radio transfrontalière",
+    de: "Das grenzüberschreitende Radio",
+    lb: "De grenziwwerschreidende Radio",
+  } as Trad,
+  promessePro: {
+    fr: "Nous vous donnons une visibilité transfrontalière",
+    de: "Wir verschaffen Ihnen grenzüberschreitende Sichtbarkeit",
+    lb: "Mir ginn Iech eng grenziwwerschreidend Visibilitéit",
+  } as Trad,
+  description: {
+    fr: "Radio et média transfrontalier entre la France, le Luxembourg et l'Allemagne : actualités locales, émissions, podcasts, sport, culture et agenda des Trois Frontières, depuis Sierck-les-Bains.",
+    de: "Grenzüberschreitendes Radio und Medium zwischen Frankreich, Luxemburg und Deutschland: lokale Nachrichten, Sendungen, Podcasts, Sport, Kultur und Veranstaltungen im Dreiländereck, aus Sierck-les-Bains.",
+    lb: "Grenziwwerschreidende Radio a Medium tëscht Frankräich, Lëtzebuerg an Däitschland: lokal Neiegkeeten, Sendungen, Podcasts, Sport, Kultur an Agenda vum Dräilännereck, vu Sierck-les-Bains aus.",
+  } as Trad,
+  pays: {
+    fr: ["France", "Luxembourg", "Allemagne"],
+    de: ["Frankreich", "Luxemburg", "Deutschland"],
+    lb: ["Frankräich", "Lëtzebuerg", "Däitschland"],
+  } as Trad<string[]>,
 
   contact: {
     telephone: "06 58 22 17 48",
     telephoneE164: "+33658221748",
     email: "info@radio-tripoint-officiel.fr",
     adresse: {
-      lieu: "Hôtel de ville",
+      lieu: { fr: "Hôtel de ville", de: "Rathaus", lb: "Gemengenhaus" } as Trad,
       rue: "12 Quai des Ducs de Lorraine",
       codePostal: "57480",
       ville: "Sierck-les-Bains",
@@ -59,10 +79,11 @@ export const site = {
     directeurPublication: "Georges Emmanuel Mathas, président" as string | null,
     hebergeur: {
       nom: "Vercel Inc.",
-      adresse: "440 N Barranca Ave #4133, Covina, CA 91723, États-Unis",
+      adresse: "440 N Barranca Ave #4133, Covina, CA 91723, USA",
       site: "https://vercel.com",
     },
   },
 } as const
 
-export const adresseLigne = `${site.contact.adresse.lieu}, ${site.contact.adresse.rue}, ${site.contact.adresse.codePostal} ${site.contact.adresse.ville}`
+/** Adresse pour les cartes et itinéraires : toujours en français, comme sur place. */
+export const adresseLigne = `${site.contact.adresse.lieu.fr}, ${site.contact.adresse.rue}, ${site.contact.adresse.codePostal} ${site.contact.adresse.ville}`

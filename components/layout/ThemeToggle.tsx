@@ -1,5 +1,7 @@
 "use client"
 
+import { useT } from "@/components/i18n/Langue"
+import type { Trad } from "@/lib/i18n/langues"
 import { Monitor, Moon, Sun } from "lucide-react"
 import { useSyncExternalStore } from "react"
 
@@ -28,10 +30,10 @@ function appliquer(t: Theme) {
 export const scriptTheme = `try{var t=localStorage.getItem("${CLE}");if(t==="clair"||t==="sombre")document.documentElement.dataset.theme=t}catch(e){}`
 
 const suivant: Record<Theme, Theme> = { auto: "clair", clair: "sombre", sombre: "auto" }
-const libelles: Record<Theme, string> = {
-  auto: "Thème : automatique",
-  clair: "Thème : clair",
-  sombre: "Thème : sombre",
+const libelles: Record<Theme, Trad> = {
+  auto: { fr: "automatique", de: "automatisch", lb: "automatesch" },
+  clair: { fr: "clair", de: "hell", lb: "hell" },
+  sombre: { fr: "sombre", de: "dunkel", lb: "donkel" },
 }
 
 export function ThemeToggle({ className }: { className?: string }) {
@@ -43,17 +45,19 @@ export function ThemeToggle({ className }: { className?: string }) {
     lireTheme,
     () => "auto" as Theme,
   )
+  const t = useT()
   const Icone = theme === "clair" ? Sun : theme === "sombre" ? Moon : Monitor
+  const libelle = `${t({ fr: "Thème", de: "Design", lb: "Design" })} : ${t(libelles[theme])}`
   return (
     <button
       type="button"
       onClick={() => appliquer(suivant[theme])}
-      aria-label={`${libelles[theme]}. Changer.`}
-      title={libelles[theme]}
+      aria-label={`${libelle}. ${t({ fr: "Changer.", de: "Ändern.", lb: "Änneren." })}`}
+      title={libelle}
       className={className}
     >
       <Icone className="size-4" aria-hidden />
-      <span>{libelles[theme].replace("Thème : ", "")}</span>
+      <span>{t(libelles[theme])}</span>
     </button>
   )
 }

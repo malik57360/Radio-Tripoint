@@ -37,6 +37,27 @@ compléter ». Le contenu de démonstration (`data/demo/`) est fictif, badgé
 `lib/contenu/*` est le **seul** point de lecture du contenu. Brancher un CMS
 = réécrire ces fonctions (déjà asynchrones), sans toucher aux pages.
 
+## Trois langues : français, allemand, luxembourgeois
+
+- **Routage** : toutes les pages vivent sous `app/[lang]/`. Le français
+  garde les URL d'origine : `proxy.ts` réécrit `/agenda` → `/fr/agenda` et
+  redirige `/fr/…` vers `/…`. L'allemand et le luxembourgeois sont
+  préfixés (`/de/…`, `/lb/…`). Ne pas mettre de page hors de `[lang]`.
+- **Textes d'interface** : écrits sur place, en trois langues,
+  `t({ fr, de, lb })`. Côté serveur `const t = await traducteur()`
+  (`lib/i18n/serveur.ts`), côté client `const t = useT()`
+  (`components/i18n/Langue.tsx`). Le français sert de repli.
+- **Liens** : importer `Link` depuis `@/components/ui/Lien` (jamais
+  `next/link` directement) : il ajoute le préfixe de langue. Pour un
+  `<a>`, une `action` de formulaire ou `router.push`, passer par `t.lien()`.
+- **Contenu** : `data/*.ts` reste la source en français. Les traductions
+  sont dans `data/traductions/{de,lb}/`, rangées par slug, appliquées par
+  `lib/contenu/localiser.ts`. Un contenu non traduit s'affiche en
+  français (un article le signale).
+- **Dates** : `lib/utils/dates.ts` prend la langue en paramètre ; les
+  noms de mois luxembourgeois sont écrits à la main (Intl ne les connaît
+  pas partout).
+
 ## Design : trois règles
 
 - **Le rouge `--direct` est réservé au direct.** Bouton d'écoute, point

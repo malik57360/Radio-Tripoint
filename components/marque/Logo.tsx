@@ -24,7 +24,7 @@ export function Logo({
     return (
       <Image
         src={src}
-        alt={`${site.nomOfficiel} — ${site.baseline}`}
+        alt={`${site.nomOfficiel} — ${site.baseline.fr}`}
         width={taille}
         height={taille}
         sizes={`${taille}px`}

@@ -1,20 +1,28 @@
-import Link from "next/link"
-import { categories } from "@/data/categories"
+import Link from "@/components/ui/Lien"
+import { categoriesLangue } from "@/lib/contenu/localiser"
 import { teinteCategorie } from "@/lib/contenu/teintes"
+import { traducteur } from "@/lib/i18n/serveur"
 import type { Article } from "@/types/article"
 import { Visuel } from "@/components/ui/Visuel"
 import { BadgeArticle, MetaArticle } from "./NewsCard"
 
 /** La une : grand visuel, grand titre, chapeau en serif. */
-export function FeaturedArticle({ article, preload }: { article: Article; preload?: boolean }) {
-  const cat = categories[article.categorie]
+export async function FeaturedArticle({
+  article,
+  preload,
+}: {
+  article: Article
+  preload?: boolean
+}) {
+  const t = await traducteur()
+  const cat = categoriesLangue(t.langue)[article.categorie]
   return (
     <article className="carte group">
       <Visuel
         visuel={article.visuel}
         repli={{
           mot: cat.nom,
-          surmot: "À la une",
+          surmot: t({ fr: "À la une", de: "Aufmacher", lb: "Op der Une" }),
           teinte: teinteCategorie[article.categorie],
           taille: "grand",
         }}

@@ -5,7 +5,8 @@ import type { Article } from "@/types/article"
 import type { Evenement } from "@/types/event"
 import type { Episode } from "@/types/podcast"
 import type { Emission } from "@/types/show"
-import { categories } from "@/data/categories"
+import { categoriesLangue } from "@/lib/contenu/localiser"
+import { choisir, codesLangues, lienLangue, type Langue } from "@/lib/i18n/langues"
 import { dureeIso } from "@/lib/utils/dates"
 import { urlAbsolue } from "./metadata"
 
@@ -21,7 +22,10 @@ const adresse = {
   addressCountry: site.contact.adresse.pays,
 }
 
-export function jsonLdOrganisation() {
+/** URL absolue d'une page dans une langue. */
+const url = (chemin: string, l: Langue) => urlAbsolue(lienLangue(chemin, l))
+
+export function jsonLdOrganisation(l: Langue = "fr") {
   const sameAs = reseauxActifs().map((r) => r.url)
   if (radioConfig.radiokingUrl) sameAs.push(radioConfig.radiokingUrl)
   return {
@@ -33,7 +37,7 @@ export function jsonLdOrganisation() {
         name: site.nomOfficiel,
         alternateName: site.nom,
         url: site.url,
-        description: site.description,
+        description: choisir(site.description, l),
         telephone: site.contact.telephoneE164,
         email: site.contact.email,
         address: adresse,
@@ -52,13 +56,13 @@ export function jsonLdOrganisation() {
         "@id": WEB_ID,
         url: site.url,
         name: site.nomOfficiel,
-        inLanguage: "fr-FR",
+        inLanguage: ["fr", "de", "lb"],
         publisher: { "@id": ORG_ID },
         potentialAction: {
           "@type": "SearchAction",
           target: {
             "@type": "EntryPoint",
-            urlTemplate: `${site.url}/recherche?q={search_term_string}`,
+            urlTemplate: `${url("/recherche", l)}?q={search_term_string}`,
           },
           "query-input": "required name=search_term_string",
         },
@@ -67,7 +71,7 @@ export function jsonLdOrganisation() {
   }
 }
 
-export function jsonLdFilAriane(elements: { nom: string; chemin: string }[]) {
+export function jsonLdFilAriane(elements: { nom: string; chemin: string }[], l: Langue = "fr") {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -75,12 +79,12 @@ export function jsonLdFilAriane(elements: { nom: string; chemin: string }[]) {
       "@type": "ListItem",
       position: i + 1,
       name: e.nom,
-      item: urlAbsolue(e.chemin),
+      item: url(e.chemin, l),
     })),
   }
 }
 
-export function jsonLdArticle(a: Article) {
+export function jsonLdArticle(a: Article, l: Langue = "fr") {
   return {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -88,21 +92,21 @@ export function jsonLdArticle(a: Article) {
     description: a.chapeau,
     ...(a.publieLe ? { datePublished: a.publieLe } : {}),
     ...((a.modifieLe ?? a.publieLe) ? { dateModified: a.modifieLe ?? a.publieLe } : {}),
-    inLanguage: "fr-FR",
-    articleSection: categories[a.categorie].nom,
-    mainEntityOfPage: urlAbsolue(`/actualites/${a.slug}`),
+    inLanguage: codesLangues[l].html,
+    articleSection: categoriesLangue(l)[a.categorie].nom,
+    mainEntityOfPage: url(`/actualites/${a.slug}`, l),
     image: a.visuel
       ? [urlAbsolue(a.visuel.src)]
       : [urlAbsolue(`/actualites/${a.slug}/opengraph-image`)],
     author: a.auteur ? { "@type": "Person", name: a.auteur } : { "@id": ORG_ID },
     publisher: { "@id": ORG_ID },
     ...(a.lieux?.length
-      ? { contentLocation: a.lieux.map((l) => ({ "@type": "Place", name: l })) }
+      ? { contentLocation: a.lieux.map((lieu) => ({ "@type": "Place", name: lieu })) }
       : {}),
   }
 }
 
-export function jsonLdEvenement(e: Evenement) {
+export function jsonLdEvenement(e: Evenement, l: Langue = "fr") {
   return {
     "@context": "https://schema.org",
     "@type": "Event",
@@ -125,11 +129,11 @@ export function jsonLdEvenement(e: Evenement) {
     ...(e.organisateur ? { organizer: { "@type": "Organization", name: e.organisateur } } : {}),
     ...(e.visuel ? { image: [urlAbsolue(e.visuel.src)] } : {}),
     ...(e.gratuit ? { isAccessibleForFree: true } : {}),
-    url: urlAbsolue(`/agenda/${e.slug}`),
+    url: url(`/agenda/${e.slug}`, l),
   }
 }
 
-export function jsonLdEpisode(ep: Episode, emission?: Emission | null) {
+export function jsonLdEpisode(ep: Episode, emission?: Emission | null, l: Langue = "fr") {
   return {
     "@context": "https://schema.org",
     "@type": "PodcastEpisode",
@@ -137,7 +141,7 @@ export function jsonLdEpisode(ep: Episode, emission?: Emission | null) {
     description: ep.description,
     ...(ep.publieLe ? { datePublished: ep.publieLe } : {}),
     timeRequired: dureeIso(ep.duree),
-    url: urlAbsolue(`/podcasts/${ep.slug}`),
+    url: url(`/podcasts/${ep.slug}`, l),
     associatedMedia: {
       "@type": "MediaObject",
       contentUrl: ep.audioUrl.startsWith("http") ? ep.audioUrl : urlAbsolue(ep.audioUrl),
@@ -147,7 +151,7 @@ export function jsonLdEpisode(ep: Episode, emission?: Emission | null) {
           partOfSeries: {
             "@type": "RadioSeries",
             name: emission.nom,
-            url: urlAbsolue(`/emissions/${emission.slug}`),
+            url: url(`/emissions/${emission.slug}`, l),
           },
         }
       : {}),
@@ -155,14 +159,14 @@ export function jsonLdEpisode(ep: Episode, emission?: Emission | null) {
   }
 }
 
-export function jsonLdEmission(e: Emission) {
+export function jsonLdEmission(e: Emission, l: Langue = "fr") {
   return {
     "@context": "https://schema.org",
     "@type": "RadioSeries",
     name: e.nom,
     ...(e.accroche || e.presentation ? { description: e.presentation ?? e.accroche } : {}),
     genre: e.thematique,
-    url: urlAbsolue(`/emissions/${e.slug}`),
+    url: url(`/emissions/${e.slug}`, l),
     productionCompany: { "@id": ORG_ID },
     ...(e.animateurs?.length
       ? { actor: e.animateurs.map((n) => ({ "@type": "Person", name: n })) }

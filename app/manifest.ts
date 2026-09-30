@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: site.nomOfficiel,
     short_name: "Radio Tripoint",
-    description: site.description,
+    description: site.description.fr,
     lang: "fr",
     start_url: "/?source=pwa",
     display: "standalone",

@@ -1,40 +1,56 @@
-import Link from "next/link"
-import { categories } from "@/data/categories"
+import Link from "@/components/ui/Lien"
+import { categoriesLangue } from "@/lib/contenu/localiser"
 import { teinteCategorie } from "@/lib/contenu/teintes"
+import { traducteur } from "@/lib/i18n/serveur"
 import { dateRelative } from "@/lib/utils/dates"
 import { tempsLecture } from "@/lib/utils/texte"
 import { cn } from "@/lib/utils/cn"
 import type { Article } from "@/types/article"
 import { Visuel } from "@/components/ui/Visuel"
 
-export function MetaArticle({ article, className }: { article: Article; className?: string }) {
+export async function MetaArticle({
+  article,
+  className,
+}: {
+  article: Article
+  className?: string
+}) {
+  const t = await traducteur()
   return (
     <p className={cn("text-encre-3 flex flex-wrap items-center gap-x-2 text-[0.8rem]", className)}>
       {article.publieLe && (
         <>
-          <time dateTime={article.publieLe}>{dateRelative(article.publieLe)}</time>
+          <time dateTime={article.publieLe}>{dateRelative(article.publieLe, t.langue)}</time>
           <span aria-hidden>·</span>
         </>
       )}
-      <span>{tempsLecture(article.corps)} min de lecture</span>
+      <span>
+        {tempsLecture(article.corps)}{" "}
+        {t({ fr: "min de lecture", de: "Min. Lesezeit", lb: "Min. Liesen" })}
+      </span>
     </p>
   )
 }
 
-export function BadgeArticle({ article }: { article: Article }) {
+export async function BadgeArticle({ article }: { article: Article }) {
+  const t = await traducteur()
   return (
     <p className="flex flex-wrap items-center gap-2">
-      <span className="badge">{categories[article.categorie].court}</span>
+      <span className="badge">{categoriesLangue(t.langue)[article.categorie].court}</span>
       {article.lieux?.[0] && (
         <span className="text-encre-3 text-[0.75rem] font-medium">{article.lieux[0]}</span>
       )}
-      {article.demo && <span className="badge-exemple">Exemple</span>}
+      {article.demo && (
+        <span className="badge-exemple">
+          {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+        </span>
+      )}
     </p>
   )
 }
 
 /** Carte standard : visuel, rubrique, titre, méta. */
-export function NewsCard({
+export async function NewsCard({
   article,
   titreNiveau: Titre = "h3",
   avecChapeau = false,
@@ -45,7 +61,7 @@ export function NewsCard({
   avecChapeau?: boolean
   sizes?: string
 }) {
-  const cat = categories[article.categorie]
+  const cat = categoriesLangue((await traducteur()).langue)[article.categorie]
   return (
     <article className="carte group flex flex-col">
       <Visuel
@@ -76,8 +92,8 @@ export function NewsCard({
 }
 
 /** Carte horizontale compacte : vignette à gauche. Pour les colonnes secondaires. */
-export function NewsCardLigne({ article }: { article: Article }) {
-  const cat = categories[article.categorie]
+export async function NewsCardLigne({ article }: { article: Article }) {
+  const cat = categoriesLangue((await traducteur()).langue)[article.categorie]
   return (
     <article className="carte group grid grid-cols-[1fr_7rem] gap-4 sm:grid-cols-[1fr_8.5rem]">
       <div className="min-w-0">

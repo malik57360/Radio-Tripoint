@@ -1,16 +1,18 @@
 "use client"
 
 import { ArrowRight, Loader2, Search, X } from "lucide-react"
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
 import { useRouter } from "next/navigation"
 import { useEffect, useId, useRef, useState } from "react"
 import { libellesTypes, type Resultat } from "@/lib/contenu/recherche-types"
+import { useT } from "@/components/i18n/Langue"
 import { Dialogue } from "./Dialogue"
 
 const suggestions = ["Sierck-les-Bains", "Schengen", "Perl", "Génération Z", "Sport"]
 
 export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () => void }) {
   const router = useRouter()
+  const t = useT()
   const [q, setQ] = useState("")
   const [resultats, setResultats] = useState<Resultat[] | null>(null)
   const [charge, setCharge] = useState(false)
@@ -31,10 +33,10 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
     const terme = q.trim()
     if (terme.length < 2) return
     const ctrl = new AbortController()
-    const t = setTimeout(async () => {
+    const minuterie = setTimeout(async () => {
       setCharge(true)
       try {
-        const r = await fetch(`/api/recherche?q=${encodeURIComponent(terme)}`, {
+        const r = await fetch(`/api/recherche?q=${encodeURIComponent(terme)}&langue=${t.langue}`, {
           signal: ctrl.signal,
         })
         const d = (await r.json()) as { resultats: Resultat[] }
@@ -46,16 +48,21 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
       }
     }, 180)
     return () => {
-      clearTimeout(t)
+      clearTimeout(minuterie)
       ctrl.abort()
     }
-  }, [q])
+  }, [q, t.langue])
 
   const terme = q.trim()
   const aAfficher = terme.length >= 2 ? resultats : null
 
   return (
-    <Dialogue ouvert={ouvert} fermer={clore} label="Recherche" className="w-full">
+    <Dialogue
+      ouvert={ouvert}
+      fermer={clore}
+      label={t({ fr: "Recherche", de: "Suche", lb: "Sich" })}
+      className="w-full"
+    >
       <div className="fondu bg-surface text-encre shadow-2 sm:border-trait mx-auto mt-0 w-full max-w-2xl sm:mt-[10vh] sm:border">
         <form
           role="search"
@@ -63,7 +70,7 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
             e.preventDefault()
             if (!terme) return
             clore()
-            router.push(`/recherche?q=${encodeURIComponent(terme)}`)
+            router.push(t.lien(`/recherche?q=${encodeURIComponent(terme)}`))
           }}
           className="border-trait flex items-center gap-3 border-b px-4"
         >
@@ -73,7 +80,11 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
             <Search className="text-encre-3 size-5 flex-none" aria-hidden />
           )}
           <label htmlFor="recherche-globale" className="sr-only">
-            Rechercher des articles, émissions, podcasts, événements
+            {t({
+              fr: "Rechercher des articles, émissions, podcasts, événements",
+              de: "Artikel, Sendungen, Podcasts, Veranstaltungen suchen",
+              lb: "Artikelen, Sendungen, Podcasts, Evenementer sichen",
+            })}
           </label>
           <input
             ref={champ}
@@ -81,7 +92,11 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
             type="search"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Rechercher un article, une émission, une ville…"
+            placeholder={t({
+              fr: "Rechercher un article, une émission, une ville…",
+              de: "Artikel, Sendung, Ort suchen…",
+              lb: "En Artikel, eng Sendung, eng Uertschaft sichen…",
+            })}
             autoComplete="off"
             aria-controls={idListe}
             className="placeholder:text-encre-3 h-16 min-w-0 flex-1 bg-transparent text-lg outline-none"
@@ -89,7 +104,11 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
           <button
             type="button"
             onClick={clore}
-            aria-label="Fermer la recherche"
+            aria-label={t({
+              fr: "Fermer la recherche",
+              de: "Suche schließen",
+              lb: "Sich zoumaachen",
+            })}
             className="hover:bg-papier-2 grid size-10 flex-none place-items-center rounded-full"
           >
             <X className="size-5" aria-hidden />
@@ -99,7 +118,9 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
         <div id={idListe} aria-live="polite" className="max-h-[65dvh] overflow-y-auto">
           {aAfficher === null ? (
             <div className="px-4 py-5">
-              <p className="surtitre text-encre-3">Suggestions</p>
+              <p className="surtitre text-encre-3">
+                {t({ fr: "Suggestions", de: "Vorschläge", lb: "Virschléi" })}
+              </p>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {suggestions.map((s) => (
                   <li key={s}>
@@ -112,8 +133,17 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
             </div>
           ) : aAfficher.length === 0 ? (
             <p className="text-encre-2 px-4 py-8">
-              Aucun résultat pour « <span className="text-encre font-semibold">{terme}</span> ».
-              Essayez un nom de ville ou d&apos;émission.
+              {t({
+                fr: "Aucun résultat pour",
+                de: "Keine Ergebnisse für",
+                lb: "Keng Resultater fir",
+              })}{" "}
+              « <span className="text-encre font-semibold">{terme}</span> ».{" "}
+              {t({
+                fr: "Essayez un nom de ville ou d'émission.",
+                de: "Versuchen Sie einen Ortsnamen oder eine Sendung.",
+                lb: "Probéiert et mat engem Uertschafts- oder Sendungsnumm.",
+              })}
             </p>
           ) : (
             <ul className="py-2">
@@ -125,7 +155,7 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
                     className="group hover:bg-papier-2 focus-visible:bg-papier-2 flex items-start gap-4 px-4 py-3"
                   >
                     <span className="surtitre text-encre-3 mt-1 w-20 flex-none">
-                      {libellesTypes[r.type]}
+                      {t(libellesTypes[r.type])}
                     </span>
                     <span className="min-w-0">
                       <span className="group-hover:text-accent-encre block font-semibold">
@@ -144,7 +174,12 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
               onClick={clore}
               className="lien-fleche border-trait text-accent-encre flex border-t px-4 py-4"
             >
-              Tous les résultats pour « {terme} » <ArrowRight className="size-4" aria-hidden />
+              {t({
+                fr: "Tous les résultats pour",
+                de: "Alle Ergebnisse für",
+                lb: "All Resultater fir",
+              })}{" "}
+              « {terme} » <ArrowRight className="size-4" aria-hidden />
             </Link>
           )}
         </div>

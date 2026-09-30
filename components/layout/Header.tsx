@@ -1,10 +1,12 @@
 "use client"
 
 import { ChevronDown, Menu, Search } from "lucide-react"
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { estActif, navPlus, navPrincipale } from "@/config/navigation"
+import { useT } from "@/components/i18n/Langue"
+import { SelecteurLangue } from "@/components/i18n/SelecteurLangue"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { Logo } from "@/components/marque/Logo"
 import { cn } from "@/lib/utils/cn"
@@ -13,6 +15,7 @@ import { SearchDialog } from "./SearchDialog"
 
 export function Header() {
   const pathname = usePathname()
+  const t = useT()
   const [compact, setCompact] = useState(false)
   const [menuOuvert, setMenuOuvert] = useState(false)
   const [rechercheOuverte, setRechercheOuverte] = useState(false)
@@ -80,7 +83,11 @@ export function Header() {
           {/* Le logo rond déborde sous la barre, comme un autocollant ; il rentre dans le rang au défilement. */}
           <Link
             href="/"
-            aria-label="Radio Tripoint — accueil"
+            aria-label={t({
+              fr: "Radio Tripoint — accueil",
+              de: "Radio Tripoint — Startseite",
+              lb: "Radio Tripoint — Startsäit",
+            })}
             className={cn(
               "relative flex-none self-stretch transition-[width] duration-300",
               compact ? "w-12 lg:w-14" : "w-[4.25rem] lg:w-[5.75rem]",
@@ -99,7 +106,11 @@ export function Header() {
           </Link>
 
           <nav
-            aria-label="Navigation principale"
+            aria-label={t({
+              fr: "Navigation principale",
+              de: "Hauptnavigation",
+              lb: "Haaptnavigatioun",
+            })}
             className="ml-4 hidden flex-1 items-center lg:flex xl:ml-8"
           >
             <ul className="flex items-center gap-0.5 xl:gap-1">
@@ -117,7 +128,7 @@ export function Header() {
                         actif ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100",
                       )}
                     >
-                      {l.libelle}
+                      {t(l.libelle)}
                     </Link>
                   </li>
                 )
@@ -133,7 +144,7 @@ export function Header() {
                     plusActif || plusOuvert ? "text-encre" : "text-encre-2 hover:text-encre",
                   )}
                 >
-                  Plus{" "}
+                  {t({ fr: "Plus", de: "Mehr", lb: "Méi" })}{" "}
                   <ChevronDown
                     className={cn("size-4 transition-transform", plusOuvert && "rotate-180")}
                     aria-hidden
@@ -152,7 +163,7 @@ export function Header() {
                           aria-current={estActif(pathname, l.href) ? "page" : undefined}
                           className="text-encre-2 hover:bg-papier-2 hover:text-encre aria-[current=page]:text-accent-encre block px-4 py-2.5 text-[0.92rem] font-medium"
                         >
-                          {l.libelle}
+                          {t(l.libelle)}
                         </Link>
                       </li>
                     ))}
@@ -163,10 +174,15 @@ export function Header() {
           </nav>
 
           <div className="ml-auto flex items-center gap-1 sm:gap-2">
+            <SelecteurLangue />
             <button
               type="button"
               onClick={() => setRechercheOuverte(true)}
-              aria-label="Rechercher (raccourci /)"
+              aria-label={t({
+                fr: "Rechercher (raccourci /)",
+                de: "Suchen (Tastenkürzel /)",
+                lb: "Sichen (Ofkierzung /)",
+              })}
               className="text-encre-2 hover:bg-papier-2 hover:text-encre grid size-10 place-items-center rounded-full transition-colors max-[359px]:hidden"
             >
               <Search className="size-5" aria-hidden />
@@ -175,7 +191,7 @@ export function Header() {
             <button
               type="button"
               onClick={() => setMenuOuvert(true)}
-              aria-label="Ouvrir le menu"
+              aria-label={t({ fr: "Ouvrir le menu", de: "Menü öffnen", lb: "Menü opmaachen" })}
               aria-expanded={menuOuvert}
               aria-controls="menu-mobile"
               className="text-encre hover:bg-papier-2 grid size-10 place-items-center rounded-full transition-colors lg:hidden"

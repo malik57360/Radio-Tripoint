@@ -1,9 +1,10 @@
 "use client"
 
 import { ArrowRight } from "lucide-react"
-import Link from "next/link"
+import { useT } from "@/components/i18n/Langue"
+import Link from "@/components/ui/Lien"
 import { radioConfig } from "@/config/radioConfig"
-import { libelleHeure, programmeEnCours, programmeSuivant } from "@/lib/radio/grille"
+import { libelleHeure, nomJour, programmeEnCours, programmeSuivant } from "@/lib/radio/grille"
 import { useMaintenant } from "@/lib/radio/horloge"
 import type { GrilleClient } from "@/lib/radio/types"
 import { useLecteur, useSuiviTitre } from "@/lib/radio/useLecteur"
@@ -17,6 +18,7 @@ import { useLecteur, useSuiviTitre } from "@/lib/radio/useLecteur"
 export function EnCeMoment({ grille }: { grille: GrilleClient }) {
   const maintenant = useMaintenant()
   const l = useLecteur()
+  const t = useT()
   useSuiviTitre()
   const date = maintenant ? new Date(maintenant) : null
   const actuel = date ? programmeEnCours(grille, date, radioConfig.timeZone) : null
@@ -31,12 +33,16 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
       <div className="flex items-center justify-between gap-4">
         <h2 id="en-ce-moment" className="surtitre text-nuit-encre-2 flex items-center gap-2.5">
           <span className="point-direct" data-actif={joue} />
-          En ce moment sur Radio Tripoint
+          {t({
+            fr: "En ce moment sur Radio Tripoint",
+            de: "Gerade auf Radio Tripoint",
+            lb: "Elo op Radio Tripoint",
+          })}
         </h2>
         {actuel && (
           <span className="surtitre text-nuit-encre-2 tabular-nums">
-            {libelleHeure(actuel.creneau.debut)}
-            {actuel.creneau.fin && <> — {libelleHeure(actuel.creneau.fin)}</>}
+            {libelleHeure(actuel.creneau.debut, t.langue)}
+            {actuel.creneau.fin && <> — {libelleHeure(actuel.creneau.fin, t.langue)}</>}
           </span>
         )}
       </div>
@@ -56,7 +62,9 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
           </>
         ) : (
           <>
-            <p className="surtitre text-nuit-accent">À l&apos;antenne</p>
+            <p className="surtitre text-nuit-accent">
+              {t({ fr: "À l'antenne", de: "Auf Sendung", lb: "Um Sender" })}
+            </p>
             <p className="titre-affiche text-nuit-encre mt-1.5 text-[clamp(1.7rem,1.2rem+2vw,2.4rem)]">
               {radioConfig.radioName}
             </p>
@@ -64,7 +72,9 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
         )}
         {l.titreEnCours && (
           <p className="text-nuit-encre-2 mt-2 truncate text-sm">
-            <span className="sr-only">Titre en cours : </span>
+            <span className="sr-only">
+              {t({ fr: "Titre en cours : ", de: "Aktueller Titel: ", lb: "Aktuellen Titel: " })}
+            </span>
             {[l.titreEnCours.artiste, l.titreEnCours.titre].filter(Boolean).join(" — ")}
           </p>
         )}
@@ -73,14 +83,17 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
       <div className="border-nuit-trait mt-6 flex flex-wrap items-center justify-between gap-4 border-t pt-5">
         {suivant && suivant.emission.slug !== actuel?.emission.slug ? (
           <p className="text-nuit-encre-2 text-sm">
-            Ensuite · <span className="text-nuit-encre font-semibold">{suivant.emission.nom}</span>{" "}
+            {t({ fr: "Ensuite", de: "Danach", lb: "Duerno" })} ·{" "}
+            <span className="text-nuit-encre font-semibold">{suivant.emission.nom}</span>{" "}
             <span className="tabular-nums">
-              {suivant.creneau.jour} à {libelleHeure(suivant.creneau.debut)}
+              {nomJour(suivant.creneau.jour, t.langue)} {t({ fr: "à", de: "um", lb: "um" })}{" "}
+              {libelleHeure(suivant.creneau.debut, t.langue)}
             </span>
           </p>
         ) : (
           <Link href="/emissions" className="lien-fleche text-nuit-encre-2 hover:text-nuit-encre">
-            Toutes les émissions <ArrowRight className="size-4" aria-hidden />
+            {t({ fr: "Toutes les émissions", de: "Alle Sendungen", lb: "All Sendungen" })}{" "}
+            <ArrowRight className="size-4" aria-hidden />
           </Link>
         )}
       </div>

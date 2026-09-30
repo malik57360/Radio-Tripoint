@@ -1,6 +1,7 @@
 "use client"
 
-import Link from "next/link"
+import { useT } from "@/components/i18n/Langue"
+import Link from "@/components/ui/Lien"
 import Script from "next/script"
 import { useSyncExternalStore } from "react"
 import { analytics } from "@/config/analytics"
@@ -38,6 +39,7 @@ export function reinitialiserConsentement() {
  * Ne rend rien tant qu'aucun outil n'est configuré dans config/analytics.ts.
  */
 export function Consentement() {
+  const t = useT()
   const choix = useSyncExternalStore(
     (f) => {
       abonnes.add(f)
@@ -54,14 +56,17 @@ export function Consentement() {
       {analytics.exigeConsentement && choix === null && (
         <div
           role="dialog"
-          aria-label="Cookies"
+          aria-label={t({ fr: "Cookies", de: "Cookies", lb: "Cookien" })}
           className="border-trait bg-surface shadow-2 fixed inset-x-3 bottom-[calc(var(--barre-lecteur)+0.75rem)] z-50 mx-auto max-w-xl border p-5"
         >
           <p className="text-encre-2 text-sm">
-            Nous aimerions mesurer l&apos;audience du site ({analytics.nom}) pour l&apos;améliorer.
-            Rien n&apos;est déposé sans votre accord.{" "}
+            {t({
+              fr: `Nous aimerions mesurer l'audience du site (${analytics.nom}) pour l'améliorer. Rien n'est déposé sans votre accord.`,
+              de: `Wir möchten die Nutzung der Website messen (${analytics.nom}), um sie zu verbessern. Ohne Ihre Zustimmung wird nichts gespeichert.`,
+              lb: `Mir géifen d'Notzung vum Site gär moossen (${analytics.nom}), fir en ze verbesseren. Ouni Är Zoustëmmung gëtt näischt gespäichert.`,
+            })}{" "}
             <Link href="/politique-confidentialite#cookies" className="lien">
-              En savoir plus
+              {t({ fr: "En savoir plus", de: "Mehr erfahren", lb: "Méi gewuer ginn" })}
             </Link>
           </p>
           <div className="mt-4 flex gap-2">
@@ -70,14 +75,14 @@ export function Consentement() {
               onClick={() => ecrire("accepte")}
               className="btn btn-plein !min-h-10"
             >
-              Accepter
+              {t({ fr: "Accepter", de: "Akzeptieren", lb: "Akzeptéieren" })}
             </button>
             <button
               type="button"
               onClick={() => ecrire("refuse")}
               className="btn btn-trait !min-h-10"
             >
-              Refuser
+              {t({ fr: "Refuser", de: "Ablehnen", lb: "Refuséieren" })}
             </button>
           </div>
         </div>
@@ -87,10 +92,11 @@ export function Consentement() {
 }
 
 export function BoutonGererCookies() {
+  const t = useT()
   if (!analytics.script) return null
   return (
     <button type="button" onClick={reinitialiserConsentement} className="btn btn-trait mt-4">
-      Modifier mes choix
+      {t({ fr: "Modifier mes choix", de: "Auswahl ändern", lb: "Auswiel änneren" })}
     </button>
   )
 }

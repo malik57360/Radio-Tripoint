@@ -1,39 +1,47 @@
+import { sansLangue, type Trad } from "@/lib/i18n/langues"
+
 export interface LienNav {
-  libelle: string
+  libelle: Trad
   href: string
 }
 
 /** Navigation principale (desktop). */
 export const navPrincipale: LienNav[] = [
-  { libelle: "Actualités", href: "/actualites" },
-  { libelle: "Émissions", href: "/emissions" },
-  { libelle: "Podcasts", href: "/podcasts" },
-  { libelle: "Agenda", href: "/agenda" },
-  { libelle: "Culture", href: "/art-culture" },
-  { libelle: "Musique", href: "/actu-music" },
-  { libelle: "Sport", href: "/sport" },
+  { libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten" }, href: "/actualites" },
+  { libelle: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" }, href: "/emissions" },
+  { libelle: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts" }, href: "/podcasts" },
+  { libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda" }, href: "/agenda" },
+  { libelle: { fr: "Culture", de: "Kultur", lb: "Kultur" }, href: "/art-culture" },
+  { libelle: { fr: "Musique", de: "Musik", lb: "Musek" }, href: "/actu-music" },
+  { libelle: { fr: "Sport", de: "Sport", lb: "Sport" }, href: "/sport" },
 ]
 
 /** Menu « Plus ». */
 export const navPlus: LienNav[] = [
-  { libelle: "Actu People", href: "/actu-people" },
-  { libelle: "Mode & Style", href: "/mode-style" },
-  { libelle: "Prévention", href: "/prevention" },
-  { libelle: "Publicité", href: "/publicite" },
-  { libelle: "À propos", href: "/a-propos" },
-  { libelle: "Contact", href: "/contact" },
+  { libelle: { fr: "Actu People", de: "People", lb: "People" }, href: "/actu-people" },
+  { libelle: { fr: "Mode & Style", de: "Mode & Stil", lb: "Mode & Stil" }, href: "/mode-style" },
+  { libelle: { fr: "Prévention", de: "Prävention", lb: "Preventioun" }, href: "/prevention" },
+  { libelle: { fr: "Publicité", de: "Werbung", lb: "Reklamm" }, href: "/publicite" },
+  { libelle: { fr: "À propos", de: "Über uns", lb: "Iwwer eis" }, href: "/a-propos" },
+  { libelle: { fr: "Contact", de: "Kontakt", lb: "Kontakt" }, href: "/contact" },
 ]
 
 export const navRubriques: LienNav[] = [
-  { libelle: "Actualités", href: "/actualites" },
-  { libelle: "Art & Culture", href: "/art-culture" },
-  { libelle: "Actu Music", href: "/actu-music" },
-  { libelle: "Actu People", href: "/actu-people" },
-  { libelle: "Mode & Style", href: "/mode-style" },
-  { libelle: "Sport", href: "/sport" },
-  { libelle: "Prévention", href: "/prevention" },
-  { libelle: "Agenda", href: "/agenda" },
+  { libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten" }, href: "/actualites" },
+  {
+    libelle: { fr: "Art & Culture", de: "Kunst & Kultur", lb: "Konscht & Kultur" },
+    href: "/art-culture",
+  },
+  { libelle: { fr: "Actu Music", de: "Musik", lb: "Musek" }, href: "/actu-music" },
+  { libelle: { fr: "Actu People", de: "People", lb: "People" }, href: "/actu-people" },
+  { libelle: { fr: "Mode & Style", de: "Mode & Stil", lb: "Mode & Stil" }, href: "/mode-style" },
+  { libelle: { fr: "Sport", de: "Sport", lb: "Sport" }, href: "/sport" },
+  { libelle: { fr: "Prévention", de: "Prävention", lb: "Preventioun" }, href: "/prevention" },
+  { libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda" }, href: "/agenda" },
 ]
 
-export const estActif = (pathname: string, href: string) =>
-  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`)
+/** `pathname` peut porter un préfixe de langue ("/de/agenda") : on le retire. */
+export const estActif = (pathname: string, href: string) => {
+  const p = sansLangue(pathname)
+  return href === "/" ? p === "/" : p === href || p.startsWith(`${href}/`)
+}

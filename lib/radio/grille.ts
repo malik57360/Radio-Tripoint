@@ -1,3 +1,4 @@
+import type { Langue } from "@/lib/i18n/langues"
 import type { Creneau, Emission, Jour } from "@/types/show"
 
 const JOURS: Jour[] = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
@@ -74,10 +75,45 @@ export function programmeSuivant(
   return meilleur?.p ?? null
 }
 
-export const libelleHeure = (hhmm: string) =>
-  (hhmm === "24:00" ? "00:00" : hhmm).replace(":", " h ")
+export const libelleHeure = (hhmm: string, l: Langue = "fr") => {
+  const h = hhmm === "24:00" ? "00:00" : hhmm
+  return l === "fr" ? h.replace(":", " h ") : h
+}
 
-export function libelleCreneaux(creneaux: Creneau[]): string[] {
+const NOMS_JOURS: Record<Langue, Record<Jour, string>> = {
+  fr: {
+    lundi: "lundi",
+    mardi: "mardi",
+    mercredi: "mercredi",
+    jeudi: "jeudi",
+    vendredi: "vendredi",
+    samedi: "samedi",
+    dimanche: "dimanche",
+  },
+  de: {
+    lundi: "Montag",
+    mardi: "Dienstag",
+    mercredi: "Mittwoch",
+    jeudi: "Donnerstag",
+    vendredi: "Freitag",
+    samedi: "Samstag",
+    dimanche: "Sonntag",
+  },
+  lb: {
+    lundi: "Méindeg",
+    mardi: "Dënschdeg",
+    mercredi: "Mëttwoch",
+    jeudi: "Donneschdeg",
+    vendredi: "Freideg",
+    samedi: "Samschdeg",
+    dimanche: "Sonndeg",
+  },
+}
+
+/** Nom du jour dans la langue ("dimanche", "Sonntag", "Sonndeg"). */
+export const nomJour = (j: Jour, l: Langue = "fr") => NOMS_JOURS[l][j]
+
+export function libelleCreneaux(creneaux: Creneau[], l: Langue = "fr"): string[] {
   // Regroupe les jours qui partagent le même horaire.
   const parHoraire = new Map<string, Jour[]>()
   for (const c of creneaux) {
@@ -89,8 +125,13 @@ export function libelleCreneaux(creneaux: Creneau[]): string[] {
     const tries = [...new Set(jours)].sort((a, b) => ORDRE.indexOf(a) - ORDRE.indexOf(b))
     const j =
       tries.length === 7
-        ? "Tous les jours"
-        : tries.map((x) => x[0].toUpperCase() + x.slice(1)).join(", ")
-    return f ? `${j} · ${libelleHeure(d)} – ${libelleHeure(f)}` : `${j} · ${libelleHeure(d)}`
+        ? { fr: "Tous les jours", de: "Täglich", lb: "All Dag" }[l]
+        : tries
+            .map((x) => nomJour(x, l))
+            .map((x) => x[0].toUpperCase() + x.slice(1))
+            .join(", ")
+    return f
+      ? `${j} · ${libelleHeure(d, l)} – ${libelleHeure(f, l)}`
+      : `${j} · ${libelleHeure(d, l)}`
   })
 }

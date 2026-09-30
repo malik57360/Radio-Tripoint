@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react"
-import Link from "next/link"
+import Link from "@/components/ui/Lien"
+import { traducteur } from "@/lib/i18n/serveur"
 import { jsonLdFilAriane } from "@/lib/seo/jsonld"
 import { cn } from "@/lib/utils/cn"
 import { JsonLd } from "./JsonLd"
@@ -10,7 +11,7 @@ export interface Miette {
 }
 
 /** Fil d'Ariane visible + BreadcrumbList JSON-LD. Le dernier élément est la page courante. */
-export function Breadcrumbs({
+export async function Breadcrumbs({
   elements,
   className,
   sombre,
@@ -19,11 +20,15 @@ export function Breadcrumbs({
   className?: string
   sombre?: boolean
 }) {
-  const complet = [{ nom: "Accueil", chemin: "/" }, ...elements]
+  const t = await traducteur()
+  const complet = [
+    { nom: t({ fr: "Accueil", de: "Startseite", lb: "Startsäit" }), chemin: "/" },
+    ...elements,
+  ]
   return (
     <>
       <nav
-        aria-label="Fil d'Ariane"
+        aria-label={t({ fr: "Fil d'Ariane", de: "Brotkrümelnavigation", lb: "Navigatiounspad" })}
         className={cn("text-[0.8rem]", sombre ? "text-nuit-encre-2" : "text-encre-3", className)}
       >
         <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
@@ -60,7 +65,7 @@ export function Breadcrumbs({
           })}
         </ol>
       </nav>
-      <JsonLd data={jsonLdFilAriane(complet)} />
+      <JsonLd data={jsonLdFilAriane(complet, t.langue)} />
     </>
   )
 }

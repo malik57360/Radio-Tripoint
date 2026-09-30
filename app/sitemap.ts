@@ -5,8 +5,13 @@ import { tousArticles } from "@/lib/contenu/articles"
 import { listerEmissions } from "@/lib/contenu/emissions"
 import { tousEvenements } from "@/lib/contenu/evenements"
 import { listerEpisodes } from "@/lib/contenu/podcasts"
+import { codesLangues, langues, lienLangue } from "@/lib/i18n/langues"
 
-/** Sitemap dynamique. Les contenus de démonstration en sont exclus. */
+/**
+ * Sitemap dynamique, dans les trois langues : chaque page y figure en
+ * français, allemand et luxembourgeois, avec ses équivalents (hreflang).
+ * Les contenus de démonstration en sont exclus.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const u = (p: string) => `${site.url}${p}`
   const [articles, emissions, episodes, evenements] = await Promise.all([
@@ -32,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: u("/mentions-legales"), changeFrequency: "yearly", priority: 0.1 },
     { url: u("/politique-confidentialite"), changeFrequency: "yearly", priority: 0.1 },
   ]
-  return [
+  const pages: MetadataRoute.Sitemap = [
     ...statiques,
     ...articles
       .filter((a) => !a.demo)
@@ -58,4 +63,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((e) => !e.demo)
       .map((e) => ({ url: u(`/agenda/${e.slug}`), lastModified: e.debut, priority: 0.6 })),
   ]
+  return pages.flatMap((p) => {
+    const chemin = p.url.slice(site.url.length) || "/"
+    const languages = Object.fromEntries(
+      langues.map((l) => [codesLangues[l].html, u(lienLangue(chemin, l))]),
+    )
+    return langues.map((l) => ({
+      ...p,
+      url: u(lienLangue(chemin, l)),
+      alternates: { languages },
+    }))
+  })
 }

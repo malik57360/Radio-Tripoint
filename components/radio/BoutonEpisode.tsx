@@ -1,5 +1,6 @@
 "use client"
 
+import { useT } from "@/components/i18n/Langue"
 import { Loader2, Pause, Play } from "lucide-react"
 import { basculer, ecouterEpisode, type EpisodeEnLecture } from "@/lib/radio/moteur"
 import { useLecteur } from "@/lib/radio/useLecteur"
@@ -15,11 +16,13 @@ export function BoutonEpisode({
   className?: string
 }) {
   const l = useLecteur()
+  const t = useT()
   const courant = l.source === "episode" && l.episode?.slug === episode.slug
   const joue = courant && l.statut === "playing"
   const charge = courant && l.statut === "loading"
   const agir = () => (courant && (joue || charge) ? basculer() : void ecouterEpisode(episode))
-  const label = `${joue ? "Mettre en pause" : "Écouter"} : ${episode.titre}`
+  const ecouter = t({ fr: "Écouter", de: "Anhören", lb: "Lauschteren" })
+  const label = `${joue ? t({ fr: "Mettre en pause", de: "Pausieren", lb: "Pauséieren" }) : ecouter} : ${episode.titre}`
   const Icone = charge ? Loader2 : joue ? Pause : Play
 
   if (variante === "rond") {
@@ -60,7 +63,11 @@ export function BoutonEpisode({
       )}
     >
       <Icone className={cn("size-4", charge ? "animate-spin" : "fill-current")} aria-hidden />
-      {joue ? "Pause" : courant && l.statut === "paused" ? "Reprendre" : "Écouter"}
+      {joue
+        ? t({ fr: "Pause", de: "Pause", lb: "Paus" })
+        : courant && l.statut === "paused"
+          ? t({ fr: "Reprendre", de: "Fortsetzen", lb: "Weiderlauschteren" })
+          : ecouter}
     </button>
   )
 }
