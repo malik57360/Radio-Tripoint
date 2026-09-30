@@ -122,7 +122,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           </main>
           <Footer />
           <LecteurBarre grille={grille} />
-          <Guide />
+          {process.env.GUIDE_ACTIF === "1" && <Guide />}
           <DirectAuto />
           <Consentement />
           <JsonLd data={jsonLdOrganisation(l)} />
