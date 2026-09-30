@@ -13,8 +13,8 @@ export function BoutonDirect({
   taille?: "compact" | "normal" | "grand"
   className?: string
 }) {
-  const { source, statut } = useLecteur()
-  const actif = source === "direct" && statut === "playing"
+  const { source, statut, widgetOuvert } = useLecteur()
+  const actif = (source === "direct" && statut === "playing") || widgetOuvert
   const charge = source === "direct" && statut === "loading"
   const libelle = actif ? "En écoute" : charge ? "Connexion…" : "Écouter en direct"
 

@@ -40,6 +40,8 @@ export interface EtatLecteur {
   titreEnCours: TitreEnCours | null
   /** Démarrage auto refusé par le navigateur : on attend le premier geste. */
   attenteGeste: boolean
+  /** Mode sans flux brut : le widget Radioking est affiché. */
+  widgetOuvert: boolean
 }
 
 const CLE_VOLUME = "rt:volume"
@@ -55,6 +57,7 @@ const ETAT_INITIAL: EtatLecteur = {
   dureeMedia: 0,
   titreEnCours: null,
   attenteGeste: false,
+  widgetOuvert: false,
 }
 
 let etat: EtatLecteur = ETAT_INITIAL
@@ -211,8 +214,25 @@ export async function demarrerDirectAuto(): Promise<"ok" | "bloque" | "rien"> {
   return r === "bloque" ? "bloque" : r === "ok" ? "ok" : "rien"
 }
 
+/** Sans flux brut, le direct passe par le widget officiel Radioking. */
+export const modeWidget = !radioConfig.streamUrl && Boolean(radioConfig.widgetUrl)
+
+export function fermerWidget() {
+  maj({ widgetOuvert: false, statut: "idle" })
+}
+
 export async function ecouterDirect() {
   noterPauseVolontaire(false)
+  if (modeWidget) {
+    // Couper un éventuel épisode : un seul son à la fois.
+    if (audio) {
+      audio.pause()
+      audio.removeAttribute("src")
+      audio.load()
+    }
+    maj({ source: "direct", episode: null, statut: "idle", erreur: null, widgetOuvert: true })
+    return
+  }
   if (!radioConfig.streamUrl) {
     maj({ source: "direct", episode: null, statut: "error", erreur: "non-configure" })
     return
@@ -228,7 +248,13 @@ export async function ecouterEpisode(ep: EpisodeEnLecture) {
   if (etat.source === "episode" && etat.episode?.slug === ep.slug && audio?.getAttribute("src")) {
     return reprendre()
   }
-  maj({ source: "episode", episode: ep, position: 0, dureeMedia: ep.duree ?? 0 })
+  maj({
+    source: "episode",
+    episode: ep,
+    position: 0,
+    dureeMedia: ep.duree ?? 0,
+    widgetOuvert: false,
+  })
   await demarrer(ep.audioUrl)
 }
 
@@ -259,12 +285,18 @@ export async function reprendre() {
 
 /** Bouton lecture/pause générique : agit sur la source courante. */
 export function basculer() {
+  if (modeWidget && etat.source === "direct") return basculerDirect()
   if (etat.statut === "playing" || etat.statut === "loading") pause()
   else void reprendre()
 }
 
 /** Bouton « direct » : lance le direct, ou le coupe s'il joue déjà. */
 export function basculerDirect() {
+  if (modeWidget) {
+    if (etat.widgetOuvert) fermerWidget()
+    else void ecouterDirect()
+    return
+  }
   if (etat.source === "direct" && (etat.statut === "playing" || etat.statut === "loading")) pause()
   else void ecouterDirect()
 }
