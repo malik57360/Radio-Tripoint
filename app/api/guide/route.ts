@@ -5,8 +5,8 @@ import { estLangue, type Langue } from "@/lib/i18n/langues"
 
 /**
  * Guide des Trois Frontières. Relaie la conversation vers Claude (API
- * Messages d'Anthropic) via Vercel AI Gateway, avec la recherche web, et
- * renvoie un flux NDJSON simplifié au navigateur :
+ * Messages d'Anthropic), directement ou via Vercel AI Gateway, avec la
+ * recherche web, et renvoie un flux NDJSON simplifié au navigateur :
  *   {"t":"texte","v":"…"}         morceau de réponse
  *   {"t":"recherche","v":"…"}     le guide cherche sur le web
  *   {"t":"source","url","titre"}  source citée
@@ -15,8 +15,30 @@ import { estLangue, type Langue } from "@/lib/i18n/langues"
  */
 export const maxDuration = 60
 
-const MODELE = process.env.GUIDE_MODELE || "anthropic/claude-sonnet-5.5"
-const PASSERELLE = process.env.GUIDE_PASSERELLE || "https://ai-gateway.vercel.sh/v1/messages"
+/**
+ * Deux accès possibles à Claude, même API Messages :
+ * - clé Anthropic (ANTHROPIC_API_KEY) : appel direct à api.anthropic.com ;
+ * - sinon Vercel AI Gateway, authentifié par le jeton OIDC du projet.
+ */
+function acces(request: Request) {
+  const cleAnthropic = process.env.ANTHROPIC_API_KEY
+  if (cleAnthropic)
+    return {
+      url: process.env.GUIDE_PASSERELLE || "https://api.anthropic.com/v1/messages",
+      modele: process.env.GUIDE_MODELE || "claude-sonnet-5-5",
+      entetes: { "x-api-key": cleAnthropic } as Record<string, string>,
+    }
+  const jeton =
+    process.env.AI_GATEWAY_API_KEY ||
+    request.headers.get("x-vercel-oidc-token") ||
+    process.env.VERCEL_OIDC_TOKEN
+  if (!jeton) return null
+  return {
+    url: process.env.GUIDE_PASSERELLE || "https://ai-gateway.vercel.sh/v1/messages",
+    modele: process.env.GUIDE_MODELE || "anthropic/claude-sonnet-5.5",
+    entetes: { Authorization: `Bearer ${jeton}` } as Record<string, string>,
+  }
+}
 const MAX_MESSAGES = 16
 const MAX_CARACTERES = 1500
 
@@ -71,27 +93,22 @@ export async function POST(request: Request) {
   const cle = createHash("sha256").update(`guide:${ip}`).digest("hex").slice(0, 24)
   if (!autoriser(cle, 20, 10 * 60 * 1000)) return json({ erreur: "debit" }, 429)
 
-  // Sur Vercel, le jeton OIDC de la requête authentifie auprès d'AI Gateway :
-  // aucune clé à gérer. Une clé explicite reste possible (dev local).
-  const jeton =
-    process.env.AI_GATEWAY_API_KEY ||
-    request.headers.get("x-vercel-oidc-token") ||
-    process.env.VERCEL_OIDC_TOKEN
-  if (!jeton) return json({ erreur: "non-configure" }, 503)
+  const cible = acces(request)
+  if (!cible) return json({ erreur: "non-configure" }, 503)
 
   // Partie fixe mise en cache chez Anthropic ; la partie variable (date,
   // agenda, langue) la suit.
   const { fixe, variable } = await consignesGuide(l)
 
-  const amont = await fetch(PASSERELLE, {
+  const amont = await fetch(cible.url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${jeton}`,
+      ...cible.entetes,
       "Content-Type": "application/json",
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: MODELE,
+      model: cible.modele,
       max_tokens: 1200,
       stream: true,
       system: [
