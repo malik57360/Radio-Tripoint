@@ -10,10 +10,12 @@ import { socialLinks } from "./socialLinks"
 
 export const radioConfig = {
   radioName: "Radio Tripoint",
-  /** Flux audio direct (MP3/AAC). Vide = pas de lecture intégrée. */
+  /**
+   * Flux audio direct : MP3 128 kbit/s « Radio Tripoint », vérifié (cible de la
+   * redirection de play.radioking.io/radio-tripoint-la-radio-transfrontaliere).
+   */
   streamUrl:
-    process.env.NEXT_PUBLIC_STREAM_URL ||
-    "https://listen.radioking.com/radio/radio-tripoint-la-radio-transfrontaliere",
+    process.env.NEXT_PUBLIC_STREAM_URL || "https://listen.radioking.com/radio/832651/stream/901926",
   /** Lien vers un player externe (bouton « Ouvrir le player ») : désactivé, vide par défaut. */
   radiokingUrl: process.env.NEXT_PUBLIC_RADIOKING_URL ?? "",
   /** Route interne qui relaie le « titre en cours » (voir app/api/en-direct). */

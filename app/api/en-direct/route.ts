@@ -22,19 +22,28 @@ function adapter(d: Brut): TitreEnCours | null {
   }
   const liste = Array.isArray(d.data) ? (d.data[0] as Brut) : null
   const source = liste ?? d
-  const titre = str(source.title) ?? str(source.song)
-  if (!titre) return null
-  return {
-    titre,
-    artiste: str(source.artist),
-    pochette: str(source.cover) ?? str(source.cover_url),
+  const brut = str(source.title) ?? str(source.song)
+  if (!brut) return null
+  let titre = brut
+  let artiste = str(source.artist)
+  // Radioking envoie souvent « Artiste - Titre » dans title, sans artist.
+  if (!artiste) {
+    const i = brut.indexOf(" - ")
+    if (i > 0) {
+      artiste = brut.slice(0, i).trim()
+      titre = brut.slice(i + 3).trim() || brut
+    }
   }
+  return { titre, artiste, pochette: str(source.cover) ?? str(source.cover_url) }
 }
 
 export async function GET() {
   // Lue à chaque requête (la source est configurée à l'exécution) ; le fetch, lui, est mis en cache 20 s.
   await connection()
-  const url = process.env.RADIO_NOW_PLAYING_URL
+  // API publique Radioking de la radio (vérifiée) ; la variable d'environnement reste prioritaire.
+  const url =
+    process.env.RADIO_NOW_PLAYING_URL ||
+    "https://api.radioking.io/widget/radio/radio-tripoint-la-radio-transfrontaliere/track/current"
   if (!url) return Response.json({ titre: null })
   try {
     const r = await fetch(url, { next: { revalidate: 20 }, signal: AbortSignal.timeout(4000) })
