@@ -49,7 +49,20 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {
-    return redirections.map(([source, destination]) => ({ source, destination, permanent: true }))
+    return [
+      ...redirections.map(([source, destination]) => ({ source, destination, permanent: true })),
+      // L'émission « On Vous Donne la Parole » s'appelle désormais « À vous la parole ».
+      {
+        source: "/emissions/on-vous-donne-la-parole",
+        destination: "/emissions/a-vous-la-parole",
+        permanent: true,
+      },
+      {
+        source: "/:lang(de|lb|en|es)/emissions/on-vous-donne-la-parole",
+        destination: "/:lang/emissions/a-vous-la-parole",
+        permanent: true,
+      },
+    ]
   },
   async headers() {
     return [

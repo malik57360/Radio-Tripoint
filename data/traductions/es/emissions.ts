@@ -7,7 +7,7 @@ export const emissions: Record<string, TradEmission> = {
       "Génération Z es un programa dinámico y comprometido dirigido a los jóvenes de 15 a 17 años. Da la palabra a una generación conectada, consciente y en plena evolución, y aborda los temas de su día a día.",
     thematique: "Juventud",
   },
-  "on-vous-donne-la-parole": {
+  "a-vous-la-parole": {
     accroche: "Salir al encuentro de la gente y darle la palabra.",
     presentation:
       "«À vous la parole» es un programa de terreno, grabado en el corazón de las Tres Fronteras (Francia, Luxemburgo, Alemania). La idea es sencilla: salir al encuentro de la gente y darle la palabra libremente sobre los temas que le importan.",

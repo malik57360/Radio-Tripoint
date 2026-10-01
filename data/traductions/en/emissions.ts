@@ -7,7 +7,7 @@ export const emissions: Record<string, TradEmission> = {
       "Génération Z is a lively, committed programme for young people aged 15 to 17. It gives a voice to a connected, aware and evolving generation, and tackles the subjects of their everyday lives.",
     thematique: "Youth",
   },
-  "on-vous-donne-la-parole": {
+  "a-vous-la-parole": {
     accroche: "Going out to meet people and giving them a voice.",
     presentation:
       "“À vous la parole” is a programme recorded out in the field, in the heart of the Three Borders (France, Luxembourg, Germany). The idea is simple: go out to meet people and let them speak freely about the issues that matter to them.",

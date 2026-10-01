@@ -7,7 +7,7 @@ export const emissions: Record<string, TradEmission> = {
       "Génération Z ass eng dynamesch an engagéiert Sendung fir Jonker vu 15 bis 17 Joer. Si gëtt enger vernetzter, bewosster Generatioun, déi sech nach entwéckelt, d'Wuert a schwätzt iwwer d'Themen aus hirem Alldag.",
     thematique: "Jugend",
   },
-  "on-vous-donne-la-parole": {
+  "a-vous-la-parole": {
     accroche: "Op d'Leit zougoen an hinnen d'Wuert ginn.",
     presentation:
       "„À vous la parole“ ass eng Sendung um Terrain, opgeholl am Häerz vum Dräilännereck (Frankräich, Lëtzebuerg, Däitschland). D'Prinzip ass einfach: op d'Leit zougoen an hinne fräi d'Wuert ginn – iwwer d'Themen, déi si betreffen.",

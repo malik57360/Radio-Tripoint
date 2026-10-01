@@ -16,11 +16,11 @@ export const generateMetadata = () =>
       es: "Nuestros programas — las citas de Radio Tripoint",
     },
     description: {
-      fr: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin !… Découvrez les émissions de Radio Tripoint, la radio des Trois Frontières.",
-      de: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin !… Entdecken Sie die Sendungen von Radio Tripoint, dem Radio des Dreiländerecks.",
-      lb: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin !… Entdeckt d'Sendunge vu Radio Tripoint, dem Radio vum Dräilännereck.",
-      en: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin!… Discover the programmes of Radio Tripoint, the radio of the Three Borders.",
-      es: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin!… Descubra los programas de Radio Tripoint, la radio de las Tres Fronteras.",
+      fr: "Génération Z, À vous la parole, Histoire & Mémoire Régionale, Talents du coin !… Découvrez les émissions de Radio Tripoint, la radio des Trois Frontières.",
+      de: "Génération Z, À vous la parole, Histoire & Mémoire Régionale, Talents du coin !… Entdecken Sie die Sendungen von Radio Tripoint, dem Radio des Dreiländerecks.",
+      lb: "Génération Z, À vous la parole, Histoire & Mémoire Régionale, Talents du coin !… Entdeckt d'Sendunge vu Radio Tripoint, dem Radio vum Dräilännereck.",
+      en: "Génération Z, À vous la parole, Histoire & Mémoire Régionale, Talents du coin!… Discover the programmes of Radio Tripoint, the radio of the Three Borders.",
+      es: "Génération Z, À vous la parole, Histoire & Mémoire Régionale, Talents du coin!… Descubra los programas de Radio Tripoint, la radio de las Tres Fronteras.",
     },
     chemin: "/emissions",
   })
