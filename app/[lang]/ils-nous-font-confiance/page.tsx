@@ -84,41 +84,44 @@ export default async function PageConfiance() {
             })}
           </h2>
           <ul className="mt-8 grid gap-6 sm:grid-cols-2">
-            {structures.map((s) => {
-              const contenu = (
-                <>
-                  <span className="relative block h-28 w-full sm:h-32">
-                    <Image
-                      src={s.logo.src}
-                      alt={s.nom}
-                      fill
-                      sizes="(min-width: 640px) 40vw, 90vw"
-                      className="object-contain"
-                    />
-                  </span>
-                  <span className="mt-4 flex items-center justify-center gap-1.5 text-center text-sm font-semibold">
-                    {s.nom}
-                    {s.site && <ExternalLink className="size-3.5 flex-none" aria-hidden />}
-                  </span>
-                </>
-              )
-              return (
-                <li key={s.nom}>
-                  {s.site ? (
+            {structures.map((s) => (
+              <li
+                key={s.nom}
+                className="bg-surface border-trait shadow-1 flex flex-col overflow-hidden border"
+              >
+                {/* Les logos sont faits pour un fond blanc : ce panneau le reste en mode sombre. */}
+                <div className="relative h-40 bg-white sm:h-44">
+                  <Image
+                    src={s.logo.src}
+                    alt={s.nom}
+                    fill
+                    sizes="(min-width: 640px) 40vw, 90vw"
+                    className="object-contain p-2 sm:p-3"
+                  />
+                </div>
+                <div className="border-accent flex flex-1 flex-col gap-4 border-t-4 p-5">
+                  <h3 className="text-lg leading-snug font-bold">{s.nom}</h3>
+                  {s.site && (
                     <a
                       href={s.site}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="border-trait hover:border-encre block border bg-white p-6 transition-colors"
+                      className="bg-accent text-sur-accent mt-auto inline-flex items-center gap-2 self-start px-4 py-2.5 text-sm font-bold transition-opacity hover:opacity-90"
                     >
-                      {contenu}
+                      {t({ fr: "Visiter le site", de: "Website besuchen", lb: "Site besichen" })}
+                      <ExternalLink className="size-4" aria-hidden />
+                      <span className="sr-only">
+                        {t({
+                          fr: "(nouvel onglet)",
+                          de: "(neuer Tab)",
+                          lb: "(neien Tab)",
+                        })}
+                      </span>
                     </a>
-                  ) : (
-                    <div className="border-trait block border bg-white p-6">{contenu}</div>
                   )}
-                </li>
-              )
-            })}
+                </div>
+              </li>
+            ))}
           </ul>
         </section>
 
