@@ -684,9 +684,18 @@
 
 /* ─── Tripo, la mascotte du guide ──────────────────────────────────────── */
 
-.mascotte-respire {
+.mascotte {
+  overflow: visible;
+}
+.mascotte-anime .mascotte-corps {
+  transform-box: fill-box;
   transform-origin: 50% 100%;
   animation: tripo-respire 3.2s ease-in-out infinite;
+}
+.mascotte-anime .mascotte-yeux {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: tripo-cligne 4.6s ease-in-out infinite;
 }
 @keyframes tripo-respire {
   0%,
@@ -694,7 +703,17 @@
     transform: scale(1, 1);
   }
   50% {
-    transform: scale(1.02, 0.98);
+    transform: scale(1.03, 0.97);
+  }
+}
+@keyframes tripo-cligne {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
   }
 }
 
