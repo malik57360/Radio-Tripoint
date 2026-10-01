@@ -125,6 +125,24 @@ export const personnes: Personne[] = [
       hauteur: 800,
     },
   },
+  {
+    nom: "Michel Gloden",
+    role: {
+      fr: "Maire de Schengen",
+      de: "Bürgermeister von Schengen",
+      lb: "Buergermeeschter vu Schengen",
+    },
+    photo: {
+      src: "/media/confiance/michel-gloden.webp",
+      alt: {
+        fr: "Portrait de Michel Gloden, souriant, en costume sombre, chemise blanche et cravate bleu clair à pois.",
+        de: "Porträt von Michel Gloden, lächelnd, in dunklem Anzug, weißem Hemd und hellblauer gepunkteter Krawatte.",
+        lb: "Portrait vum Michel Gloden, laachend, an engem donkelen Kostüm, wäissem Hiem an enger hellbloer gepunkter Krawatt.",
+      },
+      largeur: 600,
+      hauteur: 800,
+    },
+  },
 ]
 
 export const structures: Structure[] = [
