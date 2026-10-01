@@ -45,11 +45,11 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
           <p className="surtitre text-nuit-encre-2 flex items-center gap-3">
             <span className="bg-nuit-accent h-px w-8" aria-hidden />
             {t({
-              fr: "Le média qui fait tomber les frontières",
-              de: "Das Medium, das Grenzen fallen lässt",
-              lb: "D'Medium, dat d'Grenze falen léisst",
-              en: "The media that breaks down borders",
-              es: "El medio que derriba fronteras",
+              fr: "Un média, trois pays, une seule voix",
+              de: "Ein Medium, drei Länder, eine Stimme",
+              lb: "Ee Medium, dräi Länner, eng Stëmm",
+              en: "One media, three countries, one voice",
+              es: "Un medio, tres países, una sola voz",
             })}
           </p>
           <h1
