@@ -6,6 +6,97 @@ import type { Article } from "@/types/article"
  * `ordre` reprend le rang d'apparition (1 = le plus récent).
  */
 export const artCulture: Article[] = [
+  // Article de la rédaction, 1er octobre 2026, d'après l'e-mail de
+  // l'association Lire en fête et l'affiche du salon.
+  {
+    slug: "salon-du-livre-de-rettel-2026",
+    titre:
+      "Salon du Livre de Rettel : 60 auteurs, Régis Hector en parrain et une légende à découvrir",
+    chapeau:
+      "Le Salon du Livre de Rettel revient le dimanche 4 octobre 2026, de 10 h à 18 h, à la salle polyvalente : une journée de littérature, de créativité et de convivialité, avec 60 auteurs et une entrée gratuite.",
+    categorie: "art-culture",
+    publieLe: "2026-10-01T15:00:00+02:00",
+    lieux: ["Rettel", "Boust"],
+    tags: ["livres", "salon", "BD", "jeunesse"],
+    visuel: {
+      src: "/media/articles/salon-du-livre-de-rettel-2026.webp",
+      alt: "Affiche du Salon du Livre de Rettel : dimanche 4 octobre de 10 h à 18 h, présence de 60 auteurs, parrainé par Régis Hector, salle polyvalente, 15 rue de la Chartreuse, entrée gratuite.",
+      largeur: 1179,
+      hauteur: 1663,
+    },
+    corps: [
+      {
+        type: "paragraphe",
+        texte:
+          "Le Salon du Livre de Rettel revient le dimanche 4 octobre 2026, de 10 h à 18 h, à la salle polyvalente de Rettel. Organisée par l’association Lire en fête, cette journée est placée sous le signe de la littérature, de la créativité et de la convivialité, et l’entrée est gratuite.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Cette nouvelle édition rassemblera 60 auteurs, venus principalement du Grand Est, dont trois de Belgique. Près de 30 % d’entre eux sont de nouveaux venus, et la priorité a été donnée aux écrivains ayant publié un ouvrage en 2025 ou en 2026.",
+      },
+      { type: "intertitre", texte: "Des livres pour tous les goûts" },
+      {
+        type: "paragraphe",
+        texte:
+          "Bandes dessinées, mangas, littérature jeunesse, romans d’amour, polars, thrillers, témoignages, bien-être, géopolitique… Le public pourra découvrir une grande variété d’univers : il y en aura pour tous les lecteurs, petits et grands.",
+      },
+      { type: "intertitre", texte: "Régis Hector, parrain du salon" },
+      {
+        type: "paragraphe",
+        texte:
+          "Le salon est placé sous le parrainage de Régis Hector, dessinateur de presse depuis 1986 et membre de Cartooning for Peace. Auteur d’une trentaine de bandes dessinées et illustrateur de romans et de livres d’histoire, il a su faire du dessin un langage universel. Sensible à la transmission, il intervient dans les établissements scolaires pour sensibiliser les jeunes à la liberté d’expression.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Il animera un atelier BD pour les 10-14 ans, sur inscription obligatoire : il y présentera son travail, du scénario à l’encrage, parlera des métiers du livre et donnera quelques astuces de dessin.",
+      },
+      { type: "intertitre", texte: "Ateliers, légende et quiz" },
+      {
+        type: "liste",
+        elements: [
+          "Un atelier de fabrication de marque-pages, pour les enfants comme pour les adultes, animé par Christelle Baratto Deutscher.",
+          "À 15 h, une légende à découvrir avec l’auteur local Pascal Wuttke.",
+          "Toute la journée, un quiz littéraire qui invite les visiteurs à aller d’un stand à l’autre à la rencontre des auteurs, de leurs ouvrages et de leurs couvertures.",
+          "En fin d’après-midi, un tirage au sort pour remporter un panier de produits locaux.",
+        ],
+      },
+      { type: "intertitre", texte: "La légende du chemin du Druide" },
+      {
+        type: "paragraphe",
+        texte:
+          "Cette légende est née d’un « hasard merveilleux », près d’un chemin appelé chemin du Druide. Pascal Wuttke était présent ce jour-là : un jeune voyageur barbu et chevelu, venu des environs de Compostelle, s’est arrêté pour se reposer près d’un arbre que l’auteur évoque dans l’un de ses recueils.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Cet arbre mystérieux aurait été planté sur la tombe d’un druide, avant d’être coupé : c’est là que commence vraiment la légende de l’arbre et de la pierre. Est-ce un arbre, est-ce un druide ? D’autres coïncidences ont suivi, jusqu’à donner corps à cette histoire près d’un petit ruisseau qui traverse le village de Boust.",
+      },
+      { type: "intertitre", texte: "Les écoles à l’honneur" },
+      {
+        type: "paragraphe",
+        texte:
+          "Depuis plusieurs années, l’association organise un concours de marque-pages personnalisés dans les écoles du territoire. Cette année, le thème était libre et trois écoles ont participé. Les créations gagnantes seront récompensées par des livres jeunesse achetés directement auprès des auteurs présents au salon, remis aux lauréats lors de l’inauguration.",
+      },
+      { type: "intertitre", texte: "Infos pratiques" },
+      {
+        type: "liste",
+        elements: [
+          "Dimanche 4 octobre 2026, de 10 h à 18 h",
+          "Salle polyvalente, 15 rue de la Chartreuse, Rettel",
+          "Entrée gratuite",
+          "Buvette, café et gâteaux tout au long de la journée",
+          "Atelier BD (10-14 ans) sur inscription obligatoire",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Pour suivre l’actualité du salon, l’association a une page Facebook : « Salon du livre Rettel ». Radio Tripoint vous donne rendez-vous dimanche à Rettel.",
+      },
+    ],
+  },
   // Article de la rédaction, 1er octobre 2026 (interview de Pierre Bonnet).
   {
     slug: "exposition-cartes-postales-faiences-sierck-les-bains",

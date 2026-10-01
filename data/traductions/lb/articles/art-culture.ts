@@ -1,6 +1,43 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "salon-du-livre-de-rettel-2026": {
+    titre:
+      "Bicherfestival zu Rettel: 60 Auteuren, de Régis Hector als Parrain an eng Legend fir z'entdecken",
+    chapeau:
+      "De Bicherfestival zu Rettel kënnt e Sonndeg, 4. Oktober 2026, vun 10 bis 18 Auer an de Mehrzwecksall zréck: en Dag vu Literatur, Kreativitéit a Konvivialitéit, mat 60 Auteuren a gratis Entrée.",
+    alt: "Affiche vum Bicherfestival zu Rettel: Sonndeg, 4. Oktober, vun 10 bis 18 Auer, 60 Auteuren, Parrain Régis Hector, Mehrzwecksall, 15 rue de la Chartreuse, gratis Entrée.",
+    corps: [
+      "De Bicherfestival zu Rettel kënnt e Sonndeg, 4. Oktober 2026, vun 10 bis 18 Auer an de Mehrzwecksall vu Rettel zréck. Dësen Dag, deen d'Associatioun Lire en fête organiséiert, steet am Zeeche vu Literatur, Kreativitéit a Konvivialitéit, an d'Entrée ass gratis.",
+      "Dës nei Editioun bréngt 60 Auteuren zesummen, virun allem aus dem Grand Est, dovun dräi aus der Belsch. Bal 30 % vun hinne sinn fir d'éischt derbäi, an de Virrang krute Schrëftsteller, déi 2025 oder 2026 e Buch erausbruecht hunn.",
+      "Bicher fir all Goût",
+      "Comicen, Mangaen, Kanner- a Jugendbicher, Léiftromaner, Krimien, Thrilleren, Temoignagen, Wuelbefannen, Geopolitik … De Public kann eng grouss Villfalt vu Welten entdecken: et ass eppes fir all Lieser dobäi, kleng a grouss.",
+      "De Régis Hector, Parrain vum Festival",
+      "De Parrain vum Festival ass de Régis Hector, Pressezeechner zënter 1986 a Member vu Cartooning for Peace. Als Auteur vu ronn drësseg Comicen an Illustrator vu Romaner a Geschichtsbicher huet hien d'Zeechnen zu enger universeller Sprooch gemaach. D'Weiderginn läit him um Häerz: an de Schoule sensibiliséiert hien déi Jonk fir d'Meenungsfräiheet.",
+      "Hie mécht en Comic-Atelier fir 10- bis 14-Järeg, mat obligatorescher Umeldung: hie weist seng Aarbecht vum Scenario bis bei d'Tusch, schwätzt iwwer d'Beruffer ronderëm d'Buch a gëtt e puer Tipps fir ze zeechnen.",
+      "Atelieren, Legend a Quiz",
+      [
+        "En Atelier fir Lieszeechen ze bastelen, fir Kanner an Erwuessener, mam Christelle Baratto Deutscher.",
+        "Um 15 Auer eng Legend fir z'entdecken mam lokalen Auteur Pascal Wuttke.",
+        "De ganzen Dag e Literaturquiz, deen d'Visiteure vu Stand zu Stand bei d'Auteuren, hir Bicher an hir Couverturë féiert.",
+        "Um spéide Nomëtteg eng Tombola, bei där een e Kuerf mat regionale Produite gewanne kann.",
+      ],
+      "D'Legend vum Druidewee",
+      "Dës Legend ass aus engem „wonnerbare Zoufall“ entstanen, bei engem Wee, deen Druidewee genannt gëtt. De Pascal Wuttke war deen Dag do: e jonke Reesenden mat Baart a laangen Hoer, deen aus der Géigend vu Compostela koum, huet sech bei engem Bam ausgerascht, vun deem den Auteur an engem vu senge Bicher erzielt.",
+      "Dëse mysteriéise Bam wier op d'Graf vun engem Druid geplanzt ginn, ier e gefält gouf: do fänkt déi richteg Legend vum Bam a vum Steen un. Ass et e Bam, ass et en Druid? Et koumen nach aner Zoufäll dobäi, bis d'Geschicht bei engem klenge Baach am Duerf Boust Form ugeholl huet.",
+      "D'Schoulen am Mëttelpunkt",
+      "Zënter e puer Joer organiséiert d'Associatioun an de Schoulen aus der Regioun e Concours fir selwer gestallt Lieszeechen. Dëst Joer war d'Thema fräi, an dräi Schoulen hu matgemaach. D'Gewënner kréie Kanner- a Jugendbicher, déi direkt bei den Auteuren um Festival kaaft an hinnen bei der Ouverture iwwerreecht ginn.",
+      "Praktesch Informatiounen",
+      [
+        "Sonndeg, 4. Oktober 2026, vun 10 bis 18 Auer",
+        "Mehrzwecksall, 15 rue de la Chartreuse, Rettel",
+        "Gratis Entrée",
+        "Buvette, Kaffi a Kuch de ganzen Dag",
+        "Comic-Atelier (10–14 Joer) nëmme mat Umeldung",
+      ],
+      "Fir d'Aktualitéit vum Festival ze suivéieren, huet d'Associatioun eng Facebook-Säit: „Salon du livre Rettel“. Radio Tripoint gesäit Iech e Sonndeg zu Rettel.",
+    ],
+  },
   "exposition-cartes-postales-faiences-sierck-les-bains": {
     titre: "Op der Sich no de vergiessene Schätz vu Sierck-les-Bains: al Postkaarten a Fayencen",
     chapeau:

@@ -1,6 +1,43 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "salon-du-livre-de-rettel-2026": {
+    titre:
+      "Buchmesse in Rettel: 60 Autoren, Régis Hector als Schirmherr und eine Legende zum Entdecken",
+    chapeau:
+      "Die Buchmesse in Rettel kehrt am Sonntag, 4. Oktober 2026, von 10 bis 18 Uhr in die Mehrzweckhalle zurück: ein Tag der Literatur, der Kreativität und der Geselligkeit, mit 60 Autoren und freiem Eintritt.",
+    alt: "Plakat der Buchmesse Rettel: Sonntag, 4. Oktober, 10 bis 18 Uhr, 60 Autoren, Schirmherr Régis Hector, Mehrzweckhalle, 15 rue de la Chartreuse, Eintritt frei.",
+    corps: [
+      "Die Buchmesse in Rettel kehrt am Sonntag, 4. Oktober 2026, von 10 bis 18 Uhr in die Mehrzweckhalle von Rettel zurück. Der vom Verein Lire en fête organisierte Tag steht im Zeichen der Literatur, der Kreativität und der Geselligkeit, der Eintritt ist frei.",
+      "Diese neue Ausgabe vereint 60 Autorinnen und Autoren, vor allem aus der Region Grand Est, darunter drei aus Belgien. Fast 30 % von ihnen sind zum ersten Mal dabei, und Vorrang hatten Schriftsteller, die 2025 oder 2026 ein Buch veröffentlicht haben.",
+      "Bücher für jeden Geschmack",
+      "Comics, Mangas, Kinder- und Jugendliteratur, Liebesromane, Krimis, Thriller, Erfahrungsberichte, Wohlbefinden, Geopolitik … Das Publikum kann eine große Vielfalt an Welten entdecken: für alle Leser, ob klein oder groß, ist etwas dabei.",
+      "Régis Hector, Schirmherr der Messe",
+      "Schirmherr der Messe ist Régis Hector, Pressezeichner seit 1986 und Mitglied von Cartooning for Peace. Als Autor von rund dreißig Comics und Illustrator von Romanen und Geschichtsbüchern hat er das Zeichnen zu einer universellen Sprache gemacht. Die Weitergabe liegt ihm am Herzen: In Schulen sensibilisiert er junge Menschen für die Meinungsfreiheit.",
+      "Er leitet einen Comic-Workshop für 10- bis 14-Jährige (Anmeldung erforderlich): Er stellt seine Arbeit vom Drehbuch bis zur Tuschezeichnung vor, spricht über die Berufe rund ums Buch und gibt ein paar Zeichentipps.",
+      "Workshops, Legende und Quiz",
+      [
+        "Ein Workshop zum Basteln von Lesezeichen, für Kinder wie für Erwachsene, geleitet von Christelle Baratto Deutscher.",
+        "Um 15 Uhr eine Legende zum Entdecken mit dem lokalen Autor Pascal Wuttke.",
+        "Den ganzen Tag ein Literaturquiz, das die Besucher von Stand zu Stand führt, zu den Autoren, ihren Büchern und deren Titelbildern.",
+        "Am späten Nachmittag eine Verlosung, bei der ein Korb mit regionalen Produkten zu gewinnen ist.",
+      ],
+      "Die Legende vom Druidenweg",
+      "Diese Legende entstand aus einem „wunderbaren Zufall“ an einem Weg, der Druidenweg genannt wird. Pascal Wuttke war an jenem Tag dabei: Ein junger, bärtiger Reisender mit langem Haar, der aus der Gegend von Compostela kam, machte Rast bei einem Baum, von dem der Autor in einem seiner Bücher erzählt.",
+      "Dieser geheimnisvolle Baum soll auf dem Grab eines Druiden gepflanzt und später gefällt worden sein: Hier beginnt die eigentliche Legende vom Baum und vom Stein. Ist es ein Baum, ist es ein Druide? Weitere Zufälle folgten, bis die Geschichte an einem kleinen Bach im Dorf Boust Gestalt annahm.",
+      "Die Schulen im Mittelpunkt",
+      "Seit mehreren Jahren organisiert der Verein in den Schulen der Region einen Wettbewerb für selbst gestaltete Lesezeichen. In diesem Jahr war das Thema frei, drei Schulen haben teilgenommen. Die Gewinner erhalten Kinder- und Jugendbücher, die direkt bei den Autoren auf der Messe gekauft und bei der Eröffnung überreicht werden.",
+      "Praktische Infos",
+      [
+        "Sonntag, 4. Oktober 2026, von 10 bis 18 Uhr",
+        "Mehrzweckhalle, 15 rue de la Chartreuse, Rettel",
+        "Eintritt frei",
+        "Getränke, Kaffee und Kuchen den ganzen Tag",
+        "Comic-Workshop (10–14 Jahre) nur mit Anmeldung",
+      ],
+      "Aktuelles zur Messe findet man auf der Facebook-Seite des Vereins: „Salon du livre Rettel“. Radio Tripoint freut sich auf Sie am Sonntag in Rettel.",
+    ],
+  },
   "exposition-cartes-postales-faiences-sierck-les-bains": {
     titre:
       "Auf Entdeckungsreise zu den vergessenen Schätzen von Sierck-les-Bains: alte Postkarten und Fayencen",
