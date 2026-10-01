@@ -35,6 +35,58 @@ export const generateMetadata = () =>
     chemin: "/tripo",
   })
 
+/** Ses clins d'œil au territoire. */
+const QUI: { titre: Trad; texte: Trad }[] = [
+  {
+    titre: {
+      fr: "Un grain de raisin de la Moselle",
+      de: "Eine Weintraube von der Mosel",
+      lb: "Eng Wäidrauf vun der Musel",
+      en: "A grape from the Moselle",
+      es: "Una uva del Mosela",
+    },
+    texte: {
+      fr: "Les vignes de la Moselle courent le long de la rivière, en France, au Luxembourg et en Allemagne : un vignoble pour trois pays.",
+      de: "Die Weinberge der Mosel ziehen sich am Fluss entlang, in Frankreich, Luxemburg und Deutschland: ein Weinbaugebiet für drei Länder.",
+      lb: "D'Wéngerte vun der Musel zéie sech laanscht de Floss, a Frankräich, Lëtzebuerg an Däitschland: e Wéngert fir dräi Länner.",
+      en: "The Moselle vineyards run along the river in France, Luxembourg and Germany: one wine region for three countries.",
+      es: "Los viñedos del Mosela recorren el río en Francia, Luxemburgo y Alemania: una región vinícola para tres países.",
+    },
+  },
+  {
+    titre: {
+      fr: "Un casque de radio",
+      de: "Radiokopfhörer",
+      lb: "Radioskopfhörer",
+      en: "Radio headphones",
+      es: "Auriculares de radio",
+    },
+    texte: {
+      fr: "Il ne quitte jamais l'antenne de Radio Tripoint.",
+      de: "Er verlässt nie den Sender von Radio Tripoint.",
+      lb: "Hie verléisst ni d'Antenn vu Radio Tripoint.",
+      en: "He never leaves Radio Tripoint's airwaves.",
+      es: "Nunca se aleja de la antena de Radio Tripoint.",
+    },
+  },
+  {
+    titre: {
+      fr: "Un chapeau, trois pays",
+      de: "Ein Hut, drei Länder",
+      lb: "En Hutt, dräi Länner",
+      en: "One hat, three countries",
+      es: "Un sombrero, tres países",
+    },
+    texte: {
+      fr: "Sur son chapeau, les drapeaux de la France, du Luxembourg et de l'Allemagne : il est chez lui des deux côtés de la Moselle.",
+      de: "Auf seinem Hut die Flaggen Frankreichs, Luxemburgs und Deutschlands: Er ist auf beiden Seiten der Mosel zu Hause.",
+      lb: "Op sengem Hutt d'Fändele vu Frankräich, Lëtzebuerg an Däitschland: Hien ass op béide Säite vun der Musel doheem.",
+      en: "On his hat, the flags of France, Luxembourg and Germany: he is at home on both sides of the Moselle.",
+      es: "En su sombrero, las banderas de Francia, Luxemburgo y Alemania: está en casa a ambos lados del Mosela.",
+    },
+  },
+]
+
 /** Ce que Tripo connaît : chaque carte pose directement la question. */
 const SUJETS: { icone: typeof Mountain; titre: Trad; texte: Trad; question: Trad }[] = [
   {
@@ -238,21 +290,43 @@ export default async function PageTripo() {
               )}
             </div>
             <Mascotte
-              anime
+              cadrage="entier"
+              prioritaire
+              tailles="(min-width: 1024px) 384px, (min-width: 640px) 320px, 288px"
               titre={t({
-                fr: "Tripo, petite boule jaune en peluche avec un casque de radio",
-                de: "Tripo, ein kleines gelbes Plüschknäuel mit Radiokopfhörern",
-                lb: "Tripo, e klenge giele Plüschbal mat Radioskopfhörer",
-                en: "Tripo, a little yellow plush ball wearing radio headphones",
-                es: "Tripo, una bolita amarilla de peluche con auriculares de radio",
+                fr: "Tripo, un grain de raisin violet en tenue traditionnelle, chapeau aux couleurs de Radio Tripoint et des trois pays, un verre de vin blanc dans une main et une grappe dans l'autre",
+                de: "Tripo, eine violette Weintraube in Tracht, mit einem Hut in den Farben von Radio Tripoint und der drei Länder, einem Glas Weißwein in der einen und einer Traube in der anderen Hand",
+                lb: "Tripo, eng mof Wäidrauf an Trachtekleeder, mat engem Hutt an de Faarwe vu Radio Tripoint an den dräi Länner, engem Glas wäisse Wäin an der enger Hand an enger Drauf an der anerer",
+                en: "Tripo, a purple grape in traditional dress, with a hat in the colours of Radio Tripoint and the three countries, a glass of white wine in one hand and a bunch of grapes in the other",
+                es: "Tripo, una uva morada con traje tradicional, sombrero con los colores de Radio Tripoint y de los tres países, una copa de vino blanco en una mano y un racimo en la otra",
               })}
-              className="mx-auto size-56 sm:size-72 lg:size-80"
+              className="mx-auto h-auto w-72 sm:w-80 lg:w-96"
             />
           </div>
         </div>
       </header>
 
       <div className="conteneur space-y-16 py-14 lg:space-y-20 lg:py-20">
+        <section aria-labelledby="qui">
+          <h2 id="qui" className="titre-section">
+            {t({
+              fr: "Qui est Tripo ?",
+              de: "Wer ist Tripo?",
+              lb: "Wien ass den Tripo?",
+              en: "Who is Tripo?",
+              es: "¿Quién es Tripo?",
+            })}
+          </h2>
+          <ul className="mt-8 grid gap-5 sm:grid-cols-3">
+            {QUI.map((q) => (
+              <li key={q.titre.fr} className="border-accent bg-surface border-l-4 p-5">
+                <p className="text-lg leading-snug font-bold">{t(q.titre)}</p>
+                <p className="text-encre-2 mt-2">{t(q.texte)}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <section aria-labelledby="sujets">
           <h2 id="sujets" className="titre-section">
             {t({

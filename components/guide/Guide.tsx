@@ -223,7 +223,7 @@ export function Guide() {
             <X className="size-5" aria-hidden />
           </span>
         ) : (
-          <Mascotte anime className="size-10" />
+          <Mascotte className="size-10 rounded-full" />
         )}
         Tripo
       </button>
@@ -236,7 +236,7 @@ export function Guide() {
           className="bg-surface text-encre fondu sm:border-trait sm:shadow-2 fixed inset-0 z-50 flex flex-col sm:inset-auto sm:right-4 sm:bottom-[calc(var(--barre-lecteur)+4.5rem)] sm:h-[min(640px,calc(100dvh-var(--barre-lecteur)-10rem))] sm:w-[400px] sm:border"
         >
           <header className="bg-nuit text-nuit-encre flex items-center gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
-            <Mascotte anime className="size-11 flex-none" />
+            <Mascotte className="size-11 flex-none rounded-full" />
             <div className="min-w-0 flex-1">
               <h2 id={idTitre} className="text-base leading-tight font-bold">
                 {t({
