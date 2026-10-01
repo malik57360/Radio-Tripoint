@@ -111,11 +111,11 @@ export async function audience() {
   if (!analyticsActif()) return null
   const maintenant = new Date()
   const minuit = minuitParis(maintenant)
-  const il30 = new Date(minuit.getTime() - 29 * JOUR_MS)
-  const il60 = new Date(minuit.getTime() - 59 * JOUR_MS)
-  const il7 = new Date(minuit.getTime() - 6 * JOUR_MS)
-  const il14 = new Date(minuit.getTime() - 13 * JOUR_MS)
-  const hier = new Date(minuit.getTime() - JOUR_MS)
+  // Vercel arrondit les bornes au jour (UTC) et la fin est exclue : on
+  // demande donc des journées entières, de minuit à minuit, par date.
+  const aujourdhuiUtc = Date.parse(`${jourParis(maintenant)}T00:00:00Z`)
+  const jour = (decalage: number) => new Date(aujourdhuiUtc + decalage * JOUR_MS)
+  const demain = jour(1)
 
   const [
     aujourdhui,
@@ -134,21 +134,21 @@ export async function audience() {
     sources,
     campagnes,
   ] = await Promise.all([
-    compte(minuit, maintenant),
-    compte(hier, new Date(minuit.getTime() - 1)),
-    compte(il7, maintenant),
-    compte(il14, new Date(il7.getTime() - 1)),
-    compte(il30, maintenant),
-    compte(il60, new Date(il30.getTime() - 1)),
-    repartition("day", il30, maintenant, 31),
+    compte(jour(0), demain),
+    compte(jour(-1), jour(0)),
+    compte(jour(-6), demain),
+    compte(jour(-13), jour(-6)),
+    compte(jour(-29), demain),
+    compte(jour(-59), jour(-29)),
+    repartition("day", jour(-29), demain, 31),
     repartition("hour", minuit, maintenant, 24),
-    repartition("requestPath", il30, maintenant, 12),
-    repartition("country", il30, maintenant, 10),
-    repartition("deviceType", il30, maintenant, 5),
-    repartition("osName", il30, maintenant, 6),
-    repartition("browserName", il30, maintenant, 6),
-    repartition("referrerHostname", il30, maintenant, 10),
-    repartition("utmSource", il30, maintenant, 8),
+    repartition("requestPath", jour(-29), demain, 12),
+    repartition("country", jour(-29), demain, 10),
+    repartition("deviceType", jour(-29), demain, 5),
+    repartition("osName", jour(-29), demain, 6),
+    repartition("browserName", jour(-29), demain, 6),
+    repartition("referrerHostname", jour(-29), demain, 10),
+    repartition("utmSource", jour(-29), demain, 8),
   ])
   if (!aujourdhui) return { erreur: true as const }
   const heureCourante = parHeure?.at(-1) ?? null
