@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto"
+import { compter } from "@/lib/direction/redis"
 import { envoyerCourriel } from "@/lib/formulaires/courriel"
 import { autoriser } from "@/lib/formulaires/limiteur"
 import { choisir, estLangue, type Langue, type Trad } from "@/lib/i18n/langues"
@@ -117,7 +118,11 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
   // l'un ni l'autre, on le dit : le client propose l'e-mail.
   const cleResend = process.env.RESEND_API_KEY
   const webhook = process.env.FORM_WEBHOOK_URL
-  if (!cleResend && !webhook) return json({ statut: "non-configure" }, 503)
+  await compter(`form:${t}`)
+  if (!cleResend && !webhook) {
+    await compter("form_perdu")
+    return json({ statut: "non-configure" }, 503)
+  }
 
   try {
     if (cleResend) {
@@ -152,6 +157,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
   } catch (e) {
     // Journal minimal, sans aucune donnée du formulaire.
     console.error(`[formulaires] échec de transmission (${t}) :`, (e as Error).message)
+    await compter("form_perdu")
     return json(
       {
         statut: "erreur",
@@ -166,5 +172,6 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
       502,
     )
   }
+  await compter("form_ok")
   return json({ statut: "succes" })
 }

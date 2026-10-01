@@ -1,3 +1,4 @@
+import { Presence } from "@/components/mesure/Presence"
 import { BarreOnglets } from "@/components/layout/BarreOnglets"
 import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
@@ -138,6 +139,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           <BarreOnglets guide={process.env.GUIDE_ACTIF === "1"} />
           {process.env.GUIDE_ACTIF === "1" && <Guide />}
           <DirectAuto />
+          <Presence />
           <Consentement />
           {/* Mesure d'audience Vercel : sans cookie ni donnée personnelle. */}
           <Analytics />

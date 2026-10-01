@@ -1,3 +1,4 @@
+import { compter } from "@/lib/direction/redis"
 import { createHash } from "node:crypto"
 import { autoriser } from "@/lib/formulaires/limiteur"
 import { consignesGuide } from "@/lib/guide/consignes"
@@ -96,6 +97,7 @@ export async function POST(request: Request) {
 
   const cible = acces(request)
   if (!cible) return json({ erreur: "non-configure" }, 503)
+  await compter("tripo")
 
   // Partie fixe mise en cache chez Anthropic ; la partie variable (date,
   // agenda, langue) la suit.
