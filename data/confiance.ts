@@ -107,6 +107,24 @@ export const personnes: Personne[] = [
       hauteur: 1333,
     },
   },
+  {
+    nom: "Ralf Uhlenbruch",
+    role: {
+      fr: "Maire (Bürgermeister) de la commune de Perl",
+      de: "Bürgermeister der Gemeinde Perl",
+      lb: "Buergermeeschter vun der Gemeng Perl",
+    },
+    photo: {
+      src: "/media/confiance/ralf-uhlenbruch.webp",
+      alt: {
+        fr: "Portrait de Ralf Uhlenbruch, souriant, en veste grise et chemise à petits motifs, sur fond gris.",
+        de: "Porträt von Ralf Uhlenbruch, lächelnd, in grauem Sakko und gemustertem Hemd vor grauem Hintergrund.",
+        lb: "Portrait vum Ralf Uhlenbruch, laachend, a groer Jackett a gemusterten Hiem virun engem groen Hannergrond.",
+      },
+      largeur: 600,
+      hauteur: 800,
+    },
+  },
 ]
 
 export const structures: Structure[] = [
