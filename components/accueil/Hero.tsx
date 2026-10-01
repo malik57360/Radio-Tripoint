@@ -34,7 +34,7 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
         </>
       ) : (
         <Tripoint
-          className="text-nuit-trait pointer-events-none absolute top-1/2 left-[88%] -z-10 h-[150%] w-auto -translate-x-1/2 -translate-y-1/2 lg:left-[46%]"
+          className="text-nuit-trait pointer-events-none absolute top-[6%] left-[88%] -z-10 h-[150%] w-auto -translate-x-1/2 -translate-y-1/2 sm:top-1/2 lg:left-[46%]"
           epaisseur={1}
         />
       )}
@@ -52,20 +52,20 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
             className="titre-affiche mt-5 text-[clamp(2.6rem,1.2rem+6.4vw,6.4rem)]"
           >
             {t({
-              fr: "La radio qui fait vibrer",
-              de: "Das Radio, das",
-              lb: "De Radio, deen",
-              en: "The radio that makes",
-              es: "La radio que hace vibrar",
+              fr: "Le Média des",
+              de: "Das Medium des",
+              lb: "D'Medium vum",
+              en: "The media of",
+              es: "El medio de",
             })}{" "}
             <span className="text-nuit-accent">
               {t({
-                fr: "les Trois Frontières.",
+                fr: "trois frontières",
                 // Traits d'union conditionnels : le mot tient sur un téléphone.
-                de: "das Drei\u00adländer\u00adeck bewegt.",
-                lb: "d'Dräi\u00adlänner\u00adeck beweegt.",
-                en: "the Three Borders buzz.",
-                es: "las Tres Fronteras.",
+                de: "Drei\u00adländer\u00adecks",
+                lb: "Dräi\u00adlänner\u00adeck",
+                en: "the Three Borders",
+                es: "las Tres Fronteras",
               })}
             </span>
           </h1>
@@ -80,7 +80,7 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
             </span>
             <span>{de}</span>
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
             <BoutonDirect taille="grand" />
             <Link href="/emissions" className="btn btn-nuit min-h-14 !px-6">
               {t({

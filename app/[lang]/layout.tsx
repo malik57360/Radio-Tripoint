@@ -1,3 +1,4 @@
+import { BarreOnglets } from "@/components/layout/BarreOnglets"
 import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Archivo, Newsreader } from "next/font/google"
@@ -134,6 +135,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           </main>
           <Footer />
           <LecteurBarre grille={grille} />
+          <BarreOnglets guide={process.env.GUIDE_ACTIF === "1"} />
           {process.env.GUIDE_ACTIF === "1" && <Guide />}
           <DirectAuto />
           <Consentement />

@@ -18,7 +18,7 @@ export async function CarteTerritoire() {
   const t = await traducteur()
   return (
     <figure>
-      <div className="border-accent bg-nuit-2 relative aspect-square w-full overflow-hidden border-4">
+      <div className="border-accent bg-nuit-2 relative aspect-[4/3] w-full overflow-hidden border-4 sm:aspect-square">
         <iframe
           src={src}
           title={t({

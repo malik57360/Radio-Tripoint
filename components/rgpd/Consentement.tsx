@@ -63,7 +63,7 @@ export function Consentement() {
             en: "Cookies",
             es: "Cookies",
           })}
-          className="border-trait bg-surface shadow-2 fixed inset-x-3 bottom-[calc(var(--barre-lecteur)+0.75rem)] z-50 mx-auto max-w-xl border p-5"
+          className="border-trait bg-surface shadow-2 fixed inset-x-3 bottom-[calc(var(--bas-fixe)+0.75rem)] z-50 mx-auto max-w-xl border p-5"
         >
           <p className="text-encre-2 text-sm">
             {t({

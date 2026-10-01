@@ -1,6 +1,6 @@
 "use client"
 
-import { ChevronDown, Menu, Search } from "lucide-react"
+import { ChevronDown, Search } from "lucide-react"
 import Link from "@/components/ui/Lien"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -10,6 +10,7 @@ import { SelecteurLangue } from "@/components/i18n/SelecteurLangue"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { Logo } from "@/components/marque/Logo"
 import { cn } from "@/lib/utils/cn"
+import { EVENEMENT_MENU } from "./BarreOnglets"
 import { MobileMenu } from "./MobileMenu"
 import { SearchDialog } from "./SearchDialog"
 
@@ -30,6 +31,13 @@ export function Header() {
       cancelAnimationFrame(raf)
       window.removeEventListener("scroll", surDefilement)
     }
+  }, [])
+
+  // Le menu complet s'ouvre depuis la barre d'onglets du téléphone.
+  useEffect(() => {
+    const ouvrir = () => setMenuOuvert(true)
+    window.addEventListener(EVENEMENT_MENU, ouvrir)
+    return () => window.removeEventListener(EVENEMENT_MENU, ouvrir)
   }, [])
 
   // Raccourci « / » ou Ctrl+K pour la recherche.
@@ -194,22 +202,6 @@ export function Header() {
               <Search className="size-5" aria-hidden />
             </button>
             <BoutonDirect taille="compact" className="sm:!min-h-11 sm:!px-4 sm:!text-[0.78rem]" />
-            <button
-              type="button"
-              onClick={() => setMenuOuvert(true)}
-              aria-label={t({
-                fr: "Ouvrir le menu",
-                de: "Menü öffnen",
-                lb: "Menü opmaachen",
-                en: "Open menu",
-                es: "Abrir el menú",
-              })}
-              aria-expanded={menuOuvert}
-              aria-controls="menu-mobile"
-              className="text-encre hover:bg-papier-2 grid size-10 place-items-center rounded-full transition-colors lg:hidden"
-            >
-              <Menu className="size-6" aria-hidden />
-            </button>
           </div>
         </div>
       </header>

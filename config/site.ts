@@ -13,11 +13,11 @@ export const site = {
     "",
   ),
   signature: {
-    fr: "La radio qui fait vibrer les Trois Frontières.",
-    de: "Das Radio, das das Dreiländereck zum Klingen bringt.",
-    lb: "De Radio, deen d'Dräilännereck zum Vibréiere bréngt.",
-    en: "The radio that makes the Three Borders buzz.",
-    es: "La radio que hace vibrar las Tres Fronteras.",
+    fr: "Le Média des trois frontières",
+    de: "Das Medium des Dreiländerecks",
+    lb: "D'Medium vum Dräilännereck",
+    en: "The media of the Three Borders",
+    es: "El medio de las Tres Fronteras",
   } as Trad,
   /** Mentions portées par le logo officiel. */
   baseline: {

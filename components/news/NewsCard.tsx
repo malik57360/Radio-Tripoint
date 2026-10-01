@@ -60,16 +60,28 @@ export async function NewsCard({
   article,
   titreNiveau: Titre = "h3",
   avecChapeau = false,
-  sizes = "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw",
+  ligneMobile = false,
+  sizes = ligneMobile
+    ? "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 112px"
+    : "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw",
 }: {
   article: Article
   titreNiveau?: "h2" | "h3"
   avecChapeau?: boolean
+  /** Sur téléphone, vignette à droite du titre plutôt qu'une grande image. */
+  ligneMobile?: boolean
   sizes?: string
 }) {
   const cat = categoriesLangue((await traducteur()).langue)[article.categorie]
   return (
-    <article className="carte group flex flex-col">
+    <article
+      className={cn(
+        "carte group",
+        ligneMobile
+          ? "grid grid-cols-[1fr_7rem] gap-4 sm:flex sm:flex-col sm:gap-0"
+          : "flex flex-col",
+      )}
+    >
       <Visuel
         visuel={article.visuel}
         repli={{
@@ -77,11 +89,20 @@ export async function NewsCard({
           surmot: "Radio Tripoint",
           teinte: teinteCategorie[article.categorie],
         }}
+        ratio={ligneMobile ? "aspect-square sm:aspect-[16/10]" : undefined}
+        className={cn(ligneMobile && "order-last sm:order-none")}
         sizes={sizes}
       />
-      <div className="mt-4 flex flex-1 flex-col">
+      <div className={cn("flex min-w-0 flex-1 flex-col", ligneMobile ? "sm:mt-4" : "mt-4")}>
         <BadgeArticle article={article} />
-        <Titre className="carte-titre titre-carte mt-2 text-[1.2rem] sm:text-[1.28rem]">
+        <Titre
+          className={cn(
+            "carte-titre titre-carte sm:text-[1.28rem]",
+            ligneMobile
+              ? "mt-1.5 line-clamp-3 text-[1.05rem] sm:mt-2 sm:line-clamp-none"
+              : "mt-2 text-[1.2rem]",
+          )}
+        >
           <Link href={`/actualites/${article.slug}`} className="carte-lien">
             {article.titre}
           </Link>

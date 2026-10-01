@@ -115,7 +115,7 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
         en: "Radio player",
         es: "Reproductor de radio",
       })}
-      className="border-nuit-trait bg-nuit/95 text-nuit-encre supports-[backdrop-filter]:bg-nuit/88 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur"
+      className="border-nuit-trait bg-nuit/95 text-nuit-encre supports-[backdrop-filter]:bg-nuit/88 fixed inset-x-0 bottom-[calc(var(--barre-onglets)+env(safe-area-inset-bottom))] z-40 border-t backdrop-blur lg:bottom-0 lg:pb-[env(safe-area-inset-bottom)]"
     >
       {!direct && l.dureeMedia > 0 && (
         <input

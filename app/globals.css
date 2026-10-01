@@ -61,7 +61,17 @@
   --ombre-2: 0 8px 28px -12px rgb(10 10 10 / 0.25);
 
   --barre-lecteur: 64px;
+  /* Barre d'onglets du téléphone, sous le lecteur ; absente sur grand écran. */
+  --barre-onglets: 60px;
+  /* Hauteur totale de ce qui est fixé en bas de l'écran. */
+  --bas-fixe: calc(var(--barre-lecteur) + var(--barre-onglets) + env(safe-area-inset-bottom));
   color-scheme: light;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --barre-onglets: 0px;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -164,8 +174,6 @@
     font-variation-settings: "wdth" 100;
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
-    /* Place pour la barre du lecteur, qui ne doit jamais masquer le pied. */
-    padding-bottom: calc(var(--barre-lecteur) + env(safe-area-inset-bottom));
   }
   ::selection {
     background: var(--accent);

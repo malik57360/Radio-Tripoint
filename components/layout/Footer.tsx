@@ -192,7 +192,7 @@ export async function Footer() {
   const reseaux = reseauxActifs()
   const a = site.contact.adresse
   return (
-    <footer className="bg-nuit text-nuit-encre relative overflow-hidden">
+    <footer className="bg-nuit text-nuit-encre relative overflow-hidden pb-[var(--bas-fixe)]">
       <Tripoint
         className="text-nuit-trait/70 pointer-events-none absolute top-10 -right-40 size-[36rem]"
         epaisseur={1}

@@ -17,7 +17,7 @@ export async function PodcastCard({
 }) {
   const t = await traducteur()
   return (
-    <article className="carte group grid grid-cols-[4.5rem_1fr_auto] items-center gap-4 py-4 sm:grid-cols-[6rem_1fr_auto] sm:gap-5">
+    <article className="carte group grid grid-cols-[3.75rem_1fr_auto] items-center gap-3.5 py-3.5 sm:grid-cols-[6rem_1fr_auto] sm:gap-5">
       <Visuel
         visuel={episode.visuel}
         repli={{
@@ -30,7 +30,9 @@ export async function PodcastCard({
       />
       <div className="min-w-0">
         <p className="flex flex-wrap items-center gap-2">
-          <span className="badge">{emissionNom ?? "Podcast"}</span>
+          <span className="badge max-w-full">
+            <span className="min-w-0 truncate">{emissionNom ?? "Podcast"}</span>
+          </span>
           {episode.demo && (
             <span className="badge-exemple">
               {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill", en: "Example", es: "Ejemplo" })}

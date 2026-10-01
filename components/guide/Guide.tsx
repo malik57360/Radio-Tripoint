@@ -214,7 +214,7 @@ export function Guide() {
         aria-expanded={ouvert}
         aria-controls="guide-tripo"
         className={cn(
-          "bg-nuit text-nuit-encre shadow-2 border-accent fixed right-4 bottom-[calc(var(--barre-lecteur)+1rem+env(safe-area-inset-bottom))] z-40 inline-flex h-13 items-center gap-2 rounded-full border-2 pr-5 pl-2 text-[0.95rem] font-bold tracking-wide transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2",
+          "bg-nuit text-nuit-encre shadow-2 border-accent fixed right-4 bottom-[calc(var(--bas-fixe)+1rem)] z-40 hidden h-13 items-center gap-2 rounded-full border-2 pr-5 pl-2 text-[0.95rem] font-bold tracking-wide transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 lg:inline-flex",
           ouvert && "max-sm:hidden",
         )}
       >
@@ -233,7 +233,7 @@ export function Guide() {
           id="guide-tripo"
           role="dialog"
           aria-labelledby={idTitre}
-          className="bg-surface text-encre fondu sm:border-trait sm:shadow-2 fixed inset-0 z-50 flex flex-col sm:inset-auto sm:right-4 sm:bottom-[calc(var(--barre-lecteur)+4.5rem)] sm:h-[min(640px,calc(100dvh-var(--barre-lecteur)-10rem))] sm:w-[400px] sm:border"
+          className="bg-surface text-encre fondu sm:border-trait sm:shadow-2 fixed inset-0 z-50 flex flex-col sm:inset-auto sm:right-4 sm:bottom-[calc(var(--bas-fixe)+1rem)] sm:h-[min(640px,calc(100dvh-var(--bas-fixe)-8rem))] sm:w-[400px] sm:border lg:bottom-[calc(var(--bas-fixe)+4.5rem)]"
         >
           <header className="bg-nuit text-nuit-encre flex items-center gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
             <Mascotte anime className="size-11 flex-none" />

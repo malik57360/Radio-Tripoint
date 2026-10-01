@@ -20,7 +20,7 @@ export async function ShowCard({
       <Visuel
         visuel={emission.visuel}
         repli={{ mot: emission.nom, surmot: "Radio Tripoint", teinte: emission.teinte }}
-        ratio="aspect-[4/3]"
+        ratio="aspect-[2/1] sm:aspect-[4/3]"
         sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 85vw"
       />
       <div className="flex flex-1 flex-col p-5">
