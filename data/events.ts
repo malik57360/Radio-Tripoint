@@ -155,6 +155,26 @@ export const evenements: Evenement[] = [
     ),
   },
   {
+    slug: "salon-du-livre-rettel-2026",
+    titre: "Salon du Livre de Rettel",
+    description:
+      "60 auteurs, dont près de 30 % de nouveaux, venus principalement du Grand Est et 3 de Belgique, avec une priorité aux ouvrages publiés en 2025 et 2026 : bandes dessinées, mangas, littérature jeunesse, romans d'amour, polars, thrillers, témoignages, bien-être, géopolitique… Parrain : Régis Hector, dessinateur de presse depuis 1986 et membre de Cartooning for Peace, qui anime un atelier BD pour les 10-14 ans (inscription obligatoire). Atelier de fabrication de marque-pages pour enfants et adultes avec Christelle Baratto Deutscher. À 15 h, Pascal Wuttke présente la légende du chemin du Druide. Quiz littéraire toute la journée, tirage au sort d'un panier de produits locaux en fin d'après-midi, remise des prix du concours de marque-pages des écoles à l'inauguration. Buvette, café et gâteaux toute la journée.",
+    debut: "2026-10-04T10:00:00+02:00",
+    fin: "2026-10-04T18:00:00+02:00",
+    lieu: "Salle polyvalente",
+    adresse: "15 rue de la Chartreuse",
+    ville: "Rettel",
+    pays: "FR",
+    gratuit: true,
+    organisateur: "Association Lire en fête",
+    visuel: affiche(
+      "salon-du-livre-rettel-2026",
+      "Salon du Livre de Rettel, dimanche 4 octobre de 10 h à 18 h, parrainé par Régis Hector",
+      800,
+      1128,
+    ),
+  },
+  {
     slug: "exposition-cartes-postales-faiences-sierck-2026",
     titre: "Exposition de cartes postales et de faïences anciennes de Sierck-les-Bains",
     description:

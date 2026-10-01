@@ -50,6 +50,13 @@ export const evenements: Record<string, TradEvenement> = {
     lieu: "Soziokulturelles Zentrum",
     alt: "Plakat: 24. Musek & Greechen, Doppelkonzert, Samstag, 3. Oktober 2026 in Rustroff",
   },
+  "salon-du-livre-rettel-2026": {
+    titre: "Buchmesse Rettel",
+    description:
+      "60 Autorinnen und Autoren, davon fast 30 % zum ersten Mal dabei, vor allem aus der Region Grand Est und 3 aus Belgien, mit Vorrang für Bücher aus den Jahren 2025 und 2026: Comics, Mangas, Kinder- und Jugendliteratur, Liebesromane, Krimis, Thriller, Erfahrungsberichte, Wohlbefinden, Geopolitik … Schirmherr: Régis Hector, Pressezeichner seit 1986 und Mitglied von Cartooning for Peace, der einen Comic-Workshop für 10- bis 14-Jährige leitet (Anmeldung erforderlich). Lesezeichen-Bastelworkshop für Kinder und Erwachsene mit Christelle Baratto Deutscher. Um 15 Uhr stellt Pascal Wuttke die Legende vom Druidenweg vor. Literaturquiz den ganzen Tag, Verlosung eines Korbs mit regionalen Produkten am späten Nachmittag, Preisverleihung des Lesezeichen-Wettbewerbs der Schulen bei der Eröffnung. Getränke, Kaffee und Kuchen den ganzen Tag.",
+    lieu: "Mehrzweckhalle",
+    alt: "Plakat: Buchmesse Rettel, Sonntag, 4. Oktober, 10 bis 18 Uhr, Schirmherr Régis Hector",
+  },
   "exposition-cartes-postales-faiences-sierck-2026": {
     titre: "Ausstellung alter Postkarten und Fayencen aus Sierck-les-Bains",
     description: "Ausstellung alter Postkarten und Fayencen aus Sierck-les-Bains. Eintritt frei.",

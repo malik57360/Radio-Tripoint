@@ -50,6 +50,13 @@ export const evenements: Record<string, TradEvenement> = {
     lieu: "Soziokulturellen Zenter",
     alt: "Affiche: 24. Musek & Greechen, Duebelconcert, Samschdeg, 3. Oktober 2026 zu Rustroff",
   },
+  "salon-du-livre-rettel-2026": {
+    titre: "Bicherfestival zu Rettel",
+    description:
+      "60 Auteuren, dovun bal 30 % déi fir d'éischt derbäi sinn, virun allem aus dem Grand Est an 3 aus der Belsch, mat Virrang fir Bicher aus 2025 an 2026: Comicen, Mangaen, Kanner- a Jugendbicher, Léiftromaner, Krimien, Thrilleren, Temoignagen, Wuelbefannen, Geopolitik … Parrain: Régis Hector, Pressezeechner zënter 1986 a Member vu Cartooning for Peace, deen en Comic-Atelier fir 10- bis 14-Järeg mécht (Umeldung obligatoresch). Atelier fir Lieszeechen ze bastelen, fir Kanner an Erwuessener, mam Christelle Baratto Deutscher. Um 15 Auer stellt de Pascal Wuttke d'Legend vum Druidewee vir. Literaturquiz de ganzen Dag, Tombola mat engem Kuerf mat regionale Produiten um spéide Nomëtteg, Präisiwwerreechung vum Lieszeechen-Concours vun de Schoulen bei der Ouverture. Buvette, Kaffi a Kuch de ganzen Dag.",
+    lieu: "Mehrzwecksall",
+    alt: "Affiche: Bicherfestival zu Rettel, Sonndeg, 4. Oktober, vun 10 bis 18 Auer, Parrain Régis Hector",
+  },
   "exposition-cartes-postales-faiences-sierck-2026": {
     titre: "Ausstellung vun ale Postkaarten a Fayencen aus Sierck-les-Bains",
     description: "Ausstellung vun ale Postkaarten a Fayencen aus Sierck-les-Bains. Entrée gratis.",
