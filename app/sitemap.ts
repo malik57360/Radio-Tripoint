@@ -8,8 +8,9 @@ import { listerEpisodes } from "@/lib/contenu/podcasts"
 import { codesLangues, langues, lienLangue } from "@/lib/i18n/langues"
 
 /**
- * Sitemap dynamique, dans les trois langues : chaque page y figure en
- * français, allemand et luxembourgeois, avec ses équivalents (hreflang).
+ * Sitemap dynamique, dans toutes les langues du site : chaque page y figure en
+ * français, allemand, luxembourgeois, anglais et espagnol, avec ses
+ * équivalents (hreflang).
  * Les contenus de démonstration en sont exclus.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

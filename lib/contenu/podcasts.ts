@@ -7,12 +7,33 @@ import { localiserEpisode } from "./localiser"
 import { modeDemo } from "./demo"
 
 export const themesPodcast: { valeur: ThemePodcast | "toutes"; libelle: Trad }[] = [
-  { valeur: "toutes", libelle: { fr: "Toutes", de: "Alle", lb: "All" } },
-  { valeur: "actualites", libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten" } },
-  { valeur: "culture", libelle: { fr: "Culture", de: "Kultur", lb: "Kultur" } },
-  { valeur: "musique", libelle: { fr: "Musique", de: "Musik", lb: "Musek" } },
-  { valeur: "sport", libelle: { fr: "Sport", de: "Sport", lb: "Sport" } },
-  { valeur: "emissions", libelle: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" } },
+  { valeur: "toutes", libelle: { fr: "Toutes", de: "Alle", lb: "All", en: "All", es: "Todas" } },
+  {
+    valeur: "actualites",
+    libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten", en: "News", es: "Noticias" },
+  },
+  {
+    valeur: "culture",
+    libelle: { fr: "Culture", de: "Kultur", lb: "Kultur", en: "Culture", es: "Cultura" },
+  },
+  {
+    valeur: "musique",
+    libelle: { fr: "Musique", de: "Musik", lb: "Musek", en: "Music", es: "Música" },
+  },
+  {
+    valeur: "sport",
+    libelle: { fr: "Sport", de: "Sport", lb: "Sport", en: "Sport", es: "Deporte" },
+  },
+  {
+    valeur: "emissions",
+    libelle: {
+      fr: "Émissions",
+      de: "Sendungen",
+      lb: "Sendungen",
+      en: "Programmes",
+      es: "Programas",
+    },
+  },
 ]
 
 function tous(l: Langue = "fr"): Episode[] {

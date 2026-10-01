@@ -81,7 +81,7 @@ export default async function PageEpisode(props: PageProps<"/[lang]/podcasts/[sl
             )}
             {ep.demo && (
               <span className="badge-exemple">
-                {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+                {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill", en: "Example", es: "Ejemplo" })}
               </span>
             )}
           </p>
@@ -121,11 +121,23 @@ export default async function PageEpisode(props: PageProps<"/[lang]/podcasts/[sl
           <div className="filet-section flex flex-wrap items-end justify-between gap-4 pt-5">
             <h2 id="titre-autres-ep" className="titre-section">
               {emission
-                ? `${t({ fr: "Autres épisodes de", de: "Weitere Folgen von", lb: "Aner Episode vun" })} ${emission.nom}`
-                : t({ fr: "À écouter aussi", de: "Auch hörenswert", lb: "Och ze lauschteren" })}
+                ? `${t({ fr: "Autres épisodes de", de: "Weitere Folgen von", lb: "Aner Episode vun", en: "More episodes of", es: "Otros episodios de" })} ${emission.nom}`
+                : t({
+                    fr: "À écouter aussi",
+                    de: "Auch hörenswert",
+                    lb: "Och ze lauschteren",
+                    en: "Also worth a listen",
+                    es: "Para escuchar también",
+                  })}
             </h2>
             <Link href="/podcasts" className="lien-fleche hover:text-accent-encre">
-              {t({ fr: "Tous les podcasts", de: "Alle Podcasts", lb: "All Podcasts" })}{" "}
+              {t({
+                fr: "Tous les podcasts",
+                de: "Alle Podcasts",
+                lb: "All Podcasts",
+                en: "All podcasts",
+                es: "Todos los pódcasts",
+              })}{" "}
               <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>

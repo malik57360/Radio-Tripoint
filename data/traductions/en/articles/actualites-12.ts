@@ -1,0 +1,110 @@
+import type { TradArticle } from "../../types"
+
+export const actualites12: Record<string, TradArticle> = {
+  "municipales-2026-les-electeurs-appeles-aux-urnes-dans-la-vallee-de-la-moselle": {
+    titre: "Municipal elections 2026: voters in the Moselle valley called to the polls",
+    chapeau:
+      "A few days before the municipal elections, residents of the Moselle valley are getting ready to elect their town councils.",
+    corps: [
+      "A few days before the municipal elections, residents of the Moselle valley are getting ready to elect their town councils. Voting takes place on 15 March for the first round and, if necessary, on 22 March for the second. In the Pays des Trois Frontières, these municipal elections are being followed particularly closely, as the area's development, housing and cross-border mobility are at stake.",
+      "In the Pays des Trois Frontières, around Sierck-les-Bains, Apach, Rettel or Contz-les-Bains, residents are following these elections with particular attention. The decisions of the future elected officials have a direct impact on the area's development and on quality of life in the towns.",
+      "Municipal elections are often seen as the elections closest to citizens. The elected town councillors run the town's affairs for six years. Once the council is in place, its members elect the mayor.",
+      "In the rural towns of the Moselle, campaigns usually rely on local teams made up of residents involved in community associations, business or civic life.",
+      "Key issues for the area",
+      "In the Moselle valley and across the Pays des Trois Frontières, several topics could play an important role in the municipal debate:",
+      [
+        "pressure on the property market due to proximity to Luxembourg",
+        "cross-border workers' commutes",
+        "the development of town and village centres",
+        "showcasing heritage and tourism",
+        "residents' quality of life.",
+      ],
+      "Right next to Luxembourg and Germany, this border area is undergoing rapid change, which poses new challenges for the towns.",
+      "An eagerly awaited turnout",
+      "Citizens registered on the electoral rolls are therefore called to go to the polling stations in their town to choose the teams that will lead the projects of the coming years.",
+      "🎙 Radio Tripoint is following the whole municipal campaign in the Moselle valley and giving a voice to residents and public figures.",
+    ],
+  },
+  "iran-usa-les-enjeux-d-une-probable-guerre": {
+    titre: "IRAN – USA… What's at stake in a possible war!",
+    chapeau: "Tensions between Iran and the United States keep flaring up.",
+    corps: [
+      "Tensions between Iran and the United States keep flaring up. Even if a direct confrontation remains hypothetical for now, the consequences of a military escalation would be serious, both geopolitically and economically.",
+      "A strategic point: the Strait of Hormuz",
+      "One of the key issues concerns the Strait of Hormuz, through which a significant share of the world's oil is transported. Any disruption to this strategic sea route could quickly push up crude oil prices, with immediate consequences for international markets.",
+      "Even a temporary closure would mean:",
+      [
+        "shortages in global energy supply",
+        "rising fuel prices",
+        "increased inflationary pressure in Europe",
+      ],
+      "The risk of a regional conflagration",
+      "Iran has complex relations with several players in the region. A direct confrontation could indirectly draw in other countries in the Middle East and turn a bilateral crisis into a wider regional conflict.",
+      "Analysts fear in particular:",
+      [
+        "an increase in indirect attacks",
+        "cyberattacks",
+        "a destabilisation of existing diplomatic balances",
+      ],
+      "The consequences for Europe!",
+      "Even though it is geographically far away, Europe would be affected:",
+      ["rising energy costs", "turmoil on the financial markets", "a possible economic slowdown"],
+      "For border regions like the Three Borders, persistently high oil prices could lead to higher prices at the pump and greater pressure on purchasing power.",
+      "Diplomacy or confrontation?",
+      "For now, diplomacy remains the preferred route. Past crises have shown that high tensions do not necessarily lead to open conflict. Nevertheless, the situation is being closely watched by markets and governments around the world.",
+    ],
+  },
+  "carburant-risques-d-augmentations-a-la-pompe-causes-par-le-conflit-du-moyen": {
+    titre: "Fuel: risk of price rises at the pump due to the Middle East conflict.",
+    chapeau: "In the Three Borders, the price of fuel is a particularly sensitive indicator.",
+    corps: [
+      "In the Three Borders, the price of fuel is a particularly sensitive indicator. Many cross-border workers adapt their habits to price differences between France, Luxembourg and Germany.",
+      "However, any major tension in the Middle East, particularly around Iran, can affect the price of crude oil.",
+      "A direct economic mechanism",
+      "The price of fuel depends to a large extent on:",
+      ["the price of a barrel of oil", "refining costs", "national taxes"],
+      "When the price per barrel rises, this gradually feeds through to prices at the pump.",
+      "A particularly affected region.",
+      "In the Three Borders, journeys to work are often daily and cross-border. A lasting rise in fuel prices could affect:",
+      ["household budgets", "small local businesses", "the transport sector"],
+      "Drivers are therefore closely following international geopolitical developments, aware that decisions taken thousands of kilometres away can affect their daily lives.",
+    ],
+  },
+  "municipales-2026-quels-enjeux-a-sierck-les-bains-et-dans-les-trois-frontieres": {
+    titre: "Municipal elections 2026: what's at stake in Sierck-les-Bains and the Three Borders?",
+    chapeau: "The March 2026 municipal elections are approaching.",
+    corps: [
+      "The March 2026 municipal elections are approaching. In Sierck-les-Bains, as in all the towns of the Three Borders, this election will determine the political direction and priorities for the next six years.",
+      "Concrete issues",
+      "At local level, the key issues remain:",
+      [
+        "revitalising local shops",
+        "tourist appeal",
+        "cross-border mobility",
+        "living environment and safety",
+        "support for community associations",
+      ],
+      "In an area shaped by its proximity to Luxembourg and Germany, cross-border cooperation is also an important issue.",
+      "An eagerly awaited campaign.",
+      "In the coming weeks, the various lists should set out their programmes and priorities more clearly.",
+      "We'll keep you posted!",
+    ],
+  },
+  "schengen-mobilite-et-amenagement-au-coeur-des-priorites-communales": {
+    titre: "Schengen: mobility and development at the heart of municipal priorities.",
+    chapeau:
+      "In Schengen, the local authorities are continuing their thinking on mobility and town development.",
+    corps: [
+      "In Schengen, the local authorities are continuing their thinking on mobility and town development.",
+      "With a large daily flow of cross-border workers and visitors, managing traffic and access remains a central task for the municipality.",
+      "Among the priorities regularly mentioned:",
+      [
+        "Improving road access",
+        "Making pedestrian areas safer",
+        "Measured tourism development around the European site",
+      ],
+      "At a strategic crossroads between three countries, Schengen must reconcile attractiveness, quality of life and smooth traffic.",
+      "👉 Mobility remains a key issue in the Three Borders.",
+    ],
+  },
+}

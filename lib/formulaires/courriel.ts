@@ -25,6 +25,8 @@ const NOMS_LANGUES: Record<string, string> = {
   fr: "français",
   de: "allemand",
   lb: "luxembourgeois",
+  en: "anglais",
+  es: "espagnol",
 }
 
 const echapper = (s: string) =>

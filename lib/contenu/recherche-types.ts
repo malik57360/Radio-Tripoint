@@ -11,8 +11,14 @@ export interface Resultat {
 }
 
 export const libellesTypes: Record<TypeResultat, Trad> = {
-  article: { fr: "Articles", de: "Artikel", lb: "Artikelen" },
-  emission: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" },
-  podcast: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts" },
-  evenement: { fr: "Agenda", de: "Agenda", lb: "Agenda" },
+  article: { fr: "Articles", de: "Artikel", lb: "Artikelen", en: "Articles", es: "Artículos" },
+  emission: {
+    fr: "Émissions",
+    de: "Sendungen",
+    lb: "Sendungen",
+    en: "Programmes",
+    es: "Programas",
+  },
+  podcast: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts", en: "Podcasts", es: "Pódcasts" },
+  evenement: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
 }

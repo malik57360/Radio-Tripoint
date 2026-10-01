@@ -26,7 +26,13 @@ export async function MetaArticle({
       )}
       <span>
         {tempsLecture(article.corps)}{" "}
-        {t({ fr: "min de lecture", de: "Min. Lesezeit", lb: "Min. Liesen" })}
+        {t({
+          fr: "min de lecture",
+          de: "Min. Lesezeit",
+          lb: "Min. Liesen",
+          en: "min read",
+          es: "min de lectura",
+        })}
       </span>
     </p>
   )
@@ -42,7 +48,7 @@ export async function BadgeArticle({ article }: { article: Article }) {
       )}
       {article.demo && (
         <span className="badge-exemple">
-          {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+          {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill", en: "Example", es: "Ejemplo" })}
         </span>
       )}
     </p>

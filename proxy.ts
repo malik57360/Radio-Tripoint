@@ -4,12 +4,12 @@ import { NextResponse, type NextRequest } from "next/server"
  * Langues dans l'URL. Le français garde les adresses d'origine (sans
  * préfixe) : on réécrit en interne "/agenda" vers "/fr/agenda", et
  * "/fr/agenda" redirige vers "/agenda" pour qu'une page n'ait qu'une URL.
- * "/de/…" et "/lb/…" passent tels quels.
+ * "/de/…", "/lb/…", "/en/…" et "/es/…" passent tels quels.
  *
  * Volontairement autonome (pas d'import de lib/) : le proxy peut tourner à
  * part du reste du code.
  */
-const PREFIXES = new Set(["de", "lb"])
+const PREFIXES = new Set(["de", "lb", "en", "es"])
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl

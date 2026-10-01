@@ -1,8 +1,8 @@
 /**
  * Langues du site. Le français reste à la racine (URL inchangées) ; les
- * autres langues vivent sous un préfixe : /de/…, /lb/…
+ * autres langues vivent sous un préfixe : /de/…, /lb/…, /en/…, /es/…
  */
-export const langues = ["fr", "de", "lb"] as const
+export const langues = ["fr", "de", "lb", "en", "es"] as const
 export type Langue = (typeof langues)[number]
 export const langueParDefaut: Langue = "fr"
 
@@ -14,6 +14,8 @@ export const nomsLangues: Record<Langue, string> = {
   fr: "Français",
   de: "Deutsch",
   lb: "Lëtzebuergesch",
+  en: "English",
+  es: "Español",
 }
 
 /** Code BCP 47 pour `<html lang>`, hreflang et Open Graph. */
@@ -21,10 +23,12 @@ export const codesLangues: Record<Langue, { html: string; og: string }> = {
   fr: { html: "fr", og: "fr_FR" },
   de: { html: "de", og: "de_DE" },
   lb: { html: "lb", og: "lb_LU" },
+  en: { html: "en", og: "en_GB" },
+  es: { html: "es", og: "es_ES" },
 }
 
-/** Un texte dans les trois langues. Le français fait foi et sert de repli. */
-export type Trad<T = string> = { fr: T; de?: T; lb?: T }
+/** Un texte dans les langues du site. Le français fait foi et sert de repli. */
+export type Trad<T = string> = { fr: T; de?: T; lb?: T; en?: T; es?: T }
 
 export function choisir<T>(texte: Trad<T>, langue: Langue): T {
   return texte[langue] ?? texte.fr

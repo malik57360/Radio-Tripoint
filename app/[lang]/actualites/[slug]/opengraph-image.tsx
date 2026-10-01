@@ -82,6 +82,8 @@ export default async function Image({
               fr: "France · Luxembourg · Allemagne",
               de: "Frankreich · Luxemburg · Deutschland",
               lb: "Frankräich · Lëtzebuerg · Däitschland",
+              en: "France · Luxembourg · Germany",
+              es: "Francia · Luxemburgo · Alemania",
             },
             l,
           )}

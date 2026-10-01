@@ -37,7 +37,13 @@ export default async function Image({ params }: { params: Promise<{ lang: string
         >
           <span>
             {choisir(
-              { fr: "La radio qui fait vibrer", de: "Das Radio, das", lb: "De Radio, deen" },
+              {
+                fr: "La radio qui fait vibrer",
+                de: "Das Radio, das",
+                lb: "De Radio, deen",
+                en: "The radio that makes",
+                es: "La radio que hace vibrar",
+              },
               l,
             )}
           </span>
@@ -47,6 +53,8 @@ export default async function Image({ params }: { params: Promise<{ lang: string
                 fr: "les Trois Frontières.",
                 de: "das Dreiländereck bewegt.",
                 lb: "d'Dräilännereck beweegt.",
+                en: "the Three Borders buzz.",
+                es: "las Tres Fronteras.",
               },
               l,
             )}
@@ -58,6 +66,8 @@ export default async function Image({ params }: { params: Promise<{ lang: string
               fr: "France · Luxembourg · Allemagne",
               de: "Frankreich · Luxemburg · Deutschland",
               lb: "Frankräich · Lëtzebuerg · Däitschland",
+              en: "France · Luxembourg · Germany",
+              es: "Francia · Luxemburgo · Alemania",
             },
             l,
           )}

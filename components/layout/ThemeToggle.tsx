@@ -31,9 +31,15 @@ export const scriptTheme = `try{var t=localStorage.getItem("${CLE}");if(t==="cla
 
 const suivant: Record<Theme, Theme> = { auto: "clair", clair: "sombre", sombre: "auto" }
 const libelles: Record<Theme, Trad> = {
-  auto: { fr: "automatique", de: "automatisch", lb: "automatesch" },
-  clair: { fr: "clair", de: "hell", lb: "hell" },
-  sombre: { fr: "sombre", de: "dunkel", lb: "donkel" },
+  auto: {
+    fr: "automatique",
+    de: "automatisch",
+    lb: "automatesch",
+    en: "automatic",
+    es: "automático",
+  },
+  clair: { fr: "clair", de: "hell", lb: "hell", en: "light", es: "claro" },
+  sombre: { fr: "sombre", de: "dunkel", lb: "donkel", en: "dark", es: "oscuro" },
 }
 
 export function ThemeToggle({ className }: { className?: string }) {
@@ -47,12 +53,12 @@ export function ThemeToggle({ className }: { className?: string }) {
   )
   const t = useT()
   const Icone = theme === "clair" ? Sun : theme === "sombre" ? Moon : Monitor
-  const libelle = `${t({ fr: "Thème", de: "Design", lb: "Design" })} : ${t(libelles[theme])}`
+  const libelle = `${t({ fr: "Thème", de: "Design", lb: "Design", en: "Theme", es: "Tema" })} : ${t(libelles[theme])}`
   return (
     <button
       type="button"
       onClick={() => appliquer(suivant[theme])}
-      aria-label={`${libelle}. ${t({ fr: "Changer.", de: "Ändern.", lb: "Änneren." })}`}
+      aria-label={`${libelle}. ${t({ fr: "Changer.", de: "Ändern.", lb: "Änneren.", en: "Change.", es: "Cambiar." })}`}
       title={libelle}
       className={className}
     >

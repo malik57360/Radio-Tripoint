@@ -16,27 +16,37 @@ export const site = {
     fr: "La radio qui fait vibrer les Trois Frontières.",
     de: "Das Radio, das das Dreiländereck zum Klingen bringt.",
     lb: "De Radio, deen d'Dräilännereck zum Vibréiere bréngt.",
+    en: "The radio that makes the Three Borders buzz.",
+    es: "La radio que hace vibrar las Tres Fronteras.",
   } as Trad,
   /** Mentions portées par le logo officiel. */
   baseline: {
     fr: "La radio transfrontalière",
     de: "Das grenzüberschreitende Radio",
     lb: "De grenziwwerschreidende Radio",
+    en: "The cross-border radio",
+    es: "La radio transfronteriza",
   } as Trad,
   promessePro: {
     fr: "Nous vous donnons une visibilité transfrontalière",
     de: "Wir verschaffen Ihnen grenzüberschreitende Sichtbarkeit",
     lb: "Mir ginn Iech eng grenziwwerschreidend Visibilitéit",
+    en: "We give you cross-border visibility",
+    es: "Le damos visibilidad transfronteriza",
   } as Trad,
   description: {
     fr: "Radio et média transfrontalier entre la France, le Luxembourg et l'Allemagne : actualités locales, émissions, podcasts, sport, culture et agenda des Trois Frontières, depuis Sierck-les-Bains.",
     de: "Grenzüberschreitendes Radio und Medium zwischen Frankreich, Luxemburg und Deutschland: lokale Nachrichten, Sendungen, Podcasts, Sport, Kultur und Veranstaltungen im Dreiländereck, aus Sierck-les-Bains.",
     lb: "Grenziwwerschreidende Radio a Medium tëscht Frankräich, Lëtzebuerg an Däitschland: lokal Neiegkeeten, Sendungen, Podcasts, Sport, Kultur an Agenda vum Dräilännereck, vu Sierck-les-Bains aus.",
+    en: "Cross-border radio and media outlet between France, Luxembourg and Germany: local news, programmes, podcasts, sport, culture and events in the Three Borders, from Sierck-les-Bains.",
+    es: "Radio y medio transfronterizo entre Francia, Luxemburgo y Alemania: noticias locales, programas, pódcasts, deporte, cultura y agenda de las Tres Fronteras, desde Sierck-les-Bains.",
   } as Trad,
   pays: {
     fr: ["France", "Luxembourg", "Allemagne"],
     de: ["Frankreich", "Luxemburg", "Deutschland"],
     lb: ["Frankräich", "Lëtzebuerg", "Däitschland"],
+    en: ["France", "Luxembourg", "Germany"],
+    es: ["Francia", "Luxemburgo", "Alemania"],
   } as Trad<string[]>,
 
   contact: {
@@ -44,7 +54,13 @@ export const site = {
     telephoneE164: "+33658221748",
     email: "info@radio-tripoint-officiel.fr",
     adresse: {
-      lieu: { fr: "Hôtel de ville", de: "Rathaus", lb: "Gemengenhaus" } as Trad,
+      lieu: {
+        fr: "Hôtel de ville",
+        de: "Rathaus",
+        lb: "Gemengenhaus",
+        en: "Town hall",
+        es: "Ayuntamiento",
+      } as Trad,
       rue: "12 Quai des Ducs de Lorraine",
       codePostal: "57480",
       ville: "Sierck-les-Bains",

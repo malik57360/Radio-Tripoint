@@ -60,7 +60,7 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
     <Dialogue
       ouvert={ouvert}
       fermer={clore}
-      label={t({ fr: "Recherche", de: "Suche", lb: "Sich" })}
+      label={t({ fr: "Recherche", de: "Suche", lb: "Sich", en: "Search", es: "Búsqueda" })}
       className="w-full"
     >
       <div className="fondu bg-surface text-encre shadow-2 sm:border-trait mx-auto mt-0 w-full max-w-2xl sm:mt-[10vh] sm:border">
@@ -84,6 +84,8 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
               fr: "Rechercher des articles, émissions, podcasts, événements",
               de: "Artikel, Sendungen, Podcasts, Veranstaltungen suchen",
               lb: "Artikelen, Sendungen, Podcasts, Evenementer sichen",
+              en: "Search articles, programmes, podcasts, events",
+              es: "Buscar artículos, programas, pódcasts, eventos",
             })}
           </label>
           <input
@@ -96,6 +98,8 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
               fr: "Rechercher un article, une émission, une ville…",
               de: "Artikel, Sendung, Ort suchen…",
               lb: "En Artikel, eng Sendung, eng Uertschaft sichen…",
+              en: "Search for an article, a programme, a town…",
+              es: "Buscar un artículo, un programa, una localidad…",
             })}
             autoComplete="off"
             aria-controls={idListe}
@@ -108,6 +112,8 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
               fr: "Fermer la recherche",
               de: "Suche schließen",
               lb: "Sich zoumaachen",
+              en: "Close search",
+              es: "Cerrar la búsqueda",
             })}
             className="hover:bg-papier-2 grid size-10 flex-none place-items-center rounded-full"
           >
@@ -119,7 +125,13 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
           {aAfficher === null ? (
             <div className="px-4 py-5">
               <p className="surtitre text-encre-3">
-                {t({ fr: "Suggestions", de: "Vorschläge", lb: "Virschléi" })}
+                {t({
+                  fr: "Suggestions",
+                  de: "Vorschläge",
+                  lb: "Virschléi",
+                  en: "Suggestions",
+                  es: "Sugerencias",
+                })}
               </p>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {suggestions.map((s) => (
@@ -137,12 +149,16 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
                 fr: "Aucun résultat pour",
                 de: "Keine Ergebnisse für",
                 lb: "Keng Resultater fir",
+                en: "No results for",
+                es: "Ningún resultado para",
               })}{" "}
               « <span className="text-encre font-semibold">{terme}</span> ».{" "}
               {t({
                 fr: "Essayez un nom de ville ou d'émission.",
                 de: "Versuchen Sie einen Ortsnamen oder eine Sendung.",
                 lb: "Probéiert et mat engem Uertschafts- oder Sendungsnumm.",
+                en: "Try a town or programme name.",
+                es: "Pruebe con un nombre de localidad o de programa.",
               })}
             </p>
           ) : (
@@ -178,6 +194,8 @@ export function SearchDialog({ ouvert, fermer }: { ouvert: boolean; fermer: () =
                 fr: "Tous les résultats pour",
                 de: "Alle Ergebnisse für",
                 lb: "All Resultater fir",
+                en: "All results for",
+                es: "Todos los resultados para",
               })}{" "}
               « {terme} » <ArrowRight className="size-4" aria-hidden />
             </Link>

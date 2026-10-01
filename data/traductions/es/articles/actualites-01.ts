@@ -1,0 +1,88 @@
+import type { TradArticle } from "../../types"
+
+export const actualites01: Record<string, TradArticle> = {
+  "leon-xiv-a-metz-une-journee-historique-au-coeur-de-l-europe": {
+    titre: "León XIV en Metz: una jornada histórica en el corazón de Europa.",
+    chapeau:
+      "Metz vivió el lunes 28 de septiembre una jornada excepcional con la visita del papa León XIV, última etapa de su viaje apostólico a Francia.",
+    corps: [
+      "Metz vivió el lunes 28 de septiembre una jornada excepcional con la visita del papa León XIV, última etapa de su viaje apostólico a Francia. Una visita marcada por la paz, el diálogo y la unidad europea.",
+      "Tras llegar a Metz por la mañana, el papa se dirigió al centro de congresos Robert Schuman para un encuentro interreligioso y participó después en un encuentro sobre el tema «Las raíces de Europa para la paz y la unidad». La elección de Metz era muy simbólica, ya que la ciudad está estrechamente ligada a la historia europea y a la memoria de Robert Schuman.",
+      "Un encuentro en el corazón de la Gran Región",
+      "Junto al papa y al presidente Emmanuel Macron acudieron numerosas personalidades europeas, entre ellas el gran duque Guillermo y la gran duquesa Stéphanie de Luxemburgo, el primer ministro luxemburgués Luc Frieden, el príncipe Alberto II y la princesa Charlène de Mónaco y la ministra presidenta del Sarre, Anke Rehlinger. También estuvo presente el expresidente de la Comisión Europea Jean-Claude Juncker.",
+      "Una representación especialmente fuerte para una región como la nuestra, donde Francia, Luxemburgo y Alemania conviven a diario.",
+      "Una misa en la catedral de Saint-Étienne",
+      "Por la tarde, León XIV celebró la misa en la catedral de Saint-Étienne ante numerosos fieles. Emmanuel Macron, que en principio no iba a asistir a la celebración, finalmente estuvo presente.",
+      "Del encuentro con los representantes religiosos al discurso sobre Europa y la celebración en la catedral, esta jornada en Metz unió espiritualidad, historia y dimensión europea.",
+      "Para Metz y toda la Gran Región, la visita de León XIV quedará como uno de los momentos más destacados de 2026.",
+    ],
+  },
+  "le-pape-a-30-km-de-chez-nous-pourquoi-leon-xiv-a-choisi-metz-pour-parler-de": {
+    titre:
+      "El papa a 30 km de casa: por qué León XIV ha elegido Metz para hablar de paz en las Tres Fronteras.",
+    chapeau: "Metz recibe al papa León XIV el lunes 28 de septiembre de 2026.",
+    corps: [
+      "Metz recibe al papa León XIV el lunes 28 de septiembre de 2026. Es la última etapa de su primer gran viaje apostólico a Francia, que se desarrolla del viernes 25 al lunes 28 de septiembre de 2026.",
+      "Después de París y Lourdes, la elección recayó en Metz. Y no es casualidad.",
+      "Una región marcada por las guerras, hoy símbolo de reconciliación",
+      "En el cuarto día de su viaje apostólico a Francia, León XIV eligió Metz para pronunciar un discurso sobre las raíces de Europa, la paz y la unidad.",
+      "Esta región fronteriza entre Francia y Alemania, marcada por las guerras, es hoy sinónimo de encuentro y reconciliación. Un mensaje que habla directamente a los habitantes de Sierck-les-Bains, Perl, Schengen y Apach, que cruzan estas fronteras cada día.",
+      "Según el programa oficial publicado por la Santa Sede, el papa llega a París el viernes 25 de septiembre por la mañana y sale de Francia el lunes 28 de septiembre por la tarde desde el aeropuerto de Metz-Nancy-Lorraine.",
+      "Un detalle que lo dice todo",
+      "En Metz, la visita del papa está bajo el signo de Europa y de la paz. Ya se ha filtrado un símbolo potente: el papa celebrará la misa en un altar fabricado con el bronce de antiguos cañones alemanes. Armas convertidas en altar de paz, a pocos kilómetros de nosotros.",
+      "¿Quiere ir desde las Tres Fronteras?",
+      "Es el gran acontecimiento más cercano en años. Esta es la información práctica para el lunes:",
+      [
+        "Desde Sierck-les-Bains / Perl: calcule entre 35 y 45 minutos en coche hasta Metz. Utilice el coche compartido y los aparcamientos disuasorios; está prevista una enorme logística.",
+        "En tren: conexión TER desde Apach y Bouzonville.",
+        "Si no puede ir: el acontecimiento se retransmitirá en directo en KTO, que cubrirá todas las etapas.",
+      ],
+    ],
+  },
+  "carburant-5-astuces-pour-reduire-ses-depenses-quand-on-habite-pres-de-la": {
+    titre: "CARBURANTE: 5 TRUCOS PARA REDUCIR EL GASTO CUANDO SE VIVE CERCA DE LA FRONTERA.",
+    chapeau: "El precio del carburante pesa cada vez más en el presupuesto de los hogares.",
+    corps: [
+      "El precio del carburante pesa cada vez más en el presupuesto de los hogares. Para los habitantes de la Gran Región que cruzan con regularidad la frontera para trabajar, hacer la compra o acompañar a sus hijos, el coche suele ser difícil de sustituir. Pero algunos hábitos pueden ayudar a reducir la factura.",
+      "1. Hacer unos kilómetros más para repostar en Luxemburgo",
+      "Para los habitantes de las Tres Fronteras, Luxemburgo puede ser una opción interesante para el carburante. Según el periodo y la diferencia de precio, unos kilómetros más pueden suponer un ahorro.",
+      "Pero cuidado: hay que tener siempre en cuenta el coste del trayecto adicional. Hacer 20 kilómetros más solo para ahorrar unos céntimos por litro no siempre compensa.",
+      "2. Pasarse a la bici… cuando la distancia lo permite",
+      "Para los trayectos cortos del día a día, la bicicleta puede ser una verdadera alternativa al coche.",
+      "Ir a por el pan, ir al trabajo si está cerca, acompañar a los niños o hacer otros desplazamientos locales en bici reduce directamente el consumo de carburante.",
+      "Y para distancias más largas, una bicicleta eléctrica puede ampliar aún más las posibilidades.",
+      "3. Pensar en el coche compartido",
+      "Si varias personas hacen el mismo trayecto cada día, ¿por qué no compartir el coche?",
+      "Compartir coche reparte el coste del carburante y reduce al mismo tiempo el número de vehículos en la carretera.",
+      "En las regiones fronterizas, donde muchos trabajadores hacen cada día los mismos trayectos entre Francia, Alemania y Luxemburgo, esta solución puede ser especialmente interesante.",
+      "4. Dar prioridad al transporte público",
+      "Autobuses, trenes y conexiones transfronterizas también pueden ayudar a dejar el coche aparcado.",
+      "Según dónde se viva y se trabaje, combinar varios medios de transporte puede resultar a veces más barato que hacer todo el trayecto en coche cada día.",
+      "Un hábito sencillo: comparar con regularidad el coste de un trayecto en coche con el de un abono o un billete de transporte público.",
+      "5. Hablar del teletrabajo con el empleador",
+      "Si el trabajo lo permite, el teletrabajo también puede tener un impacto directo en el presupuesto de carburante.",
+      "Uno o dos días de teletrabajo a la semana suponen varios trayectos menos al mes. Para los trabajadores transfronterizos, que a veces recorren varias decenas de kilómetros al día, el ahorro puede ser rápidamente importante.",
+      "Por supuesto, la posibilidad de teletrabajar depende del oficio, de la empresa y de las normas aplicables a los trabajadores transfronterizos.",
+      "Conclusión: cada trayecto evitado cuenta",
+      "Ante la evolución del precio del carburante, no hay necesariamente una única solución. A menudo es la suma de pequeños cambios lo que reduce la factura: elegir dónde repostar, compartir trayectos, usar más el transporte público o limitar algunos desplazamientos en coche.",
+      "En una región donde las fronteras se cruzan a diario, replantearse la movilidad puede convertirse en una verdadera cuestión económica para los hogares.",
+    ],
+  },
+  "jeunesse-europeenne-entre-inquietude-et-espoir-pour-l-avenir": {
+    titre: "La juventud europea: entre la preocupación y la esperanza en el futuro.",
+    chapeau:
+      "Coste de la vida, empleo, clima, seguridad… muchos jóvenes europeos miran al futuro con cierta preocupación.",
+    corps: [
+      "Coste de la vida, empleo, clima, seguridad… muchos jóvenes europeos miran al futuro con cierta preocupación. Pero esta generación no renuncia por ello a la esperanza.",
+      "Ser joven en Europa hoy es también imaginar un futuro en un contexto marcado por numerosas incertidumbres. Las encuestas europeas muestran que el coste de la vida, el medio ambiente, el empleo y las cuestiones de seguridad ocupan un lugar importante entre las preocupaciones de los jóvenes de 16 a 30 años. En el último Eurobarómetro sobre la juventud, el 40 % cita la subida de los precios y del coste de la vida como una de sus principales preocupaciones para el futuro.",
+      "El clima sigue siendo también un tema importante, al igual que el acceso al empleo y a la vivienda. Los jóvenes encuestados desean sobre todo que Europa actúe más en favor de la economía, el empleo, el medio ambiente y la protección social.",
+      "Pero detrás de estas preocupaciones hay también una verdadera voluntad de creer en el futuro. Los últimos datos europeos muestran que los jóvenes de 15 a 30 años figuran entre las generaciones más positivas respecto al proyecto europeo. En el Eurobarómetro de otoño de 2025, el 65 % de los jóvenes se mostraba optimista sobre el futuro de la Unión Europea, y el 80 % sobre su propio futuro y el de su familia.",
+      "¿Y en la Gran Región?",
+      "En Francia, Alemania y Luxemburgo, estas cuestiones adquieren una dimensión particular. Estudiar, encontrar trabajo, una vivienda, cruzar fronteras o formar una familia: para muchos jóvenes de nuestra región, es el día a día.",
+      "Entonces, ¿a qué tienen realmente miedo los jóvenes de la Gran Región? ¿Y qué les sigue dando confianza en el futuro?",
+      "Ese es también el papel de una radio local como Radio Tripoint: escuchar a esta generación, comprender sus preocupaciones y darle la palabra.",
+      "Una juventud preocupada, quizá. Pero desde luego no una juventud sin esperanza.",
+      "Fuentes: Eurobarómetro – Comisión Europea / Parlamento Europeo.",
+    ],
+  },
+}

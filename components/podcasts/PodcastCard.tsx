@@ -33,7 +33,7 @@ export async function PodcastCard({
           <span className="badge">{emissionNom ?? "Podcast"}</span>
           {episode.demo && (
             <span className="badge-exemple">
-              {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+              {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill", en: "Example", es: "Ejemplo" })}
             </span>
           )}
         </p>

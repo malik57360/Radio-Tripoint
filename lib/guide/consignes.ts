@@ -5,7 +5,13 @@ import { listerEvenements } from "@/lib/contenu/evenements"
 import { libelleCreneaux } from "@/lib/radio/grille"
 import { lienLangue, type Langue } from "@/lib/i18n/langues"
 
-const NOMS: Record<Langue, string> = { fr: "français", de: "allemand", lb: "luxembourgeois" }
+const NOMS: Record<Langue, string> = {
+  fr: "français",
+  de: "allemand",
+  lb: "luxembourgeois",
+  en: "anglais",
+  es: "espagnol",
+}
 
 const dateParis = (d: Date) =>
   new Intl.DateTimeFormat("fr-FR", {

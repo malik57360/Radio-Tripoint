@@ -11,12 +11,20 @@ export async function generateMetadata(props: PageProps<"/[lang]/recherche">) {
   const terme = typeof q === "string" ? q.slice(0, 100) : ""
   return metadataPage({
     titre: terme
-      ? { fr: `Recherche : ${terme}`, de: `Suche: ${terme}`, lb: `Sich: ${terme}` }
-      : { fr: "Recherche", de: "Suche", lb: "Sich" },
+      ? {
+          fr: `Recherche : ${terme}`,
+          de: `Suche: ${terme}`,
+          lb: `Sich: ${terme}`,
+          en: `Search: ${terme}`,
+          es: `Búsqueda: ${terme}`,
+        }
+      : { fr: "Recherche", de: "Suche", lb: "Sich", en: "Search", es: "Búsqueda" },
     description: {
       fr: "Rechercher dans les articles, émissions, podcasts et événements de Radio Tripoint.",
       de: "Artikel, Sendungen, Podcasts und Veranstaltungen von Radio Tripoint durchsuchen.",
       lb: "An den Artikelen, Sendungen, Podcasts an Evenementer vu Radio Tripoint sichen.",
+      en: "Search Radio Tripoint's articles, programmes, podcasts and events.",
+      es: "Buscar en los artículos, programas, pódcasts y eventos de Radio Tripoint.",
     },
     chemin: "/recherche",
     noindex: true,
@@ -37,12 +45,23 @@ export default async function PageRecherche(props: PageProps<"/[lang]/recherche"
   return (
     <>
       <PageHero
-        miettes={[{ nom: t({ fr: "Recherche", de: "Suche", lb: "Sich" }), chemin: "/recherche" }]}
-        titre={terme ? <>« {terme} »</> : t({ fr: "Rechercher", de: "Suchen", lb: "Sichen" })}
+        miettes={[
+          {
+            nom: t({ fr: "Recherche", de: "Suche", lb: "Sich", en: "Search", es: "Búsqueda" }),
+            chemin: "/recherche",
+          },
+        ]}
+        titre={
+          terme ? (
+            <>« {terme} »</>
+          ) : (
+            t({ fr: "Rechercher", de: "Suchen", lb: "Sichen", en: "Search", es: "Buscar" })
+          )
+        }
         enfants={
           <form role="search" action={t.lien("/recherche")} className="relative mt-8 max-w-2xl">
             <label htmlFor="q-page" className="sr-only">
-              {t({ fr: "Rechercher", de: "Suchen", lb: "Sichen" })}
+              {t({ fr: "Rechercher", de: "Suchen", lb: "Sichen", en: "Search", es: "Buscar" })}
             </label>
             <Search
               className="text-encre-3 pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2"
@@ -57,6 +76,8 @@ export default async function PageRecherche(props: PageProps<"/[lang]/recherche"
                 fr: "Article, émission, podcast, ville…",
                 de: "Artikel, Sendung, Podcast, Ort…",
                 lb: "Artikel, Sendung, Podcast, Uertschaft…",
+                en: "Article, programme, podcast, town…",
+                es: "Artículo, programa, pódcast, localidad…",
               })}
               className="champ !min-h-14 pl-12 text-lg"
             />
@@ -70,11 +91,13 @@ export default async function PageRecherche(props: PageProps<"/[lang]/recherche"
               fr: "Saisissez un mot-clé : un nom de ville, d'émission, un sujet.",
               de: "Geben Sie ein Stichwort ein: einen Ort, eine Sendung, ein Thema.",
               lb: "Gitt e Stéchwuert an: eng Uertschaft, eng Sendung, en Thema.",
+              en: "Enter a keyword: a town, a programme, a topic.",
+              es: "Escriba una palabra clave: un nombre de localidad, de programa, un tema.",
             })}
           </p>
         ) : resultats.length === 0 ? (
           <EtatVide
-            titre={`${t({ fr: "Aucun résultat pour", de: "Keine Ergebnisse für", lb: "Keng Resultater fir" })} « ${terme} ».`}
+            titre={`${t({ fr: "Aucun résultat pour", de: "Keine Ergebnisse für", lb: "Keng Resultater fir", en: "No results for", es: "Ningún resultado para" })} « ${terme} ».`}
             actions={
               <>
                 <Link href="/actualites" className="btn btn-trait">
@@ -82,10 +105,18 @@ export default async function PageRecherche(props: PageProps<"/[lang]/recherche"
                     fr: "Parcourir les actualités",
                     de: "Nachrichten durchsuchen",
                     lb: "Duerch d'Neiegkeete bliederen",
+                    en: "Browse the news",
+                    es: "Ver las noticias",
                   })}
                 </Link>
                 <Link href="/emissions" className="btn btn-trait">
-                  {t({ fr: "Voir les émissions", de: "Sendungen ansehen", lb: "Sendunge kucken" })}
+                  {t({
+                    fr: "Voir les émissions",
+                    de: "Sendungen ansehen",
+                    lb: "Sendunge kucken",
+                    en: "See the programmes",
+                    es: "Ver los programas",
+                  })}
                 </Link>
               </>
             }
@@ -94,6 +125,8 @@ export default async function PageRecherche(props: PageProps<"/[lang]/recherche"
               fr: "Vérifiez l'orthographe ou essayez un terme plus général.",
               de: "Prüfen Sie die Schreibweise oder versuchen Sie einen allgemeineren Begriff.",
               lb: "Kontrolléiert d'Schreifweis oder probéiert en allgemengere Begrëff.",
+              en: "Check the spelling or try a more general term.",
+              es: "Compruebe la ortografía o pruebe con un término más general.",
             })}
           </EtatVide>
         ) : (
@@ -101,8 +134,20 @@ export default async function PageRecherche(props: PageProps<"/[lang]/recherche"
             <p role="status" className="surtitre text-encre-3">
               {resultats.length}{" "}
               {resultats.length > 1
-                ? t({ fr: "résultats", de: "Ergebnisse", lb: "Resultater" })
-                : t({ fr: "résultat", de: "Ergebnis", lb: "Resultat" })}
+                ? t({
+                    fr: "résultats",
+                    de: "Ergebnisse",
+                    lb: "Resultater",
+                    en: "results",
+                    es: "resultados",
+                  })
+                : t({
+                    fr: "résultat",
+                    de: "Ergebnis",
+                    lb: "Resultat",
+                    en: "result",
+                    es: "resultado",
+                  })}
             </p>
             <div className="mt-8 space-y-14">
               {groupes.map((g) => (

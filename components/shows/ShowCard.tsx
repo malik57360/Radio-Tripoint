@@ -36,6 +36,8 @@ export async function ShowCard({
               fr: "Présentation à venir.",
               de: "Beschreibung folgt.",
               lb: "Beschreiwung kënnt.",
+              en: "Description coming soon.",
+              es: "Presentación próximamente.",
             })}
         </p>
         <div className="mt-auto flex items-end justify-between gap-4 pt-5">
@@ -44,11 +46,23 @@ export async function ShowCard({
             <span>
               {horaires.length
                 ? horaires[0]
-                : t({ fr: "Horaires à venir", de: "Sendezeiten folgen", lb: "Sendezäite kommen" })}
+                : t({
+                    fr: "Horaires à venir",
+                    de: "Sendezeiten folgen",
+                    lb: "Sendezäite kommen",
+                    en: "Times coming soon",
+                    es: "Horarios próximamente",
+                  })}
             </span>
           </p>
           <span className="text-encre group-hover:text-accent-encre inline-flex flex-none items-center gap-1 text-[0.82rem] font-bold">
-            {t({ fr: "Découvrir", de: "Entdecken", lb: "Entdecken" })}{" "}
+            {t({
+              fr: "Découvrir",
+              de: "Entdecken",
+              lb: "Entdecken",
+              en: "Discover",
+              es: "Descubrir",
+            })}{" "}
             <ArrowUpRight className="size-4" aria-hidden />
           </span>
         </div>

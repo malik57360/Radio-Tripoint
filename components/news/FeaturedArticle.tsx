@@ -22,7 +22,13 @@ export async function FeaturedArticle({
         visuel={article.visuel}
         repli={{
           mot: cat.nom,
-          surmot: t({ fr: "À la une", de: "Aufmacher", lb: "Op der Une" }),
+          surmot: t({
+            fr: "À la une",
+            de: "Aufmacher",
+            lb: "Op der Une",
+            en: "Lead story",
+            es: "Noticia principal",
+          }),
           teinte: teinteCategorie[article.categorie],
           taille: "grand",
         }}

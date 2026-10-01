@@ -47,6 +47,8 @@ export async function generateMetadata(): Promise<Metadata> {
       fr: "Radio Tripoint — Radio transfrontalière France, Luxembourg, Allemagne",
       de: "Radio Tripoint — Grenzüberschreitendes Radio Frankreich, Luxemburg, Deutschland",
       lb: "Radio Tripoint — Grenziwwerschreidende Radio Frankräich, Lëtzebuerg, Däitschland",
+      en: "Radio Tripoint — Cross-border radio France, Luxembourg, Germany",
+      es: "Radio Tripoint — Radio transfronteriza Francia, Luxemburgo, Alemania",
     },
     l,
   )
@@ -114,7 +116,16 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
             href="#contenu"
             className="bg-encre text-papier sr-only z-50 px-4 py-3 font-semibold focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
           >
-            {choisir({ fr: "Aller au contenu", de: "Zum Inhalt", lb: "Op den Inhalt" }, l)}
+            {choisir(
+              {
+                fr: "Aller au contenu",
+                de: "Zum Inhalt",
+                lb: "Op den Inhalt",
+                en: "Skip to content",
+                es: "Ir al contenido",
+              },
+              l,
+            )}
           </a>
           <BandeauDemo />
           <Header />

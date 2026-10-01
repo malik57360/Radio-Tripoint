@@ -27,12 +27,16 @@ export const generateMetadata = () =>
       fr: "Radio Tripoint — Radio transfrontalière France, Luxembourg, Allemagne",
       de: "Radio Tripoint — Grenzüberschreitendes Radio Frankreich, Luxemburg, Deutschland",
       lb: "Radio Tripoint — Grenziwwerschreidende Radio Frankräich, Lëtzebuerg, Däitschland",
+      en: "Radio Tripoint — Cross-border radio France, Luxembourg, Germany",
+      es: "Radio Tripoint — Radio transfronteriza Francia, Luxemburgo, Alemania",
     },
     absolu: true,
     description: {
       fr: "Écoutez Radio Tripoint en direct depuis Sierck-les-Bains : actualités des Trois Frontières, émissions, podcasts et agenda entre Moselle, Luxembourg et Sarre.",
       de: "Hören Sie Radio Tripoint live aus Sierck-les-Bains: Nachrichten aus dem Dreiländereck, Sendungen, Podcasts und Veranstaltungen zwischen Mosel, Luxemburg und Saarland.",
       lb: "Lauschtert Radio Tripoint live vu Sierck-les-Bains: Neiegkeeten aus dem Dräilännereck, Sendungen, Podcasts an Agenda tëscht Musel, Lëtzebuerg a Saarland.",
+      en: "Listen to Radio Tripoint live from Sierck-les-Bains: news from the Three Borders, programmes, podcasts and events between the Moselle, Luxembourg and Saarland.",
+      es: "Escuche Radio Tripoint en directo desde Sierck-les-Bains: noticias de las Tres Fronteras, programas, pódcasts y agenda entre el Mosela, Luxemburgo y el Sarre.",
     },
     chemin: "/",
   })
@@ -63,14 +67,24 @@ export default async function Accueil() {
             fr: "L'info du territoire",
             de: "Nachrichten aus der Region",
             lb: "D'Neiegkeeten aus der Regioun",
+            en: "Local news",
+            es: "La información del territorio",
           })}
-          titre={t({ fr: "À la une", de: "Top-Themen", lb: "Op der Une" })}
+          titre={t({
+            fr: "À la une",
+            de: "Top-Themen",
+            lb: "Op der Une",
+            en: "Top stories",
+            es: "Portada",
+          })}
           lien={{
             href: "/actualites",
             libelle: t({
               fr: "Toutes les actualités",
               de: "Alle Nachrichten",
               lb: "All Neiegkeeten",
+              en: "All news",
+              es: "Todas las noticias",
             }),
           }}
         />
@@ -94,6 +108,8 @@ export default async function Accueil() {
               fr: "La rédaction prépare ses premiers articles.",
               de: "Die Redaktion bereitet ihre ersten Artikel vor.",
               lb: "D'Redaktioun preparéiert hir éischt Artikelen.",
+              en: "The newsroom is preparing its first articles.",
+              es: "La redacción está preparando sus primeros artículos.",
             })}
             actions={
               <>
@@ -103,6 +119,8 @@ export default async function Accueil() {
                     fr: "Proposer une information",
                     de: "Information vorschlagen",
                     lb: "Informatioun proposéieren",
+                    en: "Send us a story",
+                    es: "Proponer una información",
                   })}
                 </Link>
               </>
@@ -112,6 +130,8 @@ export default async function Accueil() {
               fr: "En attendant, l'actualité des Trois Frontières se vit à l'antenne. Une info à partager ? Écrivez à la rédaction.",
               de: "Bis dahin erleben Sie die Nachrichten aus dem Dreiländereck im Radio. Eine Info zu teilen? Schreiben Sie der Redaktion.",
               lb: "Bis dohin lieft Dir d'Neiegkeeten aus dem Dräilännereck um Radio. Eng Info ze deelen? Schreift der Redaktioun.",
+              en: "In the meantime, the news of the Three Borders is on air. Got a story to share? Write to the newsroom.",
+              es: "Mientras tanto, la actualidad de las Tres Fronteras se vive en antena. ¿Una información que compartir? Escriba a la redacción.",
             })}
           </EtatVide>
         )}
@@ -122,15 +142,29 @@ export default async function Accueil() {
         <section aria-labelledby="titre-dernieres" className="conteneur pt-16 lg:pt-24">
           <EnTeteSection
             id="titre-dernieres"
-            surtitre={t({ fr: "En continu", de: "Laufend", lb: "Lafend" })}
+            surtitre={t({
+              fr: "En continu",
+              de: "Laufend",
+              lb: "Lafend",
+              en: "Live feed",
+              es: "Al minuto",
+            })}
             titre={t({
               fr: "Les dernières actualités",
               de: "Die neuesten Nachrichten",
               lb: "Déi lescht Neiegkeeten",
+              en: "Latest news",
+              es: "Últimas noticias",
             })}
             lien={{
               href: "/actualites",
-              libelle: t({ fr: "Voir tout", de: "Alle ansehen", lb: "Alles kucken" }),
+              libelle: t({
+                fr: "Voir tout",
+                de: "Alle ansehen",
+                lb: "Alles kucken",
+                en: "See all",
+                es: "Ver todo",
+              }),
             }}
           />
           <div className="mt-8">
@@ -144,11 +178,29 @@ export default async function Accueil() {
         <div className="conteneur">
           <EnTeteSection
             id="titre-emissions"
-            surtitre={t({ fr: "À l'antenne", de: "Auf Sendung", lb: "Um Sender" })}
-            titre={t({ fr: "Nos émissions", de: "Unsere Sendungen", lb: "Eis Sendungen" })}
+            surtitre={t({
+              fr: "À l'antenne",
+              de: "Auf Sendung",
+              lb: "Um Sender",
+              en: "On air",
+              es: "En antena",
+            })}
+            titre={t({
+              fr: "Nos émissions",
+              de: "Unsere Sendungen",
+              lb: "Eis Sendungen",
+              en: "Our programmes",
+              es: "Nuestros programas",
+            })}
             lien={{
               href: "/emissions",
-              libelle: t({ fr: "Toutes les émissions", de: "Alle Sendungen", lb: "All Sendungen" }),
+              libelle: t({
+                fr: "Toutes les émissions",
+                de: "Alle Sendungen",
+                lb: "All Sendungen",
+                en: "All programmes",
+                es: "Todos los programas",
+              }),
             }}
           />
         </div>
@@ -167,11 +219,19 @@ export default async function Accueil() {
           <div>
             <EnTeteSection
               id="titre-podcasts"
-              surtitre={t({ fr: "Replays", de: "Wiederholungen", lb: "Replays" })}
+              surtitre={t({
+                fr: "Replays",
+                de: "Wiederholungen",
+                lb: "Replays",
+                en: "Replays",
+                es: "A la carta",
+              })}
               titre={t({
                 fr: "Podcasts & replays",
                 de: "Podcasts & Wiederholungen",
                 lb: "Podcasts & Replays",
+                en: "Podcasts & replays",
+                es: "Pódcasts y programas a la carta",
               })}
             />
             <p className="presse text-encre-2 mt-4 text-lg leading-snug">
@@ -179,10 +239,18 @@ export default async function Accueil() {
                 fr: "Une émission manquée ? Retrouvez-la ici et écoutez-la quand vous voulez, sans quitter la page.",
                 de: "Eine Sendung verpasst? Hier finden Sie sie wieder und hören sie, wann Sie wollen – ohne die Seite zu verlassen.",
                 lb: "Eng Sendung verpasst? Hei fannt Dir se erëm a lauschtert se, wann Dir wëllt – ouni d'Säit ze verloossen.",
+                en: "Missed a programme? Find it here and listen whenever you like, without leaving the page.",
+                es: "¿Se perdió un programa? Encuéntrelo aquí y escúchelo cuando quiera, sin salir de la página.",
               })}
             </p>
             <Link href="/podcasts" className="lien-fleche hover:text-accent-encre mt-6">
-              {t({ fr: "Tous les épisodes", de: "Alle Folgen", lb: "All Episoden" })}{" "}
+              {t({
+                fr: "Tous les épisodes",
+                de: "Alle Folgen",
+                lb: "All Episoden",
+                en: "All episodes",
+                es: "Todos los episodios",
+              })}{" "}
               <ArrowRight className="size-4" aria-hidden />
             </Link>
           </div>
@@ -203,6 +271,8 @@ export default async function Accueil() {
                 fr: "Les premiers replays arrivent bientôt.",
                 de: "Die ersten Wiederholungen folgen in Kürze.",
                 lb: "Déi éischt Replays kommen geschwënn.",
+                en: "The first replays are coming soon.",
+                es: "Los primeros programas a la carta llegarán pronto.",
               })}
               actions={<BoutonDirect />}
             >
@@ -210,6 +280,8 @@ export default async function Accueil() {
                 fr: "Les émissions de Radio Tripoint seront disponibles en podcast sur cette page. D'ici là, écoutez-les en direct.",
                 de: "Die Sendungen von Radio Tripoint werden auf dieser Seite als Podcast verfügbar sein. Bis dahin hören Sie sie live.",
                 lb: "D'Sendunge vu Radio Tripoint wäerten op dëser Säit als Podcast disponibel sinn. Bis dohin lauschtert se live.",
+                en: "Radio Tripoint's programmes will be available as podcasts on this page. Until then, listen to them live.",
+                es: "Los programas de Radio Tripoint estarán disponibles en pódcast en esta página. Mientras tanto, escúchelos en directo.",
               })}
             </EtatVide>
           )}
@@ -224,15 +296,29 @@ export default async function Accueil() {
       <section aria-labelledby="titre-agenda" className="conteneur pt-16 lg:pt-24">
         <EnTeteSection
           id="titre-agenda"
-          surtitre={t({ fr: "Sortir", de: "Ausgehen", lb: "Erausgoen" })}
+          surtitre={t({
+            fr: "Sortir",
+            de: "Ausgehen",
+            lb: "Erausgoen",
+            en: "Going out",
+            es: "Salir",
+          })}
           titre={t({
             fr: "L'agenda des Trois Frontières",
             de: "Veranstaltungen im Dreiländereck",
             lb: "D'Agenda vum Dräilännereck",
+            en: "What's on in the Three Borders",
+            es: "La agenda de las Tres Fronteras",
           })}
           lien={{
             href: "/agenda",
-            libelle: t({ fr: "Tout l'agenda", de: "Alle Termine", lb: "D'ganz Agenda" }),
+            libelle: t({
+              fr: "Tout l'agenda",
+              de: "Alle Termine",
+              lb: "D'ganz Agenda",
+              en: "All events",
+              es: "Toda la agenda",
+            }),
           }}
         />
         {evenements.length > 0 ? (
@@ -250,6 +336,8 @@ export default async function Accueil() {
               fr: "Aucun événement annoncé pour le moment.",
               de: "Derzeit sind keine Veranstaltungen angekündigt.",
               lb: "Am Moment sinn keng Evenementer ugekënnegt.",
+              en: "No events announced yet.",
+              es: "Todavía no hay eventos anunciados.",
             })}
             actions={
               <Link href="/soumettre-une-information" className="btn btn-plein">
@@ -258,6 +346,8 @@ export default async function Accueil() {
                   fr: "Annoncer un événement",
                   de: "Veranstaltung melden",
                   lb: "Evenement mellen",
+                  en: "Announce an event",
+                  es: "Anunciar un evento",
                 })}
               </Link>
             }
@@ -266,6 +356,8 @@ export default async function Accueil() {
               fr: "Vous organisez un concert, une fête de village, une exposition ou un match ? Faites-le savoir : Radio Tripoint relaie les rendez-vous du territoire.",
               de: "Sie organisieren ein Konzert, ein Dorffest, eine Ausstellung oder ein Spiel? Sagen Sie es uns: Radio Tripoint macht die Termine der Region bekannt.",
               lb: "Dir organiséiert e Concert, eng Duerffest, eng Ausstellung oder e Match? Sot et eis: Radio Tripoint mécht d'Rendez-vousen aus der Regioun bekannt.",
+              en: "Organising a concert, a village festival, an exhibition or a match? Let us know: Radio Tripoint shares the area's events.",
+              es: "¿Organiza un concierto, una fiesta de pueblo, una exposición o un partido? Háganoslo saber: Radio Tripoint difunde las citas del territorio.",
             })}
           </EtatVide>
         )}

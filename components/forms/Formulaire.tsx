@@ -110,6 +110,8 @@ export function Formulaire({
               fr: "L'envoi a échoué. Réessayez dans un instant.",
               de: "Das Senden ist fehlgeschlagen. Versuchen Sie es gleich noch einmal.",
               lb: "D'Schécken ass feelgeschloen. Probéiert et gläich nach eng Kéier.",
+              en: "Sending failed. Try again in a moment.",
+              es: "El envío ha fallado. Vuelva a intentarlo en un momento.",
             }),
         })
       }
@@ -120,6 +122,8 @@ export function Formulaire({
           fr: "Pas de connexion. Vérifiez votre réseau et réessayez.",
           de: "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
           lb: "Keng Verbindung. Kontrolléiert Äert Netz a probéiert nach eng Kéier.",
+          en: "No connection. Check your network and try again.",
+          es: "Sin conexión. Compruebe su red y vuelva a intentarlo.",
         }),
       })
     }
@@ -143,6 +147,8 @@ export function Formulaire({
             fr: "Envoyer un autre message",
             de: "Weitere Nachricht senden",
             lb: "Nach e Message schécken",
+            en: "Send another message",
+            es: "Enviar otro mensaje",
           })}
         </button>
       </div>
@@ -164,11 +170,15 @@ export function Formulaire({
                   fr: "Un champ est à corriger.",
                   de: "Ein Feld muss korrigiert werden.",
                   lb: "Ee Feld muss verbessert ginn.",
+                  en: "One field needs correcting.",
+                  es: "Hay un campo que corregir.",
                 })
               : `${nbErreurs} ${t({
                   fr: "champs sont à corriger.",
                   de: "Felder müssen korrigiert werden.",
                   lb: "Felder musse verbessert ginn.",
+                  en: "fields need correcting.",
+                  es: "campos que corregir.",
                 })}`}
           </p>
         )}
@@ -190,7 +200,7 @@ export function Formulaire({
           >
             {etat.s === "envoi" && <Loader2 className="size-4 animate-spin" aria-hidden />}
             {etat.s === "envoi"
-              ? t({ fr: "Envoi…", de: "Senden…", lb: "Schécken…" })
+              ? t({ fr: "Envoi…", de: "Senden…", lb: "Schécken…", en: "Sending…", es: "Enviando…" })
               : libelleEnvoi}
           </button>
           <div aria-live="polite">
@@ -206,6 +216,8 @@ export function Formulaire({
                     fr: "L'envoi en ligne n'est pas encore activé.",
                     de: "Der Online-Versand ist noch nicht aktiviert.",
                     lb: "Den Online-Versand ass nach net aktivéiert.",
+                    en: "Online sending is not yet enabled.",
+                    es: "El envío en línea todavía no está activado.",
                   })}
                 </p>
                 <p className="text-encre-2 mt-1">
@@ -213,6 +225,8 @@ export function Formulaire({
                     fr: "Votre message est prêt : envoyez-le depuis votre messagerie.",
                     de: "Ihre Nachricht ist bereit: Senden Sie sie aus Ihrem E-Mail-Programm.",
                     lb: "Äre Message ass prett: Schéckt en aus Ärem E-Mail-Programm.",
+                    en: "Your message is ready: send it from your email app.",
+                    es: "Su mensaje está listo: envíelo desde su correo.",
                   })}
                 </p>
                 <a href={etat.mailto} className="btn btn-trait mt-3 !min-h-10">
@@ -221,6 +235,8 @@ export function Formulaire({
                     fr: "Envoyer par e-mail",
                     de: "Per E-Mail senden",
                     lb: "Per E-Mail schécken",
+                    en: "Send by email",
+                    es: "Enviar por correo",
                   })}
                 </a>
               </div>

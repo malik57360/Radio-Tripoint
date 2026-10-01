@@ -108,6 +108,24 @@ const NOMS_JOURS: Record<Langue, Record<Jour, string>> = {
     samedi: "Samschdeg",
     dimanche: "Sonndeg",
   },
+  en: {
+    lundi: "Monday",
+    mardi: "Tuesday",
+    mercredi: "Wednesday",
+    jeudi: "Thursday",
+    vendredi: "Friday",
+    samedi: "Saturday",
+    dimanche: "Sunday",
+  },
+  es: {
+    lundi: "lunes",
+    mardi: "martes",
+    mercredi: "miércoles",
+    jeudi: "jueves",
+    vendredi: "viernes",
+    samedi: "sábado",
+    dimanche: "domingo",
+  },
 }
 
 /** Nom du jour dans la langue ("dimanche", "Sonntag", "Sonndeg"). */
@@ -125,7 +143,7 @@ export function libelleCreneaux(creneaux: Creneau[], l: Langue = "fr"): string[]
     const tries = [...new Set(jours)].sort((a, b) => ORDRE.indexOf(a) - ORDRE.indexOf(b))
     const j =
       tries.length === 7
-        ? { fr: "Tous les jours", de: "Täglich", lb: "All Dag" }[l]
+        ? { fr: "Tous les jours", de: "Täglich", lb: "All Dag", en: "Every day", es: "Todos los días" }[l]
         : tries
             .map((x) => nomJour(x, l))
             .map((x) => x[0].toUpperCase() + x.slice(1))

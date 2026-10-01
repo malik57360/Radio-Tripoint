@@ -5,10 +5,28 @@ import type { Trad } from "@/lib/i18n/langues"
 import { traducteur } from "@/lib/i18n/serveur"
 
 const offres: Trad[] = [
-  { fr: "Publicité radio", de: "Radiowerbung", lb: "Radiosreklamm" },
-  { fr: "Campagnes locales", de: "Lokale Kampagnen", lb: "Lokal Campagnen" },
-  { fr: "Promotion web", de: "Web-Promotion", lb: "Web-Promotioun" },
-  { fr: "Événementiel", de: "Events", lb: "Evenementer" },
+  {
+    fr: "Publicité radio",
+    de: "Radiowerbung",
+    lb: "Radiosreklamm",
+    en: "Radio advertising",
+    es: "Publicidad en radio",
+  },
+  {
+    fr: "Campagnes locales",
+    de: "Lokale Kampagnen",
+    lb: "Lokal Campagnen",
+    en: "Local campaigns",
+    es: "Campañas locales",
+  },
+  {
+    fr: "Promotion web",
+    de: "Web-Promotion",
+    lb: "Web-Promotioun",
+    en: "Web promotion",
+    es: "Promoción web",
+  },
+  { fr: "Événementiel", de: "Events", lb: "Evenementer", en: "Events", es: "Eventos" },
 ]
 
 export async function Professionnels() {
@@ -22,6 +40,8 @@ export async function Professionnels() {
               fr: "Pour les professionnels",
               de: "Für Unternehmen",
               lb: "Fir Professionneller",
+              en: "For businesses",
+              es: "Para profesionales",
             })}{" "}
             · {t(site.promessePro)}
           </p>
@@ -29,15 +49,29 @@ export async function Professionnels() {
             id="titre-pro"
             className="titre-affiche mt-4 text-[clamp(2.2rem,1.3rem+3.6vw,4.2rem)]"
           >
-            {t({ fr: "Votre entreprise.", de: "Ihr Unternehmen.", lb: "Är Firma." })}
+            {t({
+              fr: "Votre entreprise.",
+              de: "Ihr Unternehmen.",
+              lb: "Är Firma.",
+              en: "Your business.",
+              es: "Su empresa.",
+            })}
             <br />
-            {t({ fr: "Notre antenne.", de: "Unser Sender.", lb: "Eisen Sender." })}
+            {t({
+              fr: "Notre antenne.",
+              de: "Unser Sender.",
+              lb: "Eisen Sender.",
+              en: "Our airwaves.",
+              es: "Nuestra antena.",
+            })}
           </h2>
           <p className="presse mt-5 max-w-lg text-[1.2rem] leading-snug opacity-90">
             {t({
               fr: "Faites entendre votre activité des deux côtés de la frontière : spots radio, campagnes locales, promotion web et opérations événementielles, conçus avec notre équipe.",
               de: "Machen Sie Ihr Unternehmen auf beiden Seiten der Grenze hörbar: Radiospots, lokale Kampagnen, Web-Promotion und Event-Aktionen – gemeinsam mit unserem Team gestaltet.",
               lb: "Maacht Är Aktivitéit op béide Säite vun der Grenz héierbar: Radiospotten, lokal Campagnen, Web-Promotioun an Evenementsaktiounen, zesumme mat eiser Equipe ausgeschafft.",
+              en: "Make your business heard on both sides of the border: radio spots, local campaigns, web promotion and event operations, designed with our team.",
+              es: "Haga oír su actividad a ambos lados de la frontera: cuñas de radio, campañas locales, promoción web y acciones de eventos, diseñadas con nuestro equipo.",
             })}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -49,6 +83,8 @@ export async function Professionnels() {
                 fr: "Découvrir nos solutions",
                 de: "Unsere Angebote entdecken",
                 lb: "Eis Léisungen entdecken",
+                en: "Discover our solutions",
+                es: "Descubrir nuestras soluciones",
               })}{" "}
               <ArrowRight className="size-4" aria-hidden />
             </Link>
@@ -56,7 +92,13 @@ export async function Professionnels() {
               href="/publicite#demande"
               className="btn min-h-12 border-[1.5px] border-current !px-6 hover:bg-black/10"
             >
-              {t({ fr: "Demander une offre", de: "Angebot anfragen", lb: "Offer ufroen" })}
+              {t({
+                fr: "Demander une offre",
+                de: "Angebot anfragen",
+                lb: "Offer ufroen",
+                en: "Request a quote",
+                es: "Solicitar una oferta",
+              })}
             </Link>
           </div>
         </div>

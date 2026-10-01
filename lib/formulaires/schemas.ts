@@ -5,80 +5,120 @@ import { choisir, type Langue, type Trad } from "@/lib/i18n/langues"
 // CSP du site (sans 'unsafe-eval') refuse et signale dans la console.
 z.config({ jitless: true })
 
-/** Messages d'erreur dans les trois langues. */
+/** Messages d'erreur dans les langues du site. */
 const MESSAGES = {
   invalide: {
     fr: "Ce champ est invalide.",
     de: "Dieses Feld ist ungültig.",
     lb: "Dëst Feld ass net gëlteg.",
+    en: "This field is invalid.",
+    es: "Este campo no es válido.",
   },
   max: {
     fr: "caractères maximum.",
     de: "Zeichen höchstens.",
     lb: "Zeechen maximal.",
+    en: "characters maximum.",
+    es: "caracteres como máximo.",
   },
   email: {
     fr: "Indiquez votre adresse e-mail.",
     de: "Geben Sie Ihre E-Mail-Adresse an.",
     lb: "Gitt Är E-Mail-Adress un.",
+    en: "Enter your email address.",
+    es: "Indique su dirección de correo electrónico.",
   },
   emailInvalide: {
     fr: "Adresse e-mail invalide.",
     de: "Ungültige E-Mail-Adresse.",
     lb: "Ongëlteg E-Mail-Adress.",
+    en: "Invalid email address.",
+    es: "Dirección de correo electrónico no válida.",
   },
   telephone: {
     fr: "Numéro de téléphone invalide.",
     de: "Ungültige Telefonnummer.",
     lb: "Ongëlteg Telefonsnummer.",
+    en: "Invalid phone number.",
+    es: "Número de teléfono no válido.",
   },
   consentement: {
     fr: "Votre accord est nécessaire pour que nous puissions vous répondre.",
     de: "Ihre Zustimmung ist nötig, damit wir Ihnen antworten können.",
     lb: "Mir brauchen Är Zoustëmmung, fir Iech äntweren ze kënnen.",
+    en: "We need your consent to be able to reply to you.",
+    es: "Necesitamos su consentimiento para poder responderle.",
   },
-  nom: { fr: "Indiquez votre nom.", de: "Geben Sie Ihren Namen an.", lb: "Gitt Ären Numm un." },
+  nom: {
+    fr: "Indiquez votre nom.",
+    de: "Geben Sie Ihren Namen an.",
+    lb: "Gitt Ären Numm un.",
+    en: "Enter your name.",
+    es: "Indique su nombre.",
+  },
   message: {
     fr: "Écrivez votre message.",
     de: "Schreiben Sie Ihre Nachricht.",
     lb: "Schreift Äre Message.",
+    en: "Write your message.",
+    es: "Escriba su mensaje.",
   },
   messageCourt: {
     fr: "Votre message est un peu court.",
     de: "Ihre Nachricht ist etwas kurz.",
     lb: "Äre Message ass e bësse kuerz.",
+    en: "Your message is a little short.",
+    es: "Su mensaje es un poco corto.",
   },
   ville: {
     fr: "Indiquez la ville concernée.",
     de: "Geben Sie den betroffenen Ort an.",
     lb: "Gitt d'Uertschaft un, ëm déi et geet.",
+    en: "Enter the town concerned.",
+    es: "Indique la localidad afectada.",
   },
   categorie: {
     fr: "Choisissez une catégorie.",
     de: "Wählen Sie eine Kategorie.",
     lb: "Wielt eng Kategorie.",
+    en: "Choose a category.",
+    es: "Elija una categoría.",
   },
   titre: {
     fr: "Donnez un titre à votre information.",
     de: "Geben Sie Ihrer Information einen Titel.",
     lb: "Gitt Ärer Informatioun en Titel.",
+    en: "Give your information a title.",
+    es: "Dé un título a su información.",
   },
   description: {
     fr: "Décrivez l'information.",
     de: "Beschreiben Sie die Information.",
     lb: "Beschreift d'Informatioun.",
+    en: "Describe the information.",
+    es: "Describa la información.",
   },
   details: {
     fr: "Donnez-nous un peu plus de détails.",
     de: "Geben Sie uns etwas mehr Details.",
     lb: "Gitt eis e bësse méi Detailer.",
+    en: "Give us a few more details.",
+    es: "Denos algunos detalles más.",
   },
   entreprise: {
     fr: "Indiquez votre entreprise ou structure.",
     de: "Geben Sie Ihr Unternehmen oder Ihre Organisation an.",
     lb: "Gitt Är Firma oder Organisatioun un.",
+    en: "Enter your company or organisation.",
+    es: "Indique su empresa u organización.",
   },
-  besoin: { fr: "Choisissez un besoin.", de: "Wählen Sie einen Bedarf.", lb: "Wielt e Besoin." },
+  besoin: {
+    fr: "Choisissez un besoin.",
+    de: "Wählen Sie einen Bedarf.",
+    lb: "Wielt e Besoin.",
+    en: "Choose a requirement.",
+    es: "Elija una necesidad.",
+  },
 } satisfies Record<string, Trad>
 
 function creerChamps(l: Langue) {
@@ -111,13 +151,25 @@ export const categoriesInfo = [
 
 /** Les valeurs envoyées restent en français (la rédaction les lit) ; seul l'affichage change. */
 export const libellesCategoriesInfo: Record<(typeof categoriesInfo)[number], Trad> = {
-  "Actualité locale": { fr: "Actualité locale", de: "Lokale Nachricht", lb: "Lokal Neiegkeet" },
-  Culture: { fr: "Culture", de: "Kultur", lb: "Kultur" },
-  Musique: { fr: "Musique", de: "Musik", lb: "Musek" },
-  Sport: { fr: "Sport", de: "Sport", lb: "Sport" },
-  Événement: { fr: "Événement", de: "Veranstaltung", lb: "Evenement" },
-  Prévention: { fr: "Prévention", de: "Prävention", lb: "Preventioun" },
-  Autre: { fr: "Autre", de: "Sonstiges", lb: "Anert" },
+  "Actualité locale": {
+    fr: "Actualité locale",
+    de: "Lokale Nachricht",
+    lb: "Lokal Neiegkeet",
+    en: "Local news",
+    es: "Actualidad local",
+  },
+  Culture: { fr: "Culture", de: "Kultur", lb: "Kultur", en: "Culture", es: "Cultura" },
+  Musique: { fr: "Musique", de: "Musik", lb: "Musek", en: "Music", es: "Música" },
+  Sport: { fr: "Sport", de: "Sport", lb: "Sport", en: "Sport", es: "Deporte" },
+  Événement: { fr: "Événement", de: "Veranstaltung", lb: "Evenement", en: "Event", es: "Evento" },
+  Prévention: {
+    fr: "Prévention",
+    de: "Prävention",
+    lb: "Preventioun",
+    en: "Prevention",
+    es: "Prevención",
+  },
+  Autre: { fr: "Autre", de: "Sonstiges", lb: "Anert", en: "Other", es: "Otro" },
 }
 
 export const besoinsPub = [
@@ -131,21 +183,49 @@ export const besoinsPub = [
 ] as const
 
 export const libellesBesoinsPub: Record<(typeof besoinsPub)[number], Trad> = {
-  "Publicité radio": { fr: "Publicité radio", de: "Radiowerbung", lb: "Radiosreklamm" },
-  "Campagne locale": { fr: "Campagne locale", de: "Lokale Kampagne", lb: "Lokal Campagne" },
-  "Promotion web": { fr: "Promotion web", de: "Web-Promotion", lb: "Web-Promotioun" },
+  "Publicité radio": {
+    fr: "Publicité radio",
+    de: "Radiowerbung",
+    lb: "Radiosreklamm",
+    en: "Radio advertising",
+    es: "Publicidad en radio",
+  },
+  "Campagne locale": {
+    fr: "Campagne locale",
+    de: "Lokale Kampagne",
+    lb: "Lokal Campagne",
+    en: "Local campaign",
+    es: "Campaña local",
+  },
+  "Promotion web": {
+    fr: "Promotion web",
+    de: "Web-Promotion",
+    lb: "Web-Promotioun",
+    en: "Web promotion",
+    es: "Promoción web",
+  },
   "Campagne événementielle": {
     fr: "Campagne événementielle",
     de: "Veranstaltungskampagne",
     lb: "Evenementscampagne",
+    en: "Event campaign",
+    es: "Campaña de evento",
   },
   "Visibilité digitale": {
     fr: "Visibilité digitale",
     de: "Digitale Sichtbarkeit",
     lb: "Digital Visibilitéit",
+    en: "Digital visibility",
+    es: "Visibilidad digital",
   },
-  Partenariat: { fr: "Partenariat", de: "Partnerschaft", lb: "Partenariat" },
-  Autre: { fr: "Autre", de: "Sonstiges", lb: "Anert" },
+  Partenariat: {
+    fr: "Partenariat",
+    de: "Partnerschaft",
+    lb: "Partenariat",
+    en: "Partnership",
+    es: "Colaboración",
+  },
+  Autre: { fr: "Autre", de: "Sonstiges", lb: "Anert", en: "Other", es: "Otro" },
 }
 
 /** Schémas de validation, messages dans la langue du visiteur. */
@@ -198,6 +278,8 @@ export const PIECE_JOINTE = {
     fr: "JPG, PNG, WebP ou PDF · 4 Mo maximum",
     de: "JPG, PNG, WebP oder PDF · höchstens 4 MB",
     lb: "JPG, PNG, WebP oder PDF · maximal 4 MB",
+    en: "JPG, PNG, WebP or PDF · 4 MB maximum",
+    es: "JPG, PNG, WebP o PDF · 4 MB como máximo",
   } as Trad,
 }
 

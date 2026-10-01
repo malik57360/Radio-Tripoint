@@ -33,7 +33,7 @@ export const urlAbsolue = (chemin: string) =>
 
 const texte = (x: Texte, l: Langue) => (typeof x === "string" ? x : choisir(x, l))
 
-/** Les trois versions d'une page, pour hreflang. */
+/** Les versions d'une page dans chaque langue, pour hreflang. */
 export function alternatesLangues(chemin: string) {
   return {
     ...Object.fromEntries(langues.map((l) => [codesLangues[l].html, lienLangue(chemin, l)])),

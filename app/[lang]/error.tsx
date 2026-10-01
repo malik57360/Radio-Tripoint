@@ -24,6 +24,8 @@ export default function Erreur({
           fr: "Erreur · Friture sur la ligne",
           de: "Fehler · Störung in der Leitung",
           lb: "Feeler · Stéierung op der Linn",
+          en: "Error · Static on the line",
+          es: "Error · Interferencias en la línea",
         })}
       </p>
       <h1 className="titre-page mt-4 max-w-3xl">
@@ -31,6 +33,8 @@ export default function Erreur({
           fr: "Cette page n'a pas pu s'afficher.",
           de: "Diese Seite konnte nicht angezeigt werden.",
           lb: "Dës Säit konnt net ugewise ginn.",
+          en: "This page couldn't be displayed.",
+          es: "No se ha podido mostrar esta página.",
         })}
       </h1>
       <p className="presse text-encre-2 mt-5 max-w-xl text-[1.25rem] leading-snug">
@@ -38,19 +42,34 @@ export default function Erreur({
           fr: "Un problème technique de notre côté. Réessayez dans un instant — le lecteur en bas de page continue de fonctionner.",
           de: "Ein technisches Problem bei uns. Versuchen Sie es gleich noch einmal – der Player unten funktioniert weiter.",
           lb: "En techneschen Problem bei eis. Probéiert et gläich nach eng Kéier – de Player ënnen funktionéiert weider.",
+          en: "A technical problem on our side. Try again in a moment — the player at the bottom of the page keeps working.",
+          es: "Un problema técnico por nuestra parte. Vuelva a intentarlo en un momento: el reproductor de abajo sigue funcionando.",
         })}
       </p>
       <div className="mt-8 flex flex-wrap gap-3">
         <button type="button" onClick={() => retry()} className="btn btn-plein min-h-12 !px-6">
-          {t({ fr: "Réessayer", de: "Erneut versuchen", lb: "Nach eng Kéier probéieren" })}
+          {t({
+            fr: "Réessayer",
+            de: "Erneut versuchen",
+            lb: "Nach eng Kéier probéieren",
+            en: "Try again",
+            es: "Reintentar",
+          })}
         </button>
         <Link href="/" className="btn btn-trait min-h-12 !px-6">
-          {t({ fr: "Accueil", de: "Startseite", lb: "Startsäit" })}
+          {t({ fr: "Accueil", de: "Startseite", lb: "Startsäit", en: "Home", es: "Inicio" })}
         </Link>
       </div>
       {error.digest && (
         <p className="text-encre-3 mt-10 text-xs">
-          {t({ fr: "Référence", de: "Referenz", lb: "Referenz" })} : {error.digest}
+          {t({
+            fr: "Référence",
+            de: "Referenz",
+            lb: "Referenz",
+            en: "Reference",
+            es: "Referencia",
+          })}{" "}
+          : {error.digest}
         </p>
       )}
     </section>

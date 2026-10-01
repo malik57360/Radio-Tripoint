@@ -11,6 +11,8 @@ export async function BandeauDemo() {
         fr: "Mode démonstration : les contenus marqués « Exemple » sont fictifs et ne seront pas publiés.",
         de: "Demo-Modus: Mit „Beispiel“ markierte Inhalte sind fiktiv und werden nicht veröffentlicht.",
         lb: "Demo-Modus: Inhalter mat „Beispill“ si fiktiv a ginn net publizéiert.",
+        en: "Demo mode: content marked “Example” is fictional and will not be published.",
+        es: "Modo demostración: los contenidos marcados como «Ejemplo» son ficticios y no se publicarán.",
       })}
     </div>
   )

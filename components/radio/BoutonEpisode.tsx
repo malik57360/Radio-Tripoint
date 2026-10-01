@@ -21,8 +21,14 @@ export function BoutonEpisode({
   const joue = courant && l.statut === "playing"
   const charge = courant && l.statut === "loading"
   const agir = () => (courant && (joue || charge) ? basculer() : void ecouterEpisode(episode))
-  const ecouter = t({ fr: "Écouter", de: "Anhören", lb: "Lauschteren" })
-  const label = `${joue ? t({ fr: "Mettre en pause", de: "Pausieren", lb: "Pauséieren" }) : ecouter} : ${episode.titre}`
+  const ecouter = t({
+    fr: "Écouter",
+    de: "Anhören",
+    lb: "Lauschteren",
+    en: "Listen",
+    es: "Escuchar",
+  })
+  const label = `${joue ? t({ fr: "Mettre en pause", de: "Pausieren", lb: "Pauséieren", en: "Pause", es: "Pausar" }) : ecouter} : ${episode.titre}`
   const Icone = charge ? Loader2 : joue ? Pause : Play
 
   if (variante === "rond") {
@@ -64,9 +70,15 @@ export function BoutonEpisode({
     >
       <Icone className={cn("size-4", charge ? "animate-spin" : "fill-current")} aria-hidden />
       {joue
-        ? t({ fr: "Pause", de: "Pause", lb: "Paus" })
+        ? t({ fr: "Pause", de: "Pause", lb: "Paus", en: "Pause", es: "Pausa" })
         : courant && l.statut === "paused"
-          ? t({ fr: "Reprendre", de: "Fortsetzen", lb: "Weiderlauschteren" })
+          ? t({
+              fr: "Reprendre",
+              de: "Fortsetzen",
+              lb: "Weiderlauschteren",
+              en: "Resume",
+              es: "Reanudar",
+            })
           : ecouter}
     </button>
   )

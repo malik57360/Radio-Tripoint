@@ -87,6 +87,8 @@ export function Header() {
               fr: "Radio Tripoint — accueil",
               de: "Radio Tripoint — Startseite",
               lb: "Radio Tripoint — Startsäit",
+              en: "Radio Tripoint — home",
+              es: "Radio Tripoint — inicio",
             })}
             className={cn(
               "relative flex-none self-stretch transition-[width] duration-300",
@@ -110,6 +112,8 @@ export function Header() {
               fr: "Navigation principale",
               de: "Hauptnavigation",
               lb: "Haaptnavigatioun",
+              en: "Main navigation",
+              es: "Navegación principal",
             })}
             className="ml-4 hidden flex-1 items-center lg:flex xl:ml-8"
           >
@@ -144,7 +148,7 @@ export function Header() {
                     plusActif || plusOuvert ? "text-encre" : "text-encre-2 hover:text-encre",
                   )}
                 >
-                  {t({ fr: "Plus", de: "Mehr", lb: "Méi" })}{" "}
+                  {t({ fr: "Plus", de: "Mehr", lb: "Méi", en: "More", es: "Más" })}{" "}
                   <ChevronDown
                     className={cn("size-4 transition-transform", plusOuvert && "rotate-180")}
                     aria-hidden
@@ -182,6 +186,8 @@ export function Header() {
                 fr: "Rechercher (raccourci /)",
                 de: "Suchen (Tastenkürzel /)",
                 lb: "Sichen (Ofkierzung /)",
+                en: "Search (shortcut /)",
+                es: "Buscar (atajo /)",
               })}
               className="text-encre-2 hover:bg-papier-2 hover:text-encre grid size-10 place-items-center rounded-full transition-colors max-[359px]:hidden"
             >
@@ -191,7 +197,13 @@ export function Header() {
             <button
               type="button"
               onClick={() => setMenuOuvert(true)}
-              aria-label={t({ fr: "Ouvrir le menu", de: "Menü öffnen", lb: "Menü opmaachen" })}
+              aria-label={t({
+                fr: "Ouvrir le menu",
+                de: "Menü öffnen",
+                lb: "Menü opmaachen",
+                en: "Open menu",
+                es: "Abrir el menú",
+              })}
               aria-expanded={menuOuvert}
               aria-controls="menu-mobile"
               className="text-encre hover:bg-papier-2 grid size-10 place-items-center rounded-full transition-colors lg:hidden"

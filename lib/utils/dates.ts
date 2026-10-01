@@ -3,7 +3,7 @@ import type { Langue } from "@/lib/i18n/langues"
 const TZ = "Europe/Paris"
 
 /**
- * Dates dans les trois langues. Les noms de mois et de jours sont écrits
+ * Dates dans les langues du site. Les noms de mois et de jours sont écrits
  * ici plutôt que demandés à Intl : tous les navigateurs ne connaissent pas
  * le luxembourgeois, et un rendu serveur/client différent casserait
  * l'hydratation.
@@ -51,17 +51,49 @@ const MOIS: Record<Langue, string[]> = {
     "November",
     "Dezember",
   ],
+  en: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+  es: [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ],
 }
 const MOIS_COURT: Record<Langue, string[]> = {
   fr: ["janv", "févr", "mars", "avr", "mai", "juin", "juil", "août", "sept", "oct", "nov", "déc"],
   de: ["Jan", "Feb", "März", "Apr", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"],
   lb: ["Jan", "Feb", "Mäe", "Abr", "Mee", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
+  en: ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+  es: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sept", "oct", "nov", "dic"],
 }
 /** Dimanche en premier (getDay). */
 const JOURS: Record<Langue, string[]> = {
   fr: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
   de: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
   lb: ["Sonndeg", "Méindeg", "Dënschdeg", "Mëttwoch", "Donneschdeg", "Freideg", "Samschdeg"],
+  en: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  es: ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"],
 }
 
 const fmtParts = new Intl.DateTimeFormat("en-US", {
@@ -95,13 +127,16 @@ function parts(iso: string | Date) {
 
 export function dateLongue(iso: string, l: Langue = "fr") {
   const d = parts(iso)
-  return l === "fr"
-    ? `${d.jour === 1 ? "1er" : d.jour} ${MOIS.fr[d.mois]} ${d.annee}`
-    : `${d.jour}. ${MOIS[l][d.mois]} ${d.annee}`
+  if (l === "fr") return `${d.jour === 1 ? "1er" : d.jour} ${MOIS.fr[d.mois]} ${d.annee}`
+  if (l === "en") return `${d.jour} ${MOIS.en[d.mois]} ${d.annee}`
+  if (l === "es") return `${d.jour} de ${MOIS.es[d.mois]} de ${d.annee}`
+  return `${d.jour}. ${MOIS[l][d.mois]} ${d.annee}`
 }
 export function dateCourte(iso: string, l: Langue = "fr") {
   const d = parts(iso)
-  return l === "fr" ? `${d.jour} ${MOIS_COURT.fr[d.mois]}.` : `${d.jour}. ${MOIS_COURT[l][d.mois]}.`
+  if (l === "fr") return `${d.jour} ${MOIS_COURT.fr[d.mois]}.`
+  if (l === "en" || l === "es") return `${d.jour} ${MOIS_COURT[l][d.mois]}`
+  return `${d.jour}. ${MOIS_COURT[l][d.mois]}.`
 }
 export function heure(iso: string, l: Langue = "fr") {
   const d = parts(iso)
@@ -120,9 +155,9 @@ export function cleJour(d: Date) {
 /** « Aujourd'hui », « Hier » ou la date longue — stable côté serveur. */
 export function dateRelative(iso: string, l: Langue = "fr", maintenant = new Date()): string {
   const k = cleJour(new Date(iso))
-  if (k === cleJour(maintenant)) return { fr: "Aujourd'hui", de: "Heute", lb: "Haut" }[l]
+  if (k === cleJour(maintenant)) return { fr: "Aujourd'hui", de: "Heute", lb: "Haut", en: "Today", es: "Hoy" }[l]
   if (k === cleJour(new Date(maintenant.getTime() - 86_400_000)))
-    return { fr: "Hier", de: "Gestern", lb: "Gëschter" }[l]
+    return { fr: "Hier", de: "Gestern", lb: "Gëschter", en: "Yesterday", es: "Ayer" }[l]
   return dateLongue(iso, l)
 }
 

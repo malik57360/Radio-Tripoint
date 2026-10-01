@@ -27,13 +27,19 @@ export async function Pagination({
   )
   return (
     <nav
-      aria-label={t({ fr: "Pagination", de: "Seitennavigation", lb: "Säitennavigatioun" })}
+      aria-label={t({
+        fr: "Pagination",
+        de: "Seitennavigation",
+        lb: "Säitennavigatioun",
+        en: "Pagination",
+        es: "Paginación",
+      })}
       className="border-trait mt-14 flex items-center justify-between gap-4 border-t pt-6"
     >
       {page > 1 ? (
         <Link href={href(page - 1)} rel="prev" className="lien-fleche">
           <ArrowLeft className="size-4" aria-hidden />{" "}
-          {t({ fr: "Précédent", de: "Zurück", lb: "Zréck" })}
+          {t({ fr: "Précédent", de: "Zurück", lb: "Zréck", en: "Previous", es: "Anterior" })}
         </Link>
       ) : (
         <span />
@@ -45,7 +51,7 @@ export async function Pagination({
             <Link
               href={href(n)}
               aria-current={n === page ? "page" : undefined}
-              aria-label={`${t({ fr: "Page", de: "Seite", lb: "Säit" })} ${n}`}
+              aria-label={`${t({ fr: "Page", de: "Seite", lb: "Säit", en: "Page", es: "Página" })} ${n}`}
               className="hover:bg-papier-2 aria-[current=page]:bg-encre aria-[current=page]:text-papier grid size-10 place-items-center rounded-full text-sm font-semibold"
             >
               {n}
@@ -55,7 +61,7 @@ export async function Pagination({
       </ol>
       {page < pages ? (
         <Link href={href(page + 1)} rel="next" className="lien-fleche">
-          {t({ fr: "Suivant", de: "Weiter", lb: "Weider" })}{" "}
+          {t({ fr: "Suivant", de: "Weiter", lb: "Weider", en: "Next", es: "Siguiente" })}{" "}
           <ArrowRight className="size-4" aria-hidden />
         </Link>
       ) : (

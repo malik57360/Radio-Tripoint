@@ -55,6 +55,8 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
               fr: "La radio qui fait vibrer",
               de: "Das Radio, das",
               lb: "De Radio, deen",
+              en: "The radio that makes",
+              es: "La radio que hace vibrar",
             })}{" "}
             <span className="text-nuit-accent">
               {t({
@@ -62,6 +64,8 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
                 // Traits d'union conditionnels : le mot tient sur un téléphone.
                 de: "das Drei\u00adländer\u00adeck bewegt.",
                 lb: "d'Dräi\u00adlänner\u00adeck beweegt.",
+                en: "the Three Borders buzz.",
+                es: "las Tres Fronteras.",
               })}
             </span>
           </h1>
@@ -83,6 +87,8 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
                 fr: "Découvrir nos émissions",
                 de: "Unsere Sendungen entdecken",
                 lb: "Eis Sendungen entdecken",
+                en: "Discover our programmes",
+                es: "Descubrir nuestros programas",
               })}{" "}
               <ArrowRight className="size-4" aria-hidden />
             </Link>

@@ -37,6 +37,8 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
             fr: "En ce moment sur Radio Tripoint",
             de: "Gerade auf Radio Tripoint",
             lb: "Elo op Radio Tripoint",
+            en: "Now on Radio Tripoint",
+            es: "Ahora en Radio Tripoint",
           })}
         </h2>
         {actuel && (
@@ -63,7 +65,13 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
         ) : (
           <>
             <p className="surtitre text-nuit-accent">
-              {t({ fr: "À l'antenne", de: "Auf Sendung", lb: "Um Sender" })}
+              {t({
+                fr: "À l'antenne",
+                de: "Auf Sendung",
+                lb: "Um Sender",
+                en: "On air",
+                es: "En antena",
+              })}
             </p>
             <p className="titre-affiche text-nuit-encre mt-1.5 text-[clamp(1.7rem,1.2rem+2vw,2.4rem)]">
               {radioConfig.radioName}
@@ -73,7 +81,13 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
         {l.titreEnCours && (
           <p className="text-nuit-encre-2 mt-2 truncate text-sm">
             <span className="sr-only">
-              {t({ fr: "Titre en cours : ", de: "Aktueller Titel: ", lb: "Aktuellen Titel: " })}
+              {t({
+                fr: "Titre en cours : ",
+                de: "Aktueller Titel: ",
+                lb: "Aktuellen Titel: ",
+                en: "Now playing: ",
+                es: "Sonando ahora: ",
+              })}
             </span>
             {[l.titreEnCours.artiste, l.titreEnCours.titre].filter(Boolean).join(" — ")}
           </p>
@@ -83,16 +97,23 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
       <div className="border-nuit-trait mt-6 flex flex-wrap items-center justify-between gap-4 border-t pt-5">
         {suivant && suivant.emission.slug !== actuel?.emission.slug ? (
           <p className="text-nuit-encre-2 text-sm">
-            {t({ fr: "Ensuite", de: "Danach", lb: "Duerno" })} ·{" "}
-            <span className="text-nuit-encre font-semibold">{suivant.emission.nom}</span>{" "}
+            {t({ fr: "Ensuite", de: "Danach", lb: "Duerno", en: "Up next", es: "A continuación" })}{" "}
+            · <span className="text-nuit-encre font-semibold">{suivant.emission.nom}</span>{" "}
             <span className="tabular-nums">
-              {nomJour(suivant.creneau.jour, t.langue)} {t({ fr: "à", de: "um", lb: "um" })}{" "}
+              {nomJour(suivant.creneau.jour, t.langue)}{" "}
+              {t({ fr: "à", de: "um", lb: "um", en: "at", es: "a las" })}{" "}
               {libelleHeure(suivant.creneau.debut, t.langue)}
             </span>
           </p>
         ) : (
           <Link href="/emissions" className="lien-fleche text-nuit-encre-2 hover:text-nuit-encre">
-            {t({ fr: "Toutes les émissions", de: "Alle Sendungen", lb: "All Sendungen" })}{" "}
+            {t({
+              fr: "Toutes les émissions",
+              de: "Alle Sendungen",
+              lb: "All Sendungen",
+              en: "All programmes",
+              es: "Todos los programas",
+            })}{" "}
             <ArrowRight className="size-4" aria-hidden />
           </Link>
         )}

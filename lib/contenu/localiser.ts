@@ -4,6 +4,8 @@
  */
 import { categories as categoriesFr } from "@/data/categories"
 import { traductions as de } from "@/data/traductions/de"
+import { traductions as en } from "@/data/traductions/en"
+import { traductions as es } from "@/data/traductions/es"
 import { traductions as lb } from "@/data/traductions/lb"
 import type { Traductions } from "@/data/traductions/types"
 import type { Langue } from "@/lib/i18n/langues"
@@ -14,7 +16,7 @@ import type { Bloc } from "@/types/media"
 import type { Episode } from "@/types/podcast"
 import type { Emission } from "@/types/show"
 
-const tables: Partial<Record<Langue, Traductions>> = { de, lb }
+const tables: Partial<Record<Langue, Traductions>> = { de, lb, en, es }
 
 /** Remplace le texte de chaque bloc par sa traduction, en gardant les types et les photos. */
 function traduireCorps(corps: Bloc[], textes: (string | string[])[]): Bloc[] {

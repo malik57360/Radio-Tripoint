@@ -10,7 +10,13 @@ export async function CategoryNav({ active }: { active: CategorieSlug }) {
   const categories = categoriesLangue(t.langue)
   return (
     <nav
-      aria-label={t({ fr: "Rubriques", de: "Rubriken", lb: "Rubriken" })}
+      aria-label={t({
+        fr: "Rubriques",
+        de: "Rubriken",
+        lb: "Rubriken",
+        en: "Sections",
+        es: "Secciones",
+      })}
       className="-mx-4 px-4 sm:mx-0 sm:px-0"
     >
       <ul className="rail py-1">
@@ -23,14 +29,16 @@ export async function CategoryNav({ active }: { active: CategorieSlug }) {
                 aria-current={slug === active ? "page" : undefined}
                 className="puce-filtre"
               >
-                {slug === "actualites" ? t({ fr: "Tout", de: "Alle", lb: "All" }) : c.nom}
+                {slug === "actualites"
+                  ? t({ fr: "Tout", de: "Alle", lb: "All", en: "All", es: "Todo" })
+                  : c.nom}
               </Link>
             </li>
           )
         })}
         <li className="flex-none">
           <Link href="/agenda" className="puce-filtre">
-            {t({ fr: "Agenda", de: "Agenda", lb: "Agenda" })}
+            {t({ fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" })}
           </Link>
         </li>
       </ul>

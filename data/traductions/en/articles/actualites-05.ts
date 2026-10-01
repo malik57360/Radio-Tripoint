@@ -1,0 +1,105 @@
+import type { TradArticle } from "../../types"
+
+export const actualites05: Record<string, TradArticle> = {
+  "fete-du-chateau-2026-retour-sur-une-edition-pas-comme-les-autres": {
+    titre: "Castle Festival 2026: looking back at a very special edition.",
+    chapeau: "The 2026 Castle Festival is over.",
+    corps: [
+      "The 2026 Castle Festival is over. For this special edition, which also marked the association's 30th anniversary, Radio Tripoint met Marie Triffaut, the association's treasurer, to look back on the weekend, this year's choices, the volunteers' commitment and the public's reactions.",
+      "Radio Tripoint: Hello, Ms Triffaut. The Castle Festival has just ended. What is your initial assessment?",
+      "Marie Triffaut: This edition went very well. Above all, we had very good feedback from the groups and exhibitors, who were delighted with our welcome and our organisation.",
+      "As for visitors, the feedback we received was mostly very positive. Many said they were happy and impressed by what was on offer.",
+      "Some medieval enthusiasts were disappointed, however. But this year's project was precisely to break with conventions, in particular to celebrate the association's 30 years.",
+      "Radio Tripoint: The weekend was also marked by a storm. How did you cope?",
+      "Marie Triffaut: The storm didn't spare us, but we quickly got back on our feet. The service provider reacted incredibly quickly.",
+      "We also had a very nice surprise: people came along spontaneously after seeing our posts, to help us. Among them were former volunteers, but also people who had never volunteered before.",
+      "Radio Tripoint: What role do volunteers play for the castle and the association?",
+      "Marie Triffaut: Without the association, the castle might have had an uncertain future 30 years ago. And without volunteers, there is no association.",
+      "One without the other, we are nothing in this building.",
+      "So I would like to thank them once again and congratulate all my colleagues on the board for their incredible voluntary work. They worked on this event for a whole year.",
+      "We are a team!",
+      "Radio Tripoint: A final word for the public who came this weekend?",
+      "Marie Triffaut: Thank you to the public who came to see us this weekend!",
+      "We hope that the journey through the corridors of time carried them away, and that medieval enthusiasts won't hold it against us too much that we stepped out of our usual habits.",
+      "We certainly had a huge amount of fun!",
+      "And although the fireworks unfortunately couldn't take place, the public provided real fireworks of their own!",
+      "Radio Tripoint thanks Marie Triffaut for this interview, as well as all the volunteers, groups, exhibitors and participants who brought this 2026 edition of the Castle Festival to life.",
+    ],
+  },
+  "horen-sie-auch-seit-einigen-tagen-explosionsgerausche-in-perl": {
+    titre: "Have you also been hearing explosion-like noises in Perl for the past few days?",
+    chapeau:
+      "For the past few days, residents in and around Perl have repeatedly been hearing loud bangs coming from the vineyards.",
+    corps: [
+      "For the past few days, residents in and around Perl have repeatedly been hearing loud bangs coming from the vineyards. The noises can certainly sound like gunshots and cause a moment of alarm.",
+      "But what is behind them?",
+      "The noises are probably coming from so-called bird-scaring cannons. These devices are used by winegrowers to keep birds and other animals away from the vines and protect the grapes from damage.",
+      "Especially at this time of year, when the grapes are ripening and the harvest is approaching, winegrowers try to protect their crop as well as they can.",
+      "For residents, the regular bangs can of course be surprising. So if you hear them in the vineyards around Perl at the moment, there's no need to assume they are gunshots.",
+      "In short: what sounds like gunshots may simply be protecting the grapes in the vineyards.",
+      "Radio Tripoint – your local voice in the Three Borders.",
+    ],
+  },
+  "belgique-17-ans-de-prison-pour-une-justice-rendue-soi-meme": {
+    titre: "Belgium: 17 years in prison for taking justice into his own hands.",
+    chapeau: "A case that is causing a great stir.",
+    corps: [
+      "A case that is causing a great stir. In Namur, Grégory Lenoci has been sentenced to 17 years in prison for attempted murder after brutally attacking his neighbour.",
+      "The events took place on 24 July 2025 in Jambes. Lenoci suspected his neighbour of having sexually abused his stepson. After reporting his suspicions to the authorities, he decided to confront the neighbour himself.",
+      "The confrontation escalated into an attack of extreme brutality, leaving the victim with severe disabilities.",
+      "In court, Grégory Lenoci said he had lost control and denied wanting to kill his neighbour. The court nevertheless ruled that it was attempted murder and imposed a sentence of 17 years in prison.",
+      "The case has sparked many reactions in Belgium and reopens a sensitive debate: can one understand the anger of a relative who believes a child is in danger while condemning vigilante justice?",
+      "A question that goes far beyond this case: where does protection end and revenge begin?",
+    ],
+  },
+  "verkehrsbehinderungen-wegen-bauarbeiten-an-der-l177-l178": {
+    titre: "Traffic disruption due to roadworks on the L177/L178.",
+    chapeau:
+      "ORSCHOLZ – The roadworks at the L177/L178 junction are currently causing traffic disruption and additional diverted traffic in Orscholz.",
+    corps: [
+      "ORSCHOLZ – The roadworks at the L177/L178 junction are currently causing traffic disruption and additional diverted traffic in Orscholz.",
+      "According to the municipality of Mettlach, several residential streets are affected by the increased traffic. Drivers are asked to drive carefully, respect speed limits and allow more time for their journey.",
+      "As part of the works, the traffic lights are being replaced, among other things. The new traffic-responsive system is intended to improve traffic flow and increase safety in the future.",
+      "Until the works are completed, the municipality asks residents and road users for their understanding and mutual consideration.",
+      "Source: Municipality of Mettlach – 17 August 2026",
+      "Radio Tripoint – the media outlet connecting France, Luxembourg and Germany.",
+    ],
+  },
+  "dossier-special-incendies-fumees-ce-que-l-on-sait": {
+    titre: "SPECIAL REPORT — FIRES & SMOKE: WHAT WE KNOW.",
+    chapeau:
+      "For several days, several fires have been keeping emergency services busy in the Greater Region.",
+    corps: [
+      "For several days, several fires have been keeping emergency services busy in the Greater Region. This Monday, 17 August, the situation is still being closely monitored in Belgium, in Germany and as far as our border region, where the smoke was clearly felt.",
+      "Hautes Fagnes: almost 3,000 hectares destroyed",
+      "In the Hautes Fagnes, near the German border, the fire has already destroyed around 3,000 hectares of vegetation — the largest fire in Belgium's recent history.",
+      "Rain and calm winds brought a slight improvement on Monday morning, but the situation remains delicate. Pockets of fire persist deep in the peat soils, making firefighting particularly difficult.",
+      "In Monschau, on the German side, around thirty residents had to leave their homes as a precaution. In the late afternoon, the authorities were still reporting heavy smoke and recommending locally that doors and windows be kept closed.\nSaarland: fire in Hüttigweiler under control",
+      "In Hüttigweiler, near Illingen, around 18 hectares were affected by another major fire.",
+      "The fire is now under control but not yet completely extinguished. Firefighting had to be interrupted temporarily, however, because Second World War munitions may be buried in the ground. The bomb disposal service was on site.",
+      "Smoke felt far beyond the fires",
+      "The consequences are visible dozens, even hundreds of kilometres from the main fires.",
+      "The SWR confirms in particular that smoke from Belgium has returned to the Trier region, with smells noticeable in parts of Rhineland-Palatinate.",
+      "On the French side, several residents and towns in the Moselle have also reported a smell of burning, smoke or a very hazy sky to Radio Tripoint.",
+      "We received similar reports from the Three Borders and from near the German border.",
+      "It is therefore important to note that a smell of burning or a hazy sky does not necessarily mean there is a fire nearby: smoke can be carried over long distances by the wind and weather conditions.",
+      "Caution across the Greater Region",
+      "The situation continues to change rapidly. In heavy smoke, it is best to limit your exposure as much as possible and follow the advice of local authorities.",
+      "This news comes as Radio Tripoint wraps up its prevention campaign on 17 August to protect our forests and natural areas — a reminder of how important it is, more than ever, to stay vigilant about the risk of fire.",
+      "Radio Tripoint, the cross-border radio",
+      "Article updated on 17 August 2026 in the late afternoon.",
+    ],
+  },
+  "rauchentwicklung-im-saarland-das-wissen-wir": {
+    titre: "Smoke in Saarland: what we know.",
+    chapeau:
+      "Since Saturday evening, heavy smoke and a smell of burning have been noticed in parts of Saarland.",
+    corps: [
+      "Since Saturday evening, heavy smoke and a smell of burning have been noticed in parts of Saarland. The Saarland integrated control centre therefore issued a warning to the public.",
+      "According to the information available so far, the smoke does not come from a major fire in Saarland, but is being carried into the region from the direction of Belgium.",
+      "The authorities have since updated the warning: according to the latest information, there is no danger to the public.",
+      "However, if smoke or smells become stronger, it is recommended as a precaution to keep windows and doors closed and to follow official information from the authorities.",
+      "Radio Tripoint will continue to follow developments and will report any new information.",
+    ],
+  },
+}

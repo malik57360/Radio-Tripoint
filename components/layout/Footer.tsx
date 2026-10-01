@@ -11,44 +11,136 @@ import { ThemeToggle } from "./ThemeToggle"
 
 const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
   {
-    titre: { fr: "Écouter & lire", de: "Hören & lesen", lb: "Lauschteren & liesen" },
+    titre: {
+      fr: "Écouter & lire",
+      de: "Hören & lesen",
+      lb: "Lauschteren & liesen",
+      en: "Listen & read",
+      es: "Escuchar y leer",
+    },
     liens: [
-      { libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten" }, href: "/actualites" },
-      { libelle: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" }, href: "/emissions" },
+      {
+        libelle: {
+          fr: "Actualités",
+          de: "Aktuelles",
+          lb: "Aktualitéiten",
+          en: "News",
+          es: "Noticias",
+        },
+        href: "/actualites",
+      },
+      {
+        libelle: {
+          fr: "Émissions",
+          de: "Sendungen",
+          lb: "Sendungen",
+          en: "Programmes",
+          es: "Programas",
+        },
+        href: "/emissions",
+      },
       {
         libelle: {
           fr: "Podcasts & replays",
           de: "Podcasts & Wiederholungen",
           lb: "Podcasts & Replays",
+          en: "Podcasts & replays",
+          es: "Pódcasts y programas a la carta",
         },
         href: "/podcasts",
       },
-      { libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda" }, href: "/agenda" },
+      {
+        libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
+        href: "/agenda",
+      },
     ],
   },
   {
-    titre: { fr: "Explorer", de: "Entdecken", lb: "Entdecken" },
+    titre: { fr: "Explorer", de: "Entdecken", lb: "Entdecken", en: "Explore", es: "Explorar" },
     liens: [
       {
-        libelle: { fr: "Art & Culture", de: "Kunst & Kultur", lb: "Konscht & Kultur" },
+        libelle: {
+          fr: "Art & Culture",
+          de: "Kunst & Kultur",
+          lb: "Konscht & Kultur",
+          en: "Art & Culture",
+          es: "Arte y cultura",
+        },
         href: "/art-culture",
       },
-      { libelle: { fr: "Actu Music", de: "Musik", lb: "Musek" }, href: "/actu-music" },
-      { libelle: { fr: "Actu People", de: "People", lb: "People" }, href: "/actu-people" },
       {
-        libelle: { fr: "Mode & Style", de: "Mode & Stil", lb: "Mode & Stil" },
+        libelle: {
+          fr: "Actu Music",
+          de: "Musik",
+          lb: "Musek",
+          en: "Music news",
+          es: "Actualidad musical",
+        },
+        href: "/actu-music",
+      },
+      {
+        libelle: {
+          fr: "Actu People",
+          de: "People",
+          lb: "People",
+          en: "People news",
+          es: "Actualidad people",
+        },
+        href: "/actu-people",
+      },
+      {
+        libelle: {
+          fr: "Mode & Style",
+          de: "Mode & Stil",
+          lb: "Mode & Stil",
+          en: "Fashion & Style",
+          es: "Moda y estilo",
+        },
         href: "/mode-style",
       },
-      { libelle: { fr: "Sport", de: "Sport", lb: "Sport" }, href: "/sport" },
-      { libelle: { fr: "Prévention", de: "Prävention", lb: "Preventioun" }, href: "/prevention" },
+      {
+        libelle: { fr: "Sport", de: "Sport", lb: "Sport", en: "Sport", es: "Deporte" },
+        href: "/sport",
+      },
+      {
+        libelle: {
+          fr: "Prévention",
+          de: "Prävention",
+          lb: "Preventioun",
+          en: "Prevention",
+          es: "Prevención",
+        },
+        href: "/prevention",
+      },
     ],
   },
   {
-    titre: { fr: "Professionnels", de: "Für Unternehmen", lb: "Fir Professionneller" },
+    titre: {
+      fr: "Professionnels",
+      de: "Für Unternehmen",
+      lb: "Fir Professionneller",
+      en: "Businesses",
+      es: "Profesionales",
+    },
     liens: [
-      { libelle: { fr: "Publicité", de: "Werbung", lb: "Reklamm" }, href: "/publicite" },
       {
-        libelle: { fr: "Partenariats", de: "Partnerschaften", lb: "Partenariater" },
+        libelle: {
+          fr: "Publicité",
+          de: "Werbung",
+          lb: "Reklamm",
+          en: "Advertising",
+          es: "Publicidad",
+        },
+        href: "/publicite",
+      },
+      {
+        libelle: {
+          fr: "Partenariats",
+          de: "Partnerschaften",
+          lb: "Partenariater",
+          en: "Partnerships",
+          es: "Colaboraciones",
+        },
         href: "/publicite#partenariats",
       },
       {
@@ -56,12 +148,29 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
           fr: "Soumettre une information",
           de: "Eine Information einsenden",
           lb: "Eng Informatioun aschécken",
+          en: "Send a story",
+          es: "Enviar una información",
         },
         href: "/soumettre-une-information",
       },
-      { libelle: { fr: "À propos", de: "Über uns", lb: "Iwwer eis" }, href: "/a-propos" },
       {
-        libelle: { fr: "Ils nous font confiance", de: "Sie vertrauen uns", lb: "Si vertrauen eis" },
+        libelle: {
+          fr: "À propos",
+          de: "Über uns",
+          lb: "Iwwer eis",
+          en: "About",
+          es: "Quiénes somos",
+        },
+        href: "/a-propos",
+      },
+      {
+        libelle: {
+          fr: "Ils nous font confiance",
+          de: "Sie vertrauen uns",
+          lb: "Si vertrauen eis",
+          en: "They trust us",
+          es: "Confían en nosotros",
+        },
         href: "/ils-nous-font-confiance",
       },
     ],
@@ -88,6 +197,8 @@ export async function Footer() {
                 fr: "La radio et le média des Trois Frontières. France, Luxembourg, Allemagne\u00a0: une seule antenne.",
                 de: "Das Radio und Medium des Dreiländerecks. Frankreich, Luxemburg, Deutschland: ein einziger Sender.",
                 lb: "De Radio an d'Medium vum Dräilännereck. Frankräich, Lëtzebuerg, Däitschland: eng eenzeg Antenn.",
+                en: "The radio and media outlet of the Three Borders. France, Luxembourg, Germany: one station.",
+                es: "La radio y el medio de las Tres Fronteras. Francia, Luxemburgo, Alemania: una sola antena.",
               })}
             </p>
             {reseaux.length > 0 && (
@@ -97,6 +208,8 @@ export async function Footer() {
                   fr: "Réseaux sociaux",
                   de: "Soziale Netzwerke",
                   lb: "Sozial Netzwierker",
+                  en: "Social media",
+                  es: "Redes sociales",
                 })}
               >
                 {reseaux.map((r) => (
@@ -105,7 +218,7 @@ export async function Footer() {
                       href={r.url}
                       target="_blank"
                       rel="noopener"
-                      aria-label={`Radio Tripoint ${t({ fr: "sur", de: "auf", lb: "op" })} ${r.libelle}`}
+                      aria-label={`Radio Tripoint ${t({ fr: "sur", de: "auf", lb: "op", en: "on", es: "en" })} ${r.libelle}`}
                       className="border-nuit-trait hover:border-nuit-encre hover:bg-nuit-2 grid size-11 place-items-center rounded-full border transition-colors"
                     >
                       <IconeReseau reseau={r.reseau} />
@@ -136,7 +249,7 @@ export async function Footer() {
             ))}
             <div className="col-span-2 sm:col-span-1">
               <p className="surtitre text-nuit-encre-2">
-                {t({ fr: "Contact", de: "Kontakt", lb: "Kontakt" })}
+                {t({ fr: "Contact", de: "Kontakt", lb: "Kontakt", en: "Contact", es: "Contacto" })}
               </p>
               <ul className="mt-4 space-y-3 text-[0.95rem]">
                 <li>
@@ -176,7 +289,13 @@ export async function Footer() {
                 </li>
               </ul>
               <Link href="/contact" className="lien-fleche text-nuit-accent mt-5">
-                {t({ fr: "Nous écrire", de: "Schreiben Sie uns", lb: "Schreift eis" })}{" "}
+                {t({
+                  fr: "Nous écrire",
+                  de: "Schreiben Sie uns",
+                  lb: "Schreift eis",
+                  en: "Write to us",
+                  es: "Escríbanos",
+                })}{" "}
                 <ArrowUpRight className="size-4" aria-hidden />
               </Link>
             </div>
@@ -197,12 +316,24 @@ export async function Footer() {
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <li>
               <Link href="/mentions-legales" className="hover:text-nuit-encre">
-                {t({ fr: "Mentions légales", de: "Impressum", lb: "Impressum" })}
+                {t({
+                  fr: "Mentions légales",
+                  de: "Impressum",
+                  lb: "Impressum",
+                  en: "Legal notice",
+                  es: "Aviso legal",
+                })}
               </Link>
             </li>
             <li>
               <Link href="/politique-confidentialite" className="hover:text-nuit-encre">
-                {t({ fr: "Politique de confidentialité", de: "Datenschutz", lb: "Dateschutz" })}
+                {t({
+                  fr: "Politique de confidentialité",
+                  de: "Datenschutz",
+                  lb: "Dateschutz",
+                  en: "Privacy",
+                  es: "Privacidad",
+                })}
               </Link>
             </li>
             <li>

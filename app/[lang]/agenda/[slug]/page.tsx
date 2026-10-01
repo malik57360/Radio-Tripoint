@@ -48,7 +48,10 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
       <div className="conteneur pt-6 sm:pt-8">
         <Breadcrumbs
           elements={[
-            { nom: t({ fr: "Agenda", de: "Agenda", lb: "Agenda" }), chemin: "/agenda" },
+            {
+              nom: t({ fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" }),
+              chemin: "/agenda",
+            },
             { nom: e.titre, chemin: `/agenda/${e.slug}` },
           ]}
         />
@@ -61,7 +64,7 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
             </span>
             {e.demo && (
               <span className="badge-exemple">
-                {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+                {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill", en: "Example", es: "Ejemplo" })}
               </span>
             )}
           </p>
@@ -108,13 +111,25 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
               </li>
               {e.organisateur && (
                 <li className="text-encre-2">
-                  {t({ fr: "Organisé par", de: "Veranstalter:", lb: "Organiséiert vun" })}{" "}
+                  {t({
+                    fr: "Organisé par",
+                    de: "Veranstalter:",
+                    lb: "Organiséiert vun",
+                    en: "Organised by",
+                    es: "Organizado por",
+                  })}{" "}
                   {e.organisateur}
                 </li>
               )}
               {e.gratuit && (
                 <li className="text-succes font-semibold">
-                  {t({ fr: "Entrée libre", de: "Eintritt frei", lb: "Entrée gratis" })}
+                  {t({
+                    fr: "Entrée libre",
+                    de: "Eintritt frei",
+                    lb: "Entrée gratis",
+                    en: "Free entry",
+                    es: "Entrada libre",
+                  })}
                 </li>
               )}
             </ul>
@@ -125,11 +140,19 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
                   fr: "Ajouter à mon agenda",
                   de: "Zum Kalender hinzufügen",
                   lb: "An de Kalenner setzen",
+                  en: "Add to my calendar",
+                  es: "Añadir a mi calendario",
                 })}
               </a>
               <a href={carte} target="_blank" rel="noopener" className="btn btn-trait">
                 <MapPin className="size-4" aria-hidden />{" "}
-                {t({ fr: "Itinéraire", de: "Route", lb: "Wee" })}
+                {t({
+                  fr: "Itinéraire",
+                  de: "Route",
+                  lb: "Wee",
+                  en: "Directions",
+                  es: "Cómo llegar",
+                })}
               </a>
               {e.lienExterne && (
                 <a href={e.lienExterne} target="_blank" rel="noopener" className="btn btn-trait">
@@ -137,6 +160,8 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
                     fr: "Site de l'événement",
                     de: "Website der Veranstaltung",
                     lb: "Site vum Evenement",
+                    en: "Event website",
+                    es: "Web del evento",
                   })}{" "}
                   <ExternalLink className="size-4" aria-hidden />
                 </a>
@@ -149,10 +174,22 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
         <section aria-labelledby="titre-autres-ev" className="conteneur pb-20">
           <div className="filet-section flex flex-wrap items-end justify-between gap-4 pt-5">
             <h2 id="titre-autres-ev" className="titre-section">
-              {t({ fr: "Aussi à l'agenda", de: "Weitere Termine", lb: "Och an der Agenda" })}
+              {t({
+                fr: "Aussi à l'agenda",
+                de: "Weitere Termine",
+                lb: "Och an der Agenda",
+                en: "Also on the calendar",
+                es: "También en la agenda",
+              })}
             </h2>
             <Link href="/agenda" className="lien-fleche hover:text-accent-encre">
-              {t({ fr: "Tout l'agenda", de: "Alle Termine", lb: "D'ganz Agenda" })}
+              {t({
+                fr: "Tout l'agenda",
+                de: "Alle Termine",
+                lb: "D'ganz Agenda",
+                en: "All events",
+                es: "Toda la agenda",
+              })}
             </Link>
           </div>
           <ul className="mt-8 grid gap-x-10 gap-y-8 md:grid-cols-2">

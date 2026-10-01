@@ -25,6 +25,8 @@ export async function CarteTerritoire() {
             fr: "Carte des Trois Frontières : France, Luxembourg et Allemagne autour du tripoint de Schengen",
             de: "Karte des Dreiländerecks: Frankreich, Luxemburg und Deutschland rund um das Dreiländereck bei Schengen",
             lb: "Kaart vum Dräilännereck: Frankräich, Lëtzebuerg an Däitschland ronderëm den Dräilännerpunkt vu Schengen",
+            en: "Map of the Three Borders: France, Luxembourg and Germany around the Schengen tripoint",
+            es: "Mapa de las Tres Fronteras: Francia, Luxemburgo y Alemania alrededor del trifinio de Schengen",
           })}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"
@@ -37,6 +39,8 @@ export async function CarteTerritoire() {
             fr: "Le tripoint de Schengen, où se rejoignent la France, le Luxembourg et l'Allemagne.",
             de: "Das Dreiländereck bei Schengen, wo Frankreich, Luxemburg und Deutschland aufeinandertreffen.",
             lb: "Den Dräilännerpunkt vu Schengen, wou Frankräich, Lëtzebuerg an Däitschland openeentreffen.",
+            en: "The Schengen tripoint, where France, Luxembourg and Germany meet.",
+            es: "El trifinio de Schengen, donde se unen Francia, Luxemburgo y Alemania.",
           })}
         </span>
         <a
@@ -45,7 +49,13 @@ export async function CarteTerritoire() {
           rel="noopener"
           className="text-nuit-accent inline-flex items-center gap-1 font-semibold hover:underline"
         >
-          {t({ fr: "Agrandir la carte", de: "Karte vergrößern", lb: "Kaart vergréisseren" })}{" "}
+          {t({
+            fr: "Agrandir la carte",
+            de: "Karte vergrößern",
+            lb: "Kaart vergréisseren",
+            en: "Enlarge the map",
+            es: "Ampliar el mapa",
+          })}{" "}
           <ExternalLink className="size-3.5" aria-hidden />
         </a>
       </figcaption>

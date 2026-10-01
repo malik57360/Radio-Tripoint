@@ -56,7 +56,7 @@ export function jsonLdOrganisation(l: Langue = "fr") {
         "@id": WEB_ID,
         url: site.url,
         name: site.nomOfficiel,
-        inLanguage: ["fr", "de", "lb"],
+        inLanguage: ["fr", "de", "lb", "en", "es"],
         publisher: { "@id": ORG_ID },
         potentialAction: {
           "@type": "SearchAction",

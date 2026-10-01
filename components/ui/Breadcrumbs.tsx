@@ -22,13 +22,22 @@ export async function Breadcrumbs({
 }) {
   const t = await traducteur()
   const complet = [
-    { nom: t({ fr: "Accueil", de: "Startseite", lb: "Startsäit" }), chemin: "/" },
+    {
+      nom: t({ fr: "Accueil", de: "Startseite", lb: "Startsäit", en: "Home", es: "Inicio" }),
+      chemin: "/",
+    },
     ...elements,
   ]
   return (
     <>
       <nav
-        aria-label={t({ fr: "Fil d'Ariane", de: "Brotkrümelnavigation", lb: "Navigatiounspad" })}
+        aria-label={t({
+          fr: "Fil d'Ariane",
+          de: "Brotkrümelnavigation",
+          lb: "Navigatiounspad",
+          en: "Breadcrumb",
+          es: "Ruta de navegación",
+        })}
         className={cn("text-[0.8rem]", sombre ? "text-nuit-encre-2" : "text-encre-3", className)}
       >
         <ol className="flex flex-wrap items-center gap-x-1.5 gap-y-1">

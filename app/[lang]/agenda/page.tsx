@@ -15,20 +15,54 @@ export const generateMetadata = () =>
       fr: "Agenda des Trois Frontières — sorties et événements",
       de: "Veranstaltungen im Dreiländereck — Ausgehtipps und Events",
       lb: "Agenda vum Dräilännereck — Sortien an Evenementer",
+      en: "Three Borders events — what's on",
+      es: "Agenda de las Tres Fronteras — salidas y eventos",
     },
     description: {
       fr: "Concerts, fêtes, expositions, sport : l'agenda des événements à Sierck-les-Bains, Apach, Perl, Schengen et dans toute la région des Trois Frontières.",
       de: "Konzerte, Feste, Ausstellungen, Sport: die Veranstaltungen in Sierck-les-Bains, Apach, Perl, Schengen und im ganzen Dreiländereck.",
       lb: "Concerten, Fester, Ausstellungen, Sport: d'Agenda vun den Evenementer zu Sierck-les-Bains, Apach, Perl, Schengen an am ganzen Dräilännereck.",
+      en: "Concerts, festivals, exhibitions, sport: what's on in Sierck-les-Bains, Apach, Perl, Schengen and across the Three Borders region.",
+      es: "Conciertos, fiestas, exposiciones, deporte: la agenda de eventos en Sierck-les-Bains, Apach, Perl, Schengen y en toda la región de las Tres Fronteras.",
     },
     chemin: "/agenda",
   })
 
 const periodes: { valeur: Periode; libelle: Trad }[] = [
-  { valeur: "tout", libelle: { fr: "À venir", de: "Demnächst", lb: "Demnächst" } },
-  { valeur: "aujourdhui", libelle: { fr: "Aujourd'hui", de: "Heute", lb: "Haut" } },
-  { valeur: "semaine", libelle: { fr: "Cette semaine", de: "Diese Woche", lb: "Dës Woch" } },
-  { valeur: "mois", libelle: { fr: "Ce mois-ci", de: "Diesen Monat", lb: "Dëse Mount" } },
+  {
+    valeur: "tout",
+    libelle: {
+      fr: "À venir",
+      de: "Demnächst",
+      lb: "Demnächst",
+      en: "Upcoming",
+      es: "Próximamente",
+    },
+  },
+  {
+    valeur: "aujourdhui",
+    libelle: { fr: "Aujourd'hui", de: "Heute", lb: "Haut", en: "Today", es: "Hoy" },
+  },
+  {
+    valeur: "semaine",
+    libelle: {
+      fr: "Cette semaine",
+      de: "Diese Woche",
+      lb: "Dës Woch",
+      en: "This week",
+      es: "Esta semana",
+    },
+  },
+  {
+    valeur: "mois",
+    libelle: {
+      fr: "Ce mois-ci",
+      de: "Diesen Monat",
+      lb: "Dëse Mount",
+      en: "This month",
+      es: "Este mes",
+    },
+  },
 ]
 
 export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
@@ -62,30 +96,57 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
   return (
     <>
       <PageHero
-        miettes={[{ nom: t({ fr: "Agenda", de: "Agenda", lb: "Agenda" }), chemin: "/agenda" }]}
-        surtitre={t({ fr: "Sortir", de: "Ausgehen", lb: "Erausgoen" })}
+        miettes={[
+          {
+            nom: t({ fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" }),
+            chemin: "/agenda",
+          },
+        ]}
+        surtitre={t({
+          fr: "Sortir",
+          de: "Ausgehen",
+          lb: "Erausgoen",
+          en: "Going out",
+          es: "Salir",
+        })}
         titre={t({
           fr: "L'agenda des Trois Frontières",
           de: "Veranstaltungen im Dreiländereck",
           lb: "D'Agenda vum Dräilännereck",
+          en: "What's on in the Three Borders",
+          es: "La agenda de las Tres Fronteras",
         })}
         intro={t({
           fr: "Concerts, fêtes, expositions, rencontres sportives : les rendez-vous du territoire, d'un côté comme de l'autre de la frontière.",
           de: "Konzerte, Feste, Ausstellungen, Sportbegegnungen: die Termine der Region, diesseits und jenseits der Grenze.",
           lb: "Concerten, Fester, Ausstellungen, Sportsmatcher: d'Rendez-vousen aus der Regioun, op béide Säite vun der Grenz.",
+          en: "Concerts, festivals, exhibitions, sporting events: the area's events, on both sides of the border.",
+          es: "Conciertos, fiestas, exposiciones, encuentros deportivos: las citas del territorio, a un lado y otro de la frontera.",
         })}
         enfants={
           tous.length > 0 && (
             <div className="mt-8 space-y-3">
               <Filtres
-                label={t({ fr: "Période", de: "Zeitraum", lb: "Zäitraum" })}
+                label={t({
+                  fr: "Période",
+                  de: "Zeitraum",
+                  lb: "Zäitraum",
+                  en: "Period",
+                  es: "Periodo",
+                })}
                 options={periodes.map((p) => ({ valeur: p.valeur, libelle: t(p.libelle) }))}
                 actif={periode}
                 href={(v) => href(v, ville)}
               />
               {villes.length > 1 && (
                 <Filtres
-                  label={t({ fr: "Ville", de: "Ort", lb: "Uertschaft" })}
+                  label={t({
+                    fr: "Ville",
+                    de: "Ort",
+                    lb: "Uertschaft",
+                    en: "Town",
+                    es: "Localidad",
+                  })}
                   options={[
                     {
                       valeur: "",
@@ -93,6 +154,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
                         fr: "Toutes les villes",
                         de: "Alle Orte",
                         lb: "All Uertschaften",
+                        en: "All towns",
+                        es: "Todas las localidades",
                       }),
                     },
                     ...villes.map((v) => ({ valeur: v, libelle: v })),
@@ -106,7 +169,13 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
         }
       />
       <section
-        aria-label={t({ fr: "Événements", de: "Veranstaltungen", lb: "Evenementer" })}
+        aria-label={t({
+          fr: "Événements",
+          de: "Veranstaltungen",
+          lb: "Evenementer",
+          en: "Events",
+          es: "Eventos",
+        })}
         className="conteneur py-12 lg:py-16"
       >
         {tous.length === 0 ? (
@@ -115,6 +184,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
               fr: "Aucun événement annoncé pour le moment.",
               de: "Derzeit sind keine Veranstaltungen angekündigt.",
               lb: "Am Moment sinn keng Evenementer ugekënnegt.",
+              en: "No events announced yet.",
+              es: "Todavía no hay eventos anunciados.",
             })}
             actions={
               <Link href="/soumettre-une-information" className="btn btn-plein">
@@ -122,6 +193,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
                   fr: "Annoncer un événement",
                   de: "Veranstaltung melden",
                   lb: "Evenement mellen",
+                  en: "Announce an event",
+                  es: "Anunciar un evento",
                 })}
               </Link>
             }
@@ -130,6 +203,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
               fr: "Associations, communes, organisateurs : envoyez-nous vos rendez-vous, Radio Tripoint les relaie à l'antenne et sur cette page.",
               de: "Vereine, Gemeinden, Veranstalter: Schicken Sie uns Ihre Termine, Radio Tripoint macht sie im Radio und auf dieser Seite bekannt.",
               lb: "Veräiner, Gemengen, Organisateuren: Schéckt eis Är Rendez-vousen, Radio Tripoint mécht se um Radio an op dëser Säit bekannt.",
+              en: "Associations, towns, organisers: send us your events and Radio Tripoint will share them on air and on this page.",
+              es: "Asociaciones, municipios, organizadores: envíennos sus citas y Radio Tripoint las difundirá en antena y en esta página.",
             })}
           </EtatVide>
         ) : evenements.length === 0 ? (
@@ -138,6 +213,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
               fr: "Rien de prévu sur cette période.",
               de: "In diesem Zeitraum ist nichts geplant.",
               lb: "An dësem Zäitraum ass näischt geplangt.",
+              en: "Nothing planned for this period.",
+              es: "No hay nada previsto en este periodo.",
             })}
             actions={
               <Link href="/agenda" className="btn btn-trait">
@@ -145,6 +222,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
                   fr: "Voir tout l'agenda",
                   de: "Alle Termine ansehen",
                   lb: "D'ganz Agenda kucken",
+                  en: "See all events",
+                  es: "Ver toda la agenda",
                 })}
               </Link>
             }
@@ -153,6 +232,8 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
               fr: "Élargissez la période ou changez de ville.",
               de: "Erweitern Sie den Zeitraum oder wählen Sie einen anderen Ort.",
               lb: "Vergréissert den Zäitraum oder wielt eng aner Uertschaft.",
+              en: "Widen the period or choose another town.",
+              es: "Amplíe el periodo o cambie de localidad.",
             })}
           </EtatVide>
         ) : (

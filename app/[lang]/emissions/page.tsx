@@ -12,11 +12,15 @@ export const generateMetadata = () =>
       fr: "Nos émissions — les rendez-vous de Radio Tripoint",
       de: "Unsere Sendungen — die Termine von Radio Tripoint",
       lb: "Eis Sendungen — d'Rendez-vousen vu Radio Tripoint",
+      en: "Our programmes — Radio Tripoint's shows",
+      es: "Nuestros programas — las citas de Radio Tripoint",
     },
     description: {
       fr: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin !… Découvrez les émissions de Radio Tripoint, la radio des Trois Frontières.",
       de: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin !… Entdecken Sie die Sendungen von Radio Tripoint, dem Radio des Dreiländerecks.",
       lb: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin !… Entdeckt d'Sendunge vu Radio Tripoint, dem Radio vum Dräilännereck.",
+      en: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin!… Discover the programmes of Radio Tripoint, the radio of the Three Borders.",
+      es: "Génération Z, On Vous Donne la Parole, Histoire & Mémoire Régionale, Talents du coin!… Descubra los programas de Radio Tripoint, la radio de las Tres Fronteras.",
     },
     chemin: "/emissions",
   })
@@ -29,14 +33,37 @@ export default async function PageEmissions() {
     <>
       <PageHero
         miettes={[
-          { nom: t({ fr: "Émissions", de: "Sendungen", lb: "Sendungen" }), chemin: "/emissions" },
+          {
+            nom: t({
+              fr: "Émissions",
+              de: "Sendungen",
+              lb: "Sendungen",
+              en: "Programmes",
+              es: "Programas",
+            }),
+            chemin: "/emissions",
+          },
         ]}
-        surtitre={t({ fr: "À l'antenne", de: "Auf Sendung", lb: "Um Sender" })}
-        titre={t({ fr: "Nos émissions", de: "Unsere Sendungen", lb: "Eis Sendungen" })}
+        surtitre={t({
+          fr: "À l'antenne",
+          de: "Auf Sendung",
+          lb: "Um Sender",
+          en: "On air",
+          es: "En antena",
+        })}
+        titre={t({
+          fr: "Nos émissions",
+          de: "Unsere Sendungen",
+          lb: "Eis Sendungen",
+          en: "Our programmes",
+          es: "Nuestros programas",
+        })}
         intro={t({
           fr: "Des voix d'ici, des sujets d'ici. Jeunesse, mémoire, bien-être, talents locaux et parole aux auditeurs : les rendez-vous qui font Radio Tripoint.",
           de: "Stimmen von hier, Themen von hier. Jugend, Erinnerung, Wohlbefinden, lokale Talente und die Stimme der Hörer: die Sendungen, die Radio Tripoint ausmachen.",
           lb: "Stëmme vun hei, Themen vun hei. Jugend, Erënnerung, Wuelbefannen, lokal Talenter an d'Wuert fir d'Auditeuren: d'Rendez-vousen, déi Radio Tripoint ausmaachen.",
+          en: "Local voices, local stories. Youth, memory, wellbeing, local talent and listeners' voices: the programmes that make Radio Tripoint.",
+          es: "Voces de aquí, temas de aquí. Juventud, memoria, bienestar, talentos locales y la palabra a los oyentes: las citas que hacen Radio Tripoint.",
         })}
         enfants={
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -46,6 +73,8 @@ export default async function PageEmissions() {
                 fr: "Écouter les replays",
                 de: "Wiederholungen anhören",
                 lb: "Replays lauschteren",
+                en: "Listen to replays",
+                es: "Escuchar a la carta",
               })}
             </Link>
           </div>
@@ -56,6 +85,8 @@ export default async function PageEmissions() {
           fr: "Liste des émissions",
           de: "Liste der Sendungen",
           lb: "Lëscht vun de Sendungen",
+          en: "List of programmes",
+          es: "Lista de programas",
         })}
         className="conteneur py-12 lg:py-16"
       >
@@ -72,6 +103,8 @@ export default async function PageEmissions() {
               fr: "La grille horaire détaillée sera publiée ici prochainement. Pour savoir ce qui passe à l'antenne, lancez le direct.",
               de: "Das ausführliche Programm wird hier in Kürze veröffentlicht. Was gerade läuft, hören Sie im Livestream.",
               lb: "De Programm am Detail gëtt hei geschwënn publizéiert. Wat grad leeft, héiert Dir am Live-Stream.",
+              en: "The detailed schedule will be published here soon. To find out what's on air, start the live stream.",
+              es: "La parrilla detallada se publicará aquí próximamente. Para saber qué suena en antena, ponga el directo.",
             })}
           </p>
         )}

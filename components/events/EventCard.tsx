@@ -5,9 +5,9 @@ import { heure, jourNumero, jourSemaine, moisCourt } from "@/lib/utils/dates"
 import type { Evenement } from "@/types/event"
 
 export const nomsPays = {
-  FR: { fr: "France", de: "Frankreich", lb: "Frankräich" },
-  LU: { fr: "Luxembourg", de: "Luxemburg", lb: "Lëtzebuerg" },
-  DE: { fr: "Allemagne", de: "Deutschland", lb: "Däitschland" },
+  FR: { fr: "France", de: "Frankreich", lb: "Frankräich", en: "France", es: "Francia" },
+  LU: { fr: "Luxembourg", de: "Luxemburg", lb: "Lëtzebuerg", en: "Luxembourg", es: "Luxemburgo" },
+  DE: { fr: "Allemagne", de: "Deutschland", lb: "Däitschland", en: "Germany", es: "Alemania" },
 } as const
 
 /** Carte agenda : le calendrier d'abord, comme sur une affiche de programme. */
@@ -36,7 +36,7 @@ export async function EventCard({
           <span>{t(nomsPays[e.pays])}</span>
           {e.demo && (
             <span className="badge-exemple">
-              {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill" })}
+              {t({ fr: "Exemple", de: "Beispiel", lb: "Beispill", en: "Example", es: "Ejemplo" })}
             </span>
           )}
         </p>

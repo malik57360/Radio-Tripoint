@@ -36,7 +36,15 @@ function Cadre({
         {libelle}
         {facultatif && (
           <span className="text-encre-3 ml-1.5 font-normal">
-            ({t({ fr: "facultatif", de: "optional", lb: "fakultativ" })})
+            (
+            {t({
+              fr: "facultatif",
+              de: "optional",
+              lb: "fakultativ",
+              en: "optional",
+              es: "opcional",
+            })}
+            )
           </span>
         )}
       </label>
@@ -170,7 +178,7 @@ export function ChampChoix({
         {...p}
       >
         <option value="" disabled>
-          {t({ fr: "Choisir…", de: "Auswählen…", lb: "Auswielen…" })}
+          {t({ fr: "Choisir…", de: "Auswählen…", lb: "Auswielen…", en: "Choose…", es: "Elegir…" })}
         </option>
         {options.map((o) => (
           <option key={o} value={o}>

@@ -19,6 +19,8 @@ export async function ACompleter({ valeur }: { valeur: string | null }) {
         fr: "à compléter par l'éditeur",
         de: "vom Herausgeber zu ergänzen",
         lb: "vum Editeur auszefëllen",
+        en: "to be completed by the publisher",
+        es: "pendiente de completar por el editor",
       })}
     </span>
   )

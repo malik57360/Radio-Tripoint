@@ -47,7 +47,13 @@ function Menu({ className }: { className?: string }) {
         type="button"
         aria-expanded={ouvert}
         aria-controls="menu-langues"
-        aria-label={t({ fr: "Langue du site", de: "Sprache der Website", lb: "Sprooch vum Site" })}
+        aria-label={t({
+          fr: "Langue du site",
+          de: "Sprache der Website",
+          lb: "Sprooch vum Site",
+          en: "Website language",
+          es: "Idioma del sitio",
+        })}
         onClick={() => setOuvert((v) => !v)}
         className="text-encre-2 hover:bg-papier-2 hover:text-encre inline-flex h-10 items-center gap-1 rounded-full px-2 text-[0.8rem] font-bold tracking-wide uppercase transition-colors"
       >

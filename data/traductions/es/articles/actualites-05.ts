@@ -1,0 +1,105 @@
+import type { TradArticle } from "../../types"
+
+export const actualites05: Record<string, TradArticle> = {
+  "fete-du-chateau-2026-retour-sur-une-edition-pas-comme-les-autres": {
+    titre: "Fiesta del Castillo 2026: balance de una edición muy especial.",
+    chapeau: "La Fiesta del Castillo 2026 ha terminado.",
+    corps: [
+      "La Fiesta del Castillo 2026 ha terminado. Para esta edición especial, que también celebraba los 30 años de la asociación, Radio Tripoint se reunió con Marie Triffaut, tesorera de la asociación, para repasar el fin de semana, las decisiones de este año, la implicación de los voluntarios y las reacciones del público.",
+      "Radio Tripoint: Buenos días, señora Triffaut. La Fiesta del Castillo acaba de terminar. ¿Qué primer balance hace?",
+      "Marie Triffaut: Esta edición ha ido muy bien. Sobre todo hemos tenido muy buenas opiniones de los grupos y expositores, que estaban encantados con nuestra acogida y nuestra organización.",
+      "En cuanto a los visitantes, las opiniones que hemos recibido han sido en su mayoría muy positivas. Muchos nos dijeron que estaban contentos e impresionados con lo que se les ofreció.",
+      "Algunos aficionados a lo medieval, en cambio, se quedaron decepcionados. Pero el proyecto de este año consistía precisamente en romper con los códigos, en particular para celebrar los 30 años de la asociación.",
+      "Radio Tripoint: El fin de semana también estuvo marcado por una tormenta. ¿Cómo la gestionaron?",
+      "Marie Triffaut: La tormenta no nos perdonó, pero nos recuperamos rápido. El proveedor reaccionó con una rapidez increíble.",
+      "También tuvimos una sorpresa muy bonita: hubo personas que vinieron espontáneamente a ayudarnos tras ver nuestras publicaciones. Entre ellas había antiguos voluntarios, pero también personas que nunca habían sido voluntarias.",
+      "Radio Tripoint: ¿Qué papel desempeñan los voluntarios para el castillo y la asociación?",
+      "Marie Triffaut: Sin la asociación, el castillo quizá habría tenido un futuro incierto hace 30 años. Y sin voluntarios, no hay asociación.",
+      "Los unos sin los otros, en este edificio no somos nada.",
+      "Por eso quiero volver a darles las gracias y felicitar a todos mis compañeros de la junta por su increíble trabajo voluntario. Han trabajado durante todo un año en este evento.",
+      "¡Somos un equipo!",
+      "Radio Tripoint: ¿Unas últimas palabras para el público que vino este fin de semana?",
+      "Marie Triffaut: ¡Gracias al público que vino a vernos este fin de semana!",
+      "Esperamos que el viaje por los pasillos del tiempo les haya cautivado y que los aficionados a lo medieval no nos guarden demasiado rencor por haber salido de nuestras costumbres.",
+      "¡Nosotros, desde luego, nos lo hemos pasado en grande!",
+      "Y aunque por desgracia los fuegos artificiales no pudieron celebrarse, ¡el público puso el espectáculo!",
+      "Radio Tripoint agradece a Marie Triffaut esta entrevista, así como a todos los voluntarios, grupos, expositores y participantes que dieron vida a esta edición 2026 de la Fiesta del Castillo.",
+    ],
+  },
+  "horen-sie-auch-seit-einigen-tagen-explosionsgerausche-in-perl": {
+    titre: "¿Usted también oye desde hace unos días ruidos como explosiones en Perl?",
+    chapeau:
+      "Desde hace unos días, los vecinos de Perl y alrededores oyen una y otra vez fuertes estallidos procedentes de los viñedos.",
+    corps: [
+      "Desde hace unos días, los vecinos de Perl y alrededores oyen una y otra vez fuertes estallidos procedentes de los viñedos. Los ruidos pueden parecer disparos y causar un momento de inquietud.",
+      "Pero ¿qué hay detrás?",
+      "Probablemente se trata de los llamados cañones espantapájaros. Los viticultores utilizan estos aparatos para mantener a los pájaros y otros animales alejados de las vides y proteger la uva de daños.",
+      "Precisamente en esta época, cuando la uva madura y se acerca la vendimia, los viticultores intentan proteger su cosecha lo mejor posible.",
+      "Para los vecinos, estos estallidos regulares pueden resultar sorprendentes, por supuesto. Así que, si los oye estos días en los viñedos de los alrededores de Perl, no tiene por qué pensar en disparos.",
+      "En resumen: lo que suena a disparos podría ser simplemente una forma de proteger la uva en los viñedos.",
+      "Radio Tripoint – su voz local en las Tres Fronteras.",
+    ],
+  },
+  "belgique-17-ans-de-prison-pour-une-justice-rendue-soi-meme": {
+    titre: "Bélgica: 17 años de cárcel por tomarse la justicia por su mano.",
+    chapeau: "Un caso que causa un gran revuelo.",
+    corps: [
+      "Un caso que causa un gran revuelo. En Namur, Grégory Lenoci ha sido condenado a 17 años de cárcel por intento de asesinato tras agredir brutalmente a su vecino.",
+      "Los hechos ocurrieron el 24 de julio de 2025 en Jambes. Lenoci sospechaba que su vecino había abusado sexualmente de su hijastro. Tras comunicar sus sospechas a las autoridades, decidió enfrentarse él mismo al vecino.",
+      "El enfrentamiento derivó en una agresión de extrema brutalidad que dejó a la víctima con graves secuelas.",
+      "Ante el tribunal, Grégory Lenoci declaró que había perdido el control y negó haber querido matar a su vecino. El tribunal consideró, sin embargo, que se trataba de un intento de asesinato e impuso una pena de 17 años de prisión.",
+      "El caso provoca numerosas reacciones en Bélgica y reabre un debate delicado: ¿se puede comprender la ira de un familiar que cree que un niño está en peligro y condenar al mismo tiempo la justicia por mano propia?",
+      "Una pregunta que va mucho más allá de este caso: ¿dónde termina la protección y dónde empieza la venganza?",
+    ],
+  },
+  "verkehrsbehinderungen-wegen-bauarbeiten-an-der-l177-l178": {
+    titre: "Problemas de tráfico por obras en la L177/L178.",
+    chapeau:
+      "ORSCHOLZ – Las obras en el cruce de la L177 y la L178 están causando actualmente problemas de tráfico y desvíos adicionales en Orscholz.",
+    corps: [
+      "ORSCHOLZ – Las obras en el cruce de la L177 y la L178 están causando actualmente problemas de tráfico y desvíos adicionales en Orscholz.",
+      "Según el municipio de Mettlach, varias calles residenciales se ven afectadas por el aumento del tráfico. Se pide a los conductores que circulen con prudencia, respeten los límites de velocidad y prevean más tiempo para sus desplazamientos.",
+      "Como parte de las obras, se están renovando, entre otras cosas, los semáforos. El nuevo sistema regulado según el tráfico deberá mejorar la circulación y aumentar la seguridad en el futuro.",
+      "Hasta que terminen las obras, el municipio pide a los vecinos y usuarios de la vía comprensión y consideración mutua.",
+      "Fuente: municipio de Mettlach – 17 de agosto de 2026",
+      "Radio Tripoint – el medio que une Francia, Luxemburgo y Alemania.",
+    ],
+  },
+  "dossier-special-incendies-fumees-ce-que-l-on-sait": {
+    titre: "DOSIER ESPECIAL — INCENDIOS Y HUMO: LO QUE SE SABE.",
+    chapeau:
+      "Desde hace varios días, varios incendios mantienen ocupados a los servicios de emergencia en la Gran Región.",
+    corps: [
+      "Desde hace varios días, varios incendios mantienen ocupados a los servicios de emergencia en la Gran Región. Este lunes 17 de agosto, la situación sigue de cerca en Bélgica, en Alemania y hasta nuestra región fronteriza, donde el humo se notó claramente.",
+      "Altos del Fagne: casi 3000 hectáreas destruidas",
+      "En los Altos del Fagne, cerca de la frontera alemana, el fuego ya ha destruido unas 3000 hectáreas de vegetación, el mayor incendio de la historia reciente de Bélgica.",
+      "La lluvia y la ausencia de viento trajeron una ligera mejora el lunes por la mañana, pero la situación sigue siendo delicada. Persisten focos en lo más profundo de los suelos de turba, lo que complica especialmente la extinción.",
+      "En Monschau, en el lado alemán, una treintena de vecinos tuvieron que abandonar sus casas como medida de precaución. A última hora de la tarde, las autoridades seguían informando de mucho humo y recomendaban localmente mantener puertas y ventanas cerradas.\nSarre: incendio de Hüttigweiler bajo control",
+      "En Hüttigweiler, cerca de Illingen, unas 18 hectáreas se vieron afectadas por otro gran incendio.",
+      "El fuego está ya bajo control, pero aún no extinguido por completo. Sin embargo, las tareas de extinción tuvieron que interrumpirse temporalmente porque podría haber munición de la Segunda Guerra Mundial enterrada. El servicio de desactivación de explosivos acudió al lugar.",
+      "Humo perceptible mucho más allá de los focos",
+      "Las consecuencias son visibles a decenas, incluso a cientos de kilómetros de los principales incendios.",
+      "La SWR confirma en particular que el humo procedente de Bélgica ha vuelto a la región de Tréveris, con olores perceptibles en partes de Renania-Palatinado.",
+      "En el lado francés, varios vecinos y municipios del Mosela también han informado a Radio Tripoint de olor a quemado, humo o un cielo muy velado.",
+      "Hemos recibido testimonios similares de las Tres Fronteras y de zonas cercanas a la frontera alemana.",
+      "Por eso es importante recordar que el olor a quemado o un cielo velado no significan necesariamente que haya un incendio cerca: el viento y las condiciones meteorológicas pueden transportar el humo a grandes distancias.",
+      "Prudencia en toda la Gran Región",
+      "La situación sigue evolucionando rápidamente. En caso de mucho humo, conviene exponerse lo menos posible y seguir las indicaciones de las autoridades locales.",
+      "Esta noticia llega cuando Radio Tripoint cierra el 17 de agosto su campaña de prevención para proteger nuestros bosques y espacios naturales, un recordatorio de lo importante que es, más que nunca, mantenerse alerta ante el riesgo de incendio.",
+      "Radio Tripoint, la radio transfronteriza",
+      "Artículo actualizado el 17 de agosto de 2026 a última hora de la tarde.",
+    ],
+  },
+  "rauchentwicklung-im-saarland-das-wissen-wir": {
+    titre: "Humo en el Sarre: lo que se sabe.",
+    chapeau:
+      "Desde el sábado por la noche se percibe en partes del Sarre mucho humo y olor a quemado.",
+    corps: [
+      "Desde el sábado por la noche se percibe en partes del Sarre mucho humo y olor a quemado. Por ello, el centro de coordinación integrado del Sarre emitió un aviso a la población.",
+      "Según la información disponible hasta ahora, el humo no procede de un gran incendio en el Sarre, sino que llega a la región desde Bélgica.",
+      "Las autoridades han actualizado entretanto el aviso: según los datos actuales, no hay peligro para la población.",
+      "No obstante, si el humo o el olor aumentan, se recomienda como precaución mantener ventanas y puertas cerradas y seguir la información oficial de las autoridades.",
+      "Radio Tripoint sigue de cerca la evolución e informará de cualquier novedad.",
+    ],
+  },
+}

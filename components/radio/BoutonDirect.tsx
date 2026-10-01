@@ -18,12 +18,30 @@ export function BoutonDirect({
   const t = useT()
   const actif = source === "direct" && statut === "playing"
   const charge = source === "direct" && statut === "loading"
-  const enEcoute = t({ fr: "En écoute", de: "Läuft", lb: "Leeft" })
+  const enEcoute = t({
+    fr: "En écoute",
+    de: "Läuft",
+    lb: "Leeft",
+    en: "Now playing",
+    es: "Escuchando",
+  })
   const libelle = actif
     ? enEcoute
     : charge
-      ? t({ fr: "Connexion…", de: "Verbinden…", lb: "Verbannen…" })
-      : t({ fr: "Écouter en direct", de: "Live hören", lb: "Live lauschteren" })
+      ? t({
+          fr: "Connexion…",
+          de: "Verbinden…",
+          lb: "Verbannen…",
+          en: "Connecting…",
+          es: "Conectando…",
+        })
+      : t({
+          fr: "Écouter en direct",
+          de: "Live hören",
+          lb: "Live lauschteren",
+          en: "Listen live",
+          es: "Escuchar en directo",
+        })
 
   return (
     <button
@@ -37,11 +55,15 @@ export function BoutonDirect({
               fr: "Mettre le direct en pause",
               de: "Livestream pausieren",
               lb: "Live-Stream pauséieren",
+              en: "Pause the live stream",
+              es: "Pausar el directo",
             })
           : t({
               fr: "Écouter Radio Tripoint en direct",
               de: "Radio Tripoint live hören",
               lb: "Radio Tripoint live lauschteren",
+              en: "Listen to Radio Tripoint live",
+              es: "Escuchar Radio Tripoint en directo",
             })
       }
       className={cn(
@@ -61,7 +83,9 @@ export function BoutonDirect({
       {taille === "compact" ? (
         <>
           <span className="sm:hidden lg:inline xl:hidden">
-            {actif ? enEcoute : t({ fr: "Direct", de: "Live", lb: "Live" })}
+            {actif
+              ? enEcoute
+              : t({ fr: "Direct", de: "Live", lb: "Live", en: "Live", es: "Directo" })}
           </span>
           <span className="hidden sm:inline lg:hidden xl:inline">{libelle}</span>
         </>

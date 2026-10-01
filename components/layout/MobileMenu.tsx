@@ -18,39 +18,53 @@ import { Dialogue } from "./Dialogue"
 
 const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
   {
-    libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten" },
+    libelle: { fr: "Actualités", de: "Aktuelles", lb: "Aktualitéiten", en: "News", es: "Noticias" },
     href: "/actualites",
     detail: {
       fr: "Le fil des Trois Frontières",
       de: "Nachrichten aus dem Dreiländereck",
       lb: "Neiegkeeten aus dem Dräilännereck",
+      en: "The Three Borders news feed",
+      es: "La actualidad de las Tres Fronteras",
     },
   },
   {
-    libelle: { fr: "Émissions", de: "Sendungen", lb: "Sendungen" },
+    libelle: {
+      fr: "Émissions",
+      de: "Sendungen",
+      lb: "Sendungen",
+      en: "Programmes",
+      es: "Programas",
+    },
     href: "/emissions",
     detail: {
       fr: "Nos rendez-vous à l'antenne",
       de: "Unsere Sendungen im Programm",
       lb: "Eis Rendez-vousen um Radio",
+      en: "Our shows on air",
+      es: "Nuestras citas en antena",
     },
   },
   {
-    libelle: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts" },
+    libelle: { fr: "Podcasts", de: "Podcasts", lb: "Podcasts", en: "Podcasts", es: "Pódcasts" },
     href: "/podcasts",
     detail: {
       fr: "Replays et épisodes",
       de: "Wiederholungen und Folgen",
       lb: "Replays an Episoden",
+      en: "Replays and episodes",
+      es: "Programas a la carta y episodios",
     },
   },
   {
-    libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda" },
+    libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
     href: "/agenda",
     detail: {
       fr: "Sortir dans la région",
       de: "Ausgehen in der Region",
       lb: "Erausgoen an der Regioun",
+      en: "Going out in the region",
+      es: "Salir por la región",
     },
   },
 ]
@@ -90,6 +104,8 @@ export function MobileMenu({
               fr: "Radio Tripoint — accueil",
               de: "Radio Tripoint — Startseite",
               lb: "Radio Tripoint — Startsäit",
+              en: "Radio Tripoint — home",
+              es: "Radio Tripoint — inicio",
             })}
           >
             <Logo sombre taille={48} className="size-12" />
@@ -97,7 +113,13 @@ export function MobileMenu({
           <button
             type="button"
             onClick={fermer}
-            aria-label={t({ fr: "Fermer le menu", de: "Menü schließen", lb: "Menü zoumaachen" })}
+            aria-label={t({
+              fr: "Fermer le menu",
+              de: "Menü schließen",
+              lb: "Menü zoumaachen",
+              en: "Close menu",
+              es: "Cerrar el menú",
+            })}
             className="hover:bg-nuit-3 grid size-11 place-items-center rounded-full"
           >
             <X className="size-6" aria-hidden />
@@ -113,7 +135,13 @@ export function MobileMenu({
                 fermer()
                 ouvrirRecherche()
               }}
-              aria-label={t({ fr: "Rechercher", de: "Suchen", lb: "Sichen" })}
+              aria-label={t({
+                fr: "Rechercher",
+                de: "Suchen",
+                lb: "Sichen",
+                en: "Search",
+                es: "Buscar",
+              })}
               className="border-nuit-trait hover:border-nuit-encre grid size-14 flex-none place-items-center rounded-full border"
             >
               <Search className="size-5" aria-hidden />
@@ -121,7 +149,13 @@ export function MobileMenu({
           </div>
 
           <nav
-            aria-label={t({ fr: "Menu principal", de: "Hauptmenü", lb: "Haaptmenü" })}
+            aria-label={t({
+              fr: "Menu principal",
+              de: "Hauptmenü",
+              lb: "Haaptmenü",
+              en: "Main menu",
+              es: "Menú principal",
+            })}
             className="mt-8"
           >
             <ul className="border-nuit-trait border-t">
@@ -149,7 +183,13 @@ export function MobileMenu({
             </ul>
 
             <p className="surtitre text-nuit-encre-2 mt-9">
-              {t({ fr: "Rubriques", de: "Rubriken", lb: "Rubriken" })}
+              {t({
+                fr: "Rubriques",
+                de: "Rubriken",
+                lb: "Rubriken",
+                en: "Sections",
+                es: "Secciones",
+              })}
             </p>
             <ul className="mt-3 grid grid-cols-2 gap-x-4">
               {navRubriques
@@ -195,6 +235,8 @@ export function MobileMenu({
                     fr: "Nous signaler une info",
                     de: "Eine Info melden",
                     lb: "Eng Info mellen",
+                    en: "Send us a story",
+                    es: "Envíenos una información",
                   })}
                 </Link>
               </li>
@@ -203,7 +245,7 @@ export function MobileMenu({
 
           <div className="mt-10">
             <p className="surtitre text-nuit-encre-2">
-              {t({ fr: "Langue", de: "Sprache", lb: "Sprooch" })}
+              {t({ fr: "Langue", de: "Sprache", lb: "Sprooch", en: "Language", es: "Idioma" })}
             </p>
             <div className="mt-3">
               <ListeLangues sombre />

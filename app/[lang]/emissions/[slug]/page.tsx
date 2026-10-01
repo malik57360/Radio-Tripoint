@@ -36,17 +36,23 @@ export async function generateMetadata(props: PageProps<"/[lang]/emissions/[slug
       fr: `${e.nom} — émission de Radio Tripoint`,
       de: `${e.nom} — Sendung von Radio Tripoint`,
       lb: `${e.nom} — Sendung vu Radio Tripoint`,
+      en: `${e.nom} — a Radio Tripoint programme`,
+      es: `${e.nom} — programa de Radio Tripoint`,
     },
     description: e.accroche
       ? {
           fr: `${e.nom} : ${e.accroche} Une émission à écouter sur Radio Tripoint, la radio des Trois Frontières.`,
           de: `${e.nom}: ${e.accroche} Eine Sendung auf Radio Tripoint, dem Radio des Dreiländerecks.`,
           lb: `${e.nom}: ${e.accroche} Eng Sendung op Radio Tripoint, dem Radio vum Dräilännereck.`,
+          en: `${e.nom}: ${e.accroche} A programme to listen to on Radio Tripoint, the radio of the Three Borders.`,
+          es: `${e.nom}: ${e.accroche} Un programa para escuchar en Radio Tripoint, la radio de las Tres Fronteras.`,
         }
       : {
           fr: `${e.nom}, une émission de Radio Tripoint (${e.thematique.toLowerCase()}), à écouter en direct et en replay.`,
           de: `${e.nom}, eine Sendung von Radio Tripoint (${e.thematique}), live und als Wiederholung.`,
           lb: `${e.nom}, eng Sendung vu Radio Tripoint (${e.thematique}), live an als Replay.`,
+          en: `${e.nom}, a Radio Tripoint programme (${e.thematique.toLowerCase()}), to listen to live and on replay.`,
+          es: `${e.nom}, un programa de Radio Tripoint (${e.thematique.toLowerCase()}), para escuchar en directo y a la carta.`,
         },
     chemin: `/emissions/${e.slug}`,
     image: e.visuel ? { src: e.visuel.src, alt: e.visuel.alt } : undefined,
@@ -86,7 +92,13 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
             sombre
             elements={[
               {
-                nom: t({ fr: "Émissions", de: "Sendungen", lb: "Sendungen" }),
+                nom: t({
+                  fr: "Émissions",
+                  de: "Sendungen",
+                  lb: "Sendungen",
+                  en: "Programmes",
+                  es: "Programas",
+                }),
                 chemin: "/emissions",
               },
               { nom: e.nom, chemin: `/emissions/${e.slug}` },
@@ -106,7 +118,13 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
               <BoutonDirect taille="grand" />
               {episodes.length > 0 && (
                 <a href="#episodes" className="btn btn-nuit min-h-14 !px-6">
-                  {t({ fr: "Derniers épisodes", de: "Neueste Folgen", lb: "Lescht Episoden" })}
+                  {t({
+                    fr: "Derniers épisodes",
+                    de: "Neueste Folgen",
+                    lb: "Lescht Episoden",
+                    en: "Latest episodes",
+                    es: "Últimos episodios",
+                  })}
                 </a>
               )}
             </div>
@@ -136,7 +154,13 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
       <div className="conteneur grid gap-14 py-14 lg:grid-cols-[2fr_1fr] lg:py-20">
         <section aria-labelledby="titre-presentation">
           <h2 id="titre-presentation" className="surtitre border-trait-fort border-t-2 pt-3">
-            {t({ fr: "Présentation", de: "Vorstellung", lb: "Presentatioun" })}
+            {t({
+              fr: "Présentation",
+              de: "Vorstellung",
+              lb: "Presentatioun",
+              en: "About the programme",
+              es: "Presentación",
+            })}
           </h2>
           {e.presentation ? (
             <div className="prose-article mt-6">
@@ -150,13 +174,21 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
                 fr: "La présentation détaillée de cette émission sera publiée prochainement. En attendant, retrouvez-la à l'antenne de Radio Tripoint.",
                 de: "Die ausführliche Vorstellung dieser Sendung folgt in Kürze. Bis dahin hören Sie sie auf Radio Tripoint.",
                 lb: "Déi detailléiert Presentatioun vun dëser Sendung kënnt geschwënn. Bis dohin fannt Dir se op Radio Tripoint.",
+                en: "A full description of this programme will be published soon. In the meantime, catch it on Radio Tripoint.",
+                es: "La presentación detallada de este programa se publicará próximamente. Mientras tanto, encuéntrelo en la antena de Radio Tripoint.",
               })}
             </p>
           )}
           {e.animateurs && e.animateurs.length > 0 && (
             <p className="text-encre-2 mt-8">
               <span className="surtitre text-encre-3 mr-2">
-                {t({ fr: "Au micro", de: "Am Mikrofon", lb: "Um Mikro" })}
+                {t({
+                  fr: "Au micro",
+                  de: "Am Mikrofon",
+                  lb: "Um Mikro",
+                  en: "On the mic",
+                  es: "Al micrófono",
+                })}
               </span>
               {e.animateurs.join(", ")}
             </p>
@@ -167,7 +199,13 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
           <section aria-labelledby="titre-quand" className="border-trait bg-surface border p-6">
             <h2 id="titre-quand" className="surtitre flex items-center gap-2">
               <Clock className="size-4" aria-hidden />{" "}
-              {t({ fr: "Quand écouter ?", de: "Wann hören?", lb: "Wéini lauschteren?" })}
+              {t({
+                fr: "Quand écouter ?",
+                de: "Wann hören?",
+                lb: "Wéini lauschteren?",
+                en: "When to listen?",
+                es: "¿Cuándo escuchar?",
+              })}
             </h2>
             {horaires.length ? (
               <ul className="mt-4 space-y-1.5 font-semibold">
@@ -181,6 +219,8 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
                   fr: "Horaires à venir. L'émission est diffusée sur le direct de Radio Tripoint.",
                   de: "Sendezeiten folgen. Die Sendung läuft im Livestream von Radio Tripoint.",
                   lb: "Sendezäite kommen. D'Sendung leeft am Live-Stream vu Radio Tripoint.",
+                  en: "Times coming soon. The programme is broadcast on Radio Tripoint's live stream.",
+                  es: "Horarios próximamente. El programa se emite en el directo de Radio Tripoint.",
                 })}
               </p>
             )}
@@ -196,6 +236,8 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
                   fr: "Prochain rendez-vous",
                   de: "Nächster Termin",
                   lb: "Nächste Rendez-vous",
+                  en: "Next broadcast",
+                  es: "Próxima cita",
                 })}
               </h2>
               <p className="titre-carte mt-3 text-xl capitalize">
@@ -210,6 +252,8 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
                   fr: "Suivre l'émission",
                   de: "Der Sendung folgen",
                   lb: "D'Sendung verfollegen",
+                  en: "Follow the programme",
+                  es: "Seguir el programa",
                 })}
               </h2>
               <ul className="mt-4 flex gap-2">
@@ -235,7 +279,13 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
       <section id="episodes" aria-labelledby="titre-episodes" className="conteneur scroll-mt-24">
         <div className="filet-section pt-5">
           <h2 id="titre-episodes" className="titre-section">
-            {t({ fr: "Derniers épisodes", de: "Neueste Folgen", lb: "Lescht Episoden" })}
+            {t({
+              fr: "Derniers épisodes",
+              de: "Neueste Folgen",
+              lb: "Lescht Episoden",
+              en: "Latest episodes",
+              es: "Últimos episodios",
+            })}
           </h2>
         </div>
         {episodes.length ? (
@@ -253,6 +303,8 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
               fr: "Les replays de cette émission arrivent bientôt.",
               de: "Die Wiederholungen dieser Sendung folgen in Kürze.",
               lb: "D'Replays vun dëser Sendung kommen geschwënn.",
+              en: "Replays of this programme are coming soon.",
+              es: "Las grabaciones de este programa llegarán pronto.",
             })}
             actions={<BoutonDirect />}
           >
@@ -260,6 +312,8 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
               fr: "Les épisodes seront disponibles ici en podcast après leur diffusion.",
               de: "Die Folgen sind hier nach der Ausstrahlung als Podcast verfügbar.",
               lb: "D'Episode sinn hei no der Iwwerdroung als Podcast disponibel.",
+              en: "Episodes will be available here as podcasts after they are broadcast.",
+              es: "Los episodios estarán disponibles aquí en pódcast después de su emisión.",
             })}
           </EtatVide>
         )}
@@ -269,7 +323,13 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
         <section aria-labelledby="titre-articles" className="conteneur mt-20">
           <div className="filet-section pt-5">
             <h2 id="titre-articles" className="titre-section">
-              {t({ fr: "Articles associés", de: "Passende Artikel", lb: "Passend Artikelen" })}
+              {t({
+                fr: "Articles associés",
+                de: "Passende Artikel",
+                lb: "Passend Artikelen",
+                en: "Related articles",
+                es: "Artículos relacionados",
+              })}
             </h2>
           </div>
           <ul className="mt-8 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
@@ -285,10 +345,22 @@ export default async function PageEmission(props: PageProps<"/[lang]/emissions/[
       <section aria-labelledby="titre-autres" className="conteneur mt-20 pb-20">
         <div className="filet-section flex flex-wrap items-end justify-between gap-4 pt-5">
           <h2 id="titre-autres" className="titre-section">
-            {t({ fr: "Autres émissions", de: "Weitere Sendungen", lb: "Aner Sendungen" })}
+            {t({
+              fr: "Autres émissions",
+              de: "Weitere Sendungen",
+              lb: "Aner Sendungen",
+              en: "Other programmes",
+              es: "Otros programas",
+            })}
           </h2>
           <Link href="/emissions" className="lien-fleche hover:text-accent-encre">
-            {t({ fr: "Toutes les émissions", de: "Alle Sendungen", lb: "All Sendungen" })}{" "}
+            {t({
+              fr: "Toutes les émissions",
+              de: "Alle Sendungen",
+              lb: "All Sendungen",
+              en: "All programmes",
+              es: "Todos los programas",
+            })}{" "}
             <ArrowRight className="size-4" aria-hidden />
           </Link>
         </div>

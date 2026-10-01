@@ -1,0 +1,88 @@
+import type { TradArticle } from "../../types"
+
+export const actualites01: Record<string, TradArticle> = {
+  "leon-xiv-a-metz-une-journee-historique-au-coeur-de-l-europe": {
+    titre: "Leo XIV in Metz: a historic day at the heart of Europe.",
+    chapeau:
+      "Metz experienced an exceptional day on Monday 28 September with the visit of Pope Leo XIV, the final stop of his Apostolic Journey to France.",
+    corps: [
+      "Metz experienced an exceptional day on Monday 28 September with the visit of Pope Leo XIV, the final stop of his Apostolic Journey to France. A visit focused on peace, dialogue and European unity.",
+      "Arriving in Metz in the morning, the Pope went to the Robert Schuman congress centre for an interreligious meeting, then took part in a gathering on the theme “The roots of Europe for peace and unity”. The choice of Metz was highly symbolic, as the city is closely linked to European history and to the memory of Robert Schuman.",
+      "A gathering at the heart of the Greater Region",
+      "Many European figures had come to join the Pope and President Emmanuel Macron, including Grand Duke Guillaume and Grand Duchess Stéphanie of Luxembourg, Luxembourg's Prime Minister Luc Frieden, Prince Albert II and Princess Charlène of Monaco, and Saarland's Minister-President Anke Rehlinger. Former President of the European Commission Jean-Claude Juncker was also present.",
+      "A particularly strong turnout for a region like ours, where France, Luxembourg and Germany live side by side every day.",
+      "A Mass at Saint-Étienne Cathedral",
+      "In the afternoon, Leo XIV celebrated Mass at Saint-Étienne Cathedral in front of a large congregation. Emmanuel Macron, who was not originally scheduled to attend the celebration, was ultimately present.",
+      "From the meeting with religious representatives to the speech on Europe and the celebration in the cathedral, this day in Metz combined spirituality, history and a European dimension.",
+      "For Metz and the whole Greater Region, Leo XIV's visit will be remembered as one of the defining moments of 2026.",
+    ],
+  },
+  "le-pape-a-30-km-de-chez-nous-pourquoi-leon-xiv-a-choisi-metz-pour-parler-de": {
+    titre:
+      "The Pope 30 km from us: why Leo XIV chose Metz to talk about peace in the Three Borders.",
+    chapeau: "Metz welcomes Pope Leo XIV on Monday 28 September 2026.",
+    corps: [
+      "Metz welcomes Pope Leo XIV on Monday 28 September 2026. It is the final stop of his first major Apostolic Journey to France, which runs from Friday 25 to Monday 28 September 2026.",
+      "After Paris and Lourdes, the choice fell on Metz. And it is no coincidence.",
+      "A region scarred by wars, now a symbol of reconciliation",
+      "On the fourth day of his Apostolic Journey to France, Leo XIV chose Metz to give a speech on the roots of Europe, peace and unity.",
+      "This border region between France and Germany, scarred by wars, now stands for encounter and reconciliation. A message that speaks directly to the people of Sierck-les-Bains, Perl, Schengen and Apach, who cross these borders every day.",
+      "According to the official programme published by the Holy See, the Pope arrives in Paris on the morning of Friday 25 September and leaves France on the evening of Monday 28 September from Metz-Nancy-Lorraine airport.",
+      "A detail that says it all",
+      "In Metz, the Pope's visit is placed under the sign of Europe and peace. One powerful symbol has already leaked out: the Pope is to celebrate Mass at an altar made from the bronze of old German cannons. Weapons turned into an altar of peace, a few kilometres from us.",
+      "Would you like to go from the Three Borders?",
+      "It is the closest major event in years. Here is the practical information for Monday:",
+      [
+        "From Sierck-les-Bains / Perl: allow 35 to 45 minutes by car to Metz. Use car-sharing and park-and-ride car parks; huge logistics are planned.",
+        "By train: TER connection from Apach and Bouzonville.",
+        "If you cannot go: the event will be broadcast live on KTO, which will cover every stage.",
+      ],
+    ],
+  },
+  "carburant-5-astuces-pour-reduire-ses-depenses-quand-on-habite-pres-de-la": {
+    titre: "FUEL: 5 TIPS TO CUT YOUR FUEL COSTS WHEN YOU LIVE NEAR THE BORDER.",
+    chapeau: "The price of fuel is weighing more and more heavily on household budgets.",
+    corps: [
+      "The price of fuel is weighing more and more heavily on household budgets. For people in the Greater Region who regularly cross the border to work, shop or take their children somewhere, the car is often hard to replace. But a few habits can help bring the bill down.",
+      "1. Drive a few extra kilometres to fill up in Luxembourg",
+      "For residents of the Three Borders, Luxembourg can be an interesting option for fuel. Depending on the period and the price difference, a few extra kilometres can bring savings.",
+      "But be careful: always factor in the cost of the extra journey. Driving 20 kilometres further just to save a few cents per litre isn't necessarily worth it.",
+      "2. Switch to the bike… when the distance allows",
+      "For short everyday journeys, the bike can be a real alternative to the car.",
+      "Fetching bread, getting to work if it's nearby, taking the children or doing other local trips by bike directly reduces fuel consumption.",
+      "And for longer distances, an e-bike can open up even more possibilities.",
+      "3. Think about car-sharing",
+      "If several people make the same journey every day, why not share the car?",
+      "Car-sharing spreads the cost of fuel while reducing the number of vehicles on the road.",
+      "In border regions, where many workers make the same journeys every day between France, Germany and Luxembourg, this solution can be particularly worthwhile.",
+      "4. Choose public transport",
+      "Buses, trains and cross-border connections can also help you leave the car at home.",
+      "Depending on where you live and work, combining several modes of transport can sometimes be cheaper than driving the whole way every day.",
+      "A simple habit: regularly compare the cost of a car journey with that of a public transport pass or ticket.",
+      "5. Talk to your employer about working from home",
+      "If your job allows it, working from home can also have a direct impact on your fuel budget.",
+      "One or two days a week working from home means several fewer journeys a month. For cross-border commuters who sometimes cover several dozen kilometres a day, the savings can quickly add up.",
+      "Of course, the possibility of working from home depends on the job, the company and the rules that apply to cross-border workers.",
+      "Conclusion: every journey avoided counts",
+      "Faced with changing fuel prices, there isn't necessarily one single solution. It is often the sum of small changes that brings the bill down: choosing where to fill up, sharing journeys, using public transport more often or cutting back on some car trips.",
+      "In a region where borders are crossed every day, rethinking your mobility can therefore become a real economic issue for households.",
+    ],
+  },
+  "jeunesse-europeenne-entre-inquietude-et-espoir-pour-l-avenir": {
+    titre: "Europe's youth: between worry and hope for the future.",
+    chapeau:
+      "Cost of living, jobs, climate, security… many young Europeans look to the future with a degree of concern.",
+    corps: [
+      "Cost of living, jobs, climate, security… many young Europeans look to the future with a degree of concern. But this generation has not given up hope.",
+      "Being young in Europe today also means imagining a future in a context marked by many uncertainties. European surveys show that the cost of living, the environment, jobs and security issues rank high among the concerns of 16 to 30-year-olds. In the latest Eurobarometer on youth, 40% cite rising prices and the cost of living as one of their main worries for the future.",
+      "The climate also remains a major issue, as does access to jobs and housing. Above all, the young people surveyed want Europe to do more for the economy, jobs, the environment and social protection.",
+      "But behind these concerns there is also a real will to believe in the future. The latest European data show that 15 to 30-year-olds are among the generations most positive about the European project. In the autumn 2025 Eurobarometer, 65% of young people said they were optimistic about the future of the European Union, and 80% about their own future and that of their family.",
+      "And in the Greater Region?",
+      "In France, Germany and Luxembourg, these questions take on a particular dimension. Studying, finding a job, finding housing, crossing borders or starting a family: for many young people in our region, this is everyday life.",
+      "So what are young people in the Greater Region really afraid of? And what still gives them confidence in the future?",
+      "That too is the role of a local radio station like Radio Tripoint: to listen to this generation, understand its concerns and give it a voice.",
+      "A worried youth, perhaps. But certainly not a youth without hope.",
+      "Sources: Eurobarometer – European Commission / European Parliament.",
+    ],
+  },
+}

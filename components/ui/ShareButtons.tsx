@@ -10,7 +10,13 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
   const tr = useT()
   const u = encodeURIComponent(url)
   const t = encodeURIComponent(titre)
-  const partagerSur = tr({ fr: "Partager sur", de: "Teilen auf", lb: "Deelen op" })
+  const partagerSur = tr({
+    fr: "Partager sur",
+    de: "Teilen auf",
+    lb: "Deelen op",
+    en: "Share on",
+    es: "Compartir en",
+  })
   const liens = [
     {
       nom: "Facebook",
@@ -26,7 +32,13 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
       setTimeout(() => setCopie(false), 2200)
     } catch {
       window.prompt(
-        tr({ fr: "Copiez le lien :", de: "Link kopieren:", lb: "Link kopéieren:" }),
+        tr({
+          fr: "Copiez le lien :",
+          de: "Link kopieren:",
+          lb: "Link kopéieren:",
+          en: "Copy the link:",
+          es: "Copie el enlace:",
+        }),
         url,
       )
     }
@@ -43,7 +55,7 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <span className="surtitre text-encre-3 mr-2">
-        {tr({ fr: "Partager", de: "Teilen", lb: "Deelen" })}
+        {tr({ fr: "Partager", de: "Teilen", lb: "Deelen", en: "Share", es: "Compartir" })}
       </span>
       {liens.map((l) => (
         <a
@@ -73,8 +85,20 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
         onClick={copier}
         aria-label={
           copie
-            ? tr({ fr: "Lien copié", de: "Link kopiert", lb: "Link kopéiert" })
-            : tr({ fr: "Copier le lien", de: "Link kopieren", lb: "Link kopéieren" })
+            ? tr({
+                fr: "Lien copié",
+                de: "Link kopiert",
+                lb: "Link kopéiert",
+                en: "Link copied",
+                es: "Enlace copiado",
+              })
+            : tr({
+                fr: "Copier le lien",
+                de: "Link kopieren",
+                lb: "Link kopéieren",
+                en: "Copy link",
+                es: "Copiar el enlace",
+              })
         }
         className={classe}
       >
@@ -91,6 +115,8 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
           fr: "Autres options de partage",
           de: "Weitere Teilen-Optionen",
           lb: "Aner Méiglechkeeten ze deelen",
+          en: "More sharing options",
+          es: "Otras opciones para compartir",
         })}
         className={`${classe} sm:hidden`}
       >
@@ -102,6 +128,8 @@ export function ShareButtons({ url, titre }: { url: string; titre: string }) {
               fr: "Lien copié dans le presse-papiers",
               de: "Link in die Zwischenablage kopiert",
               lb: "Link an d'Tëschenoflag kopéiert",
+              en: "Link copied to clipboard",
+              es: "Enlace copiado en el portapapeles",
             })
           : ""}
       </span>

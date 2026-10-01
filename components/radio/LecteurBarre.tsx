@@ -36,21 +36,29 @@ const MESSAGES: Record<RaisonErreur, Trad> = {
     fr: "Le flux du direct n'est pas encore branché sur ce site.",
     de: "Der Livestream ist auf dieser Website noch nicht eingebunden.",
     lb: "De Live-Stream ass op dësem Site nach net ugeschloss.",
+    en: "The live stream isn't connected to this website yet.",
+    es: "El flujo del directo todavía no está conectado a este sitio.",
   },
   reseau: {
     fr: "Connexion perdue. Vérifiez votre réseau puis réessayez.",
     de: "Verbindung verloren. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
     lb: "Verbindung verluer. Kontrolléiert Äert Netz a probéiert nach eng Kéier.",
+    en: "Connection lost. Check your network and try again.",
+    es: "Conexión perdida. Compruebe su red y vuelva a intentarlo.",
   },
   lecture: {
     fr: "Le direct est momentanément indisponible. Réessayez dans un instant.",
     de: "Der Livestream ist vorübergehend nicht verfügbar. Versuchen Sie es gleich noch einmal.",
     lb: "De Live-Stream ass de Moment net disponibel. Probéiert et gläich nach eng Kéier.",
+    en: "The live stream is temporarily unavailable. Try again in a moment.",
+    es: "El directo no está disponible en este momento. Vuelva a intentarlo en un instante.",
   },
   bloque: {
     fr: "Votre navigateur a bloqué la lecture. Touchez ▶ pour lancer le son.",
     de: "Ihr Browser hat die Wiedergabe blockiert. Tippen Sie auf ▶, um den Ton zu starten.",
     lb: "Äre Browser huet d'Ofspillen blockéiert. Dréckt op ▶, fir den Toun ze starten.",
+    en: "Your browser blocked playback. Tap ▶ to start the sound.",
+    es: "Su navegador ha bloqueado la reproducción. Pulse ▶ para activar el sonido.",
   },
 }
 
@@ -79,6 +87,8 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
           fr: "Touchez la page pour lancer le direct",
           de: "Tippen Sie auf die Seite, um den Livestream zu starten",
           lb: "Dréckt op d'Säit, fir de Live-Stream ze starten",
+          en: "Tap the page to start the live stream",
+          es: "Toque la página para iniciar el directo",
         })
       : l.titreEnCours
         ? [l.titreEnCours.artiste, l.titreEnCours.titre].filter(Boolean).join(" — ")
@@ -88,6 +98,8 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
               fr: "France · Luxembourg · Allemagne",
               de: "Frankreich · Luxemburg · Deutschland",
               lb: "Frankräich · Lëtzebuerg · Däitschland",
+              en: "France · Luxembourg · Germany",
+              es: "Francia · Luxemburgo · Alemania",
             })
     : (l.episode?.sousTitre ?? "Podcast")
 
@@ -96,7 +108,13 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
   return (
     <div
       role="region"
-      aria-label={t({ fr: "Lecteur radio", de: "Radioplayer", lb: "Radioplayer" })}
+      aria-label={t({
+        fr: "Lecteur radio",
+        de: "Radioplayer",
+        lb: "Radioplayer",
+        en: "Radio player",
+        es: "Reproductor de radio",
+      })}
       className="border-nuit-trait bg-nuit/95 text-nuit-encre supports-[backdrop-filter]:bg-nuit/88 fixed inset-x-0 bottom-0 z-40 border-t pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
       {!direct && l.dureeMedia > 0 && (
@@ -111,8 +129,10 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
             fr: "Position dans l'épisode",
             de: "Position in der Folge",
             lb: "Positioun an der Episod",
+            en: "Position in the episode",
+            es: "Posición en el episodio",
           })}
-          aria-valuetext={`${chrono(l.position)} ${t({ fr: "sur", de: "von", lb: "vun" })} ${chrono(l.dureeMedia)}`}
+          aria-valuetext={`${chrono(l.position)} ${t({ fr: "sur", de: "von", lb: "vun", en: "of", es: "de" })} ${chrono(l.dureeMedia)}`}
           className="barre-progression absolute inset-x-0 -top-[3px] h-[5px] w-full cursor-pointer"
           style={{ ["--p" as string]: `${(l.position / l.dureeMedia) * 100}%` }}
         />
@@ -124,10 +144,22 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
           data-controle-lecteur
           aria-label={
             joue || charge
-              ? t({ fr: "Pause", de: "Pause", lb: "Paus" })
+              ? t({ fr: "Pause", de: "Pause", lb: "Paus", en: "Pause", es: "Pausa" })
               : direct
-                ? t({ fr: "Écouter le direct", de: "Live hören", lb: "Live lauschteren" })
-                : t({ fr: "Lire l'épisode", de: "Folge abspielen", lb: "Episod ofspillen" })
+                ? t({
+                    fr: "Écouter le direct",
+                    de: "Live hören",
+                    lb: "Live lauschteren",
+                    en: "Listen to the live stream",
+                    es: "Escuchar el directo",
+                  })
+                : t({
+                    fr: "Lire l'épisode",
+                    de: "Folge abspielen",
+                    lb: "Episod ofspillen",
+                    en: "Play the episode",
+                    es: "Reproducir el episodio",
+                  })
           }
           className={cn(
             "grid size-11 flex-none place-items-center rounded-full transition-colors",
@@ -159,7 +191,13 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
                   rel="noopener"
                   className="lien text-nuit-encre flex-none font-semibold"
                 >
-                  {t({ fr: "Player externe", de: "Externer Player", lb: "Externe Player" })}
+                  {t({
+                    fr: "Player externe",
+                    de: "Externer Player",
+                    lb: "Externe Player",
+                    en: "External player",
+                    es: "Reproductor externo",
+                  })}
                 </a>
               )}
               <button
@@ -169,6 +207,8 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
                   fr: "Fermer le message",
                   de: "Meldung schließen",
                   lb: "Message zoumaachen",
+                  en: "Close the message",
+                  es: "Cerrar el mensaje",
                 })}
                 className="hover:bg-nuit-3 ml-auto flex-none rounded p-1"
               >
@@ -182,7 +222,7 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
                   <>
                     <span className="point-direct" data-actif={joue} />
                     <span className={cn(joue && "text-nuit-encre")}>
-                      {t({ fr: "En direct", de: "Live", lb: "Live" })}
+                      {t({ fr: "En direct", de: "Live", lb: "Live", en: "Live", es: "En directo" })}
                     </span>
                   </>
                 ) : (
@@ -212,7 +252,13 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
             className="border-nuit-trait hover:border-nuit-encre hidden items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-bold tracking-wider uppercase sm:inline-flex"
           >
             <Radio className="size-3.5" aria-hidden />
-            {t({ fr: "Revenir au direct", de: "Zurück zum Live", lb: "Zréck op Live" })}
+            {t({
+              fr: "Revenir au direct",
+              de: "Zurück zum Live",
+              lb: "Zréck op Live",
+              en: "Back to live",
+              es: "Volver al directo",
+            })}
           </button>
         )}
 
@@ -222,8 +268,20 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
             onClick={basculerMuet}
             aria-label={
               l.muet
-                ? t({ fr: "Rétablir le son", de: "Ton einschalten", lb: "Toun aschalten" })
-                : t({ fr: "Couper le son", de: "Stummschalten", lb: "Toun ausschalten" })
+                ? t({
+                    fr: "Rétablir le son",
+                    de: "Ton einschalten",
+                    lb: "Toun aschalten",
+                    en: "Unmute",
+                    es: "Activar el sonido",
+                  })
+                : t({
+                    fr: "Couper le son",
+                    de: "Stummschalten",
+                    lb: "Toun ausschalten",
+                    en: "Mute",
+                    es: "Silenciar",
+                  })
             }
             className="hover:bg-nuit-3 rounded p-1.5"
           >
@@ -236,7 +294,13 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
             step={0.05}
             value={l.muet ? 0 : l.volume}
             onChange={(e) => reglerVolume(Number(e.target.value))}
-            aria-label={t({ fr: "Volume", de: "Lautstärke", lb: "Lautstäerkt" })}
+            aria-label={t({
+              fr: "Volume",
+              de: "Lautstärke",
+              lb: "Lautstäerkt",
+              en: "Volume",
+              es: "Volumen",
+            })}
             aria-valuetext={`${Math.round((l.muet ? 0 : l.volume) * 100)} %`}
             className="barre-volume w-24"
             style={{ ["--p" as string]: `${(l.muet ? 0 : l.volume) * 100}%` }}
@@ -251,6 +315,8 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
               fr: "Fermer l'épisode et revenir au direct",
               de: "Folge schließen und zurück zum Live",
               lb: "Episod zoumaachen an zréck op Live",
+              en: "Close the episode and return to live",
+              es: "Cerrar el episodio y volver al directo",
             })}
             className="hover:bg-nuit-3 rounded p-2 sm:hidden"
           >
@@ -261,7 +327,13 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
             href="/emissions"
             className="text-nuit-encre-2 hover:text-nuit-encre hidden text-xs font-bold tracking-wider uppercase lg:inline"
           >
-            {t({ fr: "Programmes", de: "Programm", lb: "Programm" })}
+            {t({
+              fr: "Programmes",
+              de: "Programm",
+              lb: "Programm",
+              en: "Programmes",
+              es: "Programas",
+            })}
           </Link>
         )}
       </div>

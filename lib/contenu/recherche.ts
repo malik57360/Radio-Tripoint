@@ -1,4 +1,4 @@
-import { choisir, type Langue } from "@/lib/i18n/langues"
+import { choisir, type Langue, type Trad } from "@/lib/i18n/langues"
 import { dateLongue } from "@/lib/utils/dates"
 import { normaliser } from "@/lib/utils/texte"
 import { tousArticles } from "./articles"
@@ -29,7 +29,7 @@ export async function rechercher(q: string, limite = 40, l: Langue = "fr"): Prom
     tousEvenements(l),
   ])
   const categories = categoriesLangue(l)
-  const libelle = (t: { fr: string; de: string; lb: string }) => choisir(t, l)
+  const libelle = (t: Trad) => choisir(t, l)
 
   const candidats: (Resultat & { titreN: string; corpsN: string })[] = [
     ...articles.map((a) => ({
@@ -49,7 +49,7 @@ export async function rechercher(q: string, limite = 40, l: Langue = "fr"): Prom
       type: "emission" as const,
       titre: e.nom,
       href: `/emissions/${e.slug}`,
-      contexte: `${libelle({ fr: "Émission", de: "Sendung", lb: "Sendung" })} · ${e.thematique}`,
+      contexte: `${libelle({ fr: "Émission", de: "Sendung", lb: "Sendung", en: "Programme", es: "Programa" })} · ${e.thematique}`,
       extrait: e.accroche ?? undefined,
       titreN: normaliser(e.nom),
       corpsN: normaliser(`${e.accroche ?? ""} ${e.presentation ?? ""} ${e.thematique}`),
