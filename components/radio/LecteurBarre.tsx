@@ -2,7 +2,6 @@
 
 import {
   AlertCircle,
-  ExternalLink,
   Loader2,
   Pause,
   Play,
@@ -257,16 +256,6 @@ export function LecteurBarre({ grille }: { grille: GrilleClient }) {
           >
             <X className="size-5" aria-hidden />
           </button>
-        ) : radioConfig.radiokingUrl ? (
-          <a
-            href={radioConfig.radiokingUrl}
-            target="_blank"
-            rel="noopener"
-            className="text-nuit-encre-2 hover:text-nuit-encre hidden items-center gap-1.5 text-xs font-bold tracking-wider uppercase lg:inline-flex"
-          >
-            {t({ fr: "Ouvrir le player", de: "Player öffnen", lb: "Player opmaachen" })}{" "}
-            <ExternalLink className="size-3.5" aria-hidden />
-          </a>
         ) : (
           <Link
             href="/emissions"
