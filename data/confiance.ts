@@ -161,6 +161,24 @@ export const personnes: Personne[] = [
       hauteur: 1333,
     },
   },
+  {
+    nom: "Association Une Rose Un Espoir",
+    role: {
+      fr: "Sierck-les-Bains",
+      de: "Sierck-les-Bains",
+      lb: "Sierck-les-Bains",
+    },
+    photo: {
+      src: "/media/confiance/une-rose-un-espoir-sierck.webp",
+      alt: {
+        fr: "Deux représentants de l'association Une Rose Un Espoir de Sierck-les-Bains, souriants, devant le mur aux logos de Radio Tripoint.",
+        de: "Zwei Vertreter des Vereins Une Rose Un Espoir aus Sierck-les-Bains, lächelnd vor der Logowand von Radio Tripoint.",
+        lb: "Zwee Vertrieder vum Veräin Une Rose Un Espoir vu Sierck-les-Bains, laachend virun der Logowand vu Radio Tripoint.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
 ]
 
 export const structures: Structure[] = [
