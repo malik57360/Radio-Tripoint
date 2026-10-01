@@ -143,6 +143,24 @@ export const personnes: Personne[] = [
       hauteur: 800,
     },
   },
+  {
+    nom: "Lucas Grandjean",
+    role: {
+      fr: "Adjoint au maire de Thionville, jeunesse et numérique",
+      de: "Beigeordneter des Bürgermeisters von Thionville, Jugend und Digitales",
+      lb: "Schäffen vun Thionville, Jugend an Digitales",
+    },
+    photo: {
+      src: "/media/confiance/lucas-grandjean.webp",
+      alt: {
+        fr: "Lucas Grandjean, en chemise blanche, debout devant le stand de Radio Tripoint en plein air, à côté du kakémono de la radio.",
+        de: "Lucas Grandjean im weißen Hemd vor dem Radio-Tripoint-Stand im Freien, neben dem Roll-up des Senders.",
+        lb: "De Lucas Grandjean an engem wäissen Hiem virum Radio-Tripoint-Stand dobaussen, nieft dem Roll-up vum Radio.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
 ]
 
 export const structures: Structure[] = [
