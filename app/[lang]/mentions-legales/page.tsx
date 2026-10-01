@@ -72,7 +72,8 @@ export default async function MentionsLegales() {
               lb: "Telefon",
               en: "Phone",
               es: "Teléfono",
-            })} : <a href={`tel:${site.contact.telephoneE164}`}>{site.contact.telephone}</a>
+            })}{" "}
+            : <a href={`tel:${site.contact.telephoneE164}`}>{site.contact.telephone}</a>
             <br />
             {t({
               fr: "E-mail",

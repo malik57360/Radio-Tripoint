@@ -22,7 +22,7 @@ export const emissions: Emission[] = [
   {
     slug: "a-vous-la-parole",
     nom: "À vous la parole",
-    accroche: "Aller à la rencontre des gens et leur donner la parole.",
+    accroche: "Nous donnons la parole à ceux qui font vivre les Trois Frontières.",
     presentation:
       "À vous la parole est une émission de terrain tournée au cœur du pays des trois frontières (France, Luxembourg, Allemagne). Le principe est simple : aller à la rencontre des gens et leur donner la parole, librement, sur les sujets qui les concernent.",
     thematique: "Parole aux auditeurs",

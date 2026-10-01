@@ -173,6 +173,16 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
         },
         href: "/ils-nous-font-confiance",
       },
+      {
+        libelle: {
+          fr: "Tripo, le guide",
+          de: "Tripo, der Guide",
+          lb: "Tripo, de Guide",
+          en: "Tripo, the guide",
+          es: "Tripo, el guía",
+        },
+        href: "/tripo",
+      },
     ],
   },
 ]

@@ -80,6 +80,16 @@ export const navPlus: LienNav[] = [
     href: "/publicite",
   },
   {
+    libelle: {
+      fr: "Tripo, le guide",
+      de: "Tripo, der Guide",
+      lb: "Tripo, de Guide",
+      en: "Tripo, the guide",
+      es: "Tripo, el guía",
+    },
+    href: "/tripo",
+  },
+  {
     libelle: { fr: "À propos", de: "Über uns", lb: "Iwwer eis", en: "About", es: "Quiénes somos" },
     href: "/a-propos",
   },

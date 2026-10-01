@@ -8,7 +8,7 @@ export const emissions: Record<string, TradEmission> = {
     thematique: "Jugend",
   },
   "a-vous-la-parole": {
-    accroche: "Op d'Leit zougoen an hinnen d'Wuert ginn.",
+    accroche: "Mir ginn deenen d'Wuert, déi d'Dräilännereck lieweg halen.",
     presentation:
       "„À vous la parole“ ass eng Sendung um Terrain, opgeholl am Häerz vum Dräilännereck (Frankräich, Lëtzebuerg, Däitschland). D'Prinzip ass einfach: op d'Leit zougoen an hinne fräi d'Wuert ginn – iwwer d'Themen, déi si betreffen.",
     thematique: "D'Auditeuren hunn d'Wuert",

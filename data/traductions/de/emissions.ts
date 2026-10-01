@@ -8,7 +8,7 @@ export const emissions: Record<string, TradEmission> = {
     thematique: "Jugend",
   },
   "a-vous-la-parole": {
-    accroche: "Auf die Menschen zugehen und ihnen das Wort geben.",
+    accroche: "Wir geben denen das Wort, die das Dreiländereck lebendig halten.",
     presentation:
       "„À vous la parole“ ist eine Sendung vor Ort, aufgenommen im Herzen des Dreiländerecks (Frankreich, Luxemburg, Deutschland). Das Prinzip ist einfach: auf die Menschen zugehen und ihnen frei das Wort geben – zu den Themen, die sie betreffen.",
     thematique: "Die Hörer haben das Wort",

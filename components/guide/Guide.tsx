@@ -1,10 +1,12 @@
 "use client"
 
-import { ArrowUp, Compass, Globe, Loader2, RotateCcw, X } from "lucide-react"
+import { ArrowUp, Globe, Loader2, RotateCcw, X } from "lucide-react"
 import { useCallback, useEffect, useId, useRef, useState } from "react"
 import { useT } from "@/components/i18n/Langue"
 import Link from "@/components/ui/Lien"
 import { cn } from "@/lib/utils/cn"
+import { Mascotte } from "./Mascotte"
+import { EVENEMENT_TRIPO } from "./ouvrir"
 import { TexteGuide } from "./Texte"
 
 type Source = { url: string; titre: string }
@@ -144,6 +146,21 @@ export function Guide() {
     [enCours, messages, t.langue],
   )
 
+  // Ouverture depuis la page /tripo (bouton « Parler à Tripo », suggestions).
+  const envoyerRef = useRef(envoyer)
+  useEffect(() => {
+    envoyerRef.current = envoyer
+  }, [envoyer])
+  useEffect(() => {
+    const ouvrir = (e: Event) => {
+      setOuvert(true)
+      const q = (e as CustomEvent<{ question?: string }>).detail?.question
+      if (q) setTimeout(() => envoyerRef.current(q), 0)
+    }
+    window.addEventListener(EVENEMENT_TRIPO, ouvrir)
+    return () => window.removeEventListener(EVENEMENT_TRIPO, ouvrir)
+  }, [])
+
   const recommencer = () => {
     annul.current?.abort()
     setMessages([])
@@ -197,12 +214,18 @@ export function Guide() {
         aria-expanded={ouvert}
         aria-controls="guide-tripo"
         className={cn(
-          "bg-accent text-sur-accent shadow-2 fixed right-4 bottom-[calc(var(--barre-lecteur)+1rem+env(safe-area-inset-bottom))] z-40 inline-flex h-12 items-center gap-2 rounded-full pr-5 pl-4 text-sm font-bold transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2",
+          "bg-nuit text-nuit-encre shadow-2 border-accent fixed right-4 bottom-[calc(var(--barre-lecteur)+1rem+env(safe-area-inset-bottom))] z-40 inline-flex h-13 items-center gap-2 rounded-full border-2 pr-5 pl-1.5 text-[0.95rem] font-bold tracking-wide transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2",
           ouvert && "max-sm:hidden",
         )}
       >
-        {ouvert ? <X className="size-5" aria-hidden /> : <Compass className="size-5" aria-hidden />}
-        {t({ fr: "Guide", de: "Guide", lb: "Guide", en: "Guide", es: "Guía" })}
+        {ouvert ? (
+          <span className="grid size-10 place-items-center">
+            <X className="size-5" aria-hidden />
+          </span>
+        ) : (
+          <Mascotte anime className="-mt-3 size-11" />
+        )}
+        Tripo
       </button>
 
       {ouvert && (
@@ -213,9 +236,7 @@ export function Guide() {
           className="bg-surface text-encre fondu sm:border-trait sm:shadow-2 fixed inset-0 z-50 flex flex-col sm:inset-auto sm:right-4 sm:bottom-[calc(var(--barre-lecteur)+4.5rem)] sm:h-[min(640px,calc(100dvh-var(--barre-lecteur)-10rem))] sm:w-[400px] sm:border"
         >
           <header className="bg-nuit text-nuit-encre flex items-center gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
-            <span className="bg-accent text-sur-accent grid size-10 flex-none place-items-center rounded-full">
-              <Compass className="size-5" aria-hidden />
-            </span>
+            <Mascotte anime className="size-11 flex-none" />
             <div className="min-w-0 flex-1">
               <h2 id={idTitre} className="text-base leading-tight font-bold">
                 {t({
