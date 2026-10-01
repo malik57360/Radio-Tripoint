@@ -72,5 +72,6 @@ export const structures: Structure[] = [
   {
     nom: "Communauté de Communes Bouzonvillois Trois Frontières (CCB3F)",
     logo: { src: "/media/confiance/ccb3f.webp", largeur: 225, hauteur: 225 },
+    site: "https://www.ccb3f.fr/",
   },
 ]
