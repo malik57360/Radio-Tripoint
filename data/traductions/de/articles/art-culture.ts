@@ -1,6 +1,46 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "exposition-cartes-postales-faiences-sierck-les-bains": {
+    titre:
+      "Auf Entdeckungsreise zu den vergessenen Schätzen von Sierck-les-Bains: alte Postkarten und Fayencen",
+    chapeau:
+      "Am 10. und 11. Oktober 2026 lädt Sierck-les-Bains Einwohner und Besucher zu einer Zeitreise ein – mit einer Ausstellung über alte Postkarten und die Fayencen der Stadt.",
+    alt: "Plakat der Ausstellung alter Postkarten und Fayencen aus Sierck-les-Bains: eine Vase mit Engelsfiguren, Teller, eine Tasse und alte Postkarten der Stadt. 10. Oktober 2026 von 14 bis 18 Uhr, 11. Oktober von 10 bis 18 Uhr, Eintritt frei, Salle Espace Valette.",
+    corps: [
+      "Am 10. und 11. Oktober 2026 lädt Sierck-les-Bains Einwohner und Besucher zu einer Zeitreise ein – mit einer Ausstellung über alte Postkarten und die Fayencen der Stadt. Hinter dieser Veranstaltung steht Pierre Bonnet, ein Liebhaber der Lokalgeschichte, der einen Teil dieses manchmal wenig bekannten Erbes teilen möchte. Bei Radio Tripoint erzählt er, wie die Ausstellung entstanden ist und welche Schätze das Publikum entdecken kann.",
+      "Wie ist die Idee zu dieser Ausstellung entstanden?",
+      "Pierre Bonnet: Ich wollte schon immer die Postkarten und alten Fotos von Sierck-les-Bains teilen. Als ich in meinem Umfeld über die sehr reiche Vergangenheit von Sierck sprach – über seine Geschäfte, Cafés, Hotels, die Thermen und die Quellen –, wurde mir klar, dass sich viele Menschen für diese Geschichte interessieren.",
+      "Die Ausstellung ist also aus dem Wunsch entstanden, diese Zeugnisse der Vergangenheit bekannt zu machen und zu teilen.",
+      "Was können die Besucher entdecken?",
+      "Die Besucher können zahlreiche alte Ansichten von Sierck-les-Bains entdecken sowie verschiedene Geschäfte, die es früher gab. Die Postkarten zeigen auch die Spuren der Kriege und Überschwemmungen, die die Stadt geprägt haben.",
+      "Die Ausstellung zeigt außerdem wunderschöne Fayencen, darunter Teller und Tassen. Zu den bemerkenswertesten Stücken gehören zwei prächtige, äußerst seltene Vasen aus Sierck.",
+      "Warum war es wichtig, dieses Erbe zu würdigen?",
+      "Pierre Bonnet: Ich finde es wichtig, unser ganzes vergangenes Erbe bekannt zu machen: die Steinbrüche, die Gerbereien, aber auch die Fayencemanufakturen.",
+      "Und dieses Erbe ist manchmal noch immer wenig bekannt. Erst kürzlich sprach ich mit jemandem aus der Region, der nicht einmal wusste, dass es in Sierck Fayencemanufakturen gab.",
+      "Die Ausstellung ist also auch eine Möglichkeit, daran zu erinnern, dass sich hinter den Straßen und Gebäuden, die wir heute kennen, eine besonders reiche Geschichte verbirgt.",
+      "An wen richtet sich die Ausstellung und was sollen die Besucher mitnehmen?",
+      "Pierre Bonnet: Die Ausstellung richtet sich an den ganzen Kanton Sierck, denn damals gab Sierck vielen Menschen Arbeit und Brot.",
+      "Vor allem wünsche ich mir, dass die Besucher diese Geschichte entdecken oder wiederentdecken und sich bewusst werden, wie reich das lokale Erbe ist.",
+      "Die Bonusfrage: Gibt es ein Stück mit einer besonderen Geschichte?",
+      "Zu den Postkarten hat Pierre Bonnet nach eigenen Worten keine besondere Anekdote, doch seine Sammlung ist das Ergebnis vieler Recherchen, Flohmärkte und vieler Kilometer auf der Suche nach echten Raritäten.",
+      "Bei den Fayencen erzählt sein Freund Jacquy allerdings eine schöne Anekdote.",
+      "Ein Freund von ihm sammelt Emaille aus Longwy und besaß in seiner Sammlung zwei Teller aus Sierck. Jacquy soll ihn daraufhin mit einem Augenzwinkern darauf hingewiesen haben, dass diese beiden Teller eigentlich nicht so recht in seine Sammlung passten.",
+      "Kurz vor Weihnachten schenkte der Sammler Jacquy schließlich … die beiden schönen Teller aus Sierck.",
+      "Eine kleine Geschichte, die den Geist dieser Ausstellung gut zeigt: Hinter jedem alten Gegenstand kann sich eine Geschichte, eine Begegnung oder eine Erinnerung verbergen.",
+      "Eine Reise in das Gedächtnis von Sierck-les-Bains",
+      "Mit dieser Ausstellung lassen sich also mehrere Facetten der Geschichte von Sierck-les-Bains entdecken: seine Geschäfte, seine Landschaften, die Spuren der Ereignisse, die die Stadt geprägt haben, aber auch sein Können in der Fayenceherstellung.",
+      "Eine Einladung, das lokale Erbe mit anderen Augen zu sehen und Gegenstände zu entdecken, die – manchmal nach vielen Kilometern oder nach Jahren in Privatsammlungen – zurückkehren, um einen Teil der Geschichte von Sierck zu erzählen.",
+      "Ausstellung alter Postkarten und Fayencen aus Sierck-les-Bains",
+      [
+        "Samstag, 10. Oktober 2026: 14 bis 18 Uhr",
+        "Sonntag, 11. Oktober 2026: 10 bis 18 Uhr",
+        "Eintritt frei",
+        "Salle Espace Valette, rue Porte de Trèves, Sierck-les-Bains",
+      ],
+      "Radio Tripoint lädt Sie ein, bei diesem Eintauchen in das Gedächtnis und das Erbe von Sierck-les-Bains dabei zu sein.",
+    ],
+  },
   "arnold-vi-de-sierck-quand-sierck-ecrivait-une-page-de-l-histoire-europeenne": {
     titre: "Arnold VI. von Sierck: Als Sierck europäische Geschichte schrieb.",
     chapeau:

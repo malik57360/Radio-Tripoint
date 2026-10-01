@@ -1,6 +1,45 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "exposition-cartes-postales-faiences-sierck-les-bains": {
+    titre: "Op der Sich no de vergiessene Schätz vu Sierck-les-Bains: al Postkaarten a Fayencen",
+    chapeau:
+      "Den 10. an 11. Oktober 2026 invitéiert Sierck-les-Bains Awunner a Visiteuren op eng Rees an d'Vergaangenheet, mat enger Ausstellung iwwer al Postkaarten an d'Fayence vun der Stad.",
+    alt: "Plakat vun der Ausstellung vun ale Postkaarten a Fayencen aus Sierck-les-Bains: eng Vas mat Engelcher, Telleren, eng Taass an al Postkaarte vun der Stad. 10. Oktober 2026 vu 14 bis 18 Auer, 11. Oktober vun 10 bis 18 Auer, gratis Entrée, Salle Espace Valette.",
+    corps: [
+      "Den 10. an 11. Oktober 2026 invitéiert Sierck-les-Bains Awunner a Visiteuren op eng Rees an d'Vergaangenheet, mat enger Ausstellung iwwer al Postkaarten an d'Fayence vun der Stad. Hannert dësem Rendez-vous stécht de Pierre Bonnet, e Passionnéierten vun der lokaler Geschicht, dee wollt en Deel vun dësem heiansdo wéineg bekannte Patrimoine deelen. Bei Radio Tripoint erzielt hien, wéi d'Ausstellung entstanen ass a wéi eng Schätz de Public entdecke kann.",
+      "Wéi ass d'Iddi vun dëser Ausstellung entstanen?",
+      "Pierre Bonnet: Ech hat ëmmer scho Loscht, d'Postkaarten an al Fotoe vu Sierck-les-Bains ze deelen. Wéi ech ronderëm mech iwwer déi ganz räich Vergaangenheet vu Sierck geschwat hunn – iwwer seng Geschäfter, Caféen, Hotellen, d'Thermen an d'Quellen –, hunn ech gemierkt, datt sech vill Leit fir dës Geschicht interesséieren.",
+      "Dës Ausstellung ass also aus dem Wonsch entstanen, dës Zeien aus der Vergaangenheet bekannt ze maachen an ze deelen.",
+      "Wat kënnen d'Visiteuren entdecken?",
+      "D'Visiteure kënne vill al Usiichte vu Sierck-les-Bains entdecken, an och verschidde Geschäfter, déi et fréier gouf. D'Postkaarte weisen och d'Spuere vun de Kricher an den Iwwerschwemmungen, déi d'Stad geprägt hunn.",
+      "D'Ausstellung weist och wonnerschéi Stécker aus Fayence, ënner anerem Telleren an Taassen. Zu de bemierkenswäertste Stécker gehéieren zwou prächteg Vasen aus Sierck, déi extrem seelen sinn.",
+      "Firwat war et wichteg, dëse Patrimoine ervirzehiewen?",
+      "Pierre Bonnet: Ech fannen et wichteg, eise ganze fréiere Patrimoine bekannt ze maachen: d'Steebréch, d'Gierwereien, awer och d'Fayencerien.",
+      "An dëse Patrimoine ass heiansdo nach ëmmer wéineg bekannt. Eréischt viru Kuerzem hunn ech mat engem aus der Regioun geschwat, deen net emol wosst, datt et zu Sierck Fayencerie gouf.",
+      "Dës Ausstellung ass also och eng Manéier drun ze erënneren, datt sech hannert de Stroossen a Gebaier, déi mir haut kennen, eng ganz räich Geschicht verstoppt.",
+      "Fir wien ass dës Ausstellung a wat sollen d'Visiteuren dovu behalen?",
+      "Pierre Bonnet: Dës Ausstellung riicht sech un de ganze Kanton Sierck, well deemools huet Sierck vill Leit ernäert.",
+      "Virun allem wënschen ech mer, datt d'Visiteuren dës Geschicht entdecken oder nei entdecken a sech bewosst ginn, wéi räich de lokale Patrimoine ass.",
+      "D'Bonusfro: gëtt et e Stéck mat enger besonnescher Geschicht?",
+      "Fir d'Postkaarten huet de Pierre Bonnet no sengen eegene Wierder keng besonnesch Anekdot, mee seng Sammlung ass d'Resultat vu ville Recherchen, Floumäert a ville Kilometer op der Sich no richtege Raritéiten.",
+      "Bei de Fayencen erzielt säi Frënd Jacquy awer eng flott Anekdot.",
+      "E Frënd vun him sammelt Email aus Longwy an hat a senger Sammlung zwee Telleren aus Sierck. De Jacquy soll him dunn, mat engem Schmunzelen, gesot hunn, datt déi zwee Telleren eigentlech net esou richteg a seng Sammlung gepasst hunn.",
+      "Kuerz viru Chrëschtdag huet de Sammler dem Jacquy schlussendlech … déi zwee schéin Telleren aus Sierck geschenkt.",
+      "Eng kleng Geschicht, déi de Geescht vun dëser Ausstellung gutt weist: hannert all alem Objet ka sech eng Geschicht, eng Begéinung oder eng Erënnerung verstoppen.",
+      "Eng Rees an d'Gedächtnis vu Sierck-les-Bains",
+      "Mat dëser Ausstellung kann ee also verschidde Facette vun der Geschicht vu Sierck-les-Bains entdecken: seng Geschäfter, seng Landschaften, d'Spuere vun den Evenementer, déi d'Stad geprägt hunn, awer och säi Savoir-faire an der Fayence.",
+      "Eng Invitatioun, de lokale Patrimoine mat aneren Ae ze gesinn an Objeten z'entdecken, déi – heiansdo no ville Kilometer oder no Joren a private Sammlungen – zréckkommen, fir en Deel vun der Geschicht vu Sierck ze erzielen.",
+      "Ausstellung vun ale Postkaarten a Fayencen aus Sierck-les-Bains",
+      [
+        "Samschdeg, 10. Oktober 2026: vu 14 bis 18 Auer",
+        "Sonndeg, 11. Oktober 2026: vun 10 bis 18 Auer",
+        "Gratis Entrée",
+        "Salle Espace Valette, rue Porte de Trèves, Sierck-les-Bains",
+      ],
+      "Radio Tripoint gëtt Iech Rendez-vous fir dës Rees an d'Gedächtnis an de Patrimoine vu Sierck-les-Bains.",
+    ],
+  },
   "arnold-vi-de-sierck-quand-sierck-ecrivait-une-page-de-l-histoire-europeenne": {
     titre: "Den Arnold VI. vu Sierck: Wéi Sierck europäesch Geschicht geschriwwen huet.",
     chapeau:

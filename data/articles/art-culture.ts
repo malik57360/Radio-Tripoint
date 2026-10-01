@@ -6,6 +6,208 @@ import type { Article } from "@/types/article"
  * `ordre` reprend le rang d'apparition (1 = le plus récent).
  */
 export const artCulture: Article[] = [
+  // Article de la rédaction, 1er octobre 2026 (interview de Pierre Bonnet).
+  {
+    slug: "exposition-cartes-postales-faiences-sierck-les-bains",
+    titre:
+      "À la découverte des trésors oubliés de Sierck-les-Bains : cartes postales et faïences anciennes",
+    chapeau:
+      "Les 10 et 11 octobre 2026, Sierck-les-Bains invite habitants et visiteurs à remonter le temps à travers une exposition consacrée aux anciennes cartes postales et aux faïences de la ville.",
+    categorie: "art-culture",
+    publieLe: "2026-10-01T09:00:00+02:00",
+    lieux: ["Sierck-les-Bains"],
+    tags: ["patrimoine", "faïence", "cartes postales", "exposition"],
+    visuel: {
+      src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains.webp",
+      alt: "Affiche de l'exposition de cartes postales et de faïences anciennes de Sierck-les-Bains : un vase à angelots, des assiettes, une tasse et d'anciennes cartes postales de la ville. 10 octobre 2026 de 14 h à 18 h, 11 octobre de 10 h à 18 h, entrée gratuite, salle Espace Valette.",
+      largeur: 1003,
+      hauteur: 1400,
+    },
+    corps: [
+      {
+        type: "paragraphe",
+        texte:
+          "Les 10 et 11 octobre 2026, Sierck-les-Bains invite habitants et visiteurs à remonter le temps à travers une exposition consacrée aux anciennes cartes postales et aux faïences de la ville. À l’origine de ce rendez-vous, Pierre Bonnet, passionné par l’histoire locale, a souhaité partager une partie de ce patrimoine parfois méconnu. Pour Radio Tripoint, il revient sur la naissance de cette exposition et sur les trésors que le public pourra découvrir.",
+      },
+      { type: "intertitre", texte: "Comment est née l’idée de cette exposition ?" },
+      {
+        type: "paragraphe",
+        texte:
+          "Pierre Bonnet : J’ai toujours eu envie de partager les cartes postales et les anciennes photos de Sierck-les-Bains. En parlant autour de moi du passé très riche de Sierck, notamment de ses commerces, cafés, hôtels, des thermes et des sources, je me suis rendu compte que beaucoup de personnes étaient intéressées par cette histoire.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Cette exposition est donc née de cette envie de faire découvrir et de partager ces témoignages du passé.",
+      },
+      { type: "intertitre", texte: "Que pourront découvrir les visiteurs ?" },
+      {
+        type: "paragraphe",
+        texte:
+          "Les visiteurs pourront découvrir de nombreuses anciennes vues de Sierck-les-Bains ainsi que différents commerces qui existaient autrefois. Les cartes postales permettent également de voir les traces laissées par les guerres et les inondations qui ont marqué la ville.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "L’exposition présentera aussi de magnifiques pièces de faïence, notamment des assiettes et des tasses. Parmi les pièces les plus remarquables figurent deux superbes vases de Sierck, extrêmement rares.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-vase.webp",
+          alt: "Vase bleu clair à décor doré, orné de deux angelots assis sur les anses et d'un médaillon de fleurs peintes.",
+          largeur: 1050,
+          hauteur: 1400,
+        },
+      },
+      {
+        type: "intertitre",
+        texte: "Pourquoi était-il important de mettre ce patrimoine en valeur ?",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Pierre Bonnet : Je trouve qu’il est important de faire connaître tout notre patrimoine passé : les carrières, les tanneries, mais aussi les faïenceries.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Et ce patrimoine est parfois encore méconnu. Encore récemment, je discutais avec une personne de la région qui ne connaissait même pas l’existence des faïenceries de Sierck.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Cette exposition est donc aussi une manière de rappeler que derrière les rues et les bâtiments que nous connaissons aujourd’hui se cache une histoire particulièrement riche.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-tasse.webp",
+          alt: "Tasse en faïence à décor imprimé noir : un bélier et une brebis devant une barrière, dans un cadre d'arabesques.",
+          largeur: 1400,
+          hauteur: 1050,
+        },
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-marque.webp",
+          alt: "Marque imprimée au revers de la tasse : « Opaque », un blason couronné, les lettres « C » et « L », et « Sierck ».",
+          largeur: 1050,
+          hauteur: 1400,
+        },
+      },
+      {
+        type: "intertitre",
+        texte:
+          "À qui s’adresse cette exposition et qu’aimeriez-vous que les visiteurs en retiennent ?",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Pierre Bonnet : Cette exposition s’adresse à tout le canton de Sierck, car à l’époque, Sierck faisait vivre beaucoup de monde.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "J’aimerais surtout que les visiteurs puissent découvrir ou redécouvrir cette histoire et prendre conscience de la richesse du patrimoine local.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-assiette-fleurs.webp",
+          alt: "Assiette en faïence peinte à la main : un panier de fleurs roses et de feuillage vert au centre, une frise de feuilles roses et de fleurs bleues sur le bord.",
+          largeur: 1050,
+          hauteur: 1400,
+        },
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-assiette-esperance.webp",
+          alt: "Assiette à décor imprimé brun intitulée « L'Espérance » : une scène de crucifixion entourée d'une bordure de fleurs et d'angelots.",
+          largeur: 1400,
+          hauteur: 1050,
+        },
+      },
+      {
+        type: "intertitre",
+        texte: "La question bonus : y a-t-il une pièce avec une histoire particulière ?",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Pour les cartes postales, Pierre Bonnet explique ne pas avoir une anecdote particulière à raconter, mais sa collection est le résultat de nombreuses recherches, de marchés aux puces et de nombreux kilomètres parcourus à la recherche de véritables perles rares.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Du côté des faïences, une jolie anecdote est toutefois racontée par son ami Jacquy.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Un de ses amis collectionne les émaux de Longwy et possédait dans sa collection deux assiettes de Sierck. Jacquy lui aurait alors fait remarquer, non sans humour, que ces deux assiettes n’avaient finalement pas vraiment leur place dans sa collection.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "À l’approche de Noël, le collectionneur a finalement offert… les deux belles assiettes de Sierck à Jacquy.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Une petite histoire qui illustre finalement bien l’esprit de cette exposition : derrière chaque objet ancien peut se cacher une histoire, une rencontre ou un souvenir.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-assiette-ajouree.webp",
+          alt: "Assiette au bord ajouré, peinte d'une scène galante dans un parc : des personnages en costumes d'époque, un cheval et des chiens.",
+          largeur: 1400,
+          hauteur: 1050,
+        },
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/exposition-cartes-postales-faiences-sierck-les-bains-assiette-enfant.webp",
+          alt: "Assiette à décor imprimé noir : au centre, un enfant fuit un sanglier caché derrière un arbre ; large bordure de fleurs et d'arabesques.",
+          largeur: 1400,
+          hauteur: 1050,
+        },
+      },
+      { type: "intertitre", texte: "Un voyage dans la mémoire de Sierck-les-Bains" },
+      {
+        type: "paragraphe",
+        texte:
+          "À travers cette exposition, ce sont donc plusieurs facettes de l’histoire de Sierck-les-Bains qui seront à découvrir : ses commerces, ses paysages, les traces des événements qui ont marqué la ville, mais aussi son savoir-faire faïencier.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Une invitation à regarder autrement le patrimoine local et à découvrir des objets qui, parfois après avoir parcouru de nombreux kilomètres ou attendu des années dans des collections privées, reviennent raconter une partie de l’histoire de Sierck.",
+      },
+      {
+        type: "intertitre",
+        texte: "Exposition de cartes postales et de faïences anciennes de Sierck-les-Bains",
+      },
+      {
+        type: "liste",
+        elements: [
+          "Samedi 10 octobre 2026 : 14h à 18h",
+          "Dimanche 11 octobre 2026 : 10h à 18h",
+          "Entrée gratuite",
+          "Salle Espace Valette, rue Porte de Trèves, Sierck-les-Bains",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Radio Tripoint vous donne rendez-vous pour découvrir cette plongée dans la mémoire et le patrimoine de Sierck-les-Bains.",
+      },
+    ],
+  },
   // Source : https://www.radio-tripoint-officiel.fr/art-culture
   {
     slug: "arnold-vi-de-sierck-quand-sierck-ecrivait-une-page-de-l-histoire-europeenne",
