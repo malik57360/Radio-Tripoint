@@ -61,6 +61,52 @@ export const personnes: Personne[] = [
       hauteur: 1333,
     },
   },
+  {
+    nom: "Frédérique Wehr",
+    role: {
+      fr: "Deuxième vice-présidente de la Communauté de Communes Bouzonvillois Trois Frontières",
+      de: "Zweite Vizepräsidentin der Communauté de Communes Bouzonvillois Trois Frontières",
+      lb: "Zweet Vizepresidentin vun der Communauté de Communes Bouzonvillois Trois Frontières",
+    },
+    note: {
+      fr: "Invitée de notre émission « À vous la parole », épisode diffusé à partir du vendredi 19 juin 2026.",
+      de: "Gast unserer Sendung „À vous la parole“, Folge verfügbar ab Freitag, 19. Juni 2026.",
+      lb: "Invitée vun eiser Sendung „À vous la parole“, Episod disponibel vum Freideg, 19. Juni 2026 un.",
+    },
+    photo: {
+      src: "/media/confiance/frederique-wehr.webp",
+      alt: {
+        fr: "Frédérique Wehr, souriante, en chemisier blanc, adossée à un mur de pierres anciennes.",
+        de: "Frédérique Wehr lächelt in weißer Bluse, an eine alte Steinmauer gelehnt.",
+        lb: "D'Frédérique Wehr laacht an enger wäisser Blus, un eng al Steemauer ugeluecht.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
+  {
+    nom: "Helen Hammond",
+    role: {
+      fr: "Maire de Sierck-les-Bains et première vice-présidente de la CCB3F",
+      de: "Bürgermeisterin von Sierck-les-Bains und erste Vizepräsidentin der CCB3F",
+      lb: "Buergermeeschtesch vu Sierck-les-Bains an éischt Vizepresidentin vun der CCB3F",
+    },
+    note: {
+      fr: "Invitée de notre émission « À vous la parole ».",
+      de: "Gast unserer Sendung „À vous la parole“.",
+      lb: "Invitée vun eiser Sendung „À vous la parole“.",
+    },
+    photo: {
+      src: "/media/confiance/helen-hammond.webp",
+      alt: {
+        fr: "Helen Hammond à son bureau de la mairie, devant les drapeaux européen et français, avec au premier plan un vitrail aux armoiries de Sierck-les-Bains.",
+        de: "Helen Hammond an ihrem Schreibtisch im Rathaus vor der Europa- und der Frankreichflagge, im Vordergrund ein Glasbild mit dem Wappen von Sierck-les-Bains.",
+        lb: "D'Helen Hammond un hirem Büro an der Mairie virun der europäescher an der franséischer Fändel, am Virdergrond e Glasbild mam Wope vu Sierck-les-Bains.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
 ]
 
 export const structures: Structure[] = [
