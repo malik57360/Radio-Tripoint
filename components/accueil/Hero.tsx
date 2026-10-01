@@ -44,8 +44,13 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
         <div>
           <p className="surtitre text-nuit-encre-2 flex items-center gap-3">
             <span className="bg-nuit-accent h-px w-8" aria-hidden />
-            {t(site.baseline)}
-            <span className="hidden sm:inline"> · Sierck-les-Bains</span>
+            {t({
+              fr: "Le média qui fait tomber les frontières",
+              de: "Das Medium, das Grenzen fallen lässt",
+              lb: "D'Medium, dat d'Grenze falen léisst",
+              en: "The media that breaks down borders",
+              es: "El medio que derriba fronteras",
+            })}
           </p>
           <h1
             id="titre-accueil"
