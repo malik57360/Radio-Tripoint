@@ -1,13 +1,11 @@
 import type { Episode } from "@/types/podcast"
 
 /**
- * Fichiers audio encore hébergés par l'ancien site (Webador). À déplacer
- * avant de pointer le domaine vers ce site : une fois le domaine basculé,
- * ces adresses ne répondront plus. Changer cette base suffit si les noms
- * de fichiers sont conservés.
+ * Fichiers audio rapatriés de l'ancien site (Webador) dans le stockage Blob
+ * de Vercel, réencodés en MP3 96 kbit/s, sous podcasts/<identifiant>.mp3.
  */
-const BASE_AUDIO = "https://www.radio-tripoint-officiel.fr/_downloads/"
-const audio = (id: string) => `${BASE_AUDIO}${id}`
+const BASE_AUDIO = "https://1ezay8yyi8kz7ndz.public.blob.vercel-storage.com/podcasts/"
+const audio = (id: string) => `${BASE_AUDIO}${id}.mp3`
 
 /**
  * Épisodes repris de l'ancienne page « Podcast & Replay », dans son ordre
