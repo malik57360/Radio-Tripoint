@@ -23,6 +23,10 @@ export const navPlus: LienNav[] = [
   { libelle: { fr: "Prévention", de: "Prävention", lb: "Preventioun" }, href: "/prevention" },
   { libelle: { fr: "Publicité", de: "Werbung", lb: "Reklamm" }, href: "/publicite" },
   { libelle: { fr: "À propos", de: "Über uns", lb: "Iwwer eis" }, href: "/a-propos" },
+  {
+    libelle: { fr: "Ils nous font confiance", de: "Sie vertrauen uns", lb: "Si vertrauen eis" },
+    href: "/ils-nous-font-confiance",
+  },
   { libelle: { fr: "Contact", de: "Kontakt", lb: "Kontakt" }, href: "/contact" },
 ]
 

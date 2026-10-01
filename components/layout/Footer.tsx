@@ -60,6 +60,10 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
         href: "/soumettre-une-information",
       },
       { libelle: { fr: "À propos", de: "Über uns", lb: "Iwwer eis" }, href: "/a-propos" },
+      {
+        libelle: { fr: "Ils nous font confiance", de: "Sie vertrauen uns", lb: "Si vertrauen eis" },
+        href: "/ils-nous-font-confiance",
+      },
     ],
   },
 ]
