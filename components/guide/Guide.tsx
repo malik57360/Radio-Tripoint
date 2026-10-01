@@ -214,7 +214,7 @@ export function Guide() {
         aria-expanded={ouvert}
         aria-controls="guide-tripo"
         className={cn(
-          "bg-nuit text-nuit-encre shadow-2 border-accent fixed right-4 bottom-[calc(var(--barre-lecteur)+1rem+env(safe-area-inset-bottom))] z-40 inline-flex h-13 items-center gap-2 rounded-full border-2 pr-5 pl-1.5 text-[0.95rem] font-bold tracking-wide transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2",
+          "bg-nuit text-nuit-encre shadow-2 border-accent fixed right-4 bottom-[calc(var(--barre-lecteur)+1rem+env(safe-area-inset-bottom))] z-40 inline-flex h-13 items-center gap-2 rounded-full border-2 pr-5 pl-2 text-[0.95rem] font-bold tracking-wide transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2",
           ouvert && "max-sm:hidden",
         )}
       >
@@ -223,7 +223,7 @@ export function Guide() {
             <X className="size-5" aria-hidden />
           </span>
         ) : (
-          <Mascotte anime className="-mt-3 size-11" />
+          <Mascotte anime className="size-10" />
         )}
         Tripo
       </button>
