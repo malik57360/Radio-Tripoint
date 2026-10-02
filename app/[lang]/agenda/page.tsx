@@ -8,6 +8,7 @@ import type { Trad } from "@/lib/i18n/langues"
 import { traducteur } from "@/lib/i18n/serveur"
 import { metadataPage } from "@/lib/seo/metadata"
 import { dateLongue } from "@/lib/utils/dates"
+import { EmplacementPub } from "@/components/pub/EmplacementPub"
 
 export const generateMetadata = () =>
   metadataPage({
@@ -168,6 +169,7 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
           )
         }
       />
+      <EmplacementPub id="agenda" className="conteneur pt-10 lg:pt-12" />
       <section
         aria-label={t({
           fr: "Événements",

@@ -5,6 +5,7 @@ import { listerEmissions } from "@/lib/contenu/emissions"
 import { traducteur } from "@/lib/i18n/serveur"
 import { metadataPage } from "@/lib/seo/metadata"
 import Link from "@/components/ui/Lien"
+import { EmplacementPub } from "@/components/pub/EmplacementPub"
 
 export const generateMetadata = () =>
   metadataPage({
@@ -80,6 +81,7 @@ export default async function PageEmissions() {
           </div>
         }
       />
+      <EmplacementPub id="emissions" className="conteneur pt-10 lg:pt-12" />
       <section
         aria-label={t({
           fr: "Liste des émissions",

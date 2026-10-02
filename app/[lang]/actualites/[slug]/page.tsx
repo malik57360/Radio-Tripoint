@@ -21,6 +21,7 @@ import { jsonLdArticle } from "@/lib/seo/jsonld"
 import { metadataPage, urlAbsolue } from "@/lib/seo/metadata"
 import { dateLongue, heure } from "@/lib/utils/dates"
 import { tempsLecture } from "@/lib/utils/texte"
+import { EmplacementPub } from "@/components/pub/EmplacementPub"
 
 export async function generateStaticParams() {
   return (await slugsArticles()).map((slug) => ({ slug }))
@@ -187,6 +188,7 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
           <div className="border-trait mt-12 border-t pt-6">
             <ShareButtons url={url} titre={a.titre} />
           </div>
+          <EmplacementPub id="article-fin" className="mt-10" />
           <aside className="bg-nuit text-nuit-encre mt-10 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-7">
             <p className="titre-carte text-lg">
               {t({
@@ -201,6 +203,7 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
           </aside>
         </div>
         <aside aria-labelledby="titre-dernieres" className="lg:pt-2">
+          <EmplacementPub id="article-cote" format="pave" className="mb-10 hidden lg:block" />
           <div className="lg:sticky lg:top-24">
             <h2 id="titre-dernieres" className="surtitre border-trait-fort border-t-2 pt-3">
               {t({

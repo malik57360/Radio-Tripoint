@@ -20,6 +20,7 @@ import { listerEpisodes } from "@/lib/contenu/podcasts"
 import { traducteur } from "@/lib/i18n/serveur"
 import { versGrille } from "@/lib/radio/types"
 import { metadataPage } from "@/lib/seo/metadata"
+import { EmplacementPub } from "@/components/pub/EmplacementPub"
 
 export const generateMetadata = () =>
   metadataPage({
@@ -136,6 +137,8 @@ export default async function Accueil() {
           </EtatVide>
         )}
       </section>
+
+      <EmplacementPub id="accueil-une" className="conteneur pt-14 lg:pt-20" />
 
       {/* ─── Dernières actualités ─── */}
       {suite.length > 0 && (
@@ -293,6 +296,8 @@ export default async function Accueil() {
       </div>
 
       {/* ─── Agenda ─── */}
+      <EmplacementPub id="accueil-agenda" className="conteneur pt-16 lg:pt-24" />
+
       <section aria-labelledby="titre-agenda" className="conteneur pt-16 lg:pt-24">
         <EnTeteSection
           id="titre-agenda"

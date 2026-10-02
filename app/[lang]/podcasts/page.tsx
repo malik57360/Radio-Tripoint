@@ -9,6 +9,7 @@ import { listerEmissions } from "@/lib/contenu/emissions"
 import { listerEpisodes, themesPodcast } from "@/lib/contenu/podcasts"
 import { traducteur } from "@/lib/i18n/serveur"
 import { metadataPage } from "@/lib/seo/metadata"
+import { EmplacementPub } from "@/components/pub/EmplacementPub"
 
 export const generateMetadata = () =>
   metadataPage({
@@ -135,6 +136,7 @@ export default async function PagePodcasts(props: PageProps<"/[lang]/podcasts">)
           )
         }
       />
+      <EmplacementPub id="podcasts" className="conteneur pt-10 lg:pt-12" />
       <section
         aria-label={tr({
           fr: "Épisodes",

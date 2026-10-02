@@ -11,6 +11,7 @@ import type { CategorieSlug } from "@/types/category"
 import { CategoryNav } from "./CategoryNav"
 import { FeaturedArticle } from "./FeaturedArticle"
 import { NewsGrid } from "./NewsGrid"
+import { EmplacementPub } from "@/components/pub/EmplacementPub"
 
 /** Gabarit commun à toutes les rubriques : une, grille, recherche, pagination. */
 export async function CategoryPage({
@@ -209,6 +210,7 @@ export async function CategoryPage({
             </h2>
             <NewsGrid articles={avecUne ? reste : elements} />
             <Pagination page={p} pages={pages} base={cat.chemin} params={{ q }} />
+            <EmplacementPub id="rubriques" className="mt-14" />
           </>
         )}
       </div>
