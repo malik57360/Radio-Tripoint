@@ -226,6 +226,13 @@ export const personnes: Personne[] = [
       en: "Municipal councillor of Sierck-les-Bains",
       es: "Concejal de Sierck-les-Bains",
     },
+    note: {
+      fr: "A répondu à nos questions sur Radio Tripoint.",
+      de: "Hat unsere Fragen auf Radio Tripoint beantwortet.",
+      lb: "Huet eis Froen op Radio Tripoint beäntwert.",
+      en: "Answered our questions on Radio Tripoint.",
+      es: "Respondió a nuestras preguntas en Radio Tripoint.",
+    },
     photo: {
       src: "/media/confiance/martin-beziaud.webp",
       alt: {
