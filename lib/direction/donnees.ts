@@ -9,6 +9,7 @@ import { programmeEnCours, programmeSuivant } from "@/lib/radio/grille"
 import { versGrille } from "@/lib/radio/types"
 import { radioConfig } from "@/config/radioConfig"
 import { site } from "@/config/site"
+import { smtpConfigure } from "@/lib/formulaires/courriel"
 import { jourParis, redis, redisActif, trancheParis } from "./redis"
 
 /**
@@ -498,7 +499,7 @@ export async function technique() {
 /* ───────────────────────── Alertes ───────────────────────── */
 
 export const formulairesBranches = () =>
-  Boolean(process.env.RESEND_API_KEY || process.env.FORM_WEBHOOK_URL)
+  smtpConfigure() || Boolean(process.env.RESEND_API_KEY || process.env.FORM_WEBHOOK_URL)
 
 export type Alerte = { texte: string; page: string }
 

@@ -1,13 +1,22 @@
+import { createTransport } from "nodemailer"
 import { site } from "@/config/site"
 import type { TypeFormulaire } from "@/lib/formulaires/schemas"
 
 /**
- * Envoi des formulaires par e-mail via l'API Resend (https://resend.com),
- * sans dépendance : un simple POST JSON. La pièce jointe part en base64.
+ * Envoi des formulaires par e-mail, de deux façons :
  *
- * Sans domaine vérifié chez Resend, l'expéditeur doit rester
- * onboarding@resend.dev et le destinataire être l'adresse du compte Resend.
+ * 1. Par la boîte mail de la radio (SMTP), en priorité : les e-mails du
+ *    domaine sont chez Webador (mail.webador.com, port 587, STARTTLS). Il
+ *    suffit de SMTP_PASS (mot de passe de la boîte) ; SMTP_USER vaut par
+ *    défaut l'adresse de contact. Le message part de la boîte et arrive dans
+ *    la même boîte, « Répondre » écrit au visiteur.
+ * 2. Par l'API Resend (https://resend.com), si RESEND_API_KEY est posée.
  */
+export const smtpConfigure = () => {
+  const mdp = process.env.SMTP_PASS ?? ""
+  // La variable est créée avec un texte provisoire, remplacé à la main.
+  return mdp.length > 0 && !mdp.startsWith("A_REMPLACER")
+}
 const LIBELLES: Record<string, string> = {
   nom: "Nom",
   entreprise: "Entreprise",
@@ -33,7 +42,8 @@ const echapper = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
 
 export async function envoyerCourriel(opts: {
-  cle: string
+  /** Clé Resend ; inutile si la boîte mail (SMTP) est configurée. */
+  cle?: string
   type: TypeFormulaire
   objet: string
   langue: string
@@ -67,6 +77,40 @@ ${lignes
 </table>
 <p style="margin:16px 0 0;color:#666;font-size:13px">Langue du visiteur : ${echapper(NOMS_LANGUES[langue] ?? langue)}${fichier ? ` · Pièce jointe : ${echapper(fichier.name)}` : ""}<br>Envoyé depuis le site Radio Tripoint (formulaire « ${type} »).</p>
 </div>`
+
+  const sujet = `Radio Tripoint — ${objet}${titre ? ` : ${titre}` : ""}`.slice(0, 200)
+  const destinataire = process.env.FORM_EMAIL_TO || site.contact.email
+  const repondreA = typeof champs.email === "string" && champs.email ? champs.email : undefined
+  const nomFichier = fichier?.name.replace(/[^\p{L}\p{N}.\- ]+/gu, "_").slice(0, 120)
+
+  if (smtpConfigure()) {
+    const utilisateur = process.env.SMTP_USER || site.contact.email
+    const port = Number(process.env.SMTP_PORT) || 587
+    const transport = createTransport({
+      host: process.env.SMTP_HOST || "mail.webador.com",
+      port,
+      secure: port === 465,
+      requireTLS: port !== 465,
+      auth: { user: utilisateur, pass: process.env.SMTP_PASS },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 15_000,
+    })
+    await transport.sendMail({
+      from: { name: "Site Radio Tripoint", address: utilisateur },
+      to: destinataire,
+      replyTo: repondreA,
+      subject: sujet,
+      text: texte,
+      html,
+      attachments:
+        fichier && nomFichier
+          ? [{ filename: nomFichier, content: Buffer.from(await fichier.arrayBuffer()) }]
+          : undefined,
+    })
+    return
+  }
+  if (!cle) throw new Error("aucun moyen d'envoi configuré")
 
   const corps: Record<string, unknown> = {
     from: process.env.FORM_EMAIL_FROM || "Radio Tripoint <onboarding@resend.dev>",

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto"
 import { compter } from "@/lib/direction/redis"
-import { envoyerCourriel } from "@/lib/formulaires/courriel"
+import { envoyerCourriel, smtpConfigure } from "@/lib/formulaires/courriel"
 import { autoriser } from "@/lib/formulaires/limiteur"
 import { choisir, estLangue, type Langue, type Trad } from "@/lib/i18n/langues"
 import {
@@ -114,18 +114,19 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
     }
   }
 
-  // 5. Transmission : e-mail via Resend en priorité, sinon webhook. Sans
-  // l'un ni l'autre, on le dit : le client propose l'e-mail.
+  // 5. Transmission : e-mail (boîte mail de la radio, sinon Resend), sinon
+  // webhook. Sans aucun des trois, on le dit : le client propose l'e-mail.
   const cleResend = process.env.RESEND_API_KEY
+  const parMail = smtpConfigure() || Boolean(cleResend)
   const webhook = process.env.FORM_WEBHOOK_URL
   await compter(`form:${t}`)
-  if (!cleResend && !webhook) {
+  if (!parMail && !webhook) {
     await compter("form_perdu")
     return json({ statut: "non-configure" }, 503)
   }
 
   try {
-    if (cleResend) {
+    if (parMail) {
       await envoyerCourriel({
         cle: cleResend,
         type: t,

@@ -10,7 +10,7 @@ export default async function PageTechnique() {
   const reglages: [string, boolean, string][] = [
     ["Statistiques Vercel", tech.analytics, "clé VERCEL_STATS_TOKEN"],
     ["Compteur en direct", tech.redis, "base Upstash Redis"],
-    ["Envoi des formulaires", formulairesBranches(), "clé RESEND_API_KEY"],
+    ["Envoi des formulaires", formulairesBranches(), "mot de passe de la boîte mail (SMTP_PASS)"],
     [
       "Guide Tripo",
       process.env.GUIDE_ACTIF === "1" && Boolean(process.env.ANTHROPIC_API_KEY),

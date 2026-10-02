@@ -64,7 +64,7 @@ export default async function PageEngagement() {
             {t.formPerdu30
               ? `Les formulaires ne sont pas branchés : ${nombre(t.formPerdu30)} message${t.formPerdu30 > 1 ? "s" : ""} perdu${t.formPerdu30 > 1 ? "s" : ""} en 30 jours.`
               : "Les formulaires ne sont pas branchés : les messages envoyés ne vous parviennent pas."}{" "}
-            Il manque la clé Resend sur Vercel.
+            Il manque le mot de passe de la boîte mail (SMTP_PASS) sur Vercel.
           </Etat>
         </div>
       )}
