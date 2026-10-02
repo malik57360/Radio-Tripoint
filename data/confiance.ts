@@ -217,6 +217,28 @@ export const personnes: Personne[] = [
       hauteur: 1333,
     },
   },
+  {
+    nom: "Martin Beziaud",
+    role: {
+      fr: "Conseiller municipal de Sierck-les-Bains",
+      de: "Gemeinderat von Sierck-les-Bains",
+      lb: "Gemengerot vu Sierck-les-Bains",
+      en: "Municipal councillor of Sierck-les-Bains",
+      es: "Concejal de Sierck-les-Bains",
+    },
+    photo: {
+      src: "/media/confiance/martin-beziaud.webp",
+      alt: {
+        fr: "Martin Beziaud, en chemise blanche, devant le mur aux logos de Radio Tripoint.",
+        de: "Martin Beziaud im weißen Hemd vor der Wand mit den Radio-Tripoint-Logos.",
+        lb: "De Martin Beziaud am wäissen Hiem virun der Mauer mat de Radio-Tripoint-Logoen.",
+        en: "Martin Beziaud, in a white shirt, in front of the wall of Radio Tripoint logos.",
+        es: "Martin Beziaud, con camisa blanca, delante del muro con los logotipos de Radio Tripoint.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
 ]
 
 export const structures: Structure[] = [
