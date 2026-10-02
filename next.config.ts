@@ -44,6 +44,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(process.cwd()),
   },
+  // Le flyer du week-end lit ses polices et le logo sur le disque.
+  outputFileTracingIncludes: {
+    "/api/flyer-weekend": ["./assets/fonts/**", "./public/brand/**"],
+  },
   images: {
     qualities: [75, 85],
     // Visuels d'événements publiés par les organisateurs et offices de tourisme.
