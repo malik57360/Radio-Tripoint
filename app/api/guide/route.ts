@@ -113,7 +113,12 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: cible.modele,
-        max_tokens: 1500,
+        // Sonnet 5.5 réfléchit toujours avant de répondre, et cette réflexion
+        // compte dans max_tokens : à 1 500, réflexion + recherche web
+        // épuisaient le plafond avant le premier mot (arrêt max_tokens,
+        // Tripo « indisponible »). Effort bas : c'est une conversation.
+        max_tokens: 8000,
+        output_config: { effort: "low" },
         stream: true,
         system: [
           { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
