@@ -50,6 +50,35 @@ export const personnes: Personne[] = [
     },
   },
   {
+    nom: "Martin Beziaud",
+    role: {
+      fr: "Conseiller municipal de Sierck-les-Bains",
+      de: "Gemeinderat von Sierck-les-Bains",
+      lb: "Gemengerot vu Sierck-les-Bains",
+      en: "Municipal councillor of Sierck-les-Bains",
+      es: "Concejal de Sierck-les-Bains",
+    },
+    note: {
+      fr: "A répondu à nos questions sur Radio Tripoint.",
+      de: "Hat unsere Fragen auf Radio Tripoint beantwortet.",
+      lb: "Huet eis Froen op Radio Tripoint beäntwert.",
+      en: "Answered our questions on Radio Tripoint.",
+      es: "Respondió a nuestras preguntas en Radio Tripoint.",
+    },
+    photo: {
+      src: "/media/confiance/martin-beziaud.webp",
+      alt: {
+        fr: "Martin Beziaud, en chemise blanche, devant le mur aux logos de Radio Tripoint.",
+        de: "Martin Beziaud im weißen Hemd vor der Wand mit den Radio-Tripoint-Logos.",
+        lb: "De Martin Beziaud am wäissen Hiem virun der Mauer mat de Radio-Tripoint-Logoen.",
+        en: "Martin Beziaud, in a white shirt, in front of the wall of Radio Tripoint logos.",
+        es: "Martin Beziaud, con camisa blanca, delante del muro con los logotipos de Radio Tripoint.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
+  {
     nom: "Anne-Marie Garandeau",
     role: {
       fr: "Présidente du Conseil de Fabrique",
@@ -212,35 +241,6 @@ export const personnes: Personne[] = [
         lb: "Zwee Vertrieder vum Veräin Une Rose Un Espoir vu Sierck-les-Bains, laachend virun der Logowand vu Radio Tripoint.",
         en: "Two representatives of the Une Rose Un Espoir association from Sierck-les-Bains, smiling, in front of the Radio Tripoint logo wall.",
         es: "Dos representantes de la asociación Une Rose Un Espoir de Sierck-les-Bains, sonrientes, delante del muro con los logotipos de Radio Tripoint.",
-      },
-      largeur: 1000,
-      hauteur: 1333,
-    },
-  },
-  {
-    nom: "Martin Beziaud",
-    role: {
-      fr: "Conseiller municipal de Sierck-les-Bains",
-      de: "Gemeinderat von Sierck-les-Bains",
-      lb: "Gemengerot vu Sierck-les-Bains",
-      en: "Municipal councillor of Sierck-les-Bains",
-      es: "Concejal de Sierck-les-Bains",
-    },
-    note: {
-      fr: "A répondu à nos questions sur Radio Tripoint.",
-      de: "Hat unsere Fragen auf Radio Tripoint beantwortet.",
-      lb: "Huet eis Froen op Radio Tripoint beäntwert.",
-      en: "Answered our questions on Radio Tripoint.",
-      es: "Respondió a nuestras preguntas en Radio Tripoint.",
-    },
-    photo: {
-      src: "/media/confiance/martin-beziaud.webp",
-      alt: {
-        fr: "Martin Beziaud, en chemise blanche, devant le mur aux logos de Radio Tripoint.",
-        de: "Martin Beziaud im weißen Hemd vor der Wand mit den Radio-Tripoint-Logos.",
-        lb: "De Martin Beziaud am wäissen Hiem virun der Mauer mat de Radio-Tripoint-Logoen.",
-        en: "Martin Beziaud, in a white shirt, in front of the wall of Radio Tripoint logos.",
-        es: "Martin Beziaud, con camisa blanca, delante del muro con los logotipos de Radio Tripoint.",
       },
       largeur: 1000,
       hauteur: 1333,
