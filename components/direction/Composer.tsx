@@ -61,6 +61,12 @@ export function Composer({
     })
   }
 
+  const manque = [
+    !a.trim() && "l'adresse e-mail du destinataire (case « À », en haut)",
+    !objet.trim() && "l'objet",
+    !texte.trim() && "le message",
+  ].filter((m): m is string => Boolean(m))
+
   const envoyer = () => {
     if (!window.confirm(`Envoyer ce message à ${a} ?`)) return
     setAction("envoyer")
@@ -166,10 +172,15 @@ export function Composer({
           {statut.message}
         </p>
       )}
+      {manque.length > 0 && !enCours && (
+        <p className="text-alerte text-sm font-semibold">
+          Pour envoyer, il manque : {manque.join(", ")}.
+        </p>
+      )}
       <button
         type="button"
         onClick={envoyer}
-        disabled={enCours || !a.trim() || !objet.trim() || !texte.trim()}
+        disabled={enCours || manque.length > 0}
         className="bg-encre inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-black disabled:opacity-40"
       >
         {enCours && action === "envoyer" ? (
