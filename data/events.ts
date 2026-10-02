@@ -260,9 +260,11 @@ export const evenements: Evenement[] = [
     ville: "Perl",
     pays: "DE",
     lienExterne: "https://www.perlcross.de/bienvenue.html",
-    visuel: afficheRadio(
+    visuel: affiche(
       "bauhaus-perlcross-perl-2026",
-      "BAUHAUS PERLCROSS, 3 et 4 octobre 2026 à Perl",
+      "BAUHAUS PERLCROSS, cyclo-cross, course internationale UCI C2 et Cyclo-Cross Bundesliga, 03 et 04.10.2026, www.perlcross.de",
+      900,
+      949,
     ),
   },
   {
