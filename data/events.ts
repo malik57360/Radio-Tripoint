@@ -230,4 +230,137 @@ export const evenements: Evenement[] = [
       1131,
     ),
   },
+  // ─── Ajouts du 2 octobre 2026, vérifiés sur les sites des organisateurs
+  // et des communes (sources dans lienExterne). Sans affiche reçue.
+  {
+    slug: "bauhaus-perlcross-perl-2026",
+    titre: "BAUHAUS PERLCROSS",
+    description:
+      "Le cyclo-cross international revient à Perl. Samedi, course internationale de catégorie UCI C2 ; dimanche, manche de la Cyclo-Cross Bundesliga. Parcours de 3 km (75 m de dénivelé) avec planches, escaliers et section de sable, en terrain ouvert à côté du Schengen-Lyzeum. Des courses pour toutes les catégories, des moins de 11 ans aux élites et aux masters.",
+    debut: "2026-10-03T09:30:00+02:00",
+    fin: "2026-10-04T23:59:00+02:00",
+    horaires:
+      "Samedi 3 octobre dès 9 h 30 (élites femmes 14 h, élites hommes 15 h 10) ; dimanche 4 octobre dès 9 h 20 (élites femmes 14 h)",
+    lieu: "Parcours à côté du Schengen-Lyzeum",
+    ville: "Perl",
+    pays: "DE",
+    lienExterne: "https://www.perlcross.de/bienvenue.html",
+  },
+  {
+    slug: "hierschtmoart-remich-2026",
+    titre: "Hierschtmoart, le marché d'automne",
+    description:
+      "Le marché d'automne de Remich met en lumière la région et ses produits traditionnels et de saison : stands de vente, animation pour enfants, restauration et boissons, concerts.",
+    debut: "2026-10-11T11:00:00+02:00",
+    fin: "2026-10-11T18:00:00+02:00",
+    lieu: "Place Dr F. Kons",
+    ville: "Remich",
+    pays: "LU",
+    organisateur: "Ville de Remich",
+    lienExterne: "https://visitremich.lu/fr/events-new/",
+  },
+  {
+    slug: "wein-und-kellerfest-perl-2026",
+    titre: "Perler Wein- und Kellerfest",
+    description:
+      "Le dernier week-end d'octobre, les vignerons de Perl, Oberperl et Sehndorf ouvrent leurs caves et leurs domaines : Elbling, Auxerrois, Riesling et Burgunder des coteaux de la Moselle, spécialités régionales et musique. Les sources ne s'accordent pas sur le dernier jour : vérifiez auprès de la commune de Perl avant de venir.",
+    debut: "2026-10-23T00:00:00+02:00",
+    fin: "2026-10-25T23:59:00+01:00",
+    journee: true,
+    horaires: "Dernier week-end d'octobre, à partir du vendredi 23 octobre 2026",
+    lieu: "Caves et domaines de Perl, Oberperl et Sehndorf",
+    ville: "Perl",
+    pays: "DE",
+    lienExterne: "https://www.festivalsindeutschland.de/festival/perler-wein-und-kellerfest",
+  },
+  {
+    slug: "betes-et-sorcieres-chateau-sierck-2026",
+    titre: "Bêtes & Sorcières : le Château de Sierck s'enchante",
+    description:
+      "Un week-end d'Halloween au château, dans le cadre du festival Bêtes & Sorcières du Département de la Moselle : contes, ateliers créatifs, maquillage, saynète, rencontres avec les sorcières et décoration fantastique. Venez déguisés ! Buvette sur place. Entrée 8 €.",
+    debut: "2026-10-24T00:00:00+02:00",
+    fin: "2026-10-25T23:59:00+01:00",
+    journee: true,
+    horaires: "Samedi 24 et dimanche 25 octobre 2026",
+    lieu: "Château de Sierck",
+    adresse: "5 rue du château, 57480 Sierck-les-Bains",
+    ville: "Sierck-les-Bains",
+    pays: "FR",
+    lienExterne:
+      "https://www.info-lux.com/sierck-les-bains-patrimoine-festival-betes-sorcieres-le-chateau-de-sierck-senchante/themes/evenements-traditions/fete/",
+  },
+  {
+    slug: "insomnie-pepito-mateo-sierck-2026",
+    titre: "Insomnie, de Pépito Matéo",
+    description:
+      "Une nuit sans clés devient une échappée dans l'envers du décor. Avec humour, poésie et une énergie explosive, le conteur Pépito Matéo transforme nos peurs en récits et réveille nos rêves. Tout public. Réservation en ligne.",
+    debut: "2026-10-24T20:30:00+02:00",
+    lieu: "Espace Valette",
+    adresse: "8 bis rue Porte de Trèves, 57480 Sierck-les-Bains",
+    ville: "Sierck-les-Bains",
+    pays: "FR",
+    organisateur: "Espace Valette",
+    lienExterne: "https://nittachowa.sumupstore.com",
+  },
+  {
+    slug: "marche-medieval-remich-2026",
+    titre: "Marché médiéval de Remich",
+    description:
+      "Un voyage au Moyen Âge sur les bords de Moselle : artistes de scène, saltimbanques, commerçants et artisans qui font revivre des métiers disparus. Restauration sur place. Accessible en transports en commun, tout près de la gare routière de Remich.",
+    debut: "2026-10-24T12:00:00+02:00",
+    fin: "2026-10-25T18:00:00+01:00",
+    horaires: "Samedi 24 octobre de 12 h à 21 h, dimanche 25 octobre de 11 h à 18 h",
+    lieu: "Place Dr F. Kons",
+    ville: "Remich",
+    pays: "LU",
+    organisateur: "Ville de Remich et Lorraine Médiévale",
+    lienExterne: "https://visitremich.lu/fr/agenda/2_mettelaltermoart2022-2-2-2-2/",
+  },
+  {
+    slug: "loup-garou-halloween-chateau-sierck-2026",
+    titre: "Soirées Loup-Garou spécial Halloween au château",
+    description:
+      "Le Château de Sierck ouvre ses portes à la nuit tombée pour deux soirées de Loup-Garou grandeur nature, avec l'association La Tablée Onirique et de nouveaux personnages pour Halloween. Secrets, alliances et accusations, orchestrés par des maîtres du jeu. À partir de 16 ans, sessions de 3 heures, boissons en vente sur place (pas de restauration). Venez costumés ! 16 €.",
+    debut: "2026-10-30T00:00:00+01:00",
+    fin: "2026-10-31T23:59:00+01:00",
+    journee: true,
+    horaires: "Vendredi 30 et samedi 31 octobre 2026, à la nuit tombée",
+    lieu: "Château de Sierck",
+    adresse: "5 rue du château, 57480 Sierck-les-Bains",
+    ville: "Sierck-les-Bains",
+    pays: "FR",
+    lienExterne:
+      "https://www.info-lux.com/sierck-les-bains-patrimoine-soiree-loup-garou-special-halloween/pays/france/grand-est/moselle-grand-est/sierck-les-bains/",
+  },
+  {
+    slug: "marche-de-noel-thionville-2026",
+    titre: "Marché de Noël de Thionville",
+    description:
+      "Le marché de Noël de Thionville s'installe sur cinq sites du centre-ville pendant six semaines : chalets, mapping tous les soirs sur la façade de l'hôtel de ville, patinoire, manèges et petit train, avec le défilé de Saint-Nicolas et la Grande parade de Noël. Les horaires 2026 ne sont pas encore publiés.",
+    debut: "2026-11-27T00:00:00+01:00",
+    fin: "2027-01-03T23:59:00+01:00",
+    journee: true,
+    horaires: "Du vendredi 27 novembre 2026 au dimanche 3 janvier 2027",
+    lieu: "Centre-ville (5 sites)",
+    ville: "Thionville",
+    pays: "FR",
+    organisateur: "Ville de Thionville",
+    lienExterne:
+      "https://moselle-nord.info/thionville-appel-candidatures-marche-noel-2026-843618-2026-70815",
+  },
+  {
+    slug: "wanterfestival-remich-2026",
+    titre: "Wanterfestival : marché de Noël de Remich",
+    description:
+      "Les trois premiers week-ends de l'Avent, Remich vit Noël : marché de Noël, patinoire synthétique (jusqu'au 15 janvier), lecture pour enfants et arrivée de saint Nicolas en bateau le 29 novembre, Big Christmas Wind Orchestra & Choir le 5 décembre, karaoké de Noël le 12 décembre.",
+    debut: "2026-11-28T14:00:00+01:00",
+    fin: "2026-12-13T20:00:00+01:00",
+    horaires:
+      "Marché les 28-29 novembre, 5-6 et 12-13 décembre : samedi 14 h-21 h, dimanche 14 h-20 h",
+    lieu: "Centre de Remich",
+    ville: "Remich",
+    pays: "LU",
+    organisateur: "Ville de Remich",
+    lienExterne: "https://visitremich.lu/fr/agenda/2_wanterfestival-handwierkschreschtmoart-3-3/",
+  },
 ]

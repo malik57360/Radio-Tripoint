@@ -32,7 +32,7 @@ const dateParis = (d: Date) =>
  */
 export async function consignesGuide(l: Langue): Promise<{ fixe: string; variable: string }> {
   const [evenements, emissions, articles, meteo] = await Promise.all([
-    listerEvenements({ periode: "mois", langue: "fr" }),
+    listerEvenements({ periode: "tout", langue: "fr" }),
     listerEmissions("fr"),
     articlesRecents(12, undefined, "fr"),
     meteoGuide(),
@@ -41,13 +41,13 @@ export async function consignesGuide(l: Langue): Promise<{ fixe: string; variabl
 
   const agenda = evenements.length
     ? evenements
-        .slice(0, 25)
+        .slice(0, 40)
         .map(
           (e) =>
-            `- ${e.titre} — ${e.ville} (${e.pays}), ${e.lieu} — ${e.debut.slice(0, 10)}${e.horaires ? `, ${e.horaires}` : ""}${e.gratuit ? ", gratuit" : ""} — ${lien(`/agenda/${e.slug}`)}`,
+            `- ${e.titre} — ${e.ville} (${e.pays}), ${e.lieu} — ${e.debut.slice(0, 10)}${e.fin && e.fin.slice(0, 10) !== e.debut.slice(0, 10) ? ` au ${e.fin.slice(0, 10)}` : ""}${e.horaires ? `, ${e.horaires}` : ""}${e.gratuit ? ", gratuit" : ""} — ${lien(`/agenda/${e.slug}`)}`,
         )
         .join("\n")
-    : "(aucun événement publié pour le mois à venir)"
+    : "(aucun événement à venir publié)"
 
   const grille = emissions
     .map((e) => {
@@ -97,7 +97,7 @@ Pour toute question de météo, réponds avec ces prévisions, sans recherche we
 
 ${meteo}
 
-# Agenda publié par Radio Tripoint (mois à venir)
+# Agenda publié par Radio Tripoint (tous les événements à venir)
 ${agenda}
 
 # Émissions de Radio Tripoint
