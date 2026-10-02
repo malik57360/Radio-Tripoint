@@ -46,7 +46,15 @@ export function Horloge({ genereLe }: { genereLe: number }) {
       <p className="text-2xl leading-none font-extrabold">{heure(new Date(maintenant))}</p>
       <p className="text-encre-3 mt-1 inline-flex items-center gap-1.5 text-[0.7rem]">
         <RefreshCw className={cn("size-3", enCours && "text-accent animate-spin")} aria-hidden />
-        {enCours ? "Actualisation…" : `Actualisation auto · dans ${reste} s`}
+        {enCours ? (
+          "Actualisation…"
+        ) : (
+          <>
+            <span className="hidden sm:inline">Actualisation auto · dans </span>
+            <span className="sm:hidden">auto · </span>
+            {reste} s
+          </>
+        )}
       </p>
     </div>
   )

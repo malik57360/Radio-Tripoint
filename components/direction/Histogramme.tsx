@@ -33,6 +33,7 @@ export function Histogramme({
   hauteur = 160,
   pas = 1,
   enCours = false,
+  serre = false,
 }: {
   points: Point[]
   unite: string
@@ -41,6 +42,8 @@ export function Histogramme({
   pas?: number
   /** La dernière barre est une période en cours (moins opaque). */
   enCours?: boolean
+  /** Beaucoup de barres (courbe de la journée) : pas d'espace entre elles. */
+  serre?: boolean
 }) {
   const [actif, setActif] = useState<number | null>(null)
   const max = plafondRond(Math.max(...points.map((p) => p.valeur), 0))
@@ -61,7 +64,10 @@ export function Histogramme({
           </div>
         ))}
         <div
-          className="absolute inset-y-0 right-0 left-8 flex items-end gap-[2px]"
+          className={cn(
+            "absolute inset-y-0 right-0 left-8 flex items-end",
+            serre ? "gap-0" : "gap-[2px]",
+          )}
           onMouseLeave={() => setActif(null)}
         >
           {points.map((p, i) => {
@@ -78,7 +84,8 @@ export function Histogramme({
               >
                 <span
                   className={cn(
-                    "bg-accent block w-full rounded-t-[4px] transition-opacity",
+                    "bg-accent block w-full transition-opacity",
+                    serre ? "rounded-t-[1px]" : "rounded-t-[4px]",
                     actif !== null && actif !== i && "opacity-40",
                     enCours && derniere && "opacity-60",
                   )}
@@ -103,7 +110,12 @@ export function Histogramme({
           </div>
         )}
       </div>
-      <div className="text-encre-3 mt-1.5 ml-8 flex gap-[2px] text-[0.65rem]">
+      <div
+        className={cn(
+          "text-encre-3 mt-1.5 ml-8 flex text-[0.65rem]",
+          serre ? "gap-0" : "gap-[2px]",
+        )}
+      >
         {points.map((p, i) => (
           <span
             key={p.cle}

@@ -105,7 +105,11 @@ export function Tuile({
       <p className="surtitre">{libelle}</p>
       <p
         className={cn(
-          "mt-2 text-[2rem] leading-none font-extrabold tracking-tight",
+          "mt-2 leading-none font-extrabold tracking-tight",
+          // Un nom (émission…) se lit en plus petit qu'un chiffre.
+          typeof valeur === "string" && valeur.length > 10
+            ? "text-xl leading-tight"
+            : "text-[2rem]",
           accent && "text-accent",
           valeur === null && "text-encre-3",
         )}
@@ -183,4 +187,63 @@ export function AActiver({ titre, children }: { titre: string; children: ReactNo
       <div className="text-encre-2 mt-2 text-sm leading-relaxed">{children}</div>
     </div>
   )
+}
+
+/** Titre de page : ce qu'on regarde et d'où viennent les chiffres. */
+export function EnTetePage({
+  titre,
+  source,
+  children,
+}: {
+  titre: string
+  source: string
+  children?: ReactNode
+}) {
+  return (
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{titre}</h1>
+        <p className="text-encre-3 mt-1 text-xs">{source}</p>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+/** Raccourci vers une page, avec son chiffre clé. */
+export function CarteLien({
+  href,
+  titre,
+  valeur,
+  detail,
+}: {
+  href: string
+  titre: string
+  valeur: ReactNode
+  detail?: ReactNode
+}) {
+  return (
+    <a
+      href={href}
+      className="border-trait bg-carte hover:border-accent/60 group flex flex-col rounded-xl border p-4 transition-colors"
+    >
+      <span className="surtitre flex items-center justify-between">
+        {titre}
+        <ArrowRight
+          className="text-encre-3 group-hover:text-accent size-4 transition-transform group-hover:translate-x-0.5"
+          aria-hidden
+        />
+      </span>
+      <span className="mt-2 text-2xl leading-none font-extrabold">{valeur}</span>
+      {detail && <span className="text-encre-3 mt-2 text-xs">{detail}</span>}
+    </a>
+  )
+}
+
+export const FUSEAU = "Europe/Paris"
+export const date = (iso: string | number, options: Intl.DateTimeFormatOptions) =>
+  new Date(iso).toLocaleString("fr-FR", { timeZone: FUSEAU, ...options })
+export const duree = (s: number) => {
+  const m = Math.round(s / 60)
+  return m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, "0")}` : `${m} min`
 }

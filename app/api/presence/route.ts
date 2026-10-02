@@ -1,4 +1,4 @@
-import { jourParis, redis } from "@/lib/direction/redis"
+import { jourParis, redis, trancheParis } from "@/lib/direction/redis"
 
 /**
  * Présence en direct, pour le tableau de bord de la direction.
@@ -62,6 +62,15 @@ export async function POST(request: Request) {
     etat === "podcast" && typeof corps.episode === "string"
       ? corps.episode.replace(/[^\w-]/g, "").slice(0, 120)
       : null
+  const jour = jourParis()
+  // Première apparition de cet onglet depuis 30 min : une visite, et son heure d'arrivée.
+  const arrivee = await redis([
+    ["SET", `rt:s:${id}`, maintenant, "NX", "EX", 1800],
+    ["GET", `rt:s:${id}`],
+  ])
+  if (!arrivee) return vide()
+  const nouvelle = arrivee[0] === "OK"
+
   const fiche = {
     page,
     etat,
@@ -71,23 +80,25 @@ export async function POST(request: Request) {
     appareil: appareil(ua),
     langue: /^\/(de|lb|en|es)(\/|$)/.exec(page)?.[1] ?? "fr",
     vu: maintenant,
+    // Les anciennes fiches valaient « 1 » : on ne garde qu'un horodatage plausible.
+    debut: Number(arrivee[1]) > 1e12 ? Number(arrivee[1]) : maintenant,
   }
 
-  const jour = jourParis()
   const res = await redis([
     ["ZREMRANGEBYSCORE", "rt:presence", 0, maintenant - FENETRE_MS],
     ["ZADD", "rt:presence", maintenant, id],
     ["SET", `rt:p:${id}`, JSON.stringify(fiche), "EX", 70],
     ["ZCARD", "rt:presence"],
-    // Première apparition de cet onglet depuis 30 min : une visite.
-    ["SET", `rt:s:${id}`, 1, "NX", "EX", 1800],
   ])
   if (!res) return vide()
 
   const suite: (string | number)[][] = []
   const enLigne = Number(res[3]) || 0
   suite.push(["ZADD", "rt:pics", "GT", enLigne, jour])
-  if (res[4] === "OK") suite.push(["HINCRBY", `rt:j:${jour}`, "visites", 1])
+  // Courbe du jour : le maximum de personnes en ligne par tranche de 5 minutes.
+  suite.push(["ZADD", `rt:c:${jour}`, "GT", enLigne, trancheParis(maintenant)])
+  suite.push(["EXPIRE", `rt:c:${jour}`, 8 * 24 * 3600])
+  if (nouvelle) suite.push(["HINCRBY", `rt:j:${jour}`, "visites", 1])
 
   // Événements de lecture, envoyés une fois au démarrage.
   if (corps.evenement === "direct") suite.push(["HINCRBY", `rt:j:${jour}`, "direct", 1])

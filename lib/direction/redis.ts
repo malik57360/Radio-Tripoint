@@ -46,6 +46,19 @@ export function jourParis(d = new Date()) {
   }).format(d)
 }
 
+/** Tranche de 5 minutes à l'heure de Paris, « HH:MM ». */
+export function trancheParis(ms = Date.now()) {
+  const [h, m] = new Intl.DateTimeFormat("fr-FR", {
+    timeZone: "Europe/Paris",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  })
+    .format(new Date(ms))
+    .split(":")
+  return `${h}:${String(Math.floor(Number(m) / 5) * 5).padStart(2, "0")}`
+}
+
 const DUREE_COMPTEURS = 400 * 24 * 3600
 
 /** Incrémente un compteur du jour (rt:j:AAAA-MM-JJ → champ). Silencieux si Redis est absent. */

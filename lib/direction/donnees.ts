@@ -9,7 +9,7 @@ import { programmeEnCours, programmeSuivant } from "@/lib/radio/grille"
 import { versGrille } from "@/lib/radio/types"
 import { radioConfig } from "@/config/radioConfig"
 import { site } from "@/config/site"
-import { jourParis, redis, redisActif } from "./redis"
+import { jourParis, redis, redisActif, trancheParis } from "./redis"
 
 /**
  * Toutes les données du tableau de bord de la direction. Règle unique :
@@ -107,7 +107,11 @@ async function repartition(
   }))
 }
 
-export async function audience() {
+/** Périodes proposées par l'écran Audience, en jours. */
+export const PERIODES = [7, 30, 90] as const
+export type Periode = (typeof PERIODES)[number]
+
+export async function audience(jours: Periode = 30) {
   if (!analyticsActif()) return null
   const maintenant = new Date()
   const minuit = minuitParis(maintenant)
@@ -138,22 +142,23 @@ export async function audience() {
     compte(jour(-1), jour(0)),
     compte(jour(-6), demain),
     compte(jour(-13), jour(-6)),
-    compte(jour(-29), demain),
-    compte(jour(-59), jour(-29)),
-    repartition("day", jour(-29), demain, 31),
+    compte(jour(1 - jours), demain),
+    compte(jour(1 - 2 * jours), jour(1 - jours)),
+    repartition("day", jour(1 - jours), demain, 100),
     repartition("hour", minuit, maintenant, 24),
-    repartition("requestPath", jour(-29), demain, 12),
-    repartition("country", jour(-29), demain, 10),
-    repartition("deviceType", jour(-29), demain, 5),
-    repartition("osName", jour(-29), demain, 6),
-    repartition("browserName", jour(-29), demain, 6),
-    repartition("referrerHostname", jour(-29), demain, 10),
-    repartition("utmSource", jour(-29), demain, 8),
+    repartition("requestPath", jour(1 - jours), demain, 15),
+    repartition("country", jour(1 - jours), demain, 12),
+    repartition("deviceType", jour(1 - jours), demain, 5),
+    repartition("osName", jour(1 - jours), demain, 6),
+    repartition("browserName", jour(1 - jours), demain, 6),
+    repartition("referrerHostname", jour(1 - jours), demain, 12),
+    repartition("utmSource", jour(1 - jours), demain, 8),
   ])
   if (!aujourdhui) return { erreur: true as const }
   const heureCourante = parHeure?.at(-1) ?? null
   return {
     erreur: false as const,
+    jours,
     aujourdhui,
     veille,
     semaine,
@@ -184,6 +189,7 @@ export interface Fiche {
   appareil: string
   langue: string
   vu: number
+  debut?: number
 }
 
 const compterPar = <T>(liste: T[], cle: (x: T) => string | null) => {
@@ -205,6 +211,7 @@ export async function direct() {
     ["ZSCORE", "rt:pics", jour],
     ["ZREVRANGE", "rt:pics", 0, 0, "WITHSCORES"],
     ["HGETALL", `rt:j:${jour}`],
+    ["ZRANGE", `rt:c:${jour}`, 0, -1, "WITHSCORES"],
   ])
   if (!r) return { erreur: true as const }
   const ids = (r[0] as string[] | null) ?? []
@@ -232,8 +239,33 @@ export async function direct() {
     appareils: compterPar(fiches, (f) => f.appareil),
     langues: compterPar(fiches, (f) => f.langue),
     episodes: compterPar(fiches, (f) => f.episode),
+    // Personnes présentes, sans rien qui les identifie : page, lieu approximatif, appareil.
+    actifs: fiches
+      .sort((a, b) => (a.debut ?? a.vu) - (b.debut ?? b.vu))
+      .slice(0, 50)
+      .map((f) => ({
+        page: f.page,
+        etat: f.etat,
+        episode: f.episode,
+        lieu: f.ville ? `${f.ville}${f.pays ? ` (${f.pays})` : ""}` : (f.pays ?? null),
+        appareil: f.appareil,
+        langue: f.langue,
+        depuis: f.debut ?? f.vu,
+      })),
+    courbe: courbeDuJour(r[4]),
     a: maintenant,
   }
+}
+
+/** Les 288 tranches de 5 minutes de la journée jusqu'à maintenant ; une tranche sans signe de vie vaut 0. */
+function courbeDuJour(brut: unknown) {
+  const valeurs = new Map(Object.entries(champs(brut)))
+  const [h, m] = trancheParis().split(":").map(Number)
+  const fin = h * 12 + m / 5
+  return Array.from({ length: fin + 1 }, (_, i) => {
+    const t = `${String(Math.floor(i / 12)).padStart(2, "0")}:${String((i % 12) * 5).padStart(2, "0")}`
+    return { tranche: t, n: valeurs.get(t) ?? 0 }
+  })
 }
 
 /** HGETALL renvoie [champ, valeur, champ, valeur…]. */
@@ -315,7 +347,7 @@ export async function radio() {
       is_live?: boolean
     }>(`${base}/track/current`),
     json<{ title?: string; artist?: string | null; started_at?: string; duration?: number }[]>(
-      `${base}/track/ckoi?limit=15`,
+      `${base}/track/ckoi?limit=30`,
     ),
   ])
   const emissions = versGrille(await listerEmissions())
@@ -340,6 +372,7 @@ export async function radio() {
         debut: h.started_at ?? null,
         duree: h.duration ?? null,
       })),
+    grille: emissions,
     programme: programmeEnCours(emissions, maintenant, radioConfig.timeZone),
     suivant: programmeSuivant(emissions, maintenant, radioConfig.timeZone),
   }
@@ -362,13 +395,29 @@ export async function contenu() {
   const aVenir = evenements
     .filter((e) => Date.parse(e.fin ?? e.debut) >= minuitParis().getTime())
     .sort((a, b) => a.debut.localeCompare(b.debut))
+  // Articles publiés par semaine (lundi), sur 12 semaines.
+  const lundi = (t: number) => {
+    const d = new Date(t)
+    const decalage = (d.getUTCDay() + 6) % 7
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - decalage)
+  }
+  const cetteSemaine = lundi(maintenant)
+  const parSemaine = Array.from({ length: 12 }, (_, i) => {
+    const debut = cetteSemaine - (11 - i) * 7 * JOUR_MS
+    return {
+      debut,
+      n: dates.filter((d) => d >= debut && d < debut + 7 * JOUR_MS).length,
+    }
+  })
   return {
     articles: {
       total: articles.length,
+      dates: dates.length,
+      parSemaine,
       semaine: dates.filter((d) => maintenant - d < 7 * JOUR_MS).length,
       mois: dates.filter((d) => maintenant - d < 30 * JOUR_MS).length,
       parCategorie,
-      derniers: articles.slice(0, 6).map((a) => ({
+      derniers: articles.slice(0, 15).map((a) => ({
         titre: a.titre,
         slug: a.slug,
         date: a.publieLe ?? null,
@@ -386,7 +435,7 @@ export async function contenu() {
     evenements: {
       aVenir: aVenir.length,
       semaine: aVenir.filter((e) => Date.parse(e.debut) - maintenant < 7 * JOUR_MS).length,
-      prochains: aVenir.slice(0, 6).map((e) => ({
+      prochains: aVenir.slice(0, 12).map((e) => ({
         titre: e.titre,
         debut: e.debut,
         ville: e.ville,
@@ -443,4 +492,40 @@ export async function technique() {
     redis: redisActif(),
     analytics: analyticsActif(),
   }
+}
+
+/* ───────────────────────── Alertes ───────────────────────── */
+
+export const formulairesBranches = () =>
+  Boolean(process.env.RESEND_API_KEY || process.env.FORM_WEBHOOK_URL)
+
+export type Alerte = { texte: string; page: string }
+
+/** Ce qui mérite l'attention de la direction, avec la page où regarder. */
+export function alertes(
+  tech: Awaited<ReturnType<typeof technique>>,
+  rad: Awaited<ReturnType<typeof radio>>,
+  formulairesPerdus = 0,
+): Alerte[] {
+  const a: Alerte[] = []
+  if (!tech.site.ok) a.push({ texte: "Le site ne répond pas correctement.", page: "technique" })
+  if (!tech.flux.ok || (rad.flux && rad.flux !== "started"))
+    a.push({
+      texte: "Le flux radio ne répond pas : l'antenne est peut-être coupée.",
+      page: "antenne",
+    })
+  if (!formulairesBranches())
+    a.push({
+      texte: `Les formulaires du site (contact, publicité, newsletter, infos) ne sont pas branchés : les messages envoyés ne vous parviennent pas${
+        formulairesPerdus
+          ? ` (${formulairesPerdus} perdu${formulairesPerdus > 1 ? "s" : ""} en 30 jours)`
+          : ""
+      }.`,
+      page: "engagement",
+    })
+  if (!tech.redis)
+    a.push({ texte: "Le compteur « en ce moment » n'est pas encore activé.", page: "direct" })
+  if (!tech.analytics)
+    a.push({ texte: "Les statistiques d'audience ne sont pas encore reliées.", page: "audience" })
+  return a
 }
