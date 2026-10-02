@@ -44,7 +44,7 @@ export default async function PageFlyer({
     <>
       <EnTetePage
         titre="Flyer du week-end"
-        source="Composé automatiquement à partir de l'agenda publié · format Instagram 1080 × 1350"
+        source="Composé automatiquement à partir de l'agenda publié · format story Instagram et Facebook, 1080 × 1920"
       >
         <a
           href={image}
@@ -75,13 +75,13 @@ export default async function PageFlyer({
         ))}
       </nav>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,26rem)_1fr]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,22rem)_1fr]">
         {/* eslint-disable-next-line @next/next/no-img-element -- image générée, déjà au bon format */}
         <img
           src={image}
           alt={`Flyer du week-end du ${w.titreDates}`}
           width={1080}
-          height={1350}
+          height={1920}
           className="border-trait h-auto w-full rounded-xl border"
         />
         <div className="space-y-5">
@@ -99,7 +99,10 @@ export default async function PageFlyer({
                 Le flyer reprend l&apos;agenda du site : un événement ajouté à l&apos;agenda y
                 apparaît tout seul.
               </li>
-              <li>Jusqu&apos;à 7 événements ; au-delà, le flyer renvoie vers l&apos;agenda.</li>
+              <li>
+                Jusqu&apos;à 6 événements ; au-delà, le flyer renvoie vers le site. Les foires de
+                plusieurs semaines déjà commencées n&apos;y figurent pas.
+              </li>
               <li>
                 Chaque jeudi, le flyer du week-end vous est aussi envoyé dans la conversation.
               </li>

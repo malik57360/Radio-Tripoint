@@ -46,7 +46,7 @@ const nextConfig: NextConfig = {
   },
   // Le flyer du week-end lit ses polices et le logo sur le disque.
   outputFileTracingIncludes: {
-    "/api/flyer-weekend": ["./assets/fonts/**", "./public/brand/**"],
+    "/api/flyer-weekend": ["./assets/fonts/**", "./public/media/agenda/**"],
   },
   images: {
     qualities: [75, 85],

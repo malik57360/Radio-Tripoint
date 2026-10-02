@@ -19,4 +19,13 @@ export interface Evenement extends Demo {
   lienExterne?: string
   organisateur?: string
   visuel?: Visuel
+  /** Textes courts pour le flyer du week-end (sinon tirés du titre et de la description). */
+  flyer?: {
+    titre?: string
+    accroche?: string
+    /** « ENTRÉE GRATUITE », « ENTRÉE 10 € »… uniquement ce qui est publié. */
+    tarif?: string
+    /** Lieu court : « Schengen-Lyzeum, Perl (DE) ». */
+    lieu?: string
+  }
 }

@@ -152,6 +152,11 @@ export const evenements: Evenement[] = [
       800,
       1190,
     ),
+    flyer: {
+      accroche: "Musique avec Cony & Marcel Delvo",
+      tarif: "ENTRÉE GRATUITE · Flamm 7,50 €",
+      lieu: "Metrich",
+    },
   },
   {
     slug: "musek-greechen-rustroff-2026",
@@ -169,6 +174,12 @@ export const evenements: Evenement[] = [
       799,
       525,
     ),
+    flyer: {
+      titre: "Musek & Greechen",
+      accroche: "Canti di Corsica + Manfred Pohlmann & Yannick Monot",
+      tarif: "ENTRÉE 10 €",
+      lieu: "Foyer, Rustroff",
+    },
   },
   {
     slug: "salon-du-livre-rettel-2026",
@@ -189,6 +200,12 @@ export const evenements: Evenement[] = [
       800,
       1128,
     ),
+    flyer: {
+      titre: "Salon du Livre",
+      accroche: "Ateliers · quiz · tombola",
+      tarif: "ENTRÉE GRATUITE",
+      lieu: "Salle polyvalente, Rettel",
+    },
   },
   {
     slug: "exposition-cartes-postales-faiences-sierck-2026",
@@ -209,6 +226,12 @@ export const evenements: Evenement[] = [
       800,
       1200,
     ),
+    flyer: {
+      titre: "Cartes postales & faïences",
+      accroche: "Exposition de pièces anciennes de Sierck",
+      tarif: "ENTRÉE GRATUITE",
+      lieu: "Espace Valette, Sierck-les-Bains",
+    },
   },
   {
     slug: "marche-rose-sierck-2026",
@@ -227,6 +250,11 @@ export const evenements: Evenement[] = [
       800,
       1066,
     ),
+    flyer: {
+      accroche: "4, 8 ou 12 km, dons reversés à la lutte contre le cancer",
+      tarif: "INSCRIPTION LIBRE",
+      lieu: "Parc Valette, Sierck-les-Bains",
+    },
   },
   {
     slug: "marche-de-la-pomme-apach-2026",
@@ -245,6 +273,7 @@ export const evenements: Evenement[] = [
       800,
       1131,
     ),
+    flyer: { accroche: "Producteurs, artisans et jus de pomme artisanal", lieu: "Belmach, Apach" },
   },
   // ─── Ajouts du 2 octobre 2026, vérifiés sur les sites des organisateurs
   // et des communes (sources dans lienExterne). Sans affiche reçue.
@@ -266,6 +295,11 @@ export const evenements: Evenement[] = [
       900,
       949,
     ),
+    flyer: {
+      titre: "PerlCross",
+      accroche: "Course de vélo internationale",
+      lieu: "Schengen-Lyzeum, Perl (DE)",
+    },
   },
   {
     slug: "hierschtmoart-remich-2026",
@@ -280,6 +314,11 @@ export const evenements: Evenement[] = [
     organisateur: "Ville de Remich",
     lienExterne: "https://visitremich.lu/fr/events-new/",
     visuel: afficheRadio("hierschtmoart-remich-2026", "Hierschtmoart, 11 octobre 2026 à Remich"),
+    flyer: {
+      titre: "Hierschtmoart",
+      accroche: "Marché d'automne, concerts et animations enfants",
+      lieu: "Place Dr F. Kons, Remich (LU)",
+    },
   },
   {
     slug: "wein-und-kellerfest-perl-2026",
@@ -298,6 +337,11 @@ export const evenements: Evenement[] = [
       "wein-und-kellerfest-perl-2026",
       "Perler Wein- und Kellerfest, fin octobre 2026",
     ),
+    flyer: {
+      titre: "Wein- und Kellerfest",
+      accroche: "Caves ouvertes à Perl, Oberperl et Sehndorf",
+      lieu: "Perl (DE)",
+    },
   },
   {
     slug: "betes-et-sorcieres-chateau-sierck-2026",
@@ -320,6 +364,12 @@ export const evenements: Evenement[] = [
       540,
       540,
     ),
+    flyer: {
+      titre: "Bêtes & Sorcières",
+      accroche: "Halloween au château : contes, ateliers, maquillage",
+      tarif: "ENTRÉE 8 €",
+      lieu: "Château de Sierck",
+    },
   },
   {
     slug: "insomnie-pepito-mateo-sierck-2026",
@@ -339,6 +389,12 @@ export const evenements: Evenement[] = [
       1200,
       800,
     ),
+    flyer: {
+      titre: "Insomnie",
+      accroche: "Spectacle du conteur Pépito Matéo",
+      tarif: "SUR RÉSERVATION",
+      lieu: "Espace Valette, Sierck-les-Bains",
+    },
   },
   {
     slug: "marche-medieval-remich-2026",
@@ -359,6 +415,11 @@ export const evenements: Evenement[] = [
       1920,
       1275,
     ),
+    flyer: {
+      titre: "Marché médiéval",
+      accroche: "Saltimbanques, artisans et métiers d'antan",
+      lieu: "Place Dr F. Kons, Remich (LU)",
+    },
   },
   {
     slug: "loup-garou-halloween-chateau-sierck-2026",
@@ -381,6 +442,12 @@ export const evenements: Evenement[] = [
       540,
       540,
     ),
+    flyer: {
+      titre: "Loup-Garou au château",
+      accroche: "Jeu grandeur nature spécial Halloween, dès 16 ans",
+      tarif: "16 €",
+      lieu: "Château de Sierck",
+    },
   },
   {
     slug: "marche-de-noel-thionville-2026",
@@ -403,6 +470,11 @@ export const evenements: Evenement[] = [
       1200,
       630,
     ),
+    flyer: {
+      titre: "Marché de Noël",
+      accroche: "Chalets, patinoire, mapping et manèges",
+      lieu: "Centre-ville, Thionville",
+    },
   },
   {
     slug: "wanterfestival-remich-2026",
@@ -424,5 +496,10 @@ export const evenements: Evenement[] = [
       1600,
       1067,
     ),
+    flyer: {
+      titre: "Wanterfestival",
+      accroche: "Marché de Noël et patinoire",
+      lieu: "Remich (LU)",
+    },
   },
 ]
