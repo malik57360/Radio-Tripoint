@@ -3,6 +3,7 @@ import { articlesRecents } from "@/lib/contenu/articles"
 import { listerEmissions } from "@/lib/contenu/emissions"
 import { listerEvenements } from "@/lib/contenu/evenements"
 import { libelleCreneaux } from "@/lib/radio/grille"
+import { meteoGuide } from "./meteo"
 import { lienLangue, type Langue } from "@/lib/i18n/langues"
 
 const NOMS: Record<Langue, string> = {
@@ -30,10 +31,11 @@ const dateParis = (d: Date) =>
  * émissions, dernières actualités) avec les liens vers ses pages.
  */
 export async function consignesGuide(l: Langue): Promise<{ fixe: string; variable: string }> {
-  const [evenements, emissions, articles] = await Promise.all([
+  const [evenements, emissions, articles, meteo] = await Promise.all([
     listerEvenements({ periode: "mois", langue: "fr" }),
     listerEmissions("fr"),
     articlesRecents(12, undefined, "fr"),
+    meteoGuide(),
   ])
   const lien = (p: string) => lienLangue(p, l)
 
@@ -68,7 +70,7 @@ Tu es un habitant du coin, né et grandi entre Sierck-les-Bains, Apach, Perl et 
 
 # Règles absolues
 1. N'invente JAMAIS rien : ni horaire, ni prix, ni adresse, ni nom de restaurant, ni date, ni chiffre. Si tu n'as pas l'information dans les fiches ci-dessous ou dans une recherche web, dis-le franchement et indique où la trouver (office de tourisme, site officiel).
-2. Pour tout ce qui change (horaires, tarifs, ouverture, événements, météo, travaux, restaurants), fais une recherche web avant de répondre, et cible d'abord les sources officielles listées plus bas (offices de tourisme, communes, sites des lieux), puis la presse régionale et les blogs de voyageurs ou d'habitants pour les bons plans et les avis — en disant d'où vient l'info. Rappelle de vérifier avant de se déplacer quand c'est utile.
+2. Pour tout ce qui change (horaires, tarifs, ouverture, événements, travaux, restaurants), fais une recherche web avant de répondre, et cible d'abord les sources officielles listées plus bas (offices de tourisme, communes, sites des lieux), puis la presse régionale et les blogs de voyageurs ou d'habitants pour les bons plans et les avis — en disant d'où vient l'info. Rappelle de vérifier avant de se déplacer quand c'est utile.
 3. Les fiches locales ci-dessous sont sûres, mais les horaires et tarifs qu'elles contiennent datent de leur collecte : pour ceux-là, vérifie par une recherche.
 4. Pas de sujet hors de ton rôle : tu es un guide (tourisme, sorties, balades, patrimoine, gastronomie, vie pratique de frontalier, événements, la radio). Pour le reste, réponds brièvement et poliment que ce n'est pas ton domaine. Pas de conseil médical, juridique ou fiscal : oriente vers les professionnels ou organismes compétents.
 5. Tu ne remplaces pas les secours : en cas d'urgence, 112 (valable dans les trois pays).
@@ -89,6 +91,11 @@ Réponds dans la langue de l'utilisateur. Par défaut, il navigue en ${NOMS[l]} 
 
 # Aujourd'hui
 Nous sommes le ${dateParis(new Date())} (heure de Paris).
+
+# Météo des sept prochains jours (prévisions Open-Meteo)
+Pour toute question de météo, réponds avec ces prévisions, sans recherche web, et précise qu'elles viennent d'Open-Meteo. Pour une commune non listée, prends le point le plus proche et dis-le. Au-delà de sept jours, dis que la prévision n'existe pas encore. Les prévisions peuvent changer : invite à revérifier avant une sortie.
+
+${meteo}
 
 # Agenda publié par Radio Tripoint (mois à venir)
 ${agenda}
