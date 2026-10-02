@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
   },
   images: {
     qualities: [75, 85],
+    // Visuels d'événements publiés par les organisateurs et offices de tourisme.
+    remotePatterns: [
+      { protocol: "https", hostname: "www.info-lux.com", pathname: "/wp-content/uploads/**" },
+      { protocol: "https", hostname: "visitremich.lu", pathname: "/wp-content/uploads/**" },
+      { protocol: "https", hostname: "www.jds.fr", pathname: "/medias/image/**" },
+    ],
     formats: ["image/avif", "image/webp"],
   },
   async redirects() {

@@ -7,6 +7,22 @@ const affiche = (slug: string, alt: string, largeur: number, hauteur: number) =>
   hauteur,
 })
 
+/** Visuel publié par l'organisateur ou l'office de tourisme, servi depuis sa source. */
+const distant = (src: string, alt: string, largeur: number, hauteur: number) => ({
+  src,
+  alt,
+  largeur,
+  hauteur,
+})
+
+/** Affiche réalisée par Radio Tripoint quand l'organisateur n'en publie pas de libre. */
+const afficheRadio = (slug: string, alt: string) => ({
+  src: `/media/agenda/${slug}.jpg`,
+  alt: `Affiche Radio Tripoint : ${alt}`,
+  largeur: 800,
+  hauteur: 1000,
+})
+
 /**
  * Événements de l'agenda, repris des affiches publiées sur l'ancienne page
  * « Agenda ». Tout vient de l'affiche : date, heure, lieu, tarifs, contacts.
@@ -245,6 +261,10 @@ export const evenements: Evenement[] = [
     ville: "Perl",
     pays: "DE",
     lienExterne: "https://www.perlcross.de/bienvenue.html",
+    visuel: afficheRadio(
+      "bauhaus-perlcross-perl-2026",
+      "BAUHAUS PERLCROSS, 3 et 4 octobre 2026 à Perl",
+    ),
   },
   {
     slug: "hierschtmoart-remich-2026",
@@ -258,6 +278,7 @@ export const evenements: Evenement[] = [
     pays: "LU",
     organisateur: "Ville de Remich",
     lienExterne: "https://visitremich.lu/fr/events-new/",
+    visuel: afficheRadio("hierschtmoart-remich-2026", "Hierschtmoart, 11 octobre 2026 à Remich"),
   },
   {
     slug: "wein-und-kellerfest-perl-2026",
@@ -272,6 +293,10 @@ export const evenements: Evenement[] = [
     ville: "Perl",
     pays: "DE",
     lienExterne: "https://www.festivalsindeutschland.de/festival/perler-wein-und-kellerfest",
+    visuel: afficheRadio(
+      "wein-und-kellerfest-perl-2026",
+      "Perler Wein- und Kellerfest, fin octobre 2026",
+    ),
   },
   {
     slug: "betes-et-sorcieres-chateau-sierck-2026",
@@ -288,6 +313,12 @@ export const evenements: Evenement[] = [
     pays: "FR",
     lienExterne:
       "https://www.info-lux.com/sierck-les-bains-patrimoine-festival-betes-sorcieres-le-chateau-de-sierck-senchante/themes/evenements-traditions/fete/",
+    visuel: distant(
+      "https://www.info-lux.com/wp-content/uploads/2026/09/festival-betes-sorcieres-le-chateau-de-si-sierck-les-bains-halloween-2.png",
+      "Visuel du festival Bêtes & Sorcières au Château de Sierck (photo : Sybil Becker)",
+      540,
+      540,
+    ),
   },
   {
     slug: "insomnie-pepito-mateo-sierck-2026",
@@ -301,6 +332,12 @@ export const evenements: Evenement[] = [
     pays: "FR",
     organisateur: "Espace Valette",
     lienExterne: "https://nittachowa.sumupstore.com",
+    visuel: distant(
+      "https://www.info-lux.com/wp-content/uploads/2026/09/insomnie-pepito-mateo-sierck-les-bains-2026.jpg",
+      "Visuel du spectacle Insomnie de Pépito Matéo",
+      1200,
+      800,
+    ),
   },
   {
     slug: "marche-medieval-remich-2026",
@@ -315,6 +352,12 @@ export const evenements: Evenement[] = [
     pays: "LU",
     organisateur: "Ville de Remich et Lorraine Médiévale",
     lienExterne: "https://visitremich.lu/fr/agenda/2_mettelaltermoart2022-2-2-2-2/",
+    visuel: distant(
+      "https://visitremich.lu/wp-content/uploads/sites/4/2018/07/knight-1421358_1920.jpg",
+      "Chevalier en armure, visuel du marché médiéval de Remich (Visit Remich)",
+      1920,
+      1275,
+    ),
   },
   {
     slug: "loup-garou-halloween-chateau-sierck-2026",
@@ -331,6 +374,12 @@ export const evenements: Evenement[] = [
     pays: "FR",
     lienExterne:
       "https://www.info-lux.com/sierck-les-bains-patrimoine-soiree-loup-garou-special-halloween/pays/france/grand-est/moselle-grand-est/sierck-les-bains/",
+    visuel: distant(
+      "https://www.info-lux.com/wp-content/uploads/2026/09/soiree-loup-garou-special-halloween-sierck-les-bains-halloween-2026.png",
+      "Visuel des soirées Loup-Garou spécial Halloween au Château de Sierck (CCB3F)",
+      540,
+      540,
+    ),
   },
   {
     slug: "marche-de-noel-thionville-2026",
@@ -347,6 +396,12 @@ export const evenements: Evenement[] = [
     organisateur: "Ville de Thionville",
     lienExterne:
       "https://moselle-nord.info/thionville-appel-candidatures-marche-noel-2026-843618-2026-70815",
+    visuel: distant(
+      "https://www.jds.fr/medias/image/marche-de-noel-a-thionville-et-animations-268151-1200-630.webp",
+      "Marché de Noël de Thionville (photo : Ville de Thionville)",
+      1200,
+      630,
+    ),
   },
   {
     slug: "wanterfestival-remich-2026",
@@ -362,5 +417,11 @@ export const evenements: Evenement[] = [
     pays: "LU",
     organisateur: "Ville de Remich",
     lienExterne: "https://visitremich.lu/fr/agenda/2_wanterfestival-handwierkschreschtmoart-3-3/",
+    visuel: distant(
+      "https://visitremich.lu/wp-content/uploads/sites/4/2023/12/Remich-Chreschtmoart-2023-byMS-0017-Enhanced-NR.jpg",
+      "Marché de Noël de Remich (photo : Visit Remich)",
+      1600,
+      1067,
+    ),
   },
 ]
