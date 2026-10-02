@@ -9,6 +9,7 @@ import {
   Newspaper,
   Radio,
   ServerCog,
+  Target,
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -18,6 +19,7 @@ export const PAGES = [
   { href: "/direction", libelle: "Vue d'ensemble", court: "Accueil", icone: LayoutDashboard },
   { href: "/direction/direct", libelle: "En direct", court: "Direct", icone: Activity },
   { href: "/direction/mails", libelle: "Mails", court: "Mails", icone: Mail },
+  { href: "/direction/prospection", libelle: "Prospection", court: "Prospection", icone: Target },
   { href: "/direction/audience", libelle: "Audience", court: "Audience", icone: BarChart3 },
   { href: "/direction/antenne", libelle: "Antenne", court: "Antenne", icone: Radio },
   { href: "/direction/engagement", libelle: "Engagement", court: "Engagement", icone: HeartPulse },

@@ -1,6 +1,8 @@
-import { CornerUpLeft, Mail as IconeMail } from "lucide-react"
+import { CornerUpLeft, Mail as IconeMail, PenLine } from "lucide-react"
 import Link from "next/link"
+import { Composer, type ProspectCible } from "@/components/direction/Composer"
 import { Redacteur } from "@/components/direction/Redacteur"
+import { lireSuivi } from "@/lib/direction/prospection"
 import { AActiver, Carte, EnTetePage, Etat, date } from "@/components/direction/ui"
 import { boiteConfiguree, lireMail, listerMails } from "@/lib/direction/mails"
 import { cn } from "@/lib/utils/cn"
@@ -18,7 +20,14 @@ export default async function PageMails({
     <EnTetePage
       titre="Mails"
       source="Boîte info@radio-tripoint-officiel.fr (Webador) · l'IA propose, vous relisez et envoyez"
-    />
+    >
+      <Link
+        href="/direction/mails?nouveau=1"
+        className="bg-accent inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-black"
+      >
+        <PenLine className="size-4" aria-hidden /> Nouveau message
+      </Link>
+    </EnTetePage>
   )
   if (!boiteConfiguree())
     return (
@@ -31,7 +40,21 @@ export default async function PageMails({
       </div>
     )
 
-  const uid = Number((await searchParams).uid) || null
+  const params = await searchParams
+  const p = (k: string) => (typeof params[k] === "string" ? (params[k] as string) : "")
+  const uid = Number(p("uid")) || null
+  const nouveau = p("nouveau") === "1"
+  const siren = /^\d{9}$/.test(p("siren")) ? p("siren") : ""
+  const suivi = siren ? await lireSuivi(siren).catch(() => null) : null
+  const prospect: ProspectCible | undefined = siren
+    ? {
+        siren,
+        nom: p("nom").slice(0, 200),
+        activite: p("activite").slice(0, 100),
+        commune: p("commune").slice(0, 100),
+        dirigeant: p("dirigeant").slice(0, 100) || undefined,
+      }
+    : undefined
   let mails: Awaited<ReturnType<typeof listerMails>>
   let choisi: Awaited<ReturnType<typeof lireMail>> = null
   try {
@@ -98,7 +121,16 @@ export default async function PageMails({
           )}
         </Carte>
 
-        {choisi ? (
+        {nouveau ? (
+          <Composer
+            key={siren || "libre"}
+            prospect={prospect}
+            initial={{
+              a: p("a") || suivi?.email || "",
+              objet: prospect ? `Radio Tripoint × ${prospect.nom}` : "",
+            }}
+          />
+        ) : choisi ? (
           <div className="min-w-0 space-y-4">
             <Carte>
               <p className="text-xl leading-tight font-extrabold">{choisi.sujet}</p>

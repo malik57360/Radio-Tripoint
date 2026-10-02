@@ -1,9 +1,17 @@
 "use server"
 
 import { estConnecte } from "@/lib/direction/acces"
-import { enregistrerBrouillon, envoyerReponse, proposerReponse } from "@/lib/direction/mails"
+import {
+  enregistrerBrouillon,
+  envoyerNouveau,
+  envoyerReponse,
+  proposerMessage,
+  proposerReponse,
+} from "@/lib/direction/mails"
+import { ecrireSuivi, lireSuivi, type Suivi } from "@/lib/direction/prospection"
 
-type Resultat = { ok: true; texte?: string; message?: string } | { ok: false; erreur: string }
+type Resultat =
+  { ok: true; texte?: string; objet?: string; message?: string } | { ok: false; erreur: string }
 
 const uidValide = (uid: unknown) => Number.isInteger(uid) && (uid as number) > 0
 
@@ -35,5 +43,44 @@ export async function actionBrouillon(uid: number, texte: string): Promise<Resul
   return garde(async () => {
     await enregistrerBrouillon(uid, texte.slice(0, 20_000))
     return { ok: true as const, message: "Brouillon rangé dans la boîte (dossier Brouillons)." }
+  })
+}
+
+export async function actionProposerMessage(
+  consigne: string,
+  entreprise?: { nom: string; activite?: string; commune?: string; dirigeant?: string },
+): Promise<Resultat> {
+  return garde(async () => {
+    const r = await proposerMessage({ consigne, entreprise })
+    return { ok: true as const, objet: r.objet, texte: r.texte }
+  })
+}
+
+export async function actionEnvoyerNouveau(
+  a: string,
+  objet: string,
+  texte: string,
+  prospect?: { siren: string; nom: string; commune: string; activite: string },
+): Promise<Resultat> {
+  if (!texte.trim()) return { ok: false, erreur: "Le message est vide." }
+  return garde(async () => {
+    const dest = await envoyerNouveau(a, objet, texte.slice(0, 20_000))
+    // Prospection : la fiche passe à « Contacté » et garde l'adresse utilisée.
+    if (prospect && /^\d{9}$/.test(prospect.siren)) {
+      const avant = await lireSuivi(prospect.siren).catch(() => null)
+      const suivi: Suivi = {
+        statut: !avant || avant.statut === "a_contacter" ? "contacte" : avant.statut,
+        note: avant?.note ?? "",
+        email: dest,
+        telephone: avant?.telephone ?? "",
+        nom: prospect.nom,
+        commune: prospect.commune,
+        activite: prospect.activite,
+        maj: Date.now(),
+        dernierEnvoi: Date.now(),
+      }
+      await ecrireSuivi(prospect.siren, suivi).catch(() => {})
+    }
+    return { ok: true as const, message: `Message envoyé à ${dest}.` }
   })
 }
