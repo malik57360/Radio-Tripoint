@@ -20,8 +20,9 @@ import { libelleCreneaux } from "@/lib/radio/grille"
 const SIGNATURE = "L'équipe Radio Tripoint"
 
 const compte = () => ({
-  user: process.env.SMTP_USER || site.contact.email,
-  pass: process.env.SMTP_PASS ?? "",
+  user: (process.env.SMTP_USER || site.contact.email).trim(),
+  // Un espace collé par mégarde suffit à faire refuser le mot de passe.
+  pass: (process.env.SMTP_PASS ?? "").trim(),
 })
 
 export const boiteConfiguree = smtpConfigure
@@ -37,7 +38,14 @@ async function connecter() {
     greetingTimeout: 10_000,
     socketTimeout: 30_000,
   })
-  await client.connect()
+  try {
+    await client.connect()
+  } catch (e) {
+    const err = e as { authenticationFailed?: boolean; responseText?: string; message?: string }
+    if (err.authenticationFailed)
+      throw new Error("le serveur de Webador refuse l'identifiant ou le mot de passe de la boîte")
+    throw new Error(err.responseText || err.message || "connexion impossible")
+  }
   return client
 }
 

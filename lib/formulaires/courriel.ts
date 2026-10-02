@@ -91,7 +91,7 @@ ${lignes
       port,
       secure: port === 465,
       requireTLS: port !== 465,
-      auth: { user: utilisateur, pass: process.env.SMTP_PASS },
+      auth: { user: utilisateur.trim(), pass: (process.env.SMTP_PASS ?? "").trim() },
       connectionTimeout: 10_000,
       greetingTimeout: 10_000,
       socketTimeout: 15_000,
