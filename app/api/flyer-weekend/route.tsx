@@ -88,8 +88,11 @@ async function imageDe(v?: Visuel): Promise<string | null> {
     const r = await fetch(v.src, { signal: AbortSignal.timeout(5000) })
     if (!r.ok) return null
     let buf: Buffer = Buffer.from(await r.arrayBuffer())
-    let type = r.headers.get("content-type") ?? ""
-    if (!/image\/(png|jpe?g)/.test(type)) {
+    // Le type annoncé ment parfois (WebP servi en « .png ») : on lit la signature.
+    const png = buf.subarray(0, 4).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47]))
+    const jpeg = buf[0] === 0xff && buf[1] === 0xd8
+    let type = png ? "image/png" : "image/jpeg"
+    if (!png && !jpeg) {
       const sharp = (await import("sharp")).default
       buf = await sharp(buf)
         .resize({ width: 500, withoutEnlargement: true })
