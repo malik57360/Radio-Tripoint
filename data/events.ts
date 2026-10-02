@@ -252,11 +252,10 @@ export const evenements: Evenement[] = [
     slug: "bauhaus-perlcross-perl-2026",
     titre: "BAUHAUS PERLCROSS",
     description:
-      "Le cyclo-cross international revient à Perl. Samedi, course internationale de catégorie UCI C2 ; dimanche, manche de la Cyclo-Cross Bundesliga. Parcours de 3 km (75 m de dénivelé) avec planches, escaliers et section de sable, en terrain ouvert à côté du Schengen-Lyzeum. Des courses pour toutes les catégories, des moins de 11 ans aux élites et aux masters.",
+      "Le cyclo-cross international revient à Perl. Samedi, course internationale de catégorie UCI C2 ; dimanche, manche de la Cyclo-Cross Bundesliga. Parcours de 3 km (75 m de dénivelé) avec planches, escaliers et section de sable, en terrain ouvert à côté du Schengen-Lyzeum. Des courses pour toutes les catégories, des moins de 11 ans aux élites et aux masters : élites femmes à 14 h les deux jours, élites hommes à 15 h 10 le samedi.",
     debut: "2026-10-03T09:30:00+02:00",
     fin: "2026-10-04T23:59:00+02:00",
-    horaires:
-      "Samedi 3 octobre dès 9 h 30 (élites femmes 14 h, élites hommes 15 h 10) ; dimanche 4 octobre dès 9 h 20 (élites femmes 14 h)",
+    horaires: "Samedi 3 octobre dès 9 h 30, dimanche 4 octobre dès 9 h 20",
     lieu: "Parcours à côté du Schengen-Lyzeum",
     ville: "Perl",
     pays: "DE",

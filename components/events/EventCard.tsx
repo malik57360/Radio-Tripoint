@@ -1,8 +1,10 @@
 import { MapPin } from "lucide-react"
+import Image from "next/image"
 import Link from "@/components/ui/Lien"
 import { traducteur } from "@/lib/i18n/serveur"
 import { heure, jourNumero, jourSemaine, moisCourt } from "@/lib/utils/dates"
 import type { Evenement } from "@/types/event"
+import { cn } from "@/lib/utils/cn"
 
 export const nomsPays = {
   FR: { fr: "France", de: "Frankreich", lb: "Frankräich", en: "France", es: "Francia" },
@@ -22,7 +24,14 @@ export async function EventCard({
   const l = t.langue
   const quand = e.horaires ?? (e.journee ? null : heure(e.debut, l))
   return (
-    <article className="carte group border-trait grid grid-cols-[4.5rem_1fr] gap-5 border-t pt-5">
+    <article
+      className={cn(
+        "carte group border-trait grid gap-4 border-t pt-5 sm:gap-5",
+        e.visuel
+          ? "grid-cols-[4.5rem_1fr_5.5rem] sm:grid-cols-[4.5rem_1fr_8rem]"
+          : "grid-cols-[4.5rem_1fr]",
+      )}
+    >
       <p className="flex flex-col items-start leading-none">
         <span className="surtitre text-encre-3">{jourSemaine(e.debut, l).slice(0, 3)}.</span>
         <span className="titre-affiche mt-1 text-[2.6rem] tabular-nums">{jourNumero(e.debut)}</span>
@@ -55,6 +64,17 @@ export async function EventCard({
           {e.lieu}
         </p>
       </div>
+      {e.visuel && (
+        <div className="carte-visuel bg-papier-3 relative aspect-[4/5] self-start overflow-hidden">
+          <Image
+            src={e.visuel.src}
+            alt=""
+            fill
+            sizes="(min-width: 640px) 8rem, 5.5rem"
+            className="object-cover"
+          />
+        </div>
+      )}
     </article>
   )
 }
