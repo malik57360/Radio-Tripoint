@@ -89,7 +89,7 @@ export default async function PageAudience({
   const sources = new Map<string, number>()
   for (const s of aud.sources)
     sources.set(origine(s.cle), (sources.get(origine(s.cle)) ?? 0) + s.visiteurs)
-  const pas = jours === 7 ? 1 : jours === 30 ? 7 : 14
+  const pas = jours === 7 ? 1 : jours === 14 ? 2 : 7
 
   return (
     <div className="space-y-4">
@@ -110,7 +110,11 @@ export default async function PageAudience({
               <Evolution actuel={aud.mois.visiteurs} precedent={aud.moisPrec?.visiteurs ?? null} />
             )
           }
-          detail={`vs les ${jours} jours d'avant`}
+          detail={
+            jours * 2 > 31
+              ? "pas de comparaison : Vercel garde 31 jours"
+              : `vs les ${jours} jours d'avant`
+          }
         />
         <Tuile
           libelle={`Pages vues · ${jours} jours`}
@@ -187,14 +191,18 @@ export default async function PageAudience({
                   <tr key={p.cle}>
                     <td className="text-encre-3 px-1 py-2">{i + 1}</td>
                     <td className="max-w-[28rem] truncate px-1 py-2">
-                      <a
-                        href={p.cle}
-                        target="_blank"
-                        rel="noopener"
-                        className="hover:text-accent font-semibold"
-                      >
-                        {libellePage(p.cle)}
-                      </a>
+                      {p.cle === "Autres" ? (
+                        <span className="text-encre-3">Autres pages (regroupées)</span>
+                      ) : (
+                        <a
+                          href={p.cle}
+                          target="_blank"
+                          rel="noopener"
+                          className="hover:text-accent font-semibold"
+                        >
+                          {libellePage(p.cle)}
+                        </a>
+                      )}
                     </td>
                     <td className="px-1 py-2 text-right font-semibold">{nombre(p.pages)}</td>
                     <td className="text-encre-2 px-1 py-2 text-right">{nombre(p.visiteurs)}</td>

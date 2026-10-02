@@ -101,14 +101,15 @@ async function repartition(
   )
   if (!r) return null
   return r.data.map((d) => ({
-    cle: String(d[par] ?? d.timestamp ?? ""),
+    // Vercel regroupe le reste sous « Others ».
+    cle: d[par] === "Others" ? "Autres" : String(d[par] ?? d.timestamp ?? ""),
     visiteurs: Number(d.visitors) || 0,
     pages: Number(d.pageviews) || 0,
   }))
 }
 
-/** Périodes proposées par l'écran Audience, en jours. */
-export const PERIODES = [7, 30, 90] as const
+/** Périodes proposées par l'écran Audience, en jours (l'offre gratuite de Vercel garde 31 jours). */
+export const PERIODES = [7, 14, 30] as const
 export type Periode = (typeof PERIODES)[number]
 
 export async function audience(jours: Periode = 30) {
