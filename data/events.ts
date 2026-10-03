@@ -502,4 +502,29 @@ export const evenements: Evenement[] = [
       lieu: "Remich (LU)",
     },
   },
+  {
+    slug: "mosel-gaming-perl-2026",
+    titre: "Mosel Gaming",
+    description:
+      "Le rendez-vous gaming de la région : jeux de société, consoles et PC, réalité virtuelle et retrogaming, tournois (dont un grand tournoi Mario Kart), concours de cosplay, ateliers pour tous les âges, stands et food trucks. Entrée gratuite.",
+    debut: "2026-10-10T11:00:00+02:00",
+    fin: "2026-10-10T19:00:00+02:00",
+    lieu: "Sporthalle du Schengen-Lyzeum",
+    adresse: "Auf dem Sabel 2, 66706 Perl",
+    ville: "Perl",
+    pays: "DE",
+    gratuit: true,
+    lienExterne: "https://moselgaming.com/ort-zeit/",
+    visuel: affiche(
+      "mosel-gaming-perl-2026",
+      "Mosel Gaming, 10 octobre 2026, 11 h – 19 h : gaming, concours de cosplay, tournois, ateliers",
+      800,
+      1425,
+    ),
+    flyer: {
+      accroche: "Tournois, cosplay, VR, retrogaming et ateliers",
+      tarif: "ENTRÉE GRATUITE",
+      lieu: "Schengen-Lyzeum, Perl (DE)",
+    },
+  },
 ]
