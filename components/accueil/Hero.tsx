@@ -2,107 +2,120 @@ import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "@/components/ui/Lien"
 import { site } from "@/config/site"
-import { Tripoint } from "@/components/marque/Tripoint"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { EnCeMoment } from "@/components/radio/EnCeMoment"
 import { traducteur } from "@/lib/i18n/serveur"
 import type { GrilleClient } from "@/lib/radio/types"
 
 /**
- * Le studio : fond nuit, grand titre, module du direct. Pas de hauteur
- * plein écran vide — le direct est visible sans défiler, même sur 320 px.
+ * L'accueil : le jaune du logo en pleine page, le grand titre en lettrage
+ * condensé, puis le cadran — la graduation d'un poste radio où les trois
+ * pays sont les stations, et l'aiguille rouge marque le direct.
+ * Pas de hauteur plein écran vide : le direct est visible sans défiler.
  */
 export async function Hero({ grille }: { grille: GrilleClient }) {
   const t = await traducteur()
-  const [fr, lu, de] = t(site.pays)
+  const pays = t(site.pays)
   return (
-    <section
-      aria-labelledby="titre-accueil"
-      className="bg-nuit text-nuit-encre relative isolate overflow-hidden"
-    >
-      {site.visuels.hero ? (
-        <>
+    <section aria-labelledby="titre-accueil" className="relative isolate">
+      <div className="bg-accent relative isolate overflow-hidden text-black">
+        {site.visuels.hero && (
           <Image
             src={site.visuels.hero}
             alt=""
             fill
             preload
             sizes="100vw"
-            className="-z-20 object-cover"
+            className="-z-10 object-cover opacity-25 mix-blend-multiply grayscale"
           />
-          <div className="from-nuit via-nuit/85 to-nuit/40 absolute inset-0 -z-10 bg-gradient-to-r" />
-        </>
-      ) : (
-        <Tripoint
-          className="text-nuit-trait pointer-events-none absolute top-[6%] left-[88%] -z-10 h-[150%] w-auto -translate-x-1/2 -translate-y-1/2 sm:top-1/2 lg:left-[46%]"
-          epaisseur={1}
-        />
-      )}
-
-      <div className="conteneur grid gap-10 pt-10 pb-12 sm:pt-14 lg:grid-cols-[1.35fr_1fr] lg:items-end lg:gap-14 lg:pt-20 lg:pb-20">
-        {/* Pas d'animation ici : le titre est l'élément LCP de la page. */}
-        <div>
-          <p className="surtitre text-nuit-encre-2 flex items-center gap-3">
-            <span className="bg-nuit-accent h-px w-8" aria-hidden />
-            {t({
-              fr: "Un média, trois pays, une seule voix",
-              de: "Ein Medium, drei Länder, eine Stimme",
-              lb: "Ee Medium, dräi Länner, eng Stëmm",
-              en: "One media, three countries, one voice",
-              es: "Un medio, tres países, una sola voz",
-            })}
-          </p>
-          <h1
-            id="titre-accueil"
-            className="titre-affiche mt-5 text-[clamp(2.6rem,1.2rem+6.4vw,6.4rem)]"
-          >
+        )}
+        <div className="conteneur pt-10 pb-10 sm:pt-14 lg:pt-16 lg:pb-14">
+          {/* Pas d'animation ici : le titre est l'élément LCP de la page. */}
+          <h1 id="titre-accueil" className="titre-affiche text-[clamp(3.5rem,0.6rem+11vw,12.5rem)]">
             {t({
               fr: "Le Média des",
               de: "Das Medium des",
               lb: "D'Medium vum",
               en: "The media of",
               es: "El medio de",
-            })}{" "}
-            <span className="text-nuit-accent">
-              {t({
-                fr: "trois frontières",
-                // Traits d'union conditionnels : le mot tient sur un téléphone.
-                de: "Drei\u00adländer\u00adecks",
-                lb: "Dräi\u00adlänner\u00adeck",
-                en: "the Three Borders",
-                es: "las Tres Fronteras",
-              })}
-            </span>
+            })}
+            <br />
+            {t({
+              fr: "trois frontières",
+              // Traits d'union conditionnels : le mot tient sur un téléphone.
+              de: "Drei­länder­ecks",
+              lb: "Dräi­länner­eck",
+              en: "the Three Borders",
+              es: "las Tres Fronteras",
+            })}
           </h1>
-          <p className="text-nuit-encre-2 mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.95rem] font-semibold tracking-[0.02em] sm:text-base">
-            <span>{fr}</span>
-            <span className="text-nuit-accent" aria-hidden>
-              ·
-            </span>
-            <span>{lu}</span>
-            <span className="text-nuit-accent" aria-hidden>
-              ·
-            </span>
-            <span>{de}</span>
-          </p>
-          <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
-            <BoutonDirect taille="grand" />
-            <Link href="/emissions" className="btn btn-nuit min-h-14 !px-6">
+          <div className="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-12">
+            <p className="presse max-w-xl text-[1.2rem] leading-snug sm:text-[1.35rem]">
               {t({
-                fr: "Découvrir nos émissions",
-                de: "Unsere Sendungen entdecken",
-                lb: "Eis Sendungen entdecken",
-                en: "Discover our programmes",
-                es: "Descubrir nuestros programas",
-              })}{" "}
-              <ArrowRight className="size-4" aria-hidden />
-            </Link>
+                fr: "La radio de Sierck-les-Bains, là où la France, le Luxembourg et l'Allemagne se touchent. L'actu, la musique et les sorties du territoire, en direct.",
+                de: "Das Radio aus Sierck-les-Bains, wo sich Frankreich, Luxemburg und Deutschland berühren. Nachrichten, Musik und Ausgehtipps aus der Region, live.",
+                lb: "De Radio vu Sierck-les-Bains, do wou Frankräich, Lëtzebuerg an Däitschland sech beréieren. Neiegkeeten, Musek an Ausgoen aus der Regioun, live.",
+                en: "The radio from Sierck-les-Bains, where France, Luxembourg and Germany meet. Local news, music and what's on, live.",
+                es: "La radio de Sierck-les-Bains, donde se tocan Francia, Luxemburgo y Alemania. Actualidad, música y planes del territorio, en directo.",
+              })}
+            </p>
+            <div className="grid gap-3 sm:flex sm:flex-wrap">
+              <BoutonDirect taille="grand" />
+              <Link
+                href="/emissions"
+                className="btn min-h-14 bg-black !px-6 text-white hover:bg-white hover:text-black"
+              >
+                {t({
+                  fr: "Voir les émissions",
+                  de: "Sendungen ansehen",
+                  lb: "Sendunge kucken",
+                  en: "See the programmes",
+                  es: "Ver los programas",
+                })}
+                <ArrowRight className="size-4" aria-hidden />
+              </Link>
+            </div>
           </div>
         </div>
-        <div className="entree-2">
-          <EnCeMoment grille={grille} />
+      </div>
+
+      <div className="bg-nuit text-nuit-encre">
+        <div className="conteneur pt-9 pb-8 lg:pb-10">
+          <Cadran pays={pays} />
+          <div className="mt-6 lg:mt-8">
+            <EnCeMoment grille={grille} />
+          </div>
         </div>
       </div>
     </section>
+  )
+}
+
+/** Graduation de poste radio : les trois pays sont les stations, l'aiguille rouge le direct. */
+function Cadran({ pays }: { pays: string[] }) {
+  const positions = ["14%", "50%", "86%"]
+  return (
+    <div className="relative h-16 select-none" aria-hidden>
+      <div
+        className="absolute inset-x-0 top-0 h-5"
+        style={{
+          background:
+            "repeating-linear-gradient(90deg, rgb(255 255 255 / 0.8) 0 2px, transparent 2px 10%), repeating-linear-gradient(90deg, rgb(255 255 255 / 0.3) 0 1px, transparent 1px 2%) 0 0 / 100% 55% no-repeat",
+        }}
+      />
+      {pays.map((p, i) => (
+        <div
+          key={p}
+          className="absolute top-0 flex -translate-x-1/2 flex-col items-center"
+          style={{ left: positions[i] }}
+        >
+          <span className="bg-nuit-accent block h-7 w-1" />
+          <span className="text-nuit-encre mt-2 text-[0.85rem] font-bold whitespace-nowrap sm:text-base">
+            {p}
+          </span>
+        </div>
+      ))}
+      <span className="bg-direct absolute -top-6 left-1/2 h-12 w-0.5 -translate-x-1/2 shadow-[0_0_14px_var(--direct)]" />
+    </div>
   )
 }

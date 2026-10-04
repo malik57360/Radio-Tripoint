@@ -24,22 +24,22 @@
  */
 
 :root {
-  --papier: #fafaf7;
-  --papier-2: #f1f0eb;
-  --papier-3: #e7e5de;
+  --papier: #ffffff;
+  --papier-2: #f3f3f0;
+  --papier-3: #e4e4df;
   --surface: #ffffff;
-  --encre: #0a0a0a;
-  --encre-2: #45443f;
-  --encre-3: #6a6963;
-  --trait: #dddbd3;
-  --trait-fort: #0a0a0a;
+  --encre: #000000;
+  --encre-2: #3d3d3a;
+  --encre-3: #67675f;
+  --trait: #dcdcd6;
+  --trait-fort: #000000;
 
   /* Jaune du logo (relevé sur le fichier officiel). */
   --accent: #f9b800;
-  --accent-encre: #0a0a0a;
+  --accent-encre: #000000;
   --accent-doux: #fdefc0;
-  --sur-accent: #0a0a0a;
-  --focus: #0a0a0a;
+  --sur-accent: #000000;
+  --focus: #000000;
 
   --direct: #d8261c;
   --sur-direct: #ffffff;
@@ -49,10 +49,10 @@
   --erreur-fond: #fdece2;
 
   /* Le studio : noir du logo, toujours sombre quel que soit le thème. */
-  --nuit: #0a0a0a;
-  --nuit-2: #151515;
-  --nuit-3: #232323;
-  --nuit-encre: #fafaf7;
+  --nuit: #000000;
+  --nuit-2: #141414;
+  --nuit-3: #262626;
+  --nuit-encre: #ffffff;
   --nuit-encre-2: #a9a8a2;
   --nuit-trait: #2c2c2c;
   --nuit-accent: #f9b800;
@@ -76,10 +76,10 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="clair"]) {
-    --papier: #0a0a0a;
-    --papier-2: #141414;
-    --papier-3: #1f1f1f;
-    --surface: #121212;
+    --papier: #000000;
+    --papier-2: #121212;
+    --papier-3: #1e1e1e;
+    --surface: #0e0e0e;
     --encre: #f7f6f2;
     --encre-2: #b9b8b1;
     --encre-3: #8f8e88;
@@ -98,10 +98,10 @@
 }
 
 :root[data-theme="sombre"] {
-  --papier: #0a0a0a;
-  --papier-2: #141414;
-  --papier-3: #1f1f1f;
-  --surface: #121212;
+  --papier: #000000;
+  --papier-2: #121212;
+  --papier-3: #1e1e1e;
+  --surface: #0e0e0e;
   --encre: #f7f6f2;
   --encre-2: #b9b8b1;
   --encre-3: #8f8e88;
@@ -225,45 +225,51 @@
   }
 
   /* Titres — Archivo élargi : l'habillage d'antenne. */
+  /* Titres : le lettrage du logo — Archivo resserré, noir, en capitales.
+     Une seule voix typographique, du grand titre d'accueil au titre de page. */
   .titre-affiche {
     font-family: var(--font-titre);
-    font-weight: 800;
-    font-variation-settings: "wdth" 112;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+    font-weight: 900;
+    font-variation-settings: "wdth" 66;
+    text-transform: uppercase;
+    letter-spacing: -0.012em;
+    line-height: 0.84;
   }
   .titre-section {
     font-family: var(--font-titre);
-    font-weight: 780;
-    font-variation-settings: "wdth" 110;
-    letter-spacing: -0.028em;
-    line-height: 1;
-    font-size: clamp(1.9rem, 1.2rem + 3vw, 3.4rem);
+    font-weight: 900;
+    font-variation-settings: "wdth" 70;
+    text-transform: uppercase;
+    letter-spacing: -0.008em;
+    line-height: 0.88;
+    font-size: clamp(2.3rem, 1.5rem + 3.6vw, 4.6rem);
   }
   .titre-page {
     font-family: var(--font-titre);
-    font-weight: 800;
-    font-variation-settings: "wdth" 110;
-    letter-spacing: -0.032em;
-    line-height: 0.98;
-    font-size: clamp(2.4rem, 1.4rem + 4.6vw, 5.2rem);
+    font-weight: 900;
+    font-variation-settings: "wdth" 68;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 0.86;
+    font-size: clamp(2.9rem, 1.6rem + 6vw, 7rem);
   }
+  /* Titres d'articles et de cartes : à lire, donc en bas de casse,
+     à peine resserrés pour garder la parenté avec les grands titres. */
   .titre-carte {
     font-family: var(--font-titre);
-    font-weight: 700;
-    font-variation-settings: "wdth" 100;
-    letter-spacing: -0.012em;
-    line-height: 1.15;
+    font-weight: 750;
+    font-variation-settings: "wdth" 88;
+    letter-spacing: -0.01em;
+    line-height: 1.12;
   }
 
-  /* Surtitre : petit, espacé, capitales. Marque la rubrique ou la section. */
+  /* Surtitre : une indication courte, en bas de casse, pas une étiquette criée. */
   .surtitre {
     font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-variation-settings: "wdth" 108;
+    font-size: 0.9rem;
+    font-weight: 650;
+    letter-spacing: 0;
+    line-height: 1.3;
   }
 
   .presse {
@@ -286,8 +292,8 @@
     justify-content: center;
     gap: 0.55rem;
     min-height: 2.75rem;
-    padding: 0.6rem 1.15rem;
-    border-radius: var(--radius-sm);
+    padding: 0.6rem 1.3rem;
+    border-radius: 999px;
     font-weight: 700;
     font-size: 0.92rem;
     letter-spacing: 0.005em;
@@ -339,10 +345,8 @@
     background: var(--direct);
     color: var(--sur-direct);
     border-radius: 999px;
-    padding-inline: 1.1rem 1.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 0.8rem;
+    padding-inline: 1.1rem 1.4rem;
+    font-size: 0.95rem;
   }
   .btn-direct:hover {
     filter: brightness(1.08);
@@ -378,16 +382,15 @@
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.18rem 0.45rem 0.14rem;
+    padding: 0.16rem 0.5rem 0.18rem;
     width: fit-content;
     background: var(--accent);
     color: var(--sur-accent);
-    font-size: 0.68rem;
+    border-radius: 999px;
+    font-size: 0.74rem;
     font-weight: 800;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
     line-height: 1.2;
-    text-transform: uppercase;
-    font-variation-settings: "wdth" 108;
   }
   .badge-exemple {
     display: inline-flex;
@@ -488,18 +491,24 @@
   }
 
   /* Filet de section : règle noire + tampon jaune à gauche. */
+  /* Filet de section : la graduation d'un cadran de poste radio. */
   .filet-section {
     position: relative;
-    border-top: 2px solid var(--trait-fort);
+    border-top: 3px solid var(--trait-fort);
+    padding-top: 1.6rem !important;
   }
   .filet-section::before {
     content: "";
     position: absolute;
-    top: -6px;
+    top: 0;
     left: 0;
-    width: 3.5rem;
-    height: 10px;
-    background: var(--accent);
+    right: 0;
+    height: 9px;
+    background:
+      repeating-linear-gradient(90deg, var(--trait-fort) 0 2px, transparent 2px 60px),
+      repeating-linear-gradient(90deg, var(--trait-fort) 0 1px, transparent 1px 12px) 0 0 / 100% 5px no-repeat;
+    -webkit-mask: linear-gradient(90deg, #000 30%, transparent);
+    mask: linear-gradient(90deg, #000 30%, transparent);
   }
   .carte .carte-visuel img,
   .carte .carte-visuel .couverture {

@@ -315,8 +315,8 @@ export async function Footer() {
         {/* Texte décoratif en pseudo-élément : hors de l'arbre d'accessibilité. */}
         <p
           aria-hidden
-          data-texte={t(site.pays).join(" · ")}
-          className="titre-affiche border-nuit-trait text-nuit-encre/10 mt-16 border-t pt-8 text-[clamp(2.2rem,1rem+6vw,6.5rem)] select-none before:content-[attr(data-texte)]"
+          data-texte="Radio Tripoint"
+          className="titre-affiche border-nuit-trait text-nuit-accent mt-16 border-t pt-8 text-[clamp(3.4rem,0.6rem+13.4vw,15rem)] whitespace-nowrap select-none before:content-[attr(data-texte)]"
         />
 
         <div className="text-nuit-encre-2 mt-8 flex flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">

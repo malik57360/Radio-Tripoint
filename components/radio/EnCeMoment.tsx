@@ -28,7 +28,7 @@ export function EnCeMoment({ grille }: { grille: GrilleClient }) {
   return (
     <section
       aria-labelledby="en-ce-moment"
-      className="border-nuit-trait bg-nuit-2/80 relative border p-5 backdrop-blur sm:p-6"
+      className="relative"
     >
       <div className="flex items-center justify-between gap-4">
         <h2 id="en-ce-moment" className="surtitre text-nuit-encre-2 flex items-center gap-2.5">
