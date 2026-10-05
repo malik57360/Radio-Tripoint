@@ -2,7 +2,7 @@ import { MapPin } from "lucide-react"
 import Image from "next/image"
 import Link from "@/components/ui/Lien"
 import { traducteur } from "@/lib/i18n/serveur"
-import { heure, jourNumero, jourSemaine, moisCourt } from "@/lib/utils/dates"
+import { heure, jourNumero, jourSemaine, moisCourt, surPlusieursJours } from "@/lib/utils/dates"
 import type { Evenement } from "@/types/event"
 import { cn } from "@/lib/utils/cn"
 
@@ -33,8 +33,26 @@ export async function EventCard({
       )}
     >
       <p className="flex flex-col items-start leading-none">
-        <span className="surtitre text-encre-3">{jourSemaine(e.debut, l).slice(0, 3)}.</span>
-        <span className="titre-affiche mt-1 text-[2.6rem] tabular-nums">{jourNumero(e.debut)}</span>
+        {e.fin &&
+        surPlusieursJours(e.debut, e.fin) &&
+        moisCourt(e.debut, l) === moisCourt(e.fin, l) ? (
+          // Plusieurs jours dans le même mois : « sam.–dim. 10–11 oct ».
+          <>
+            <span className="surtitre text-encre-3">
+              {jourSemaine(e.debut, l).slice(0, 3)}.–{jourSemaine(e.fin, l).slice(0, 3)}.
+            </span>
+            <span className="titre-affiche mt-1 text-[1.75rem] whitespace-nowrap tabular-nums">
+              {jourNumero(e.debut)}–{jourNumero(e.fin)}
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="surtitre text-encre-3">{jourSemaine(e.debut, l).slice(0, 3)}.</span>
+            <span className="titre-affiche mt-1 text-[2.6rem] tabular-nums">
+              {jourNumero(e.debut)}
+            </span>
+          </>
+        )}
         <span className="surtitre text-accent-encre mt-1">{moisCourt(e.debut, l)}</span>
       </p>
       <div className="min-w-0">

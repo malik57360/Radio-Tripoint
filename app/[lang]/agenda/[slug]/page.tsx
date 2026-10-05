@@ -11,7 +11,14 @@ import { nomsPays } from "@/components/events/EventCard"
 import { langue, traducteur } from "@/lib/i18n/serveur"
 import { jsonLdEvenement } from "@/lib/seo/jsonld"
 import { metadataPage, urlAbsolue } from "@/lib/seo/metadata"
-import { dateLongue, heure, jourSemaine } from "@/lib/utils/dates"
+import {
+  dateLongue,
+  heure,
+  joursPeriode,
+  jourSemaine,
+  periodeLongue,
+  surPlusieursJours,
+} from "@/lib/utils/dates"
 
 export async function generateStaticParams() {
   return (await tousEvenements()).map((e) => ({ slug: e.slug }))
@@ -89,8 +96,21 @@ export default async function PageEvenement(props: PageProps<"/[lang]/agenda/[sl
         </div>
         <aside className="lg:pt-14">
           <div className="border-accent bg-surface border-t-4 p-6 lg:sticky lg:top-24">
-            <p className="surtitre text-encre-3">{jourSemaine(e.debut, l)}</p>
-            <p className="titre-affiche mt-1 text-[2.4rem]">{dateLongue(e.debut, l)}</p>
+            {e.fin && surPlusieursJours(e.debut, e.fin) ? (
+              <>
+                <p className="surtitre text-encre-3 first-letter:uppercase">
+                  {joursPeriode(e.debut, e.fin, l)}
+                </p>
+                <p className="titre-affiche mt-1 text-[2.4rem]">
+                  {periodeLongue(e.debut, e.fin, l)}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="surtitre text-encre-3">{jourSemaine(e.debut, l)}</p>
+                <p className="titre-affiche mt-1 text-[2.4rem]">{dateLongue(e.debut, l)}</p>
+              </>
+            )}
             <ul className="mt-6 space-y-4 text-[0.95rem]">
               {(e.horaires || !e.journee) && (
                 <li className="flex gap-3">

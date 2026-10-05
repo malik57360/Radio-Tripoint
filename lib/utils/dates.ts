@@ -143,6 +143,63 @@ export function heure(iso: string, l: Langue = "fr") {
   return l === "fr" ? `${d.h} h ${d.m}` : `${d.h}:${d.m}`
 }
 export const jourSemaine = (iso: string, l: Langue = "fr") => JOURS[l][parts(iso).semaine]
+
+/** Vrai quand un événement court sur plusieurs jours (début et fin à des dates différentes). */
+export function surPlusieursJours(debut: string, fin?: string) {
+  if (!fin) return false
+  const a = parts(debut)
+  const b = parts(fin)
+  return a.annee !== b.annee || a.mois !== b.mois || a.jour !== b.jour
+}
+
+/** « samedi et dimanche », « du vendredi au lundi »… (jours de début et de fin). */
+export function joursPeriode(debut: string, fin: string, l: Langue = "fr") {
+  const a = jourSemaine(debut, l)
+  const b = jourSemaine(fin, l)
+  const deuxJours = (Date.parse(fin) - Date.parse(debut)) / 86_400_000 < 2
+  const lien = {
+    fr: ["et", "du", "au"],
+    de: ["und", "", "bis"],
+    lb: ["an", "", "bis"],
+    en: ["and", "", "to"],
+    es: ["y", "del", "al"],
+  }[l]
+  if (deuxJours) return `${a} ${lien[0]} ${b}`
+  return [lien[1], a, lien[2], b].filter(Boolean).join(" ")
+}
+
+/** « 10 et 11 octobre 2026 », « du 25 septembre au 5 octobre 2026 »… */
+export function periodeLongue(debut: string, fin: string, l: Langue = "fr") {
+  const a = parts(debut)
+  const b = parts(fin)
+  const deuxJours = (Date.parse(fin) - Date.parse(debut)) / 86_400_000 < 2
+  const memeMois = a.mois === b.mois && a.annee === b.annee
+  if (!memeMois) {
+    const fr = (d: typeof a) => `${d.jour === 1 ? "1er" : d.jour} ${MOIS.fr[d.mois]}`
+    if (l === "fr") return `du ${fr(a)} au ${fr(b)} ${b.annee}`
+    if (l === "en") return `${a.jour} ${MOIS.en[a.mois]} – ${b.jour} ${MOIS.en[b.mois]} ${b.annee}`
+    if (l === "es")
+      return `del ${a.jour} de ${MOIS.es[a.mois]} al ${b.jour} de ${MOIS.es[b.mois]} de ${b.annee}`
+    return `${a.jour}. ${MOIS[l][a.mois]} – ${b.jour}. ${MOIS[l][b.mois]} ${b.annee}`
+  }
+  const m = MOIS[l][a.mois]
+  if (l === "fr")
+    return deuxJours
+      ? `${a.jour} et ${b.jour} ${m} ${a.annee}`
+      : `du ${a.jour} au ${b.jour} ${m} ${a.annee}`
+  if (l === "en")
+    return deuxJours
+      ? `${a.jour} and ${b.jour} ${m} ${a.annee}`
+      : `${a.jour}–${b.jour} ${m} ${a.annee}`
+  if (l === "es")
+    return deuxJours
+      ? `${a.jour} y ${b.jour} de ${m} de ${a.annee}`
+      : `del ${a.jour} al ${b.jour} de ${m} de ${a.annee}`
+  const et = l === "de" ? "und" : "an"
+  return deuxJours
+    ? `${a.jour}. ${et} ${b.jour}. ${m} ${a.annee}`
+    : `${a.jour}.–${b.jour}. ${m} ${a.annee}`
+}
 export const jourNumero = (iso: string) => String(parts(iso).jour).padStart(2, "0")
 export const moisCourt = (iso: string, l: Langue = "fr") => MOIS_COURT[l][parts(iso).mois]
 
@@ -155,7 +212,8 @@ export function cleJour(d: Date) {
 /** « Aujourd'hui », « Hier » ou la date longue — stable côté serveur. */
 export function dateRelative(iso: string, l: Langue = "fr", maintenant = new Date()): string {
   const k = cleJour(new Date(iso))
-  if (k === cleJour(maintenant)) return { fr: "Aujourd'hui", de: "Heute", lb: "Haut", en: "Today", es: "Hoy" }[l]
+  if (k === cleJour(maintenant))
+    return { fr: "Aujourd'hui", de: "Heute", lb: "Haut", en: "Today", es: "Hoy" }[l]
   if (k === cleJour(new Date(maintenant.getTime() - 86_400_000)))
     return { fr: "Hier", de: "Gestern", lb: "Gëschter", en: "Yesterday", es: "Ayer" }[l]
   return dateLongue(iso, l)
