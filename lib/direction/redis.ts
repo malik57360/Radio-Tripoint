@@ -16,6 +16,9 @@ function acces() {
 
 export const redisActif = () => acces() !== null
 
+/** URL et jeton REST, pour les lectures mises en cache par Next (GET + tags). */
+export const accesRedis = acces
+
 /** Exécute un lot de commandes ; null si Redis n'est pas branché ou ne répond pas. */
 export async function redis(commandes: Commande[]): Promise<unknown[] | null> {
   const a = acces()

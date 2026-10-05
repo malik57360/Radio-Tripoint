@@ -28,6 +28,9 @@ const LIBELLES: Record<string, string> = {
   titre: "Titre",
   sujet: "Sujet",
   message: "Message",
+  verification: "Vérification",
+  quand: "Quand",
+  a_faire: "À faire",
 }
 
 const NOMS_LANGUES: Record<string, string> = {

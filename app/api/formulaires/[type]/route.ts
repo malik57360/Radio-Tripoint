@@ -1,11 +1,13 @@
 import { createHash } from "node:crypto"
-import { compter } from "@/lib/direction/redis"
+import { creerProposition, PRIX_EUROS, verifierOrganisation } from "@/lib/agenda/propositions"
+import { compter, redisActif } from "@/lib/direction/redis"
 import { envoyerCourriel, smtpConfigure } from "@/lib/formulaires/courriel"
 import { autoriser } from "@/lib/formulaires/limiteur"
 import { choisir, estLangue, type Langue, type Trad } from "@/lib/i18n/langues"
 import {
   PIECE_JOINTE,
   creerSchemas,
+  nettoyerIdentifiant,
   objetsMail,
   typesFormulaire,
   type TypeFormulaire,
@@ -112,6 +114,94 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
         )
       fichier = f
     }
+  }
+
+  // 5 bis. Agenda payant : la demande est enregistrée pour le tableau de
+  // bord, avec le résultat du contrôle du numéro officiel. L'e-mail qui
+  // suit n'est qu'une alerte pour la radio.
+  let champsMail: Record<string, unknown> = resultat.data
+  if (t === "agenda") {
+    if (!redisActif()) return json({ statut: "non-configure" }, 503)
+    const d = creerSchemas("fr").agenda.parse(brut)
+    d.identifiant = d.pays_org === "FR" ? nettoyerIdentifiant(d.identifiant) : d.identifiant
+    const verification = await verifierOrganisation(d.pays_org, d.identifiant)
+    try {
+      const p = await creerProposition({
+        langue: l,
+        organisation: {
+          type: d.type_org,
+          pays: d.pays_org,
+          identifiant: d.identifiant,
+          nom: d.organisation,
+        },
+        verification,
+        contact: { nom: d.nom, email: d.email, telephone: d.telephone || undefined },
+        champs: {
+          titre: d.titre,
+          description: d.description,
+          date_debut: d.date_debut,
+          heure_debut: d.heure_debut || undefined,
+          date_fin: d.date_fin || undefined,
+          heure_fin: d.heure_fin || undefined,
+          lieu: d.lieu,
+          adresse: d.adresse || undefined,
+          ville: d.ville,
+          pays: d.pays,
+          tarif: d.tarif || undefined,
+          lien: d.lien || undefined,
+        },
+      })
+      const libelleVerif = {
+        verifie: `trouvée et active dans l'annuaire de l'État (${verification.nomOfficiel ?? "?"})`,
+        ferme: `RADIÉE ou fermée dans l'annuaire (${verification.nomOfficiel ?? "?"})`,
+        introuvable: "INTROUVABLE dans l'annuaire de l'État",
+        manuel: "à vérifier à la main (Luxembourg / Allemagne)",
+        indisponible: "annuaire injoignable, à vérifier à la main",
+      }[verification.statut]
+      champsMail = {
+        titre: d.titre,
+        entreprise: `${d.organisation} — ${d.type_org}, ${d.pays_org}, n° ${d.identifiant}`,
+        verification: libelleVerif,
+        nom: d.nom,
+        email: d.email,
+        telephone: d.telephone,
+        quand: [d.date_debut, d.heure_debut, d.date_fin && `→ ${d.date_fin}`, d.heure_fin]
+          .filter(Boolean)
+          .join(" "),
+        ville: `${d.lieu}, ${d.ville} (${d.pays})`,
+        message: d.description,
+        a_faire: `Accepter ou refuser dans le tableau de bord : /direction/agenda (dossier ${p.id}). Le lien de paiement (${PRIX_EUROS} €) part seulement après acceptation.`,
+      }
+    } catch (e) {
+      console.error("[formulaires] agenda : enregistrement impossible :", (e as Error).message)
+      await compter("form_perdu")
+      return json(
+        {
+          statut: "erreur",
+          message: dire({
+            fr: "L'enregistrement a échoué de notre côté. Réessayez dans un instant.",
+            de: "Das Speichern ist bei uns fehlgeschlagen. Versuchen Sie es gleich noch einmal.",
+            lb: "D'Späicheren ass bei eis feelgeschloen. Probéiert et gläich nach eng Kéier.",
+            en: "Saving failed on our side. Try again in a moment.",
+            es: "El registro ha fallado por nuestra parte. Vuelva a intentarlo en un momento.",
+          }),
+        },
+        502,
+      )
+    }
+    await compter("form:agenda")
+    // La demande est enregistrée : l'alerte e-mail est un plus, pas une condition.
+    if (smtpConfigure() || process.env.RESEND_API_KEY)
+      await envoyerCourriel({
+        cle: process.env.RESEND_API_KEY,
+        type: t,
+        objet: objetsMail[t],
+        langue: l,
+        champs: champsMail,
+        fichier: null,
+      }).catch((e) => console.error("[formulaires] agenda : alerte e-mail :", (e as Error).message))
+    await compter("form_ok")
+    return json({ statut: "succes" })
   }
 
   // 5. Transmission : e-mail (boîte mail de la radio, sinon Resend), sinon

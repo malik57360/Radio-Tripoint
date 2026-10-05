@@ -125,48 +125,61 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
           es: "Conciertos, fiestas, exposiciones, encuentros deportivos: las citas del territorio, a un lado y otro de la frontera.",
         })}
         enfants={
-          tous.length > 0 && (
-            <div className="mt-8 space-y-3">
-              <Filtres
-                label={t({
-                  fr: "Période",
-                  de: "Zeitraum",
-                  lb: "Zäitraum",
-                  en: "Period",
-                  es: "Periodo",
+          <>
+            <p className="mt-6">
+              <Link href="/agenda/proposer" className="btn btn-plein">
+                {t({
+                  fr: "Publier votre événement",
+                  de: "Ihre Veranstaltung veröffentlichen",
+                  lb: "Ären Evenement publizéieren",
+                  en: "Publish your event",
+                  es: "Publicar su evento",
                 })}
-                options={periodes.map((p) => ({ valeur: p.valeur, libelle: t(p.libelle) }))}
-                actif={periode}
-                href={(v) => href(v, ville)}
-              />
-              {villes.length > 1 && (
+              </Link>
+            </p>
+            {tous.length > 0 && (
+              <div className="mt-8 space-y-3">
                 <Filtres
                   label={t({
-                    fr: "Ville",
-                    de: "Ort",
-                    lb: "Uertschaft",
-                    en: "Town",
-                    es: "Localidad",
+                    fr: "Période",
+                    de: "Zeitraum",
+                    lb: "Zäitraum",
+                    en: "Period",
+                    es: "Periodo",
                   })}
-                  options={[
-                    {
-                      valeur: "",
-                      libelle: t({
-                        fr: "Toutes les villes",
-                        de: "Alle Orte",
-                        lb: "All Uertschaften",
-                        en: "All towns",
-                        es: "Todas las localidades",
-                      }),
-                    },
-                    ...villes.map((v) => ({ valeur: v, libelle: v })),
-                  ]}
-                  actif={ville ?? ""}
-                  href={(v) => href(periode, v || undefined)}
+                  options={periodes.map((p) => ({ valeur: p.valeur, libelle: t(p.libelle) }))}
+                  actif={periode}
+                  href={(v) => href(v, ville)}
                 />
-              )}
-            </div>
-          )
+                {villes.length > 1 && (
+                  <Filtres
+                    label={t({
+                      fr: "Ville",
+                      de: "Ort",
+                      lb: "Uertschaft",
+                      en: "Town",
+                      es: "Localidad",
+                    })}
+                    options={[
+                      {
+                        valeur: "",
+                        libelle: t({
+                          fr: "Toutes les villes",
+                          de: "Alle Orte",
+                          lb: "All Uertschaften",
+                          en: "All towns",
+                          es: "Todas las localidades",
+                        }),
+                      },
+                      ...villes.map((v) => ({ valeur: v, libelle: v })),
+                    ]}
+                    actif={ville ?? ""}
+                    href={(v) => href(periode, v || undefined)}
+                  />
+                )}
+              </div>
+            )}
+          </>
         }
       />
       <EmplacementPub id="agenda" className="conteneur pt-10 lg:pt-12" />
@@ -190,7 +203,7 @@ export default async function PageAgenda(props: PageProps<"/[lang]/agenda">) {
               es: "Todavía no hay eventos anunciados.",
             })}
             actions={
-              <Link href="/soumettre-une-information" className="btn btn-plein">
+              <Link href="/agenda/proposer" className="btn btn-plein">
                 {t({
                   fr: "Annoncer un événement",
                   de: "Veranstaltung melden",

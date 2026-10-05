@@ -3,6 +3,7 @@
 import {
   Activity,
   BarChart3,
+  CalendarCheck,
   HeartPulse,
   ImagePlus,
   LayoutDashboard,
@@ -21,6 +22,7 @@ export const PAGES = [
   { href: "/direction/direct", libelle: "En direct", court: "Direct", icone: Activity },
   { href: "/direction/mails", libelle: "Mails", court: "Mails", icone: Mail },
   { href: "/direction/prospection", libelle: "Prospection", court: "Prospection", icone: Target },
+  { href: "/direction/agenda", libelle: "Agenda payant", court: "Agenda", icone: CalendarCheck },
   { href: "/direction/flyer", libelle: "Flyer du week-end", court: "Flyer", icone: ImagePlus },
   { href: "/direction/audience", libelle: "Audience", court: "Audience", icone: BarChart3 },
   { href: "/direction/antenne", libelle: "Antenne", court: "Antenne", icone: Radio },

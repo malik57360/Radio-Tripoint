@@ -119,6 +119,83 @@ const MESSAGES = {
     en: "Choose a requirement.",
     es: "Elija una necesidad.",
   },
+  typeOrg: {
+    fr: "Choisissez : entreprise ou association.",
+    de: "Wählen Sie: Unternehmen oder Verein.",
+    lb: "Wielt: Betrib oder Associatioun.",
+    en: "Choose: company or association.",
+    es: "Elija: empresa o asociación.",
+  },
+  pays: {
+    fr: "Choisissez un pays.",
+    de: "Wählen Sie ein Land.",
+    lb: "Wielt e Land.",
+    en: "Choose a country.",
+    es: "Elija un país.",
+  },
+  identifiant: {
+    fr: "Indiquez le numéro officiel de votre structure.",
+    de: "Geben Sie die amtliche Nummer Ihrer Organisation an.",
+    lb: "Gitt déi offiziell Nummer vun Ärer Organisatioun un.",
+    en: "Enter your organisation's official number.",
+    es: "Indique el número oficial de su organización.",
+  },
+  siret: {
+    fr: "SIRET invalide : 14 chiffres (ou SIREN : 9 chiffres).",
+    de: "Ungültige SIRET: 14 Ziffern (oder SIREN: 9 Ziffern).",
+    lb: "Ongëlteg SIRET: 14 Zifferen (oder SIREN: 9 Zifferen).",
+    en: "Invalid SIRET: 14 digits (or SIREN: 9 digits).",
+    es: "SIRET no válido: 14 cifras (o SIREN: 9 cifras).",
+  },
+  rna: {
+    fr: "Numéro invalide : RNA (W suivi de 9 chiffres) ou SIRET (14 chiffres).",
+    de: "Ungültige Nummer: RNA (W und 9 Ziffern) oder SIRET (14 Ziffern).",
+    lb: "Ongëlteg Nummer: RNA (W an 9 Zifferen) oder SIRET (14 Zifferen).",
+    en: "Invalid number: RNA (W followed by 9 digits) or SIRET (14 digits).",
+    es: "Número no válido: RNA (W seguido de 9 cifras) o SIRET (14 cifras).",
+  },
+  date: {
+    fr: "Indiquez une date à venir.",
+    de: "Geben Sie ein zukünftiges Datum an.",
+    lb: "Gitt en Datum an der Zukunft un.",
+    en: "Enter an upcoming date.",
+    es: "Indique una fecha futura.",
+  },
+  dateFin: {
+    fr: "La fin doit venir après le début.",
+    de: "Das Ende muss nach dem Beginn liegen.",
+    lb: "D'Enn muss nom Ufank sinn.",
+    en: "The end must come after the start.",
+    es: "El final debe ser posterior al inicio.",
+  },
+  heure: {
+    fr: "Heure invalide (ex. 20:30).",
+    de: "Ungültige Uhrzeit (z. B. 20:30).",
+    lb: "Ongëlteg Auerzäit (z. B. 20:30).",
+    en: "Invalid time (e.g. 20:30).",
+    es: "Hora no válida (p. ej. 20:30).",
+  },
+  lieu: {
+    fr: "Indiquez le lieu (salle, place, parc…).",
+    de: "Geben Sie den Ort an (Saal, Platz, Park…).",
+    lb: "Gitt d'Plaz un (Sall, Plaz, Park…).",
+    en: "Enter the venue (hall, square, park…).",
+    es: "Indique el lugar (sala, plaza, parque…).",
+  },
+  lien: {
+    fr: "Adresse web invalide (commencez par https://).",
+    de: "Ungültige Webadresse (beginnen Sie mit https://).",
+    lb: "Ongëlteg Webadress (fänkt mat https:// un).",
+    en: "Invalid web address (start with https://).",
+    es: "Dirección web no válida (empiece por https://).",
+  },
+  conditions: {
+    fr: "Acceptez les conditions de publication pour continuer.",
+    de: "Akzeptieren Sie die Veröffentlichungsbedingungen, um fortzufahren.",
+    lb: "Akzeptéiert d'Konditioune fir d'Verëffentlechung, fir weiderzefueren.",
+    en: "Accept the publication terms to continue.",
+    es: "Acepte las condiciones de publicación para continuar.",
+  },
 } satisfies Record<string, Trad>
 
 function creerChamps(l: Langue) {
@@ -228,6 +305,44 @@ export const libellesBesoinsPub: Record<(typeof besoinsPub)[number], Trad> = {
   Autre: { fr: "Autre", de: "Sonstiges", lb: "Anert", en: "Other", es: "Otro" },
 }
 
+export const typesOrganisation = ["entreprise", "association"] as const
+export const paysAgenda = ["FR", "LU", "DE"] as const
+
+export const libellesTypesOrganisation: Record<(typeof typesOrganisation)[number], Trad> = {
+  entreprise: {
+    fr: "Entreprise",
+    de: "Unternehmen",
+    lb: "Betrib",
+    en: "Company",
+    es: "Empresa",
+  },
+  association: {
+    fr: "Association",
+    de: "Verein",
+    lb: "Associatioun",
+    en: "Association",
+    es: "Asociación",
+  },
+}
+
+export const libellesPaysAgenda: Record<(typeof paysAgenda)[number], Trad> = {
+  FR: { fr: "France", de: "Frankreich", lb: "Frankräich", en: "France", es: "Francia" },
+  LU: { fr: "Luxembourg", de: "Luxemburg", lb: "Lëtzebuerg", en: "Luxembourg", es: "Luxemburgo" },
+  DE: { fr: "Allemagne", de: "Deutschland", lb: "Däitschland", en: "Germany", es: "Alemania" },
+}
+
+/** Numéro officiel nettoyé : majuscules, sans espaces ni points. */
+export const nettoyerIdentifiant = (s: string) => s.toUpperCase().replace(/[\s.\-]/g, "")
+
+/** Date du jour à Paris, AAAA-MM-JJ (même calcul côté serveur et navigateur). */
+const aujourdhui = () =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date())
+
 /** Schémas de validation, messages dans la langue du visiteur. */
 export function creerSchemas(l: Langue = "fr") {
   const { m, texte, requis, email, telephone, consentement } = creerChamps(l)
@@ -263,6 +378,62 @@ export function creerSchemas(l: Langue = "fr") {
       email,
       consentement,
     }),
+    agenda: z
+      .object({
+        type_org: z.enum(typesOrganisation, { error: m("typeOrg") }),
+        pays_org: z.enum(paysAgenda, { error: m("pays") }),
+        identifiant: requis(60, m("identifiant")),
+        organisation: requis(150, m("entreprise")),
+        nom: requis(100, m("nom")),
+        email,
+        telephone,
+        titre: requis(120, m("titre")),
+        description: requis(1500, m("description")).pipe(z.string().min(40, m("details"))),
+        date_debut: z
+          .string({ error: m("date") })
+          .regex(/^\d{4}-\d{2}-\d{2}$/, m("date"))
+          .refine((d) => d >= aujourdhui(), m("date")),
+        heure_debut: texte(5)
+          .refine((s) => s === "" || /^([01]\d|2[0-3]):[0-5]\d$/.test(s), m("heure"))
+          .optional(),
+        date_fin: texte(10)
+          .refine((s) => s === "" || /^\d{4}-\d{2}-\d{2}$/.test(s), m("date"))
+          .optional(),
+        heure_fin: texte(5)
+          .refine((s) => s === "" || /^([01]\d|2[0-3]):[0-5]\d$/.test(s), m("heure"))
+          .optional(),
+        lieu: requis(120, m("lieu")),
+        adresse: texte(200).optional(),
+        ville: requis(80, m("ville")),
+        pays: z.enum(paysAgenda, { error: m("pays") }),
+        tarif: texte(80).optional(),
+        lien: texte(300)
+          .refine((s) => s === "" || /^https?:\/\/[^\s<>"]+\.[^\s<>"]+$/i.test(s), m("lien"))
+          .optional(),
+        conditions: z.literal("oui", { error: m("conditions") }),
+        consentement,
+      })
+      .superRefine((v, ctx) => {
+        const id = nettoyerIdentifiant(v.identifiant)
+        if (v.pays_org === "FR") {
+          const ok =
+            v.type_org === "entreprise"
+              ? /^(\d{9}|\d{14})$/.test(id)
+              : /^(W\d{9}|\d{9}|\d{14})$/.test(id)
+          if (!ok)
+            ctx.addIssue({
+              code: "custom",
+              path: ["identifiant"],
+              message: m(v.type_org === "entreprise" ? "siret" : "rna"),
+            })
+        } else if (id.length < 3) {
+          ctx.addIssue({ code: "custom", path: ["identifiant"], message: m("identifiant") })
+        }
+        const fin = `${v.date_fin || v.date_debut}T${v.heure_fin || "23:59"}`
+        const debut = `${v.date_debut}T${v.heure_debut || "00:00"}`
+        if ((v.date_fin || v.heure_fin) && fin <= debut)
+          ctx.addIssue({ code: "custom", path: ["date_fin"], message: m("dateFin") })
+      }),
   } as const
 }
 
@@ -288,4 +459,5 @@ export const objetsMail: Record<TypeFormulaire, string> = {
   information: "Information proposée à la rédaction",
   publicite: "Demande d'offre publicitaire",
   newsletter: "Inscription à la newsletter",
+  agenda: "Événement proposé à l'agenda (payant)",
 }
