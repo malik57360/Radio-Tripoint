@@ -11,6 +11,7 @@ import { actualites09 } from "./articles/actualites-09"
 import { actualites10 } from "./articles/actualites-10"
 import { actualites11 } from "./articles/actualites-11"
 import { actualites12 } from "./articles/actualites-12"
+import { actualites13 } from "./articles/actualites-13"
 import { actuMusic } from "./articles/actu-music"
 import { actuPeople } from "./articles/actu-people"
 import { artCulture } from "./articles/art-culture"
@@ -32,6 +33,7 @@ export const articles: Record<string, TradArticle> = {
   ...actualites10,
   ...actualites11,
   ...actualites12,
+  ...actualites13,
   ...actuMusic,
   ...actuPeople,
   ...artCulture,

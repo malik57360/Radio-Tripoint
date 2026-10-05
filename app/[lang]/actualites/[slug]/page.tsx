@@ -163,8 +163,16 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
       </header>
 
       <div className="conteneur mt-10">
-        <figure className="mx-auto max-w-5xl">
+        {/* Un visuel en hauteur (story, affiche) se montre en entier, à taille lisible. */}
+        <figure
+          className={
+            a.visuel && a.visuel.hauteur > a.visuel.largeur
+              ? "mx-auto max-w-md"
+              : "mx-auto max-w-5xl"
+          }
+        >
           <Visuel
+            ratioNaturel={Boolean(a.visuel && a.visuel.hauteur > a.visuel.largeur)}
             visuel={a.visuel}
             repli={{
               mot: cat.nom,

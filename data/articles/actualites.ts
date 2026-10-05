@@ -6,6 +6,118 @@ import type { Article } from "@/types/article"
  * `ordre` reprend le rang d'apparition (1 = le plus récent).
  */
 export const actualites: Article[] = [
+  // Articles de la rédaction, 5 octobre 2026, d'après les visuels
+  // d'information publiés par Radio Tripoint ce jour-là.
+  {
+    slug: "thionville-lycees-mobilisation-5-6-octobre-2026",
+    titre: "Thionville : la mobilisation lycéenne se poursuit, ce qu’il faut retenir cette semaine",
+    chapeau:
+      "Lundi 5 octobre, la mobilisation lycéenne continue à Thionville. Mardi 6 octobre, une mobilisation générale est annoncée à l’échelle nationale, avec des blocages et rassemblements attendus, également à Thionville.",
+    categorie: "actualites",
+    publieLe: "2026-10-05T09:00:00+02:00",
+    lieux: ["Thionville", "Moselle"],
+    tags: ["lycées", "mobilisation", "éducation"],
+    visuel: {
+      src: "/media/articles/thionville-lycees-mobilisation-5-6-octobre-2026.webp",
+      alt: "Visuel « Thionville, lycées : ce qu’il faut retenir cette semaine » : des élèves devant un lycée, avec le programme du lundi 5 et du mardi 6 octobre.",
+      largeur: 576,
+      hauteur: 1024,
+    },
+    corps: [
+      { type: "intertitre", texte: "Aujourd’hui, lundi 5 octobre" },
+      {
+        type: "liste",
+        elements: [
+          "La mobilisation lycéenne se poursuit.",
+          "La situation est à surveiller autour des établissements de Thionville.",
+          "Des mesures de sécurité sont en place dans plusieurs communes de Moselle.",
+        ],
+      },
+      { type: "intertitre", texte: "Demain, mardi 6 octobre" },
+      {
+        type: "liste",
+        elements: [
+          "Une mobilisation générale est annoncée à l’échelle nationale.",
+          "Des blocages et rassemblements sont attendus, également à Thionville.",
+        ],
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Lycéens et parents : vérifiez les informations de votre établissement avant de vous déplacer.",
+      },
+    ],
+    une: true,
+  },
+  {
+    slug: "lu-alert-test-national-luxembourg-5-octobre-2026",
+    titre: "Luxembourg : test national de LU-Alert ce lundi 5 octobre à 11 h",
+    chapeau:
+      "Le système d’alerte national LU-Alert est testé ce lundi 5 octobre à 11 h au Luxembourg. Votre téléphone peut sonner et vibrer : c’est uniquement un test, aucune action n’est nécessaire.",
+    categorie: "actualites",
+    publieLe: "2026-10-05T08:30:00+02:00",
+    lieux: ["Luxembourg"],
+    tags: ["LU-Alert", "alerte", "sécurité"],
+    visuel: {
+      src: "/media/articles/lu-alert-test-national-luxembourg-5-octobre-2026.webp",
+      alt: "Visuel « Luxembourg, LU-Alert, test national, lundi 5 octobre, 11 h » : un téléphone affiche la notification « Test du système d’alerte national ».",
+      largeur: 576,
+      hauteur: 1024,
+    },
+    corps: [
+      {
+        type: "paragraphe",
+        texte:
+          "Ce lundi 5 octobre à 11 h, le Luxembourg teste son système d’alerte national, LU-Alert.",
+      },
+      { type: "intertitre", texte: "À quoi s’attendre" },
+      {
+        type: "liste",
+        elements: [
+          "Votre téléphone peut sonner et vibrer.",
+          "Une notification apparaîtra sur votre téléphone, même en mode silencieux ou verrouillé.",
+          "Le signal sonore durera quelques secondes.",
+        ],
+      },
+      {
+        type: "citation",
+        texte: "C’est uniquement un test. Aucune action n’est nécessaire.",
+      },
+    ],
+  },
+  {
+    slug: "perl-besch-kreuzung-gesperrt-5-16-octobre-2026",
+    titre: "Perl-Besch : le carrefour fermé à toute circulation du 5 au 16 octobre",
+    chapeau:
+      "En raison de travaux, le carrefour de Besch, à Perl, est fermé à toute circulation depuis ce lundi 5 octobre, et ce jusqu’au 16 octobre (prévisionnel).",
+    categorie: "actualites",
+    publieLe: "2026-10-05T08:00:00+02:00",
+    lieux: ["Perl", "Besch"],
+    tags: ["travaux", "circulation", "route"],
+    visuel: {
+      src: "/media/articles/perl-besch-kreuzung-gesperrt-5-16-octobre-2026.webp",
+      alt: "Visuel « Perl, Besch, Kreuzung gesperrt » : des barrières de chantier et une pelleteuse sur une route, avec les dates et le carrefour concerné.",
+      largeur: 576,
+      hauteur: 1024,
+    },
+    corps: [
+      {
+        type: "paragraphe",
+        texte:
+          "En raison de travaux, le carrefour de Besch, sur la commune de Perl, est fermé depuis ce lundi 5 octobre.",
+      },
+      { type: "intertitre", texte: "Ce qu’il faut savoir" },
+      {
+        type: "liste",
+        elements: [
+          "Fermeture à partir du lundi 5 octobre.",
+          "Carrefour concerné : Deichstraße / Ruhbrück / Bischof-Walo-Straße, à Besch.",
+          "Durée des travaux : du 5 au 16 octobre (prévisionnel).",
+          "Fermeture totale, pour toute la circulation.",
+        ],
+      },
+    ],
+  },
   // Source : https://www.radio-tripoint-officiel.fr/actualites
   {
     slug: "leon-xiv-a-metz-une-journee-historique-au-coeur-de-l-europe",
@@ -53,7 +165,6 @@ export const actualites: Article[] = [
           "Pour Metz et, plus largement, pour la Grande Région, la venue de Léon XIV restera comme un moment particulièrement marquant de cette année 2026.",
       },
     ],
-    une: true,
   },
   // Source : https://www.radio-tripoint-officiel.fr/actualites
   {

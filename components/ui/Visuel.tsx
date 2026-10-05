@@ -39,7 +39,8 @@ export function Visuel({
           fill
           sizes={sizes}
           preload={preload}
-          className="object-cover"
+          // Visuel en hauteur (affiche, story) recadré : on garde le haut, où est le titre.
+          className={cn("object-cover", visuel.hauteur > visuel.largeur && "object-top")}
         />
       ) : (
         <Couverture {...repli} />
