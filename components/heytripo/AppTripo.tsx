@@ -254,6 +254,14 @@ type Reco = {
   onerror: ((e: { error: string }) => void) | null
 }
 
+function classeReco(): (new () => Reco) | undefined {
+  const W = window as unknown as {
+    SpeechRecognition?: new () => Reco
+    webkitSpeechRecognition?: new () => Reco
+  }
+  return W.SpeechRecognition ?? W.webkitSpeechRecognition
+}
+
 /* ─── L'appli ─────────────────────────────────────────────────────────── */
 
 export function AppTripo() {
@@ -294,6 +302,8 @@ export function AppTripo() {
   const [appel, setAppel] = useState(false)
   const appelRef = useRef(false)
   const ecouterRef = useRef<() => void>(() => {})
+  const reprendreRef = useRef<() => void>(() => {})
+  const envoyerRef = useRef<(q: string, mode?: "texte" | "appel") => void>(() => {})
   const fil = useRef<HTMLDivElement>(null)
   const champ = useRef<HTMLTextAreaElement>(null)
   const fichier = useRef<HTMLInputElement>(null)
@@ -630,10 +640,11 @@ export function AppTripo() {
           const gen = generation.current
           setEnCours(false)
           await chaine.current
-          if (appelRef.current && gen === generation.current) ecouterRef.current()
+          if (appelRef.current && gen === generation.current) reprendreRef.current()
         }
       } catch (e) {
         if ((e as Error).name === "AbortError") return
+        if (appelEnCours && appelRef.current) reprendreRef.current()
         setMessages((l) => (l[l.length - 1]?.content ? l : l.slice(0, -1)))
         const k = (e as Error).message
         setErreur(k === "debit" ? t.debit : k === "image" ? t.photoTrop : t.erreur)
@@ -645,6 +656,7 @@ export function AppTripo() {
     },
     [photo, t, enCours, taire, debloquerAudio, messages, langue, son, alimenterVoix],
   )
+  envoyerRef.current = envoyer
 
   /* ─── Micro (reconnaissance vocale du navigateur) ─── */
   /** Réveille la voix de Tripo (fonction Python, ≈ 70 Mo à charger) avant qu'il en ait besoin. */
@@ -656,12 +668,113 @@ export function AppTripo() {
     reveiller()
   }, [reveiller])
 
-  const ecouter = useCallback(() => {
-    const W = window as unknown as {
-      SpeechRecognition?: new () => Reco
-      webkitSpeechRecognition?: new () => Reco
+  /* ─── Appel : un seul micro, ouvert du début à la fin ─── */
+  // Sur iPhone, le micro ne se rallume pas tout seul sans un toucher : le
+  // rouvrir après chaque réponse de Tripo échouait en silence (il
+  // « n'entendait plus »). On l'ouvre donc une fois, au toucher, et on le
+  // laisse ouvert ; pendant que Tripo parle, ce qu'il entend est ignoré.
+  const micAppel = useRef<Reco | null>(null)
+  const accepte = useRef(false)
+  const vus = useRef(0)
+  const base = useRef(0)
+  const plein = useRef("")
+  const prefixe = useRef("")
+  const ouvrirRef = useRef<() => boolean>(() => false)
+
+  const ouvrirMicAppel = useCallback((): boolean => {
+    const R = classeReco()
+    if (!R) {
+      setErreur(t.micIndispo)
+      return false
     }
-    const R = W.SpeechRecognition ?? W.webkitSpeechRecognition
+    const r = new R()
+    r.lang = ECOUTE[langue]
+    r.interimResults = true
+    r.continuous = true
+    vus.current = base.current = 0
+    plein.current = prefixe.current = ""
+    const debut = Date.now()
+    let silence: ReturnType<typeof setTimeout> | undefined
+    r.onresult = (e) => {
+      const liste = Array.from(e.results)
+      const tout = liste.map((x) => x[0].transcript).join(" ")
+      vus.current = liste.length
+      plein.current = tout
+      if (!accepte.current) return
+      // Seulement ce qui a été dit depuis que Tripo s'est tu.
+      const texte = (
+        tout.startsWith(prefixe.current)
+          ? tout.slice(prefixe.current.length)
+          : liste
+              .slice(base.current)
+              .map((x) => x[0].transcript)
+              .join(" ")
+      ).trim()
+      setTranscription(texte)
+      clearTimeout(silence)
+      if (!texte) return
+      const fini = liste[liste.length - 1].isFinal
+      silence = setTimeout(
+        () => {
+          if (!accepte.current) return
+          accepte.current = false
+          setEcoute(false)
+          setTranscription("")
+          envoyerRef.current(texte, "appel")
+        },
+        fini ? 350 : 800,
+      )
+    }
+    r.onerror = (e) => {
+      if (e.error === "not-allowed" || e.error === "service-not-allowed") setErreur(t.micIndispo)
+    }
+    r.onend = () => {
+      clearTimeout(silence)
+      if (micAppel.current !== r) return
+      micAppel.current = null
+      if (!appelRef.current) return
+      // Le navigateur a fermé le micro (long silence) : on le rouvre, sauf
+      // s'il vient de refuser (alors le bouton « Parler » prend le relais).
+      const ecoutait = accepte.current
+      if (Date.now() - debut < 1500 || !ouvrirRef.current()) {
+        accepte.current = false
+        setEcoute(false)
+      } else accepte.current = ecoutait
+    }
+    micAppel.current = r
+    try {
+      r.start()
+      return true
+    } catch {
+      micAppel.current = null
+      return false
+    }
+  }, [langue, t])
+  ouvrirRef.current = ouvrirMicAppel
+
+  /** Tripo s'est tu : à toi. */
+  const reprendre = useCallback(() => {
+    if (!appelRef.current) return
+    setErreur(null)
+    if (!micAppel.current && !ouvrirMicAppel()) {
+      setEcoute(false)
+      return
+    }
+    prefixe.current = plein.current
+    base.current = vus.current
+    accepte.current = true
+    setTranscription("")
+    setEcoute(true)
+  }, [ouvrirMicAppel])
+  reprendreRef.current = reprendre
+
+  const ecouter = useCallback(() => {
+    if (appelRef.current) {
+      taire()
+      if (sonRef.current) debloquerAudio()
+      return reprendre()
+    }
+    const R = classeReco()
     if (!R) {
       setErreur(t.micIndispo)
       return
@@ -704,7 +817,7 @@ export function AppTripo() {
     } catch {
       setEcoute(false)
     }
-  }, [langue, t, taire, debloquerAudio, envoyer])
+  }, [langue, t, taire, debloquerAudio, envoyer, reprendre])
   ecouterRef.current = ecouter
 
   const demarrerAppel = useCallback(() => {
@@ -718,6 +831,10 @@ export function AppTripo() {
 
   const finAppel = useCallback(() => {
     appelRef.current = false
+    accepte.current = false
+    micAppel.current?.abort()
+    micAppel.current = null
+    setEcoute(false)
     setAppel(false)
     reco.current?.abort()
     annul.current?.abort()
@@ -726,11 +843,17 @@ export function AppTripo() {
 
   /** Toucher Tripo pendant qu'il parle : il se tait et t'écoute. */
   const couper = useCallback(() => {
+    if (appelRef.current) {
+      if (ecoute) return
+      annul.current?.abort()
+      taire()
+      return reprendre()
+    }
     if (ecoute) return reco.current?.stop()
     annul.current?.abort()
     taire()
     ecouter()
-  }, [ecoute, taire, ecouter])
+  }, [ecoute, taire, ecouter, reprendre])
 
   const choisirPhoto = async (f: File | undefined) => {
     if (!f) return
