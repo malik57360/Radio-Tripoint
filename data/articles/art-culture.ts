@@ -6,18 +6,18 @@ import type { Article } from "@/types/article"
  * `ordre` reprend le rang d'apparition (1 = le plus récent).
  */
 export const artCulture: Article[] = [
-  // Article de la rédaction, 6 octobre 2026, d'après le communiqué et le
-  // dossier de presse du Centre européen Schengen asbl (Schengen Museum).
+  // Article de la rédaction, 6 octobre 2026, d'après le communiqué, l'e-mail
+  // et le dossier de presse du Centre européen Schengen asbl (Schengen Museum).
   {
     slug: "schengen-museum-courts-metrages-frontieres-octobre-2026",
     titre:
-      "Schengen : cinq courts métrages sur l’impact humain des frontières, à bord du Princesse Marie-Astrid",
+      "Schengen : cinq courts métrages sur l’impact humain des frontières, projetés à bord du Princesse Marie-Astrid",
     chapeau:
-      "Le Schengen Museum présente « Borders, Mobility, and their Human Impact », un programme de cinq courts métrages sur les frontières, les migrations et la liberté de circulation. Ouverture le jeudi 8 octobre à 18 h 30, à bord du bateau Princesse Marie-Astrid Europa.",
+      "Le Schengen Museum lance « Borders, Mobility, and their Human Impact », une programmation de cinq courts métrages primés sur les frontières, les migrations et la liberté de circulation. Soirée d’ouverture le jeudi 8 octobre à 18 h 30, à bord du bateau Princesse Marie-Astrid Europa, en présence de la plupart des réalisateurs.",
     categorie: "art-culture",
     publieLe: "2026-10-06T13:00:00+02:00",
     lieux: ["Schengen", "Luxembourg"],
-    tags: ["cinéma", "courts métrages", "Schengen Museum", "frontières"],
+    tags: ["cinéma", "courts métrages", "Schengen Museum", "frontières", "migrations"],
     visuel: {
       src: "/media/articles/schengen-museum-courts-metrages-frontieres-octobre-2026.webp",
       alt: "Affiche du court métrage Bon Voyage de Marc Wilkins : un enfant au pull rouge, à l’avant d’un voilier.",
@@ -29,55 +29,151 @@ export const artCulture: Article[] = [
       {
         type: "paragraphe",
         texte:
-          "Le Schengen Museum, porté par le Centre européen Schengen asbl, lance une nouvelle programmation de courts métrages : « Borders, Mobility, and their Human Impact ». Cinq films explorent l’impact humain des frontières, des migrations et de la restriction de la liberté de circulation.",
+          "Schengen, octobre 2026. Cinq courts métrages explorent l’impact humain des frontières, des migrations et de la restriction de la liberté de circulation : c’est le cœur de « Borders, Mobility, and their Human Impact », la nouvelle programmation cinématographique du Schengen Museum, porté par le Centre européen Schengen asbl. Les projections ont lieu à bord du Princesse Marie-Astrid Europa, amarré à Schengen.",
+      },
+      {
+        type: "citation",
+        texte:
+          "Que signifient les frontières pour celles et ceux qui cherchent à les franchir, qui en sont empêchés ou qui se retrouvent pris entre différents systèmes politiques et sociaux ?",
+        auteur: "Schengen Museum",
       },
       {
         type: "paragraphe",
         texte:
-          "Réalisés dans différents pays et à différentes périodes, ces films partagent une même question : que signifient les frontières pour celles et ceux qui cherchent à les franchir, qui en sont empêchés ou qui se retrouvent pris entre différents systèmes politiques et sociaux ? Les rencontres entre les cinéastes et le public sont au cœur du programme, et la plupart des réalisateurs seront présents.",
+          "Réalisés dans différents pays et à différentes périodes, les cinq films partagent cette même question. À travers cette programmation, le Schengen Museum souhaite ouvrir différentes perspectives sur ces enjeux et donner la parole à des cinéastes aux parcours et aux expériences variés. Les rencontres entre les cinéastes et le public sont au cœur du programme : la plupart des réalisateurs seront présents.",
       },
-      { type: "intertitre", texte: "Deux rendez-vous" },
+      {
+        type: "paragraphe",
+        texte:
+          "Le lieu n’a rien d’anodin. C’est à Schengen, sur la Moselle, à bord d’un bateau baptisé Princesse Marie-Astrid, que furent signés le 14 juin 1985 les accords qui ont donné naissance à l’espace Schengen et à la libre circulation des personnes en Europe. Plus de quarante ans plus tard, c’est sur un bateau qui porte ce nom que le musée interroge ce que les frontières font encore aux vies humaines.",
+      },
+      {
+        type: "intertitre",
+        texte: "Deux rendez-vous, une programmation",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "La soirée d’ouverture a lieu le jeudi 8 octobre 2026 à 18 h 30, à bord du Princesse Marie-Astrid Europa. Elle sera accompagnée de rencontres et d’échanges avec les cinéastes et le public.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Le lendemain, vendredi 9 octobre 2026 à 9 h, une séance scolaire et universitaire est proposée. Elle sera elle aussi suivie de discussions et d’un échange avec le public.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "La programmation est présentée à partir du 9 octobre. La durée totale du programme est d’environ 2 h 30.",
+      },
+      {
+        type: "intertitre",
+        texte: "Cinq films, cinq perspectives",
+      },
+      {
+        type: "intertitre",
+        texte: "Border Conversations",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Réalisé par Jonathan Brunner (Allemagne, 2022, 30 min). En novembre 2021, des milliers de personnes tentent d’entrer dans l’Union européenne en franchissant la frontière entre la Biélorussie et la Pologne. Deux militantes polonaises reçoivent chaque jour des appels à l’aide et tentent de soutenir les personnes présentes dans la zone frontalière. Le film explore les limites de l’aide humanitaire et l’expérience de l’impuissance. Border Conversations a notamment été récompensé au DOK Leipzig et au DOK.fest de Munich.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/schengen-border-conversations.webp",
+          alt: "Affiche du film Border Conversations de Jonathan Brunner : une forêt de nuit, avec les messages « I want to get out of the jungle but not to Belarus » et « Hi, are you safe? ».",
+          largeur: 800,
+          hauteur: 1248,
+          credit: "dossier de presse du Schengen Museum",
+        },
+        legende: "Border Conversations, Jonathan Brunner (Allemagne, 2022)",
+      },
+      {
+        type: "intertitre",
+        texte: "Invisible Border",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Réalisé par Mark Gerstorfer (Autriche, 2022, 27 min), Invisible Border complète cette sélection venue de cinq horizons différents.",
+      },
+      {
+        type: "intertitre",
+        texte: "Play Schengen",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Réalisé par Gunhild Enger (Norvège, 2020, 14 min). Deux concepteurs de jeux vidéo développent un jeu destiné aux enfants pour expliquer l’Union européenne et l’espace Schengen. Les joueurs incarnent un oiseau national qui ne peut franchir les frontières qu’en fonction de son visa. Avec humour et absurdité, le film interroge la possibilité de traduire la complexité et les inégalités liées aux frontières dans un jeu destiné aux enfants.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/schengen-play-schengen.webp",
+          alt: "Affiche du film Play Schengen de Gunhild Enger : un ordinateur rétro affiche un oiseau en pixels et « Have your visa ready » sur une carte de l’Europe verte.",
+          largeur: 800,
+          hauteur: 1092,
+          credit: "dossier de presse du Schengen Museum",
+        },
+        legende: "Play Schengen, Gunhild Enger (Norvège, 2020)",
+      },
+      {
+        type: "intertitre",
+        texte: "Bon Voyage",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Réalisé par Marc Wilkins (Suisse, Turquie, 2016, 21 min). Un voilier suisse découvre en Méditerranée un bateau de réfugiés en difficulté. Lorsque certains des réfugiés parviennent à monter à bord, la situation échappe rapidement à tout contrôle. Ce court métrage, récompensé à de nombreuses reprises, a notamment reçu le Prix du cinéma suisse du meilleur court métrage ainsi qu’un prix du jury au Palm Springs International ShortFest. Il figurait également parmi les films présélectionnés pour les 89e Oscars.",
+      },
+      {
+        type: "intertitre",
+        texte: "An Orange from Jaffa",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Réalisé par Mohammed Almughanni (Palestine, Pologne, France, 2024, 27 min). Mohammed, un jeune Palestinien, tente de franchir un checkpoint israélien muni d’un titre de séjour polonais temporaire. Après plusieurs refus de la part de chauffeurs, un chauffeur de taxi lui propose de l’aider. Mais lorsque des soldats israéliens découvrent que Mohammed a déjà tenté, sans succès, de franchir le checkpoint, la situation dégénère rapidement.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Le film a reçu de nombreuses distinctions internationales, notamment le Grand Prix du Festival international du court métrage de Clermont-Ferrand, le Prix du meilleur court métrage européen au Festival du film de Cracovie et le Louis Le Prince Award au Leeds International Film Festival. An Orange from Jaffa figurait également parmi les films présélectionnés pour l’Oscar 2025 du meilleur court métrage en prises de vues réelles.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/schengen-an-orange-from-jaffa.webp",
+          alt: "Affiche du film An Orange from Jaffa de Mohammed Almughanni : une orange dessinée sur une carte, sur fond orange vif.",
+          largeur: 800,
+          hauteur: 1082,
+          credit: "dossier de presse du Schengen Museum",
+        },
+        legende: "An Orange from Jaffa, Mohammed Almughanni (Palestine, Pologne, France, 2024)",
+      },
+      {
+        type: "intertitre",
+        texte: "Les réalisateurs face au public",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Le Schengen Museum met l’accent sur l’échange : après chaque séance, cinéastes et spectateurs pourront dialoguer. Le musée se tient par ailleurs à la disposition des médias pour un aperçu en amont de la programmation et pour organiser des entretiens avec les réalisateurs.",
+      },
+      {
+        type: "intertitre",
+        texte: "Infos pratiques",
+      },
       {
         type: "liste",
         elements: [
-          "Jeudi 8 octobre 2026, 18 h 30 : soirée d’ouverture à bord du Princesse Marie-Astrid Europa, avec des rencontres et des échanges entre les cinéastes et le public.",
-          "Vendredi 9 octobre 2026, 9 h : séance scolaire et universitaire, suivie de discussions et d’un échange avec le public.",
-        ],
-      },
-      { type: "paragraphe", texte: "Durée totale du programme : environ 2 h 30." },
-      { type: "intertitre", texte: "Cinq films, cinq perspectives" },
-      {
-        type: "paragraphe",
-        texte:
-          "Border Conversations, de Jonathan Brunner (Allemagne, 2022, 30 min). En novembre 2021, des milliers de personnes tentent d’entrer dans l’Union européenne en franchissant la frontière entre la Biélorussie et la Pologne. Deux militantes polonaises reçoivent chaque jour des appels à l’aide et tentent de soutenir les personnes présentes dans la zone frontalière. Le film explore les limites de l’aide humanitaire et l’expérience de l’impuissance ; il a notamment été récompensé au DOK Leipzig et au DOK.fest de Munich.",
-      },
-      {
-        type: "paragraphe",
-        texte: "Invisible Border, de Mark Gerstorfer (Autriche, 2022, 27 min).",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Play Schengen, de Gunhild Enger (Norvège, 2020, 14 min). Deux concepteurs de jeux vidéo développent un jeu destiné aux enfants pour expliquer l’Union européenne et l’espace Schengen. Les joueurs incarnent un oiseau national qui ne peut franchir les frontières qu’en fonction de son visa. Avec humour et absurdité, le film interroge la possibilité de traduire la complexité et les inégalités liées aux frontières dans un jeu pour enfants.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "Bon Voyage, de Marc Wilkins (Suisse, Turquie, 2016, 21 min). Un voilier suisse découvre en Méditerranée un bateau de réfugiés en difficulté ; lorsque certains réfugiés parviennent à monter à bord, la situation échappe rapidement à tout contrôle. Le court métrage a reçu le Prix du cinéma suisse du meilleur court métrage et un prix du jury au Palm Springs International ShortFest, et figurait parmi les films présélectionnés pour les 89e Oscars.",
-      },
-      {
-        type: "paragraphe",
-        texte:
-          "An Orange from Jaffa, de Mohammed Almughanni (Palestine, Pologne, France, 2024, 27 min). Mohammed, un jeune Palestinien, tente de franchir un checkpoint israélien muni d’un titre de séjour polonais temporaire. Après plusieurs refus de chauffeurs, un chauffeur de taxi propose de l’aider, mais la situation dégénère quand des soldats découvrent qu’il a déjà tenté de passer. Le film a notamment reçu le Grand Prix du Festival international du court métrage de Clermont-Ferrand, le Prix du meilleur court métrage européen au Festival du film de Cracovie et le Louis Le Prince Award au Leeds International Film Festival ; il figurait parmi les films présélectionnés pour l’Oscar 2025 du meilleur court métrage en prises de vues réelles.",
-      },
-      { type: "intertitre", texte: "Infos pratiques" },
-      {
-        type: "liste",
-        elements: [
+          "Soirée d’ouverture : jeudi 8 octobre 2026 à 18 h 30, à bord du Princesse Marie-Astrid Europa",
+          "Séance scolaire et universitaire : vendredi 9 octobre 2026 à 9 h",
+          "Durée totale du programme : environ 2 h 30",
           "Schengen Museum, 1 rue Robert Goebbels, L-5444 Schengen (Luxembourg)",
           "Musée ouvert du lundi au dimanche, de 10 h à 18 h",
-          "Ouverture du programme : jeudi 8 octobre à 18 h 30, à bord du Princesse Marie-Astrid Europa",
-          "Séance scolaire et universitaire : vendredi 9 octobre à 9 h",
         ],
       },
     ],
