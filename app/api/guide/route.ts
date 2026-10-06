@@ -42,6 +42,27 @@ function acces(request: Request) {
 }
 const MAX_MESSAGES = 16
 const MAX_CARACTERES = 1500
+/** Photo jointe au dernier message (heytripo.fr) : réduite dans le navigateur, ≈ 2 Mo max. */
+const MAX_IMAGE_B64 = 2_800_000
+const TYPES_IMAGE = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+
+type Image = { media_type: string; data: string }
+
+function validerImage(brut: unknown): Image | null | false {
+  if (brut === undefined || brut === null) return null
+  if (typeof brut !== "object") return false
+  const { media_type, data } = brut as Record<string, unknown>
+  if (typeof media_type !== "string" || !TYPES_IMAGE.includes(media_type)) return false
+  if (typeof data !== "string" || data.length > MAX_IMAGE_B64 || !/^[A-Za-z0-9+/=]+$/.test(data))
+    return false
+  return { media_type, data }
+}
+
+/** Consignes ajoutées selon l'usage : réponse lue à voix haute, photo jointe. */
+const CONSIGNE_ORALE =
+  "\n\nMODE VOCAL : ta réponse sera lue à voix haute. Réponds en 2 à 4 phrases courtes et naturelles, sans liste, sans titre, sans Markdown, sans URL écrite en toutes lettres (dis plutôt « sur le site de Radio Tripoint »)."
+const CONSIGNE_PHOTO =
+  "\n\nPHOTOS : l'utilisateur peut t'envoyer une photo. Décris ce que tu vois vraiment et réponds à sa question. Si tu n'es pas sûr de ce que montre la photo, dis-le. N'identifie jamais une personne à partir de son visage."
 
 type Message = { role: "user" | "assistant"; content: string }
 
@@ -81,7 +102,7 @@ function valider(brut: unknown): Message[] | null {
 }
 
 export async function POST(request: Request) {
-  let corps: { messages?: unknown; langue?: unknown }
+  let corps: { messages?: unknown; langue?: unknown; image?: unknown; oral?: unknown }
   try {
     corps = await request.json()
   } catch {
@@ -90,14 +111,20 @@ export async function POST(request: Request) {
   const l: Langue = estLangue(corps.langue) ? corps.langue : "fr"
   const messages = valider(corps.messages)
   if (!messages) return json({ erreur: "requete" }, 400)
+  const image = validerImage(corps.image)
+  if (image === false) return json({ erreur: "image" }, 400)
+  const oral = corps.oral === true
 
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`guide:${ip}`).digest("hex").slice(0, 24)
   if (!autoriser(cle, 20, 10 * 60 * 1000)) return json({ erreur: "debit" }, 429)
+  // Une photo coûte bien plus qu'un message : 8 par tranche de 10 minutes.
+  if (image && !autoriser(`${cle}:img`, 8, 10 * 60 * 1000)) return json({ erreur: "debit" }, 429)
 
   const cible = acces(request)
   if (!cible) return json({ erreur: "non-configure" }, 503)
   await compter("tripo")
+  if (image) await compter("tripo_photo")
 
   // Partie fixe mise en cache chez Anthropic ; la partie variable (date,
   // agenda, langue) la suit.
@@ -122,7 +149,7 @@ export async function POST(request: Request) {
         stream: true,
         system: [
           { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
-          { type: "text", text: variable },
+          { type: "text", text: variable + CONSIGNE_PHOTO + (oral ? CONSIGNE_ORALE : "") },
         ],
         tools: [
           {
@@ -143,7 +170,22 @@ export async function POST(request: Request) {
       signal: AbortSignal.timeout(55_000),
     }).catch(() => null)
 
-  const premier = await appeler(messages)
+  // La photo accompagne le dernier message, et lui seul (l'historique n'en garde pas).
+  const derniere = messages[messages.length - 1]
+  const conversationInitiale: unknown[] = image
+    ? [
+        ...messages.slice(0, -1),
+        {
+          role: "user",
+          content: [
+            { type: "image", source: { type: "base64", ...image } },
+            { type: "text", text: derniere.content },
+          ],
+        },
+      ]
+    : messages
+
+  const premier = await appeler(conversationInitiale)
   if (!premier || !premier.ok || !premier.body) {
     // Message d'erreur de la passerelle seulement (jamais la conversation).
     const detail = premier ? (await premier.text().catch(() => "")).slice(0, 300) : ""
@@ -159,7 +201,7 @@ export async function POST(request: Request) {
   const flux = new ReadableStream<Uint8Array>({
     async start(ctrl) {
       const envoyer = (o: object) => ctrl.enqueue(encodeur.encode(JSON.stringify(o) + "\n"))
-      let conversation: unknown[] = messages
+      let conversation: unknown[] = conversationInitiale
       let reponse: Response | null = premier
       try {
         // La recherche web peut « mettre en pause » le tour (stop_reason

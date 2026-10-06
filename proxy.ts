@@ -11,7 +11,17 @@ import { NextResponse, type NextRequest } from "next/server"
  */
 const PREFIXES = new Set(["de", "lb", "en", "es"])
 
+/** heytripo.fr (et son sous-domaine de secours) : tout mène à l'appli Tripo. */
+const HOTES_TRIPO = /^(www\.)?heytripo\.fr$|^tripo\.radio-tripoint-officiel\.fr$/
+
 export function proxy(request: NextRequest) {
+  const hote = (request.headers.get("host") ?? "").split(":")[0].toLowerCase()
+  if (HOTES_TRIPO.test(hote)) {
+    const url = request.nextUrl.clone()
+    url.pathname = "/heytripo"
+    return NextResponse.rewrite(url)
+  }
+
   const { pathname } = request.nextUrl
   const premier = pathname.split("/")[1]
 
@@ -31,5 +41,5 @@ export function proxy(request: NextRequest) {
 export const config = {
   // Ni l'API, ni les fichiers (tout ce qui a une extension), ni les
   // ressources de Next.
-  matcher: ["/((?!api/|_next/|direction(?:/|$)|.*\\.[a-zA-Z0-9]+$).*)"],
+  matcher: ["/((?!api/|_next/|direction(?:/|$)|heytripo(?:/|$)|.*\\.[a-zA-Z0-9]+$).*)"],
 }

@@ -84,7 +84,8 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+            // Micro autorisé pour le site lui-même : on parle à Tripo (heytripo.fr).
+            value: "camera=(), microphone=(self), geolocation=(), interest-cohort=()",
           },
           {
             key: "Strict-Transport-Security",
