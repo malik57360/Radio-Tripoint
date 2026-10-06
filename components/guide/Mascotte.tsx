@@ -13,22 +13,29 @@ const GRAINS = [
   { cx: 60, cy: 129, r: 12 },
 ] as const
 
-/** Les trois pans du foulard, aux couleurs des trois pays (comme le logo). */
-const PANS = [
+/**
+ * Les trois drapeaux, accrochés au foulard comme une petite guirlande :
+ * France, Allemagne, Luxembourg (l'ordre du logo). Assez grands et bien
+ * à plat pour se lire même sur la pastille de 40 px.
+ */
+const DRAPEAUX = [
   // France : bandes verticales
-  { x: 84, rot: 6, h: 18, sens: "v", couleurs: ["#0055a4", "#ffffff", "#ef4135"] },
-  // Luxembourg : bandes horizontales
-  { x: 94, rot: 18, h: 20, sens: "h", couleurs: ["#ea141d", "#ffffff", "#51adda"] },
+  { x: 25, rot: -9, sens: "v", couleurs: ["#0055a4", "#ffffff", "#ef4135"] },
   // Allemagne : bandes horizontales
-  { x: 104, rot: 30, h: 17, sens: "h", couleurs: ["#000000", "#dd0000", "#ffce00"] },
+  { x: 49, rot: 0, sens: "h", couleurs: ["#000000", "#dd0000", "#ffce00"] },
+  // Luxembourg : bandes horizontales
+  { x: 73, rot: 9, sens: "h", couleurs: ["#ea141d", "#ffffff", "#51adda"] },
 ] as const
+const D_L = 22
+const D_H = 15
+const D_Y = 95
 
 /**
  * Tripo, la mascotte du guide : une grappe de raisin de la Moselle, le
  * vignoble que partagent la France, le Luxembourg et l'Allemagne. Sa tête
  * est le gros grain du haut, coiffé d'une feuille de vigne et d'une vrille,
  * casque de radio sur les oreilles ; il porte un foulard jaune Radio
- * Tripoint dont les trois pans ont les couleurs des trois pays. Façon
+ * Tripoint d'où pend une guirlande des trois drapeaux. Façon
  * autocollant : un liseré blanc l'entoure pour se lire sur fond clair comme
  * sur fond noir. SVG net de la pastille (40 px) à la page ; respiration et
  * clignement dans globals.css, coupés par prefers-reduced-motion.
@@ -54,13 +61,13 @@ export function Mascotte({
     "M66 9C63 3 67 -2 72 0C73 -6 81 -7 83 -2C88 -5 95 -1 92 4C97 7 95 14 88 13C86 18 78 18 76 13C71 16 66 14 66 9Z"
   const vrille = "M58 20C51 17 48 11 52 7C55 5 59 8 56 11"
   const foulard = "M33 80Q60 94 87 80L84 90Q60 103 36 90Z"
-  const pan = (x: number, h: number, rot: number) => ({
-    x: x - 5,
-    y: 90,
-    width: 10,
-    height: h,
-    rx: 2,
-    transform: `rotate(${rot} ${x} 90)`,
+  const drapeau = (x: number, rot: number) => ({
+    x,
+    y: D_Y,
+    width: D_L,
+    height: D_H,
+    rx: 1.5,
+    transform: `rotate(${rot} ${x + D_L / 2} ${D_Y})`,
   })
 
   return (
@@ -77,10 +84,10 @@ export function Mascotte({
           <stop offset="45%" stopColor="#8546c2" />
           <stop offset="100%" stopColor="#4c1d7c" />
         </radialGradient>
-        {PANS.map((p, i) => (
+        {DRAPEAUX.map((d, i) => (
           // Pas de rotation ici : le groupe qui l'utilise est déjà tourné.
-          <clipPath key={i} id={`tripo-pan-${i}-${id}`}>
-            <rect x={p.x - 5} y={90} width={10} height={p.h} rx={2} />
+          <clipPath key={i} id={`tripo-drapeau-${i}-${id}`}>
+            <rect x={d.x} y={D_Y} width={D_L} height={D_H} rx={1.5} />
           </clipPath>
         ))}
       </defs>
@@ -99,8 +106,9 @@ export function Mascotte({
           <path d={feuille} strokeWidth="7" />
           <path d={vrille} fill="none" strokeWidth="7" />
           <path d={foulard} strokeWidth="6" />
-          {PANS.map((p, i) => (
-            <rect key={i} {...pan(p.x, p.h, p.rot)} strokeWidth="6" />
+          <path d="M30 96Q60 104 90 96" fill="none" strokeWidth="6" />
+          {DRAPEAUX.map((d, i) => (
+            <rect key={i} {...drapeau(d.x, d.rot)} strokeWidth="7" />
           ))}
         </g>
 
@@ -185,34 +193,36 @@ export function Mascotte({
 
         {/* Foulard jaune Radio Tripoint, pans aux couleurs des trois pays */}
         <path d={foulard} fill="#f9b800" stroke={TRAIT} strokeWidth="2.4" strokeLinejoin="round" />
-        {PANS.map((p, i) => {
-          const r = pan(p.x, p.h, p.rot)
+        {/* Guirlande : la ficelle, puis les trois drapeaux */}
+        <path d="M30 96Q60 104 90 96" fill="none" stroke={TRAIT} strokeWidth="1.6" />
+        {DRAPEAUX.map((d, i) => {
+          const r = drapeau(d.x, d.rot)
           return (
-            <g key={i}>
-              <g clipPath={`url(#tripo-pan-${i}-${id})`} transform={r.transform}>
-                {p.couleurs.map((couleur, j) =>
-                  p.sens === "v" ? (
+            <g key={i} transform={r.transform}>
+              <g clipPath={`url(#tripo-drapeau-${i}-${id})`}>
+                {d.couleurs.map((couleur, j) =>
+                  d.sens === "v" ? (
                     <rect
                       key={j}
-                      x={r.x + (j * 10) / 3}
+                      x={r.x + (j * D_L) / 3}
                       y={r.y}
-                      width={10 / 3}
-                      height={r.height}
+                      width={D_L / 3}
+                      height={D_H}
                       fill={couleur}
                     />
                   ) : (
                     <rect
                       key={j}
                       x={r.x}
-                      y={r.y + (j * r.height) / 3}
-                      width={r.width}
-                      height={r.height / 3}
+                      y={r.y + (j * D_H) / 3}
+                      width={D_L}
+                      height={D_H / 3}
                       fill={couleur}
                     />
                   ),
                 )}
               </g>
-              <rect {...r} fill="none" stroke={TRAIT} strokeWidth="2" />
+              <rect {...r} transform={undefined} fill="none" stroke={TRAIT} strokeWidth="1.6" />
             </g>
           )
         })}
