@@ -9,6 +9,7 @@ import type { Article } from "@/types/article"
 import type { CategorieSlug } from "@/types/category"
 import type { Langue } from "@/lib/i18n/langues"
 import { normaliser } from "@/lib/utils/texte"
+import { articlesDashboard } from "./articles-dashboard"
 import { localiserArticle } from "./localiser"
 import { modeDemo } from "./demo"
 
@@ -25,12 +26,17 @@ function comparer(a: Article, b: Article): number {
   return Number(Boolean(b.publieLe)) - Number(Boolean(a.publieLe))
 }
 
-const tries = (): Article[] =>
-  [...(modeDemo ? [...articlesReels, ...articlesDemo] : articlesReels)].sort(comparer)
+/** Articles du dépôt + ceux publiés depuis le tableau de bord (un slug du dépôt prime). */
+async function tries(): Promise<Article[]> {
+  const base = modeDemo ? [...articlesReels, ...articlesDemo] : articlesReels
+  const connus = new Set(base.map((a) => a.slug))
+  const ajoutes = (await articlesDashboard()).filter((a) => !connus.has(a.slug))
+  return [...base, ...ajoutes].sort(comparer)
+}
 
 /** Tous les articles, dans la langue demandée (français par défaut). */
-function tous(l: Langue = "fr"): Article[] {
-  const liste = tries()
+async function tous(l: Langue = "fr"): Promise<Article[]> {
+  const liste = await tries()
   return l === "fr" ? liste : liste.map((a) => localiserArticle(a, l))
 }
 
@@ -53,7 +59,7 @@ export async function listerArticles(
   } = {},
 ): Promise<Page<Article>> {
   const { categorie, q, page = 1, parPage = PAR_PAGE, langue = "fr" } = options
-  let liste = tous(langue)
+  let liste = await tous(langue)
   // « actualites » est le flux général : il contient toutes les rubriques.
   if (categorie && categorie !== "actualites")
     liste = liste.filter((a) => a.categorie === categorie)
@@ -78,7 +84,7 @@ export async function articlesRecents(
   sauf?: string,
   l: Langue = "fr",
 ): Promise<Article[]> {
-  return tous(l)
+  return (await tous(l))
     .filter((a) => a.slug !== sauf)
     .slice(0, n)
 }
@@ -89,7 +95,7 @@ export async function une(l: Langue = "fr"): Promise<{
   secondaires: Article[]
   suite: Article[]
 }> {
-  const liste = tous(l)
+  const liste = await tous(l)
   const principal = liste.find((a) => a.une) ?? liste[0] ?? null
   const reste = liste.filter((a) => a !== principal)
   const suite = reste.slice(3, 9)
@@ -102,7 +108,7 @@ export async function une(l: Langue = "fr"): Promise<{
 }
 
 export async function articleParSlug(slug: string, l: Langue = "fr"): Promise<Article | null> {
-  return tous(l).find((a) => a.slug === slug) ?? null
+  return (await tous(l)).find((a) => a.slug === slug) ?? null
 }
 
 export async function articlesSimilaires(
@@ -110,13 +116,13 @@ export async function articlesSimilaires(
   n = 3,
   l: Langue = "fr",
 ): Promise<Article[]> {
-  const liste = tous(l).filter((a) => a.slug !== article.slug)
+  const liste = (await tous(l)).filter((a) => a.slug !== article.slug)
   const meme = liste.filter((a) => a.categorie === article.categorie)
   return [...meme, ...liste.filter((a) => a.categorie !== article.categorie)].slice(0, n)
 }
 
 export async function slugsArticles(): Promise<string[]> {
-  return tries().map((a) => a.slug)
+  return (await tries()).map((a) => a.slug)
 }
 
 export async function tousArticles(l: Langue = "fr"): Promise<Article[]> {

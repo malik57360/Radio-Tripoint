@@ -55,6 +55,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.info-lux.com", pathname: "/wp-content/uploads/**" },
       { protocol: "https", hostname: "visitremich.lu", pathname: "/wp-content/uploads/**" },
       { protocol: "https", hostname: "www.jds.fr", pathname: "/medias/image/**" },
+      // Photos de presse envoyées depuis le tableau de bord (page Articles).
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/articles/**",
+      },
     ],
     formats: ["image/avif", "image/webp"],
   },

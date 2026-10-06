@@ -14,6 +14,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
     "@vercel/analytics": "^2.0.1",
+    "@vercel/blob": "^2.8.1",
     "imapflow": "^2.2.1",
     "lucide-react": "^1.48.0",
     "mailparser": "^3.9.33",
