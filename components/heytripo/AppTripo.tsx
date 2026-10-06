@@ -19,7 +19,17 @@ const CLE = "heytripo-v1"
 const MAX = 1500
 
 type Source = { url: string; titre: string }
-type Message = { role: "user" | "assistant"; content: string; photo?: string; sources?: Source[] }
+type Message = {
+  role: "user" | "assistant"
+  content: string
+  photo?: string
+  sources?: Source[]
+  /** Échange vocal : question dite au micro, réponse en message vocal. */
+  vocal?: boolean
+  /** Message vocal de Tripo (URL locale du fichier audio) et sa durée. */
+  audio?: string
+  duree?: number
+}
 type Photo = { apercu: string; data: string; type: string }
 
 /* ─── Petits outils ───────────────────────────────────────────────────── */
@@ -123,6 +133,81 @@ function Texte({ texte }: { texte: string }) {
   )
 }
 
+/** Onde du message vocal : des barres stables, dérivées du texte. */
+function barres(texte: string, n = 34) {
+  let h = 7
+  return Array.from({ length: n }, (_, i) => {
+    h = (h * 31 + texte.charCodeAt(i % Math.max(1, texte.length)) + i) % 997
+    return 0.25 + ((h % 100) / 100) * 0.75
+  })
+}
+
+const duree = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`
+
+/** Bulle « message vocal » de Tripo, façon messagerie. */
+function BulleVocale({
+  m,
+  enLecture,
+  progres,
+  total,
+  pret,
+  onJouer,
+  libelle,
+}: {
+  m: Message
+  enLecture: boolean
+  progres: number
+  total: number
+  pret: boolean
+  onJouer: () => void
+  libelle: string
+}) {
+  const b = barres(m.content)
+  return (
+    <div className="border-jaune/30 bg-carte/80 flex items-center gap-3 rounded-3xl rounded-tl-lg border px-3 py-2.5 backdrop-blur">
+      <button
+        onClick={onJouer}
+        disabled={!pret}
+        aria-label={libelle}
+        className="bg-jaune grid size-11 flex-none place-items-center rounded-full text-black transition-transform active:scale-95 disabled:opacity-60"
+      >
+        {!pret ? (
+          <span className="points scale-75">
+            <span className="!bg-black" />
+            <span className="!bg-black" />
+            <span className="!bg-black" />
+          </span>
+        ) : enLecture ? (
+          <Square className="size-4" fill="currentColor" />
+        ) : (
+          <svg viewBox="0 0 24 24" className="ml-0.5 size-5" fill="currentColor" aria-hidden>
+            <path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5Z" />
+          </svg>
+        )}
+      </button>
+      <div className="flex h-9 min-w-0 flex-1 items-center gap-[3px]">
+        {b.map((v, i) => {
+          const joue = total > 0 && i / b.length < progres
+          return (
+            <span
+              key={i}
+              className={cn(
+                "w-[3px] flex-none rounded-full transition-colors",
+                joue ? "bg-jaune" : "bg-encre-3/60",
+                enLecture && "animate-pulse",
+              )}
+              style={{ height: `${Math.round(v * 100)}%` }}
+            />
+          )
+        })}
+      </div>
+      <span className="text-encre-3 w-10 flex-none text-right text-xs font-bold tabular-nums">
+        {total ? duree(enLecture ? total * progres : total) : "·:··"}
+      </span>
+    </div>
+  )
+}
+
 /** Tripo en grand : halo, ondes quand il écoute ou parle. */
 function GrandTripo({
   className,
@@ -203,6 +288,8 @@ export function AppTripo() {
   const [parle, setParle] = useState(false)
   const [ecoute, setEcoute] = useState(false)
   const [transcription, setTranscription] = useState("")
+  const [lecture, setLecture] = useState<{ i: number; progres: number; total: number } | null>(null)
+  const [texteVisible, setTexteVisible] = useState<Record<number, boolean>>({})
   const fil = useRef<HTMLDivElement>(null)
   const champ = useRef<HTMLTextAreaElement>(null)
   const fichier = useRef<HTMLInputElement>(null)
@@ -220,7 +307,7 @@ export function AppTripo() {
       // Les photos ne sont pas gardées, même dans l'onglet.
       const sansPhotos = messages
         .slice(-20)
-        .map(({ role, content, sources }) => ({ role, content, sources }))
+        .map(({ role, content, sources, vocal }) => ({ role, content, sources, vocal }))
       sessionStorage.setItem(CLE, JSON.stringify({ langue, messages: sansPhotos }))
     } catch {
       /* stockage indisponible */
@@ -336,6 +423,7 @@ export function AppTripo() {
     aDire.current = ""
     enFile.current = 0
     setParle(false)
+    setLecture(null)
     lecteur.current?.pause()
     if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel()
   }, [])
@@ -366,6 +454,87 @@ export function AppTripo() {
     [dire],
   )
 
+  /* ─── Messages vocaux de Tripo ─── */
+
+  /** Fichier audio d'une réponse : voix humaine (ElevenLabs) si elle est
+   * branchée, sinon la voix des vidéos (français), sinon rien. */
+  const produireAudio = useCallback(
+    async (texte: string): Promise<{ url: string; duree: number } | null> => {
+      const corps = JSON.stringify({ texte: pourLaVoix(texte) })
+      const sources = ["/api/tripo_vocal", ...(langue === "fr" ? ["/api/tripo_voix"] : [])]
+      for (const src of sources) {
+        const r = await fetch(src, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: corps,
+        }).catch(() => null)
+        if (!r?.ok) continue
+        const url = URL.createObjectURL(await r.blob())
+        const duree = await new Promise<number>((ok) => {
+          const x = new Audio()
+          x.preload = "metadata"
+          x.onloadedmetadata = () => ok(Number.isFinite(x.duration) ? x.duration : 0)
+          x.onerror = () => ok(0)
+          x.src = url
+        })
+        return { url, duree }
+      }
+      return null
+    },
+    [langue],
+  )
+
+  const jouerVocal = useCallback(
+    (i: number, m: Message) => {
+      const dejaEnCours = lecture?.i === i
+      taire()
+      if (dejaEnCours) return
+      const fin = () => {
+        setLecture(null)
+        setParle(false)
+      }
+      setLecture({ i, progres: 0, total: m.duree ?? 0 })
+      setParle(true)
+      if (!m.audio) {
+        // Après un rechargement, le fichier n'existe plus : on le refait.
+        produireAudio(m.content).then((audio) => {
+          if (!audio) return direNavigateur(pourLaVoix(m.content), fin)
+          setMessages((l) =>
+            l.map((x, j) => (j === i ? { ...x, audio: audio.url, duree: audio.duree } : x)),
+          )
+          jouerFichier.current(audio.url, i)
+        })
+        return
+      }
+      jouerFichier.current(m.audio, i)
+    },
+    [lecture, taire, direNavigateur, produireAudio],
+  )
+
+  /** Lecture d'un fichier vocal dans le lecteur unique (débloqué pour iOS). */
+  const jouerFichier = useRef<(url: string, i: number) => void>(() => {})
+  jouerFichier.current = (url: string, i: number) => {
+    const fin = () => {
+      setLecture(null)
+      setParle(false)
+    }
+    const a = (lecteur.current ??= new Audio())
+    a.ontimeupdate = () =>
+      setLecture((l) =>
+        l && l.i === i
+          ? {
+              i,
+              progres: a.duration ? a.currentTime / a.duration : 0,
+              total: a.duration || l.total,
+            }
+          : l,
+      )
+    a.onended = fin
+    a.onerror = fin
+    a.src = url
+    a.play().catch(fin)
+  }
+
   /* ─── Envoi ─── */
   const envoyer = useCallback(
     async (question: string, oral = false) => {
@@ -379,9 +548,11 @@ export function AppTripo() {
       setPhoto(null)
       const historique: Message[] = [
         ...messages,
-        { role: "user", content: q, photo: jointe?.apercu },
+        { role: "user", content: q, photo: jointe?.apercu, vocal: oral },
       ]
-      setMessages([...historique, { role: "assistant", content: "", sources: [] }])
+      const indexReponse = historique.length
+      let complet = ""
+      setMessages([...historique, { role: "assistant", content: "", sources: [], vocal: oral }])
       setEnCours(true)
       const ctrl = new AbortController()
       annul.current = ctrl
@@ -430,8 +601,9 @@ export function AppTripo() {
               recu = true
               setRecherche(null)
               const v = ev.v
+              complet += v
               maj((m) => ({ ...m, content: m.content + v }))
-              alimenterVoix(v)
+              if (!oral) alimenterVoix(v)
             } else if (ev.t === "recherche" && ev.v) setRecherche(ev.v)
             else if (ev.t === "source" && ev.url) {
               const s = { url: ev.url, titre: ev.titre ?? ev.url }
@@ -440,7 +612,20 @@ export function AppTripo() {
           }
         }
         if (!recu) throw new Error("indisponible")
-        alimenterVoix("", true)
+        if (oral) {
+          // Message vocal : Tripo « enregistre » toute sa réponse d'un coup,
+          // pour une voix continue et naturelle, puis elle part toute seule.
+          const audio = await produireAudio(complet)
+          const final: Message = {
+            role: "assistant",
+            content: complet,
+            vocal: true,
+            audio: audio?.url,
+            duree: audio?.duree,
+          }
+          maj((m) => ({ ...m, audio: final.audio, duree: final.duree }))
+          if (sonRef.current) jouerVocal(indexReponse, final)
+        } else alimenterVoix("", true)
       } catch (e) {
         if ((e as Error).name === "AbortError") return
         setMessages((l) => (l[l.length - 1]?.content ? l : l.slice(0, -1)))
@@ -452,7 +637,19 @@ export function AppTripo() {
         annul.current = null
       }
     },
-    [photo, t, enCours, taire, debloquerAudio, messages, langue, son, alimenterVoix],
+    [
+      photo,
+      t,
+      enCours,
+      taire,
+      debloquerAudio,
+      messages,
+      langue,
+      son,
+      alimenterVoix,
+      produireAudio,
+      jouerVocal,
+    ],
   )
 
   /* ─── Micro (reconnaissance vocale du navigateur) ─── */
@@ -630,7 +827,18 @@ export function AppTripo() {
             >
               {t.intro}
             </p>
-            <div className="mt-7 grid w-full max-w-xl grid-cols-2 gap-2 sm:gap-2.5">
+            <button
+              onClick={ecouter}
+              className="entre group bg-jaune relative mt-7 flex items-center gap-3 rounded-full py-3 pr-7 pl-3 text-lg font-extrabold text-black shadow-[0_12px_40px_rgba(249,184,0,0.35)] transition-transform active:scale-95"
+              style={{ animationDelay: "440ms" }}
+            >
+              <span className="text-jaune relative grid size-11 place-items-center rounded-full bg-black">
+                <span className="onde !inset-0 !border-black/40" />
+                <Mic className="size-5" strokeWidth={2.4} />
+              </span>
+              {t.parlerA}
+            </button>
+            <div className="mt-6 grid w-full max-w-xl grid-cols-2 gap-2 sm:gap-2.5">
               {t.suggestions.map((s, i) => (
                 <button
                   key={s}
@@ -657,8 +865,9 @@ export function AppTripo() {
                         className="mb-2 ml-auto max-h-64 rounded-2xl border border-white/10 object-cover shadow-lg"
                       />
                     )}
-                    <div className="bg-jaune rounded-3xl rounded-br-lg px-4 py-3 font-semibold text-black">
-                      {m.content}
+                    <div className="bg-jaune flex items-start gap-2 rounded-3xl rounded-br-lg px-4 py-3 font-semibold text-black">
+                      {m.vocal && <Mic className="mt-0.5 size-4 flex-none opacity-70" />}
+                      <span>{m.content}</span>
                     </div>
                   </div>
                 </div>
@@ -670,21 +879,56 @@ export function AppTripo() {
                     <Mascotte anime={i === dernier} className="h-full w-full" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <div className="border-trait bg-carte/75 text-encre-2 rounded-3xl rounded-tl-lg border px-4 py-3 text-[1.02rem] backdrop-blur">
-                      {m.content ? (
-                        <Texte texte={m.content} />
-                      ) : (
-                        <span className="text-encre-3 flex items-center gap-2 text-sm font-semibold">
-                          <span className="points">
-                            <span />
-                            <span />
-                            <span />
-                          </span>
-                          {recherche ? `${t.cherche} : ${recherche}` : t.reflechit}
+                    {m.vocal && !(enCours && i === dernier) ? (
+                      <>
+                        <BulleVocale
+                          m={m}
+                          enLecture={lecture?.i === i}
+                          progres={lecture?.i === i ? lecture.progres : 0}
+                          total={lecture?.i === i && lecture.total ? lecture.total : (m.duree ?? 0)}
+                          pret
+                          onJouer={() => jouerVocal(i, m)}
+                          libelle={t.ecouterVocal}
+                        />
+                        <button
+                          onClick={() => setTexteVisible((v) => ({ ...v, [i]: !v[i] }))}
+                          className="text-encre-3 hover:text-encre mt-1.5 ml-2 text-xs font-semibold underline-offset-2 hover:underline"
+                        >
+                          {texteVisible[i] ? t.cacherTexte : t.voirTexte}
+                        </button>
+                        {texteVisible[i] && (
+                          <div className="entre border-trait bg-carte/60 text-encre-2 mt-2 rounded-2xl border px-4 py-3 text-[0.95rem]">
+                            <Texte texte={m.content} />
+                          </div>
+                        )}
+                      </>
+                    ) : m.vocal ? (
+                      <div className="border-jaune/30 bg-carte/80 text-jaune flex items-center gap-3 rounded-3xl rounded-tl-lg border px-4 py-3.5 text-sm font-bold backdrop-blur">
+                        <span className="eq flex h-4 items-center">
+                          <span />
+                          <span />
+                          <span />
+                          <span />
                         </span>
-                      )}
-                    </div>
-                    {i === dernier && parle && (
+                        {recherche ? `${t.cherche} : ${recherche}` : t.vocalEnCours}
+                      </div>
+                    ) : (
+                      <div className="border-trait bg-carte/75 text-encre-2 rounded-3xl rounded-tl-lg border px-4 py-3 text-[1.02rem] backdrop-blur">
+                        {m.content ? (
+                          <Texte texte={m.content} />
+                        ) : (
+                          <span className="text-encre-3 flex items-center gap-2 text-sm font-semibold">
+                            <span className="points">
+                              <span />
+                              <span />
+                              <span />
+                            </span>
+                            {recherche ? `${t.cherche} : ${recherche}` : t.reflechit}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {i === dernier && parle && !m.vocal && (
                       <p className="text-jaune mt-2 flex items-center gap-2 text-xs font-bold">
                         <span className="eq flex h-4 items-center">
                           <span />

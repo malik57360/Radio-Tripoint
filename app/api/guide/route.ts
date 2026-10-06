@@ -60,7 +60,7 @@ function validerImage(brut: unknown): Image | null | false {
 
 /** Consignes ajoutées selon l'usage : réponse lue à voix haute, photo jointe. */
 const CONSIGNE_ORALE =
-  "\n\nMODE VOCAL : ta réponse sera lue à voix haute. Réponds en 2 à 4 phrases courtes et naturelles, sans liste, sans titre, sans Markdown, sans URL écrite en toutes lettres (dis plutôt « sur le site de Radio Tripoint »)."
+  "\n\nMODE VOCAL : ta réponse est un message vocal, comme sur WhatsApp. Parle comme un vrai humain qui parle à un ami : phrases orales, naturelles et vivantes (« Alors… », « Ah ça, bonne question ! »), avec ta personnalité de Tripo, chaleureuse et un peu taquine. 2 à 5 phrases, pas plus. Aucune liste, aucun titre, aucun Markdown, aucune URL ni adresse web (dis « sur le site de Radio Tripoint »). Écris les nombres et les heures comme on les dit (« vingt heures trente »). Tutoie si l'utilisateur te tutoie."
 const CONSIGNE_PHOTO =
   "\n\nPHOTOS : l'utilisateur peut t'envoyer une photo. Décris ce que tu vois vraiment et réponds à sa question. Si tu n'es pas sûr de ce que montre la photo, dis-le. N'identifie jamais une personne à partir de son visage."
 

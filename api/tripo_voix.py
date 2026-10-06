@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler
 from piper import PiperVoice, SynthesisConfig
 
 MODELE = os.path.join(os.path.dirname(__file__), "voix", "fr-siwis-medium.onnx")
-MAX_TEXTE = 400
+MAX_TEXTE = 900
 ORIGINES = (
     "https://heytripo.fr",
     "https://www.heytripo.fr",
@@ -83,7 +83,7 @@ class handler(BaseHTTPRequestHandler):
         if origine and not (origine in ORIGINES or origine.endswith(".vercel.app")):
             return self._repondre(403, b'{"erreur":"origine"}')
         try:
-            n = min(int(self.headers.get("content-length") or 0), 4000)
+            n = min(int(self.headers.get("content-length") or 0), 8000)
             texte = str(json.loads(self.rfile.read(n) or b"{}").get("texte", "")).strip()[:MAX_TEXTE]
         except Exception:
             return self._repondre(400, b'{"erreur":"requete"}')

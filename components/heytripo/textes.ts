@@ -43,6 +43,11 @@ type Textes = {
   micIndispo: string
   pied: string
   sources: string
+  parlerA: string
+  vocalEnCours: string
+  voirTexte: string
+  cacherTexte: string
+  ecouterVocal: string
 }
 
 export const TEXTES: Record<Langue, Textes> = {
@@ -77,6 +82,11 @@ export const TEXTES: Record<Langue, Textes> = {
     micIndispo: "Le micro n'est pas disponible sur ce navigateur. Essaie Chrome ou Safari.",
     pied: "Tripo est une IA : il peut se tromper. Vérifie les infos importantes. Les photos ne sont pas conservées.",
     sources: "Sources",
+    parlerA: "Parler à Tripo",
+    vocalEnCours: "Tripo t'enregistre un vocal…",
+    voirTexte: "Voir le texte",
+    cacherTexte: "Cacher le texte",
+    ecouterVocal: "Écouter le message vocal",
   },
   de: {
     salut: ["Hey, ich bin", "Tripo!"],
@@ -109,6 +119,11 @@ export const TEXTES: Record<Langue, Textes> = {
     micIndispo: "Das Mikrofon ist in diesem Browser nicht verfügbar. Versuch Chrome oder Safari.",
     pied: "Tripo ist eine KI und kann sich irren. Prüfe wichtige Infos. Fotos werden nicht gespeichert.",
     sources: "Quellen",
+    parlerA: "Mit Tripo sprechen",
+    vocalEnCours: "Tripo nimmt eine Sprachnachricht auf…",
+    voirTexte: "Text anzeigen",
+    cacherTexte: "Text ausblenden",
+    ecouterVocal: "Sprachnachricht anhören",
   },
   lb: {
     salut: ["Hey, ech sinn", "den Tripo!"],
@@ -141,6 +156,11 @@ export const TEXTES: Record<Langue, Textes> = {
     micIndispo: "De Mikro ass an dësem Browser net disponibel. Prob Chrome oder Safari.",
     pied: "Den Tripo ass eng KI a kann sech iren. Iwwerpréif wichteg Infoen. Fotoe ginn net gespäichert.",
     sources: "Quellen",
+    parlerA: "Mam Tripo schwätzen",
+    vocalEnCours: "Den Tripo hëlt e Vocal op…",
+    voirTexte: "Text weisen",
+    cacherTexte: "Text verstoppen",
+    ecouterVocal: "De Vocal lauschteren",
   },
   en: {
     salut: ["Hey, I'm", "Tripo!"],
@@ -173,6 +193,11 @@ export const TEXTES: Record<Langue, Textes> = {
     micIndispo: "The microphone isn't available in this browser. Try Chrome or Safari.",
     pied: "Tripo is an AI and can make mistakes. Check important information. Photos are not stored.",
     sources: "Sources",
+    parlerA: "Talk to Tripo",
+    vocalEnCours: "Tripo is recording a voice note…",
+    voirTexte: "Show text",
+    cacherTexte: "Hide text",
+    ecouterVocal: "Play voice message",
   },
   es: {
     salut: ["¡Hola, soy", "Tripo!"],
@@ -205,5 +230,10 @@ export const TEXTES: Record<Langue, Textes> = {
     micIndispo: "El micrófono no está disponible en este navegador. Prueba Chrome o Safari.",
     pied: "Tripo es una IA y puede equivocarse. Comprueba la información importante. Las fotos no se guardan.",
     sources: "Fuentes",
+    parlerA: "Hablar con Tripo",
+    vocalEnCours: "Tripo te graba un audio…",
+    voirTexte: "Ver el texto",
+    cacherTexte: "Ocultar el texto",
+    ecouterVocal: "Escuchar el mensaje de voz",
   },
 }
