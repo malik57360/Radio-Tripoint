@@ -130,7 +130,10 @@ export async function POST(request: Request) {
   // agenda, langue) la suit.
   const { fixe, variable } = await consignesGuide(l)
 
-  const appeler = (conversation: unknown[]) =>
+  // En appel vocal, chaque seconde compte : pas de réflexion entre les
+  // outils, une réponse courte, une seule recherche web au plus. Si l'API
+  // refuse ce réglage (400), on retombe sur le réglage normal plus bas.
+  const appeler = (conversation: unknown[], rapide = false) =>
     fetch(cible.url, {
       method: "POST",
       headers: {
@@ -144,8 +147,9 @@ export async function POST(request: Request) {
         // compte dans max_tokens : à 1 500, réflexion + recherche web
         // épuisaient le plafond avant le premier mot (arrêt max_tokens,
         // Tripo « indisponible »). Effort bas : c'est une conversation.
-        max_tokens: 8000,
+        max_tokens: rapide ? 1500 : 8000,
         output_config: { effort: "low" },
+        ...(rapide ? { thinking: { type: "between_tools" } } : {}),
         stream: true,
         system: [
           { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
@@ -155,7 +159,7 @@ export async function POST(request: Request) {
           {
             type: "web_search_20250305",
             name: "web_search",
-            max_uses: 4,
+            max_uses: rapide ? 1 : 4,
             user_location: {
               type: "approximate",
               city: "Sierck-les-Bains",
@@ -185,7 +189,14 @@ export async function POST(request: Request) {
       ]
     : messages
 
-  const premier = await appeler(conversationInitiale)
+  let rapide = oral
+  let premier = await appeler(conversationInitiale, rapide)
+  if (rapide && premier && premier.status === 400) {
+    rapide = false
+    const detail = (await premier.text().catch(() => "")).slice(0, 300)
+    console.error(`[guide] réglage rapide refusé, réglage normal : ${detail}`)
+    premier = await appeler(conversationInitiale)
+  }
   if (!premier || !premier.ok || !premier.body) {
     // Message d'erreur de la passerelle seulement (jamais la conversation).
     const detail = premier ? (await premier.text().catch(() => "")).slice(0, 300) : ""
@@ -274,7 +285,7 @@ export async function POST(request: Request) {
             break
           }
           conversation = [...conversation, { role: "assistant", content: blocs.filter(Boolean) }]
-          reponse = await appeler(conversation)
+          reponse = await appeler(conversation, rapide)
           if (!reponse?.ok) {
             console.error(`[guide] reprise impossible (${reponse?.status ?? "réseau"})`)
             break

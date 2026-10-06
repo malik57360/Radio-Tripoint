@@ -647,6 +647,15 @@ export function AppTripo() {
   )
 
   /* ─── Micro (reconnaissance vocale du navigateur) ─── */
+  /** Réveille la voix de Tripo (fonction Python, ≈ 70 Mo à charger) avant qu'il en ait besoin. */
+  const reveiller = useCallback(() => {
+    if (langue !== "fr") return
+    fetch("/api/tripo_voix", { cache: "no-store" }).catch(() => {})
+  }, [langue])
+  useEffect(() => {
+    reveiller()
+  }, [reveiller])
+
   const ecouter = useCallback(() => {
     const W = window as unknown as {
       SpeechRecognition?: new () => Reco
@@ -665,16 +674,23 @@ export function AppTripo() {
     r.interimResults = true
     r.continuous = false
     let texte = ""
+    // Le navigateur attend parfois 2-3 s de silence avant de rendre la main
+    // (Safari surtout). On coupe nous-mêmes : 0,8 s sans mot nouveau, ou
+    // 0,35 s après une phrase marquée finale, et la question part.
+    let silence: ReturnType<typeof setTimeout> | undefined
     r.onresult = (e) => {
-      texte = Array.from(e.results)
-        .map((x) => x[0].transcript)
-        .join(" ")
+      const liste = Array.from(e.results)
+      texte = liste.map((x) => x[0].transcript).join(" ")
       setTranscription(texte)
+      clearTimeout(silence)
+      const fini = liste.length > 0 && liste[liste.length - 1].isFinal
+      if (texte.trim()) silence = setTimeout(() => r.stop(), fini ? 350 : 800)
     }
     r.onerror = (e) => {
       if (e.error === "not-allowed" || e.error === "service-not-allowed") setErreur(t.micIndispo)
     }
     r.onend = () => {
+      clearTimeout(silence)
       setEcoute(false)
       setTranscription("")
       reco.current = null
@@ -692,12 +708,13 @@ export function AppTripo() {
   ecouterRef.current = ecouter
 
   const demarrerAppel = useCallback(() => {
+    reveiller()
     appelRef.current = true
     sonRef.current = true
     setSon(true)
     setAppel(true)
     ecouter()
-  }, [ecouter])
+  }, [ecouter, reveiller])
 
   const finAppel = useCallback(() => {
     appelRef.current = false
