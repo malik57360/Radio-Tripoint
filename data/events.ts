@@ -602,4 +602,26 @@ export const evenements: Evenement[] = [
       lieu: "Salle des fêtes, Bouzonville (FR)",
     },
   },
+  {
+    slug: "schengen-museum-courts-metrages-ouverture-2026",
+    titre: "Borders, Mobility, and their Human Impact : soirée d’ouverture",
+    description:
+      "Le Schengen Museum ouvre son programme de cinq courts métrages sur l’impact humain des frontières, des migrations et de la restriction de la liberté de circulation (environ 2 h 30). La soirée est accompagnée de rencontres et d’échanges entre les cinéastes et le public. Séance scolaire et universitaire le vendredi 9 octobre à 9 h.",
+    debut: "2026-10-08T18:30:00+02:00",
+    lieu: "À bord du Princesse Marie-Astrid Europa",
+    ville: "Schengen",
+    pays: "LU",
+    organisateur: "Schengen Museum (Centre européen Schengen asbl)",
+    visuel: distant(
+      "/media/articles/schengen-museum-courts-metrages-frontieres-octobre-2026.webp",
+      "Affiche du court métrage Bon Voyage de Marc Wilkins, l’un des cinq films du programme",
+      900,
+      1270,
+    ),
+    flyer: {
+      titre: "Courts métrages : les frontières",
+      accroche: "5 films, rencontre avec les cinéastes",
+      lieu: "Bateau Princesse Marie-Astrid, Schengen (LU)",
+    },
+  },
 ]
