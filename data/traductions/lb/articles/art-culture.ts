@@ -1,6 +1,36 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "schengen-museum-courts-metrages-frontieres-octobre-2026": {
+    titre:
+      "Schengen: fënnef Kuerzfilmer iwwer de mënschlechen Impakt vu Grenzen, u Bord vun der Princesse Marie-Astrid",
+    chapeau:
+      "De Schengen Museum weist „Borders, Mobility, and their Human Impact“, e Programm mat fënnef Kuerzfilmer iwwer Grenzen, Migratioun a fräi Beweegung. Ouverture en Donneschdeg, den 8. Oktober, um 18.30 Auer u Bord vum Schëff Princesse Marie-Astrid Europa.",
+    alt: "Plakat vum Kuerzfilm Bon Voyage vum Marc Wilkins: e Kand mat engem roude Pullover viischt op engem Segelboot.",
+    corps: [
+      "De Schengen Museum, gedroe vum Centre européen Schengen asbl, lancéiert eng nei Programmatioun mat Kuerzfilmer: „Borders, Mobility, and their Human Impact“. Fënnef Filmer weisen de mënschlechen Impakt vu Grenzen, Migratioun an der Aschränkung vun der fräier Beweegung.",
+      "Gedréint a verschiddene Länner an zu verschiddenen Zäiten, stellen dës Filmer déiselwecht Fro: Wat bedeite Grenze fir déi Leit, déi se iwwerschreide wëllen, déi drun gehënnert ginn oder déi tëscht verschiddene politeschen a soziale Systemer festsëtzen? D'Begéinunge tëscht de Filmemaacher an dem Public stinn am Mëttelpunkt vum Programm, an déi meescht Regisseure sinn do.",
+      "Zwee Rendez-vousen",
+      [
+        "Donneschdeg, 8. Oktober 2026, 18.30 Auer: Ouverturesowend u Bord vun der Princesse Marie-Astrid Europa, mat Begéinungen an Echangë tëscht de Filmemaacher an dem Public.",
+        "Freideg, 9. Oktober 2026, 9 Auer: Virstellung fir Schoulen an Universitéiten, duerno Diskussiounen an en Austausch mam Public.",
+      ],
+      "Ganz Dauer vum Programm: ronn 2 Stonnen 30.",
+      "Fënnef Filmer, fënnef Perspektiven",
+      "Border Conversations vum Jonathan Brunner (Däitschland, 2022, 30 Min.). Am November 2021 probéieren Dausende Mënschen, iwwer d'Grenz tëscht Wäissrussland a Polen an d'Europäesch Unioun ze kommen. Zwou polnesch Aktivistinne kréien all Dag Hëllefruffen a probéieren, de Leit an der Grenzzon ze hëllefen. De Film weist d'Grenze vun der humanitärer Hëllef an d'Erfahrung vun der Muechtlosegkeet; en ass ënner anerem um DOK Leipzig an um DOK.fest München ausgezeechent ginn.",
+      "Invisible Border vum Mark Gerstorfer (Éisträich, 2022, 27 Min.).",
+      "Play Schengen vum Gunhild Enger (Norwegen, 2020, 14 Min.). Zwee Videospill-Entwéckler maachen e Spill fir Kanner, dat d'Europäesch Unioun an de Schengen-Raum erkläre soll. D'Spiller sinn en nationale Vull, deen d'Grenzen nëmmen no sengem Visum iwwerschreide kann. Mat Humor an Absurditéit freet de Film, ob een d'Komplexitéit an d'Ongläichheete vu Grenzen an engem Kannerspill duerstelle kann.",
+      "Bon Voyage vum Marc Wilkins (Schwäiz, Tierkei, 2016, 21 Min.). E Schwäizer Segelboot entdeckt am Mëttelmier e Flüchtlingsboot a Nout; wéi e puer Flüchtlingen u Bord kommen, entgleit d'Situatioun séier. De Kuerzfilm krut de Schwäizer Filmpräis fir de beschte Kuerzfilm an e Jurypräis um Palm Springs International ShortFest, an e war an der Virauswiel fir déi 89. Oscaren.",
+      "An Orange from Jaffa vum Mohammed Almughanni (Palestina, Polen, Frankräich, 2024, 27 Min.). De Mohammed, e jonke Palestinenser, probéiert mat engem temporäre polnesche Openthaltstitel en israelesche Checkpoint ze passéieren. No e puer Refuse vu Chauffeure bitt en Taxichauffeur him Hëllef un, mä d'Situatioun eskaléiert, wéi Zaldoten erausfannen, datt hien et schonn eemol probéiert huet. De Film krut ënner anerem de Grand Prix vum internationale Kuerzfilmfestival vu Clermont-Ferrand, de Präis fir de beschten europäesche Kuerzfilm um Filmfestival vu Krakau an den Louis Le Prince Award um Leeds International Film Festival; en war an der Virauswiel fir den Oscar 2025 vum beschte Kuerzfilm.",
+      "Praktesch Infoen",
+      [
+        "Schengen Museum, 1 rue Robert Goebbels, L-5444 Schengen (Lëtzebuerg)",
+        "Musée op vu Méindes bis Sonndes, vun 10 bis 18 Auer",
+        "Ouverture vum Programm: Donneschdeg, 8. Oktober, 18.30 Auer, u Bord vun der Princesse Marie-Astrid Europa",
+        "Virstellung fir Schoulen an Universitéiten: Freideg, 9. Oktober, 9 Auer",
+      ],
+    ],
+  },
   "salon-du-livre-de-rettel-2026": {
     titre:
       "Bicherfestival zu Rettel: 60 Auteuren, de Régis Hector als Parrain an eng Legend fir z'entdecken",

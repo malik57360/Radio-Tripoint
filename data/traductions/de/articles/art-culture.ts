@@ -1,6 +1,36 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "schengen-museum-courts-metrages-frontieres-octobre-2026": {
+    titre:
+      "Schengen: fünf Kurzfilme über die menschlichen Folgen von Grenzen, an Bord der Princesse Marie-Astrid",
+    chapeau:
+      "Das Schengen Museum zeigt „Borders, Mobility, and their Human Impact“, ein Programm mit fünf Kurzfilmen über Grenzen, Migration und Freizügigkeit. Eröffnung am Donnerstag, 8. Oktober, um 18.30 Uhr an Bord des Schiffes Princesse Marie-Astrid Europa.",
+    alt: "Plakat des Kurzfilms Bon Voyage von Marc Wilkins: ein Kind im roten Pullover am Bug eines Segelboots.",
+    corps: [
+      "Das Schengen Museum, getragen vom Centre européen Schengen asbl, startet ein neues Kurzfilmprogramm: „Borders, Mobility, and their Human Impact“. Fünf Filme erkunden die menschlichen Folgen von Grenzen, Migration und eingeschränkter Freizügigkeit.",
+      "In verschiedenen Ländern und zu verschiedenen Zeiten entstanden, stellen diese Filme dieselbe Frage: Was bedeuten Grenzen für die Menschen, die sie überqueren wollen, die daran gehindert werden oder die zwischen verschiedenen politischen und gesellschaftlichen Systemen gefangen sind? Die Begegnungen zwischen Filmschaffenden und Publikum stehen im Mittelpunkt des Programms, die meisten Regisseure werden anwesend sein.",
+      "Zwei Termine",
+      [
+        "Donnerstag, 8. Oktober 2026, 18.30 Uhr: Eröffnungsabend an Bord der Princesse Marie-Astrid Europa, mit Begegnungen und Gesprächen zwischen Filmschaffenden und Publikum.",
+        "Freitag, 9. Oktober 2026, 9 Uhr: Vorstellung für Schulen und Hochschulen, anschließend Diskussion und Austausch mit dem Publikum.",
+      ],
+      "Gesamtdauer des Programms: etwa 2 Stunden 30 Minuten.",
+      "Fünf Filme, fünf Perspektiven",
+      "Border Conversations von Jonathan Brunner (Deutschland, 2022, 30 Min.). Im November 2021 versuchen Tausende Menschen, über die Grenze zwischen Belarus und Polen in die Europäische Union zu gelangen. Zwei polnische Aktivistinnen erhalten jeden Tag Hilferufe und versuchen, die Menschen im Grenzgebiet zu unterstützen. Der Film erkundet die Grenzen humanitärer Hilfe und die Erfahrung der Ohnmacht; er wurde unter anderem beim DOK Leipzig und beim DOK.fest München ausgezeichnet.",
+      "Invisible Border von Mark Gerstorfer (Österreich, 2022, 27 Min.).",
+      "Play Schengen von Gunhild Enger (Norwegen, 2020, 14 Min.). Zwei Videospielentwickler entwickeln ein Spiel für Kinder, das die Europäische Union und den Schengen-Raum erklären soll. Die Spieler verkörpern einen Nationalvogel, der Grenzen nur je nach seinem Visum überqueren kann. Mit Humor und Absurdität fragt der Film, ob sich die Komplexität und die Ungleichheiten von Grenzen in einem Kinderspiel darstellen lassen.",
+      "Bon Voyage von Marc Wilkins (Schweiz, Türkei, 2016, 21 Min.). Ein Schweizer Segelboot entdeckt im Mittelmeer ein Flüchtlingsboot in Seenot; als einige Geflüchtete an Bord gelangen, gerät die Lage schnell außer Kontrolle. Der Kurzfilm erhielt den Schweizer Filmpreis für den besten Kurzfilm und einen Jurypreis beim Palm Springs International ShortFest und war für die 89. Oscars in der Vorauswahl.",
+      "An Orange from Jaffa von Mohammed Almughanni (Palästina, Polen, Frankreich, 2024, 27 Min.). Mohammed, ein junger Palästinenser, versucht mit einer befristeten polnischen Aufenthaltserlaubnis einen israelischen Checkpoint zu passieren. Nach mehreren Absagen von Fahrern bietet ihm ein Taxifahrer Hilfe an, doch die Lage eskaliert, als Soldaten entdecken, dass er es schon einmal versucht hat. Der Film erhielt unter anderem den Grand Prix des Internationalen Kurzfilmfestivals Clermont-Ferrand, den Preis für den besten europäischen Kurzfilm beim Filmfestival Krakau und den Louis Le Prince Award beim Leeds International Film Festival; er war für den Oscar 2025 als bester Kurzfilm in der Vorauswahl.",
+      "Praktische Infos",
+      [
+        "Schengen Museum, 1 rue Robert Goebbels, L-5444 Schengen (Luxemburg)",
+        "Museum geöffnet von Montag bis Sonntag, 10 bis 18 Uhr",
+        "Programmeröffnung: Donnerstag, 8. Oktober, 18.30 Uhr, an Bord der Princesse Marie-Astrid Europa",
+        "Vorstellung für Schulen und Hochschulen: Freitag, 9. Oktober, 9 Uhr",
+      ],
+    ],
+  },
   "salon-du-livre-de-rettel-2026": {
     titre:
       "Buchmesse in Rettel: 60 Autoren, Régis Hector als Schirmherr und eine Legende zum Entdecken",

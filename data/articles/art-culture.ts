@@ -6,6 +6,82 @@ import type { Article } from "@/types/article"
  * `ordre` reprend le rang d'apparition (1 = le plus récent).
  */
 export const artCulture: Article[] = [
+  // Article de la rédaction, 6 octobre 2026, d'après le communiqué et le
+  // dossier de presse du Centre européen Schengen asbl (Schengen Museum).
+  {
+    slug: "schengen-museum-courts-metrages-frontieres-octobre-2026",
+    titre:
+      "Schengen : cinq courts métrages sur l’impact humain des frontières, à bord du Princesse Marie-Astrid",
+    chapeau:
+      "Le Schengen Museum présente « Borders, Mobility, and their Human Impact », un programme de cinq courts métrages sur les frontières, les migrations et la liberté de circulation. Ouverture le jeudi 8 octobre à 18 h 30, à bord du bateau Princesse Marie-Astrid Europa.",
+    categorie: "art-culture",
+    publieLe: "2026-10-06T13:00:00+02:00",
+    lieux: ["Schengen", "Luxembourg"],
+    tags: ["cinéma", "courts métrages", "Schengen Museum", "frontières"],
+    visuel: {
+      src: "/media/articles/schengen-museum-courts-metrages-frontieres-octobre-2026.webp",
+      alt: "Affiche du court métrage Bon Voyage de Marc Wilkins : un enfant au pull rouge, à l’avant d’un voilier.",
+      largeur: 900,
+      hauteur: 1270,
+      credit: "Bon Voyage, Marc Wilkins — dossier de presse du Schengen Museum",
+    },
+    corps: [
+      {
+        type: "paragraphe",
+        texte:
+          "Le Schengen Museum, porté par le Centre européen Schengen asbl, lance une nouvelle programmation de courts métrages : « Borders, Mobility, and their Human Impact ». Cinq films explorent l’impact humain des frontières, des migrations et de la restriction de la liberté de circulation.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Réalisés dans différents pays et à différentes périodes, ces films partagent une même question : que signifient les frontières pour celles et ceux qui cherchent à les franchir, qui en sont empêchés ou qui se retrouvent pris entre différents systèmes politiques et sociaux ? Les rencontres entre les cinéastes et le public sont au cœur du programme, et la plupart des réalisateurs seront présents.",
+      },
+      { type: "intertitre", texte: "Deux rendez-vous" },
+      {
+        type: "liste",
+        elements: [
+          "Jeudi 8 octobre 2026, 18 h 30 : soirée d’ouverture à bord du Princesse Marie-Astrid Europa, avec des rencontres et des échanges entre les cinéastes et le public.",
+          "Vendredi 9 octobre 2026, 9 h : séance scolaire et universitaire, suivie de discussions et d’un échange avec le public.",
+        ],
+      },
+      { type: "paragraphe", texte: "Durée totale du programme : environ 2 h 30." },
+      { type: "intertitre", texte: "Cinq films, cinq perspectives" },
+      {
+        type: "paragraphe",
+        texte:
+          "Border Conversations, de Jonathan Brunner (Allemagne, 2022, 30 min). En novembre 2021, des milliers de personnes tentent d’entrer dans l’Union européenne en franchissant la frontière entre la Biélorussie et la Pologne. Deux militantes polonaises reçoivent chaque jour des appels à l’aide et tentent de soutenir les personnes présentes dans la zone frontalière. Le film explore les limites de l’aide humanitaire et l’expérience de l’impuissance ; il a notamment été récompensé au DOK Leipzig et au DOK.fest de Munich.",
+      },
+      {
+        type: "paragraphe",
+        texte: "Invisible Border, de Mark Gerstorfer (Autriche, 2022, 27 min).",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Play Schengen, de Gunhild Enger (Norvège, 2020, 14 min). Deux concepteurs de jeux vidéo développent un jeu destiné aux enfants pour expliquer l’Union européenne et l’espace Schengen. Les joueurs incarnent un oiseau national qui ne peut franchir les frontières qu’en fonction de son visa. Avec humour et absurdité, le film interroge la possibilité de traduire la complexité et les inégalités liées aux frontières dans un jeu pour enfants.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Bon Voyage, de Marc Wilkins (Suisse, Turquie, 2016, 21 min). Un voilier suisse découvre en Méditerranée un bateau de réfugiés en difficulté ; lorsque certains réfugiés parviennent à monter à bord, la situation échappe rapidement à tout contrôle. Le court métrage a reçu le Prix du cinéma suisse du meilleur court métrage et un prix du jury au Palm Springs International ShortFest, et figurait parmi les films présélectionnés pour les 89e Oscars.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "An Orange from Jaffa, de Mohammed Almughanni (Palestine, Pologne, France, 2024, 27 min). Mohammed, un jeune Palestinien, tente de franchir un checkpoint israélien muni d’un titre de séjour polonais temporaire. Après plusieurs refus de chauffeurs, un chauffeur de taxi propose de l’aider, mais la situation dégénère quand des soldats découvrent qu’il a déjà tenté de passer. Le film a notamment reçu le Grand Prix du Festival international du court métrage de Clermont-Ferrand, le Prix du meilleur court métrage européen au Festival du film de Cracovie et le Louis Le Prince Award au Leeds International Film Festival ; il figurait parmi les films présélectionnés pour l’Oscar 2025 du meilleur court métrage en prises de vues réelles.",
+      },
+      { type: "intertitre", texte: "Infos pratiques" },
+      {
+        type: "liste",
+        elements: [
+          "Schengen Museum, 1 rue Robert Goebbels, L-5444 Schengen (Luxembourg)",
+          "Musée ouvert du lundi au dimanche, de 10 h à 18 h",
+          "Ouverture du programme : jeudi 8 octobre à 18 h 30, à bord du Princesse Marie-Astrid Europa",
+          "Séance scolaire et universitaire : vendredi 9 octobre à 9 h",
+        ],
+      },
+    ],
+  },
   // Article de la rédaction, 1er octobre 2026, d'après l'e-mail de
   // l'association Lire en fête et l'affiche du salon.
   {

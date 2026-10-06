@@ -1,6 +1,36 @@
 import type { TradArticle } from "../../types"
 
 export const artCulture: Record<string, TradArticle> = {
+  "schengen-museum-courts-metrages-frontieres-octobre-2026": {
+    titre:
+      "Schengen: five short films on the human impact of borders, aboard the Princesse Marie-Astrid",
+    chapeau:
+      "The Schengen Museum presents “Borders, Mobility, and their Human Impact”, a programme of five short films about borders, migration and freedom of movement. It opens on Thursday 8 October at 6.30 pm aboard the boat Princesse Marie-Astrid Europa.",
+    alt: "Poster for the short film Bon Voyage by Marc Wilkins: a child in a red jumper at the bow of a sailing boat.",
+    corps: [
+      "The Schengen Museum, run by the Centre européen Schengen asbl, is launching a new short film programme: “Borders, Mobility, and their Human Impact”. Five films explore the human impact of borders, migration and restrictions on freedom of movement.",
+      "Made in different countries and at different times, these films share one question: what do borders mean for those who try to cross them, who are prevented from doing so, or who find themselves caught between different political and social systems? Meetings between the filmmakers and the audience are at the heart of the programme, and most of the directors will attend.",
+      "Two dates",
+      [
+        "Thursday 8 October 2026, 6.30 pm: opening evening aboard the Princesse Marie-Astrid Europa, with meetings and discussions between the filmmakers and the audience.",
+        "Friday 9 October 2026, 9 am: screening for schools and universities, followed by discussions and an exchange with the audience.",
+      ],
+      "Total running time of the programme: about 2 hours 30 minutes.",
+      "Five films, five perspectives",
+      "Border Conversations by Jonathan Brunner (Germany, 2022, 30 min). In November 2021, thousands of people try to enter the European Union by crossing the border between Belarus and Poland. Two Polish activists receive calls for help every day and try to support the people in the border zone. The film explores the limits of humanitarian aid and the experience of powerlessness; its awards include prizes at DOK Leipzig and DOK.fest Munich.",
+      "Invisible Border by Mark Gerstorfer (Austria, 2022, 27 min).",
+      "Play Schengen by Gunhild Enger (Norway, 2020, 14 min). Two video game designers develop a game for children to explain the European Union and the Schengen Area. Players become a national bird that can only cross borders according to its visa. With humour and absurdity, the film asks whether the complexity and inequalities of borders can be turned into a children's game.",
+      "Bon Voyage by Marc Wilkins (Switzerland, Turkey, 2016, 21 min). A Swiss sailing boat comes across a refugee boat in distress in the Mediterranean; when some of the refugees manage to climb aboard, the situation quickly spirals out of control. The short film won the Swiss Film Award for best short film and a jury prize at the Palm Springs International ShortFest, and was shortlisted for the 89th Oscars.",
+      "An Orange from Jaffa by Mohammed Almughanni (Palestine, Poland, France, 2024, 27 min). Mohammed, a young Palestinian, tries to cross an Israeli checkpoint with a temporary Polish residence permit. After several drivers refuse, a taxi driver offers to help, but things escalate when soldiers discover he has already tried to cross. The film's awards include the Grand Prix of the Clermont-Ferrand International Short Film Festival, the Best European Short Film award at the Krakow Film Festival and the Louis Le Prince Award at the Leeds International Film Festival; it was shortlisted for the 2025 Oscar for best live action short film.",
+      "Practical information",
+      [
+        "Schengen Museum, 1 rue Robert Goebbels, L-5444 Schengen (Luxembourg)",
+        "Museum open Monday to Sunday, 10 am to 6 pm",
+        "Programme opening: Thursday 8 October at 6.30 pm, aboard the Princesse Marie-Astrid Europa",
+        "Screening for schools and universities: Friday 9 October at 9 am",
+      ],
+    ],
+  },
   "salon-du-livre-de-rettel-2026": {
     titre: "Rettel Book Fair: 60 authors, Régis Hector as patron and a legend to discover",
     chapeau:
