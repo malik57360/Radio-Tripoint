@@ -290,6 +290,10 @@ export function AppTripo() {
   const [transcription, setTranscription] = useState("")
   const [lecture, setLecture] = useState<{ i: number; progres: number; total: number } | null>(null)
   const [texteVisible, setTexteVisible] = useState<Record<number, boolean>>({})
+  /** Appel vocal : on parle, Tripo répond à voix haute, puis réécoute. */
+  const [appel, setAppel] = useState(false)
+  const appelRef = useRef(false)
+  const ecouterRef = useRef<() => void>(() => {})
   const fil = useRef<HTMLDivElement>(null)
   const champ = useRef<HTMLTextAreaElement>(null)
   const fichier = useRef<HTMLInputElement>(null)
@@ -356,6 +360,8 @@ export function AppTripo() {
    * par un seul lecteur audio (débloqué au premier geste, pour iOS).
    */
   const lecteur = useRef<HTMLAudioElement | null>(null)
+  /** Voix humaine disponible ? (inconnu au départ, puis mémorisé). */
+  const humaine = useRef<boolean | null>(null)
   const chaine = useRef<Promise<void>>(Promise.resolve())
   const generation = useRef(0)
 
@@ -379,20 +385,28 @@ export function AppTripo() {
         enFile.current = Math.max(0, enFile.current - 1)
         if (!enFile.current) setParle(false)
       }
-      if (langue !== "fr") {
-        chaine.current = chaine.current.then(
-          () => new Promise<void>((ok) => direNavigateur(p, () => (fin(), ok()))),
-        )
-        return
-      }
       // La requête part tout de suite (préchargement) ; la lecture attend son tour.
-      const audio = fetch("/api/tripo_voix", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ texte: p }),
-      })
-        .then((r) => (r.ok ? r.blob() : null))
-        .catch(() => null)
+      // Ordre : voix humaine (ElevenLabs) si elle est branchée, puis la voix
+      // des vidéos (français), sinon la voix du navigateur.
+      const demander = (src: string) =>
+        fetch(src, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ texte: p }),
+        }).catch(() => null)
+      const audio = (async () => {
+        if (humaine.current !== false) {
+          const r = await demander("/api/tripo_vocal")
+          if (r?.ok) {
+            humaine.current = true
+            return r.blob()
+          }
+          if (r?.status === 503) humaine.current = false
+        }
+        if (langue !== "fr") return null
+        const r = await demander("/api/tripo_voix")
+        return r?.ok ? r.blob() : null
+      })().catch(() => null)
       chaine.current = chaine.current.then(async () => {
         if (gen !== generation.current) return
         const blob = await audio
@@ -537,7 +551,8 @@ export function AppTripo() {
 
   /* ─── Envoi ─── */
   const envoyer = useCallback(
-    async (question: string, oral = false) => {
+    async (question: string, mode: "texte" | "appel" = "texte") => {
+      const appelEnCours = mode === "appel"
       const jointe = photo
       const q = (question.trim() || (jointe ? t.photoDefaut : "")).slice(0, MAX)
       if (!q || enCours) return
@@ -548,11 +563,9 @@ export function AppTripo() {
       setPhoto(null)
       const historique: Message[] = [
         ...messages,
-        { role: "user", content: q, photo: jointe?.apercu, vocal: oral },
+        { role: "user", content: q, photo: jointe?.apercu, vocal: appelEnCours },
       ]
-      const indexReponse = historique.length
-      let complet = ""
-      setMessages([...historique, { role: "assistant", content: "", sources: [], vocal: oral }])
+      setMessages([...historique, { role: "assistant", content: "", sources: [] }])
       setEnCours(true)
       const ctrl = new AbortController()
       annul.current = ctrl
@@ -568,7 +581,7 @@ export function AppTripo() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             langue,
-            oral: oral || son,
+            oral: appelEnCours || son,
             image: jointe ? { media_type: jointe.type, data: jointe.data } : undefined,
             messages: historique.map(({ role, content, photo: p }) => ({
               role,
@@ -601,9 +614,8 @@ export function AppTripo() {
               recu = true
               setRecherche(null)
               const v = ev.v
-              complet += v
               maj((m) => ({ ...m, content: m.content + v }))
-              if (!oral) alimenterVoix(v)
+              alimenterVoix(v)
             } else if (ev.t === "recherche" && ev.v) setRecherche(ev.v)
             else if (ev.t === "source" && ev.url) {
               const s = { url: ev.url, titre: ev.titre ?? ev.url }
@@ -612,20 +624,14 @@ export function AppTripo() {
           }
         }
         if (!recu) throw new Error("indisponible")
-        if (oral) {
-          // Message vocal : Tripo « enregistre » toute sa réponse d'un coup,
-          // pour une voix continue et naturelle, puis elle part toute seule.
-          const audio = await produireAudio(complet)
-          const final: Message = {
-            role: "assistant",
-            content: complet,
-            vocal: true,
-            audio: audio?.url,
-            duree: audio?.duree,
-          }
-          maj((m) => ({ ...m, audio: final.audio, duree: final.duree }))
-          if (sonRef.current) jouerVocal(indexReponse, final)
-        } else alimenterVoix("", true)
+        alimenterVoix("", true)
+        if (appelEnCours) {
+          // Appel : dès que Tripo a fini de parler, il réécoute tout seul.
+          const gen = generation.current
+          setEnCours(false)
+          await chaine.current
+          if (appelRef.current && gen === generation.current) ecouterRef.current()
+        }
       } catch (e) {
         if ((e as Error).name === "AbortError") return
         setMessages((l) => (l[l.length - 1]?.content ? l : l.slice(0, -1)))
@@ -637,19 +643,7 @@ export function AppTripo() {
         annul.current = null
       }
     },
-    [
-      photo,
-      t,
-      enCours,
-      taire,
-      debloquerAudio,
-      messages,
-      langue,
-      son,
-      alimenterVoix,
-      produireAudio,
-      jouerVocal,
-    ],
+    [photo, t, enCours, taire, debloquerAudio, messages, langue, son, alimenterVoix],
   )
 
   /* ─── Micro (reconnaissance vocale du navigateur) ─── */
@@ -684,7 +678,7 @@ export function AppTripo() {
       setEcoute(false)
       setTranscription("")
       reco.current = null
-      if (texte.trim()) envoyer(texte, true)
+      if (texte.trim()) envoyer(texte, appelRef.current ? "appel" : "texte")
     }
     reco.current = r
     setTranscription("")
@@ -695,6 +689,31 @@ export function AppTripo() {
       setEcoute(false)
     }
   }, [langue, t, taire, debloquerAudio, envoyer])
+  ecouterRef.current = ecouter
+
+  const demarrerAppel = useCallback(() => {
+    appelRef.current = true
+    sonRef.current = true
+    setSon(true)
+    setAppel(true)
+    ecouter()
+  }, [ecouter])
+
+  const finAppel = useCallback(() => {
+    appelRef.current = false
+    setAppel(false)
+    reco.current?.abort()
+    annul.current?.abort()
+    taire()
+  }, [taire])
+
+  /** Toucher Tripo pendant qu'il parle : il se tait et t'écoute. */
+  const couper = useCallback(() => {
+    if (ecoute) return reco.current?.stop()
+    annul.current?.abort()
+    taire()
+    ecouter()
+  }, [ecoute, taire, ecouter])
 
   const choisirPhoto = async (f: File | undefined) => {
     if (!f) return
@@ -828,7 +847,7 @@ export function AppTripo() {
               {t.intro}
             </p>
             <button
-              onClick={ecouter}
+              onClick={demarrerAppel}
               className="entre group bg-jaune relative mt-7 flex items-center gap-3 rounded-full py-3 pr-7 pl-3 text-lg font-extrabold text-black shadow-[0_12px_40px_rgba(249,184,0,0.35)] transition-transform active:scale-95"
               style={{ animationDelay: "440ms" }}
             >
@@ -1061,7 +1080,7 @@ export function AppTripo() {
               ) : (
                 <button
                   type="button"
-                  onClick={ecouter}
+                  onClick={demarrerAppel}
                   aria-label={t.micro}
                   title={t.micro}
                   className="bg-jaune grid size-11 flex-none place-items-center rounded-full text-black transition-transform active:scale-95"
@@ -1080,19 +1099,42 @@ export function AppTripo() {
         </div>
       </div>
 
-      {/* Écoute : Tripo tend l'oreille */}
-      {ecoute && (
-        <div className="verre entre fixed inset-0 z-30 flex flex-col items-center justify-center px-6 text-center">
-          <GrandTripo className="size-64" etat="ecoute" />
-          <p className="titre-tripo text-jaune mt-6 text-4xl">{t.ecoute}</p>
-          <p className="text-encre mt-4 min-h-[3.5rem] max-w-xl text-xl font-semibold">
-            {transcription}
+      {/* Appel avec Tripo : on reste ici, on parle, il répond, il réécoute */}
+      {appel && (
+        <div className="entre fixed inset-0 z-30 flex flex-col items-center justify-center bg-[#07060a]/96 px-6 pt-[env(safe-area-inset-top)] pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center backdrop-blur-2xl">
+          <button onClick={couper} aria-label={t.micro} className="rounded-full outline-none">
+            <GrandTripo
+              className="size-60 sm:size-72"
+              etat={ecoute ? "ecoute" : parle ? "parle" : "repos"}
+            />
+          </button>
+          <p className="titre-tripo text-jaune mt-5 text-4xl" key={`${ecoute}-${parle}-${enCours}`}>
+            <span className="mot">
+              {ecoute ? t.ecoute : parle ? t.parle : enCours ? `${t.reflechit}…` : t.parlerA}
+            </span>
           </p>
+          <p className="text-encre mt-4 min-h-[2rem] max-w-xl text-xl font-semibold">
+            {ecoute ? transcription : ""}
+          </p>
+          {!ecoute && (parle || enCours) && messages[dernier]?.role === "assistant" && (
+            <p className="text-encre-2 line-clamp-3 max-w-xl text-base">
+              {pourLaVoix(messages[dernier].content)}
+            </p>
+          )}
+          {!ecoute && !parle && !enCours && (
+            <button
+              onClick={ecouter}
+              className="bg-jaune mt-6 flex items-center gap-2 rounded-full px-7 py-3.5 text-lg font-extrabold text-black active:scale-95"
+            >
+              <Mic className="size-5" strokeWidth={2.4} />
+              {t.parlerA}
+            </button>
+          )}
           <button
-            onClick={() => reco.current?.stop()}
-            className="bg-encre mt-8 flex items-center gap-2 rounded-full px-6 py-3 font-bold text-black"
+            onClick={finAppel}
+            className="border-trait text-encre mt-8 flex items-center gap-2 rounded-full border bg-white/5 px-6 py-3 font-bold"
           >
-            <Square className="size-4" fill="currentColor" />
+            <X className="size-4" />
             {t.arreter}
           </button>
         </div>
