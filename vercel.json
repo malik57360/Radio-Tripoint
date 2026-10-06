@@ -1,5 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["cdg1"],
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "functions": {
+    "api/tripo_voix.py": {
+      "memory": 1024,
+      "maxDuration": 30,
+      "excludeFiles": "{.next/**,node_modules/**,public/**,app/**,components/**,data/**,lib/**,assets/**,scripts/**,types/**,config/**,*.md}"
+    }
+  }
 }
