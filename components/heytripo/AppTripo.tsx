@@ -244,24 +244,18 @@ export function AppTripo() {
     return null
   }, [langue])
 
-  const dire = useCallback(
-    (phrase: string) => {
-      const p = pourLaVoix(phrase)
-      if (!p || !sonRef.current || typeof speechSynthesis === "undefined") return
+  /** Voix du navigateur : pour les langues où Tripo n'a pas (encore) sa voix. */
+  const direNavigateur = useCallback(
+    (p: string, fin: () => void) => {
+      if (typeof speechSynthesis === "undefined") return fin()
       const u = new SpeechSynthesisUtterance(p)
       const v = voix()
       if (v) {
         u.voice = v
         u.lang = v.lang
       }
-      u.rate = 1.04
-      u.pitch = 1.15
-      enFile.current++
-      setParle(true)
-      const fin = () => {
-        enFile.current = Math.max(0, enFile.current - 1)
-        if (!enFile.current) setParle(false)
-      }
+      u.rate = 1.05
+      u.pitch = 1.35 // plus aigu : au plus près de la voix de Tripo
       u.onend = fin
       u.onerror = fin
       speechSynthesis.speak(u)
@@ -269,10 +263,80 @@ export function AppTripo() {
     [voix],
   )
 
+  /*
+   * Voix de Tripo (celle des vidéos) en français : chaque phrase est
+   * synthétisée sur le serveur dès qu'elle est prête, et jouée dans l'ordre
+   * par un seul lecteur audio (débloqué au premier geste, pour iOS).
+   */
+  const lecteur = useRef<HTMLAudioElement | null>(null)
+  const chaine = useRef<Promise<void>>(Promise.resolve())
+  const generation = useRef(0)
+
+  const debloquerAudio = useCallback(() => {
+    if (!lecteur.current) lecteur.current = new Audio()
+    const a = lecteur.current
+    // Un court silence joué pendant le geste autorise les lectures suivantes.
+    a.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="
+    a.play().catch(() => {})
+  }, [])
+
+  const dire = useCallback(
+    (phrase: string) => {
+      const p = pourLaVoix(phrase)
+      if (!p || !sonRef.current) return
+      const gen = generation.current
+      enFile.current++
+      setParle(true)
+      const fin = () => {
+        if (gen !== generation.current) return
+        enFile.current = Math.max(0, enFile.current - 1)
+        if (!enFile.current) setParle(false)
+      }
+      if (langue !== "fr") {
+        chaine.current = chaine.current.then(
+          () => new Promise<void>((ok) => direNavigateur(p, () => (fin(), ok()))),
+        )
+        return
+      }
+      // La requête part tout de suite (préchargement) ; la lecture attend son tour.
+      const audio = fetch("/api/tripo_voix", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ texte: p }),
+      })
+        .then((r) => (r.ok ? r.blob() : null))
+        .catch(() => null)
+      chaine.current = chaine.current.then(async () => {
+        if (gen !== generation.current) return
+        const blob = await audio
+        if (gen !== generation.current) return
+        if (!blob) return new Promise<void>((ok) => direNavigateur(p, () => (fin(), ok())))
+        const url = URL.createObjectURL(blob)
+        const a = (lecteur.current ??= new Audio())
+        await new Promise<void>((ok) => {
+          const fini = () => {
+            a.onended = a.onerror = null
+            URL.revokeObjectURL(url)
+            fin()
+            ok()
+          }
+          a.onended = fini
+          a.onerror = fini
+          a.src = url
+          a.play().catch(fini)
+        })
+      })
+    },
+    [langue, direNavigateur],
+  )
+
   const taire = useCallback(() => {
+    generation.current++
+    chaine.current = Promise.resolve()
     aDire.current = ""
     enFile.current = 0
     setParle(false)
+    lecteur.current?.pause()
     if (typeof speechSynthesis !== "undefined") speechSynthesis.cancel()
   }, [])
 
@@ -309,6 +373,7 @@ export function AppTripo() {
       const q = (question.trim() || (jointe ? t.photoDefaut : "")).slice(0, MAX)
       if (!q || enCours) return
       taire()
+      if (sonRef.current) debloquerAudio()
       setErreur(null)
       setSaisie("")
       setPhoto(null)
@@ -387,7 +452,7 @@ export function AppTripo() {
         annul.current = null
       }
     },
-    [photo, t, enCours, taire, messages, langue, son, alimenterVoix],
+    [photo, t, enCours, taire, debloquerAudio, messages, langue, son, alimenterVoix],
   )
 
   /* ─── Micro (reconnaissance vocale du navigateur) ─── */
@@ -402,6 +467,7 @@ export function AppTripo() {
       return
     }
     taire()
+    if (sonRef.current) debloquerAudio()
     setErreur(null)
     const r = new R()
     r.lang = ECOUTE[langue]
@@ -431,7 +497,7 @@ export function AppTripo() {
     } catch {
       setEcoute(false)
     }
-  }, [langue, t, taire, envoyer])
+  }, [langue, t, taire, debloquerAudio, envoyer])
 
   const choisirPhoto = async (f: File | undefined) => {
     if (!f) return

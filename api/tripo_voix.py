@@ -70,6 +70,14 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(corps)
 
+    def do_GET(self):
+        # Vérification rapide (« santé ») : la voix se charge et répond.
+        try:
+            d = synthese("Salut, c'est Tripo !")
+            return self._repondre(200, json.dumps({"ok": True, "octets": len(d)}).encode())
+        except Exception as e:
+            return self._repondre(500, json.dumps({"ok": False, "erreur": type(e).__name__}).encode())
+
     def do_POST(self):
         origine = self.headers.get("origin") or ""
         if origine and not (origine in ORIGINES or origine.endswith(".vercel.app")):
