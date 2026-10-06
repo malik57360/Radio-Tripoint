@@ -30,6 +30,7 @@ const VERIF: Record<Proposition["verification"]["statut"], { ok: boolean; texte:
   introuvable: { ok: false, texte: "Introuvable dans l'annuaire de l'État" },
   manuel: { ok: false, texte: "À vérifier à la main (registre LU / DE)" },
   indisponible: { ok: false, texte: "Annuaire injoignable : à vérifier à la main" },
+  particulier: { ok: false, texte: "Particulier : aucun numéro, à vérifier à la main" },
 }
 
 const jour = (iso: string) =>
@@ -83,8 +84,9 @@ function Dossier({ p }: { p: Proposition }) {
             <p className="surtitre">Structure</p>
             <p className="mt-1 font-bold">{p.organisation.nom}</p>
             <p className="text-encre-2">
-              {p.organisation.type === "association" ? "Association" : "Entreprise"} ·{" "}
-              {p.organisation.pays} · n° {p.organisation.identifiant}
+              {p.organisation.type === "particulier"
+                ? "Particulier"
+                : `${p.organisation.type === "association" ? "Association" : "Entreprise"} · ${p.organisation.pays} · n° ${p.organisation.identifiant}`}
             </p>
             <div className="mt-1.5">
               <Etat ok={v.ok}>{v.texte}</Etat>
@@ -103,15 +105,17 @@ function Dossier({ p }: { p: Proposition }) {
                 Déclarée « association », mais l&apos;annuaire ne la classe pas comme telle.
               </p>
             )}
-            <a
-              href={p.verification.lien}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent mt-1 inline-flex items-center gap-1 font-semibold"
-            >
-              Voir dans le registre officiel
-              <ExternalLink className="size-3.5" aria-hidden />
-            </a>
+            {p.verification.lien && (
+              <a
+                href={p.verification.lien}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent mt-1 inline-flex items-center gap-1 font-semibold"
+              >
+                Voir dans le registre officiel
+                <ExternalLink className="size-3.5" aria-hidden />
+              </a>
+            )}
           </div>
           <div>
             <p className="surtitre">Contact</p>

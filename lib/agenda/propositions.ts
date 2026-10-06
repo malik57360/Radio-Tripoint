@@ -29,13 +29,13 @@ export type Statut = "a_verifier" | "accepte" | "refuse" | "publie" | "retire"
 
 export interface Verification {
   /** verifie : trouvée et active · ferme : radiée · introuvable · manuel : LU/DE · indisponible : annuaire injoignable. */
-  statut: "verifie" | "ferme" | "introuvable" | "manuel" | "indisponible"
+  statut: "verifie" | "ferme" | "introuvable" | "manuel" | "indisponible" | "particulier"
   nomOfficiel?: string
   commune?: string
   /** L'annuaire la classe comme association (France). */
   association?: boolean
   /** Où vérifier soi-même. */
-  lien: string
+  lien?: string
   le: number
 }
 
@@ -48,7 +48,7 @@ export interface Proposition {
   statut: Statut
   langue: Langue
   organisation: {
-    type: "entreprise" | "association"
+    type: "entreprise" | "association" | "particulier"
     pays: "FR" | "LU" | "DE"
     identifiant: string
     nom: string
@@ -266,7 +266,8 @@ export function versEvenement(p: Proposition): Evenement {
     pays: c.pays,
     ...(tarif && /gratuit|libre|free|kostenlos|frei|gratis/i.test(tarif) ? { gratuit: true } : {}),
     ...(c.lien ? { lienExterne: c.lien } : {}),
-    organisateur: p.organisation.nom,
+    // Le nom d'un particulier ne s'affiche pas publiquement.
+    ...(p.organisation.type !== "particulier" ? { organisateur: p.organisation.nom } : {}),
     ...(tarif ? { flyer: { tarif: tarif.toUpperCase().slice(0, 40) } } : {}),
   }
 }

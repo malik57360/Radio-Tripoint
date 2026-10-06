@@ -19,11 +19,11 @@ export const generateMetadata = () =>
       es: "Publicar su evento en la agenda",
     },
     description: {
-      fr: `Entreprises et associations immatriculées : publiez votre événement dans l'agenda de Radio Tripoint, la radio des Trois Frontières. ${PRIX_EUROS} € par événement, payés seulement après acceptation.`,
-      de: `Eingetragene Unternehmen und Vereine: Veröffentlichen Sie Ihre Veranstaltung im Kalender von Radio Tripoint, dem Radio des Dreiländerecks. ${PRIX_EUROS} € pro Veranstaltung, erst nach Annahme zu zahlen.`,
-      lb: `Ageschriwwe Betriber an Associatiounen: Publizéiert Ären Evenement an der Agenda vu Radio Tripoint, dem Radio vum Dräilännereck. ${PRIX_EUROS} € pro Evenement, eréischt no der Unhuelung ze bezuelen.`,
-      en: `Registered companies and associations: publish your event in the Radio Tripoint listings, the radio of the Three Borders. €${PRIX_EUROS} per event, paid only once accepted.`,
-      es: `Empresas y asociaciones registradas: publiquen su evento en la agenda de Radio Tripoint, la radio de las Tres Fronteras. ${PRIX_EUROS} € por evento, que se pagan solo tras la aceptación.`,
+      fr: `Entreprises, associations et particuliers : publiez votre événement dans l'agenda de Radio Tripoint, la radio des Trois Frontières. ${PRIX_EUROS} € par événement, payés seulement après acceptation.`,
+      de: `Unternehmen, Vereine und Privatpersonen: Veröffentlichen Sie Ihre Veranstaltung im Kalender von Radio Tripoint, dem Radio des Dreiländerecks. ${PRIX_EUROS} € pro Veranstaltung, erst nach Annahme zu zahlen.`,
+      lb: `Betriber, Associatiounen a Privatpersounen: Publizéiert Ären Evenement an der Agenda vu Radio Tripoint, dem Radio vum Dräilännereck. ${PRIX_EUROS} € pro Evenement, eréischt no der Unhuelung ze bezuelen.`,
+      en: `Companies, associations and individuals: publish your event in the Radio Tripoint listings, the radio of the Three Borders. €${PRIX_EUROS} per event, paid only once accepted.`,
+      es: `Empresas, asociaciones y particulares: publiquen su evento en la agenda de Radio Tripoint, la radio de las Tres Fronteras. ${PRIX_EUROS} € por evento, que se pagan solo tras la aceptación.`,
     },
     chemin: "/agenda/proposer",
   })
@@ -38,11 +38,11 @@ const etapes: { titre: Trad; texte: Trad }[] = [
       es: "Usted propone",
     },
     texte: {
-      fr: "Votre événement et le numéro officiel de votre structure (SIRET, RNA, RCS…).",
-      de: "Ihre Veranstaltung und die amtliche Nummer Ihrer Organisation (SIRET, RNA, RCS…).",
-      lb: "Ären Evenement an déi offiziell Nummer vun Ärer Organisatioun (SIRET, RNA, RCS…).",
-      en: "Your event and your organisation's official number (SIRET, RNA, RCS…).",
-      es: "Su evento y el número oficial de su organización (SIRET, RNA, RCS…).",
+      fr: "Votre événement et le numéro officiel de votre structure (SIRET, RNA, RCS…), sauf pour les particuliers.",
+      de: "Ihre Veranstaltung und die amtliche Nummer Ihrer Organisation (SIRET, RNA, RCS…), außer bei Privatpersonen.",
+      lb: "Ären Evenement an déi offiziell Nummer vun Ärer Organisatioun (SIRET, RNA, RCS…), ausser bei Privatpersounen.",
+      en: "Your event and your organisation's official number (SIRET, RNA, RCS…), except for individuals.",
+      es: "Su evento y el número oficial de su organización (SIRET, RNA, RCS…), salvo para particulares.",
     },
   },
   {
@@ -54,11 +54,11 @@ const etapes: { titre: Trad; texte: Trad }[] = [
       es: "Lo comprobamos",
     },
     texte: {
-      fr: "Le numéro est contrôlé dans le registre officiel, puis l'équipe relit l'événement. Uniquement des entreprises et associations immatriculées.",
-      de: "Die Nummer wird im amtlichen Register geprüft, dann liest das Team die Veranstaltung. Nur eingetragene Unternehmen und Vereine.",
-      lb: "D'Nummer gëtt am offiziellen Register kontrolléiert, duerno liest d'Team den Evenement. Just ageschriwwe Betriber an Associatiounen.",
-      en: "The number is checked in the official register, then the team reviews the event. Registered companies and associations only.",
-      es: "El número se comprueba en el registro oficial y después el equipo revisa el evento. Solo empresas y asociaciones registradas.",
+      fr: "Le numéro des entreprises et associations est contrôlé dans le registre officiel ; l'équipe relit chaque événement, et vérifie elle-même ceux des particuliers.",
+      de: "Die Nummer von Unternehmen und Vereinen wird im amtlichen Register geprüft; das Team liest jede Veranstaltung und prüft die von Privatpersonen selbst.",
+      lb: "D'Nummer vu Betriber an Associatioune gëtt am offiziellen Register kontrolléiert; d'Team liest all Evenement a kontrolléiert déi vu Privatpersounen selwer.",
+      en: "Company and association numbers are checked in the official register; the team reviews every event and checks those from individuals itself.",
+      es: "El número de empresas y asociaciones se comprueba en el registro oficial; el equipo revisa cada evento y comprueba él mismo los de particulares.",
     },
   },
   {
@@ -131,11 +131,11 @@ export default async function PageProposerEvenement() {
           es: "Publique su evento",
         })}
         intro={t({
-          fr: `Entreprises et associations des Trois Frontières : votre événement dans l'agenda de Radio Tripoint pour ${PRIX_EUROS} €. Vous ne payez qu'une fois l'événement accepté.`,
-          de: `Unternehmen und Vereine aus dem Dreiländereck: Ihre Veranstaltung im Kalender von Radio Tripoint für ${PRIX_EUROS} €. Sie zahlen erst, wenn die Veranstaltung angenommen ist.`,
-          lb: `Betriber an Associatiounen aus dem Dräilännereck: Ären Evenement an der Agenda vu Radio Tripoint fir ${PRIX_EUROS} €. Dir bezuelt eréischt, wann den Evenement ugeholl ass.`,
-          en: `Companies and associations of the Three Borders: your event in the Radio Tripoint listings for €${PRIX_EUROS}. You only pay once the event is accepted.`,
-          es: `Empresas y asociaciones de las Tres Fronteras: su evento en la agenda de Radio Tripoint por ${PRIX_EUROS} €. Solo paga cuando el evento se acepta.`,
+          fr: `Entreprises, associations et particuliers des Trois Frontières : votre événement dans l'agenda de Radio Tripoint pour ${PRIX_EUROS} €. Vous ne payez qu'une fois l'événement accepté.`,
+          de: `Unternehmen, Vereine und Privatpersonen aus dem Dreiländereck: Ihre Veranstaltung im Kalender von Radio Tripoint für ${PRIX_EUROS} €. Sie zahlen erst, wenn die Veranstaltung angenommen ist.`,
+          lb: `Betriber, Associatiounen a Privatpersounen aus dem Dräilännereck: Ären Evenement an der Agenda vu Radio Tripoint fir ${PRIX_EUROS} €. Dir bezuelt eréischt, wann den Evenement ugeholl ass.`,
+          en: `Companies, associations and individuals of the Three Borders: your event in the Radio Tripoint listings for €${PRIX_EUROS}. You only pay once the event is accepted.`,
+          es: `Empresas, asociaciones y particulares de las Tres Fronteras: su evento en la agenda de Radio Tripoint por ${PRIX_EUROS} €. Solo paga cuando el evento se acepta.`,
         })}
       />
       <div className="conteneur grid gap-12 py-12 lg:grid-cols-[1fr_1.8fr] lg:gap-16 lg:py-16">
@@ -186,11 +186,11 @@ export default async function PageProposerEvenement() {
           <fieldset>
             <legend className="surtitre text-encre-3 mb-5">
               {t({
-                fr: "Votre structure",
-                de: "Ihre Organisation",
-                lb: "Är Organisatioun",
-                en: "Your organisation",
-                es: "Su organización",
+                fr: "Vous",
+                de: "Sie",
+                lb: "Dir",
+                en: "You",
+                es: "Usted",
               })}
             </legend>
             <ChampsOrganisation />

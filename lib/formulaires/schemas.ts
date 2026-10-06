@@ -380,10 +380,12 @@ export function creerSchemas(l: Langue = "fr") {
     }),
     agenda: z
       .object({
-        type_org: z.enum(typesOrganisation, { error: m("typeOrg") }),
-        pays_org: z.enum(paysAgenda, { error: m("pays") }),
-        identifiant: requis(60, m("identifiant")),
-        organisation: requis(150, m("entreprise")),
+        // Particulier : ni structure ni numéro, la direction vérifie à la main.
+        particulier: z.literal("oui").optional(),
+        type_org: z.enum(typesOrganisation, { error: m("typeOrg") }).optional(),
+        pays_org: z.enum(paysAgenda, { error: m("pays") }).optional(),
+        identifiant: texte(60).optional(),
+        organisation: texte(150).optional(),
         nom: requis(100, m("nom")),
         email,
         telephone,
@@ -414,8 +416,16 @@ export function creerSchemas(l: Langue = "fr") {
         consentement,
       })
       .superRefine((v, ctx) => {
-        const id = nettoyerIdentifiant(v.identifiant)
-        if (v.pays_org === "FR") {
+        const manque = (path: string, message: string) =>
+          ctx.addIssue({ code: "custom", path: [path], message })
+        const id = nettoyerIdentifiant(v.identifiant ?? "")
+        if (v.particulier === "oui") {
+          // Rien à contrôler côté structure.
+        } else if (!v.type_org) manque("type_org", m("typeOrg"))
+        else if (!v.pays_org) manque("pays_org", m("pays"))
+        else if (!v.organisation) manque("organisation", m("entreprise"))
+        else if (!id) manque("identifiant", m("identifiant"))
+        else if (v.pays_org === "FR") {
           const ok =
             v.type_org === "entreprise"
               ? /^(\d{9}|\d{14})$/.test(id)

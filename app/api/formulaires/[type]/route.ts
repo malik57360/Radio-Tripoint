@@ -1,5 +1,11 @@
 import { createHash } from "node:crypto"
-import { creerProposition, PRIX_EUROS, verifierOrganisation } from "@/lib/agenda/propositions"
+import {
+  creerProposition,
+  PRIX_EUROS,
+  verifierOrganisation,
+  type Proposition,
+  type Verification,
+} from "@/lib/agenda/propositions"
 import { compter, redisActif } from "@/lib/direction/redis"
 import { envoyerCourriel, smtpConfigure } from "@/lib/formulaires/courriel"
 import { autoriser } from "@/lib/formulaires/limiteur"
@@ -123,17 +129,25 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
   if (t === "agenda") {
     if (!redisActif()) return json({ statut: "non-configure" }, 503)
     const d = creerSchemas("fr").agenda.parse(brut)
-    d.identifiant = d.pays_org === "FR" ? nettoyerIdentifiant(d.identifiant) : d.identifiant
-    const verification = await verifierOrganisation(d.pays_org, d.identifiant)
+    const particulier = d.particulier === "oui" || !d.type_org || !d.pays_org
+    const organisation: Proposition["organisation"] = particulier
+      ? { type: "particulier", pays: d.pays, identifiant: "", nom: d.nom }
+      : {
+          type: d.type_org!,
+          pays: d.pays_org!,
+          identifiant:
+            d.pays_org === "FR"
+              ? nettoyerIdentifiant(d.identifiant ?? "")
+              : (d.identifiant ?? "").trim(),
+          nom: d.organisation ?? "",
+        }
+    const verification: Verification = particulier
+      ? { statut: "particulier", le: Date.now() }
+      : await verifierOrganisation(organisation.pays, organisation.identifiant)
     try {
       const p = await creerProposition({
         langue: l,
-        organisation: {
-          type: d.type_org,
-          pays: d.pays_org,
-          identifiant: d.identifiant,
-          nom: d.organisation,
-        },
+        organisation,
         verification,
         contact: { nom: d.nom, email: d.email, telephone: d.telephone || undefined },
         champs: {
@@ -157,10 +171,13 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
         introuvable: "INTROUVABLE dans l'annuaire de l'État",
         manuel: "à vérifier à la main (Luxembourg / Allemagne)",
         indisponible: "annuaire injoignable, à vérifier à la main",
+        particulier: "PARTICULIER : pas de numéro, à vérifier à la main",
       }[verification.statut]
       champsMail = {
         titre: d.titre,
-        entreprise: `${d.organisation} — ${d.type_org}, ${d.pays_org}, n° ${d.identifiant}`,
+        entreprise: particulier
+          ? "Particulier"
+          : `${organisation.nom} — ${organisation.type}, ${organisation.pays}, n° ${organisation.identifiant}`,
         verification: libelleVerif,
         nom: d.nom,
         email: d.email,

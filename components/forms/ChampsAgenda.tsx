@@ -122,9 +122,47 @@ export function ChampsOrganisation() {
   const t = useT()
   const [type, setType] = useState("entreprise")
   const [pays, setPays] = useState("FR")
+  const [particulier, setParticulier] = useState(false)
   const a = AIDES[`${pays}-${type}`] ?? AIDES["FR-entreprise"]
+  const caseParticulier = (
+    <label className="flex cursor-pointer items-start gap-3 sm:col-span-2">
+      <input
+        type="checkbox"
+        name="particulier"
+        value="oui"
+        checked={particulier}
+        onChange={(e) => {
+          setParticulier(e.target.checked)
+          setType("entreprise")
+          setPays("FR")
+        }}
+        className="mt-0.5 size-5 flex-none cursor-pointer accent-[var(--accent)]"
+      />
+      <span className="text-encre-2 text-sm leading-relaxed">
+        <strong className="text-encre">
+          {t({
+            fr: "Je suis un particulier",
+            de: "Ich bin eine Privatperson",
+            lb: "Ech sinn eng Privatpersoun",
+            en: "I am a private individual",
+            es: "Soy un particular",
+          })}
+        </strong>
+        <br />
+        {t({
+          fr: "Pas d'entreprise ni d'association : pas de numéro à donner, l'équipe vérifie votre demande.",
+          de: "Kein Unternehmen und kein Verein: keine Nummer nötig, das Team prüft Ihre Anfrage.",
+          lb: "Kee Betrib a keng Associatioun: keng Nummer néideg, d'Team kontrolléiert Är Ufro.",
+          en: "No company or association: no number needed, the team reviews your request.",
+          es: "Sin empresa ni asociación: no hace falta ningún número, el equipo revisa su solicitud.",
+        })}
+      </span>
+    </label>
+  )
+  if (particulier) return <div className="grid gap-5 sm:grid-cols-2">{caseParticulier}</div>
   return (
     <div className="grid gap-5 sm:grid-cols-2">
+      {caseParticulier}
       <ChampChoix
         name="type_org"
         libelle={t({
