@@ -38,6 +38,7 @@ export const emplacements = {
     annonceur: {
       nom: "Africandles by Zaza — Collection Home",
       image: "/pub/africandles-collection-home.webp",
+      lien: "https://zaza-riviera-herbs.com/",
       largeur: 1774,
       hauteur: 887,
     },
@@ -53,6 +54,7 @@ export const emplacements = {
     annonceur: {
       nom: "Zaza Riviera Herbs — Élixir de Zaza",
       image: "/pub/zaza-elixir-de-zaza.webp",
+      lien: "https://zaza-riviera-herbs.com/",
       largeur: 1536,
       hauteur: 1024,
     },
@@ -68,6 +70,7 @@ export const emplacements = {
     annonceur: {
       nom: "Zaza Riviera Herbs — Natürliches Wohlbefinden für Ihre Tiere",
       image: "/pub/zaza-cbd-animaux-de.webp",
+      lien: "https://zaza-riviera-herbs.com/",
       largeur: 1774,
       hauteur: 887,
     },
