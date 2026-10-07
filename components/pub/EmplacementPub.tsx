@@ -58,8 +58,13 @@ export async function EmplacementPub({
           · {annonceur.nom}
         </p>
         {(() => {
+          // Visuel plutôt haut (3:2…) : largeur bornée pour ne pas manger l'écran.
+          const haut = Boolean(
+            annonceur.largeur && annonceur.hauteur && annonceur.largeur / annonceur.hauteur < 1.8,
+          )
           const classe = cn(
             "bg-nuit relative block overflow-hidden",
+            haut && "mx-auto max-w-3xl",
             !annonceur.largeur &&
               (format === "banniere" ? "aspect-[4/1] max-sm:aspect-[2/1]" : "aspect-square"),
           )

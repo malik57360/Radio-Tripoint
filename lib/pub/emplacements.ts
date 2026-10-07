@@ -50,6 +50,12 @@ export const emplacements = {
       en: "Home page, before the events",
       es: "Portada, antes de la agenda",
     },
+    annonceur: {
+      nom: "Zaza Riviera Herbs — Élixir de Zaza",
+      image: "/pub/zaza-elixir-de-zaza.webp",
+      largeur: 1536,
+      hauteur: 1024,
+    },
   },
   "article-fin": {
     ou: {
@@ -58,6 +64,12 @@ export const emplacements = {
       lb: "Um Enn vun all Artikel",
       en: "End of every article",
       es: "Al final de cada artículo",
+    },
+    annonceur: {
+      nom: "Zaza Riviera Herbs — Natürliches Wohlbefinden für Ihre Tiere",
+      image: "/pub/zaza-cbd-animaux-de.webp",
+      largeur: 1774,
+      hauteur: 887,
     },
   },
   "article-cote": {
