@@ -1,12 +1,15 @@
 "use client"
 
-import { ArrowDown, ArrowUp, ImagePlus, Loader2, Send, Trash2, X } from "lucide-react"
+import { ArrowDown, ArrowUp, ImagePlus, Loader2, Pencil, Save, Send, Trash2, X } from "lucide-react"
+import Link from "next/link"
 import { useRef, useState, useTransition } from "react"
 import {
+  actionModifierArticle,
   actionPublierArticle,
   actionRetirerArticle,
   type DonneesArticle,
 } from "@/app/direction/(espace)/articles/actions"
+import type { Brouillon } from "@/lib/contenu/brouillon-article"
 import { cn } from "@/lib/utils/cn"
 
 const champ =
@@ -16,12 +19,28 @@ const etiquette = "text-encre-2 text-xs font-bold"
 /** Côté le plus long d'une photo de presse une fois réduite. */
 const MAX_COTE = 1800
 
+/** Photo du formulaire : nouvelle (fichier à envoyer) ou déjà en ligne (url). */
 type Photo = {
   cle: string
   apercu: string
-  fichier: File
+  fichier?: File
+  enLigne?: { url: string; largeur: number; hauteur: number }
   legende: string
   credit: string
+}
+
+/**
+ * Garde chaque repère « [photo n] » du texte collé à sa photo quand on la
+ * déplace ou la retire (vers renvoie le nouveau numéro, ou null pour effacer).
+ */
+const renumeroter = (texte: string, vers: (n: number) => number | null) =>
+  texte.replace(/\[photo\s*(\d+)\]/gi, (_, n: string) => {
+    const v = vers(Number(n))
+    return v === null ? "" : `[photo ${v}]`
+  })
+
+const libererApercu = (p: Photo) => {
+  if (p.fichier) URL.revokeObjectURL(p.apercu)
 }
 
 /** Ouvre la photo : createImageBitmap si possible, sinon une <img> (vieux Safari). */
@@ -77,15 +96,37 @@ const nouveauDossier = () =>
     (b) => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36],
   ).join("")
 
-export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom: string }[] }) {
-  const [titre, setTitre] = useState("")
-  const [chapeau, setChapeau] = useState("")
-  const [categorie, setCategorie] = useState(rubriques[0]?.slug ?? "actualites")
-  const [auteur, setAuteur] = useState("")
-  const [lieux, setLieux] = useState("")
-  const [texte, setTexte] = useState("")
-  const [une, setUne] = useState(false)
-  const [photos, setPhotos] = useState<Photo[]>([])
+/**
+ * Formulaire d'article du tableau de bord. Sans brouillon : nouvel article.
+ * Avec brouillon (bouton « Modifier ») : le formulaire est pré-rempli et
+ * l'enregistrement remplace l'article sans changer son lien.
+ */
+export function RedactionArticle({
+  rubriques,
+  brouillon,
+}: {
+  rubriques: { slug: string; nom: string }[]
+  brouillon?: Brouillon
+}) {
+  const modification = Boolean(brouillon)
+  const [titre, setTitre] = useState(brouillon?.titre ?? "")
+  const [chapeau, setChapeau] = useState(brouillon?.chapeau ?? "")
+  const [categorie, setCategorie] = useState(
+    brouillon?.categorie ?? rubriques[0]?.slug ?? "actualites",
+  )
+  const [auteur, setAuteur] = useState(brouillon?.auteur ?? "")
+  const [lieux, setLieux] = useState(brouillon?.lieux ?? "")
+  const [texte, setTexte] = useState(brouillon?.texte ?? "")
+  const [une, setUne] = useState(brouillon?.une ?? false)
+  const [photos, setPhotos] = useState<Photo[]>(() =>
+    (brouillon?.photos ?? []).map((p, i) => ({
+      cle: `en-ligne-${i}-${p.url}`,
+      apercu: p.url,
+      enLigne: { url: p.url, largeur: p.largeur, hauteur: p.hauteur },
+      legende: p.legende,
+      credit: p.credit,
+    })),
+  )
   const [etape, setEtape] = useState("")
   const [retour, setRetour] = useState<{ ok: boolean; texte: string; lien?: string } | null>(null)
   const [enCours, demarrer] = useTransition()
@@ -107,30 +148,51 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
   }
   const modifier = (i: number, x: Partial<Photo>) =>
     setPhotos((p) => p.map((ph, j) => (j === i ? { ...ph, ...x } : ph)))
-  const deplacer = (i: number, sens: -1 | 1) =>
+  const deplacer = (i: number, sens: -1 | 1) => {
+    const j = i + sens
+    if (j < 0 || j >= photos.length) return
     setPhotos((p) => {
       const c = [...p]
-      const j = i + sens
-      if (j < 0 || j >= c.length) return p
       ;[c[i], c[j]] = [c[j], c[i]]
       return c
     })
-  const enlever = (i: number) =>
-    setPhotos((p) => {
-      URL.revokeObjectURL(p[i].apercu)
-      return p.filter((_, j) => j !== i)
-    })
+    setTexte((t) => renumeroter(t, (n) => (n === i + 1 ? j + 1 : n === j + 1 ? i + 1 : n)))
+  }
+  const enlever = (i: number) => {
+    libererApercu(photos[i])
+    setPhotos((p) => p.filter((_, j) => j !== i))
+    setTexte((t) => renumeroter(t, (n) => (n === i + 1 ? null : n > i + 1 ? n - 1 : n)))
+  }
 
   const publier = () => {
     setRetour(null)
     if (!photos.length) return setRetour({ ok: false, texte: "Ajoutez au moins une photo." })
-    if (!window.confirm("Publier cet article sur le site maintenant ?")) return
+    if (
+      !window.confirm(
+        modification
+          ? "Enregistrer les modifications ? L'article en ligne sera mis à jour tout de suite."
+          : "Publier cet article sur le site maintenant ?",
+      )
+    )
+      return
     demarrer(async () => {
       try {
         const dossier = nouveauDossier()
         const envoyees: DonneesArticle["photos"] = []
-        for (const [i, p] of photos.entries()) {
-          setEtape(`Photo ${i + 1} sur ${photos.length}…`)
+        const nouvelles = photos.filter((p) => p.fichier).length
+        let n = 0
+        for (const p of photos) {
+          // Photo déjà en ligne : rien à renvoyer, seules légende et crédit changent.
+          if (p.enLigne) {
+            envoyees.push({
+              ...p.enLigne,
+              legende: p.legende.trim() || undefined,
+              credit: p.credit.trim() || undefined,
+            })
+            continue
+          }
+          if (!p.fichier) continue
+          setEtape(`Photo ${++n} sur ${nouvelles}…`)
           const { blob, largeur, hauteur } = await reduire(p.fichier)
           const r = await fetch(`/api/direction/articles/photo?dossier=${dossier}`, {
             method: "POST",
@@ -147,8 +209,8 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
             credit: p.credit.trim() || undefined,
           })
         }
-        setEtape("Mise en ligne…")
-        const r = await actionPublierArticle({
+        setEtape(modification ? "Enregistrement…" : "Mise en ligne…")
+        const donnees: DonneesArticle = {
           titre,
           chapeau,
           categorie: categorie as DonneesArticle["categorie"],
@@ -157,10 +219,30 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
           texte,
           photos: envoyees,
           une,
-        })
+        }
+        const r = brouillon
+          ? await actionModifierArticle(brouillon.slug, donnees)
+          : await actionPublierArticle(donnees)
         if (!r.ok) return setRetour({ ok: false, texte: r.erreur })
         setRetour({ ok: true, texte: r.message, lien: r.lien })
-        photos.forEach((p) => URL.revokeObjectURL(p.apercu))
+        if (modification) {
+          // On reste sur le formulaire : les photos envoyées sont désormais en ligne.
+          photos.forEach(libererApercu)
+          setPhotos((p) =>
+            p.map((ph, i) => ({
+              ...ph,
+              fichier: undefined,
+              apercu: envoyees[i].url,
+              enLigne: {
+                url: envoyees[i].url,
+                largeur: envoyees[i].largeur,
+                hauteur: envoyees[i].hauteur,
+              },
+            })),
+          )
+          return
+        }
+        photos.forEach(libererApercu)
         setTitre("")
         setChapeau("")
         setAuteur("")
@@ -301,7 +383,10 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
                 <div className="min-w-0 flex-1 space-y-2">
                   <p className="text-xs font-bold">
                     {i === 0 ? "Photo principale" : `Photo ${i + 1}`}
-                    <span className="text-encre-3 font-normal"> · {p.fichier.name}</span>
+                    <span className="text-encre-3 font-normal">
+                      {" "}
+                      · {p.fichier ? p.fichier.name : "déjà en ligne"}
+                    </span>
                   </p>
                   <input
                     value={p.legende}
@@ -365,11 +450,18 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
         >
           {enCours ? (
             <Loader2 className="size-4 animate-spin" aria-hidden />
+          ) : modification ? (
+            <Save className="size-4" aria-hidden />
           ) : (
             <Send className="size-4" aria-hidden />
           )}
-          Publier sur le site
+          {modification ? "Enregistrer les modifications" : "Publier sur le site"}
         </button>
+        {modification && (
+          <Link href="/direction/articles" className="text-encre-2 text-sm font-semibold underline">
+            Annuler
+          </Link>
+        )}
         {etape && <span className="text-encre-2 text-sm">{etape}</span>}
       </div>
 
@@ -391,6 +483,23 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
         </p>
       )}
     </form>
+  )
+}
+
+/** Bouton « Modifier » : rouvre le formulaire pré-rempli avec cet article. */
+export function ModifierArticle({ slug, actif }: { slug: string; actif?: boolean }) {
+  return (
+    <Link
+      href={`/direction/articles?modifier=${encodeURIComponent(slug)}`}
+      aria-current={actif ? "true" : undefined}
+      className={cn(
+        "inline-flex flex-none items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold",
+        actif ? "border-accent bg-accent text-black" : "border-trait text-encre-2",
+      )}
+    >
+      <Pencil className="size-3.5" aria-hidden />
+      Modifier
+    </Link>
   )
 }
 

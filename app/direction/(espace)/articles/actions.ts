@@ -144,23 +144,14 @@ function versCorps(texte: string, photos: z.infer<typeof photo>[], titre: string
   )
 }
 
-export async function actionPublierArticle(donnees: DonneesArticle): Promise<Resultat> {
-  if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
-  const v = schema.safeParse(donnees)
-  if (!v.success) return { ok: false, erreur: v.error.issues[0]?.message ?? "Formulaire invalide." }
-  const d = v.data
-  const base = versSlug(d.titre)
-  if (base.length < 4) return { ok: false, erreur: "Titre invalide." }
-  const pris = new Set(await slugsArticles())
-  let slug = base
-  for (let i = 2; pris.has(slug); i++) slug = `${base}-${i}`
-
-  const article: Article = {
+/** Formulaire validé → article. Le slug (donc le lien) est fixé par l'appelant. */
+function construire(slug: string, d: DonneesArticle, publieLe: string): Article {
+  return {
     slug,
     titre: d.titre,
     chapeau: d.chapeau,
     categorie: d.categorie,
-    publieLe: maintenantParis(),
+    publieLe,
     ...(d.auteur ? { auteur: d.auteur } : {}),
     ...(d.lieux
       ? {
@@ -175,6 +166,41 @@ export async function actionPublierArticle(donnees: DonneesArticle): Promise<Res
     corps: versCorps(d.texte, d.photos, d.titre),
     ...(d.une ? { une: true } : {}),
   }
+}
+
+/** Adresses des photos d'un article qui sont dans notre stockage. */
+const photosDe = (a: Article) =>
+  [a.visuel?.src, ...a.corps.map((b) => (b.type === "image" ? b.visuel.src : undefined))].filter(
+    (u): u is string => !!u && URL_PHOTO.test(u),
+  )
+
+/** Supprime des photos du stockage une fois la réponse partie (le stockage peut être lent). */
+function supprimerPlusTard(urls: string[]) {
+  if (!urls.length) return
+  after(async () => {
+    try {
+      await del(urls, { abortSignal: AbortSignal.timeout(15_000) })
+    } catch (e) {
+      console.error("[articles] suppression photos", (e as Error).message)
+    }
+  })
+}
+
+const slugValide = (slug: unknown): slug is string =>
+  typeof slug === "string" && /^[a-z0-9-]{4,90}$/.test(slug)
+
+export async function actionPublierArticle(donnees: DonneesArticle): Promise<Resultat> {
+  if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
+  const v = schema.safeParse(donnees)
+  if (!v.success) return { ok: false, erreur: v.error.issues[0]?.message ?? "Formulaire invalide." }
+  const d = v.data
+  const base = versSlug(d.titre)
+  if (base.length < 4) return { ok: false, erreur: "Titre invalide." }
+  const pris = new Set(await slugsArticles())
+  let slug = base
+  for (let i = 2; pris.has(slug); i++) slug = `${base}-${i}`
+
+  const article = construire(slug, d, maintenantParis())
   const r = await redis([["HSET", CLE_ARTICLES, slug, JSON.stringify(article)]])
   if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
   revalidateTag(TAG_ARTICLES, { expire: 0 })
@@ -182,29 +208,57 @@ export async function actionPublierArticle(donnees: DonneesArticle): Promise<Res
   return { ok: true, message: "Article en ligne.", lien: `/actualites/${slug}` }
 }
 
+/**
+ * Modifie un article du tableau de bord sans changer son lien : même slug,
+ * même date de publication, « mis à jour le » à maintenant. Les photos
+ * retirées pendant la modification sont supprimées du stockage.
+ */
+export async function actionModifierArticle(
+  slug: unknown,
+  donnees: DonneesArticle,
+): Promise<Resultat> {
+  if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
+  if (!slugValide(slug)) return { ok: false, erreur: "Article invalide." }
+  const v = schema.safeParse(donnees)
+  if (!v.success) return { ok: false, erreur: v.error.issues[0]?.message ?? "Formulaire invalide." }
+  const lu = await redis([["HGET", CLE_ARTICLES, slug]])
+  if (!lu) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (typeof lu[0] !== "string")
+    return { ok: false, erreur: "Article introuvable : il a peut-être été retiré." }
+  let ancien: Article
+  try {
+    ancien = JSON.parse(lu[0]) as Article
+  } catch {
+    return { ok: false, erreur: "Article illisible." }
+  }
+
+  const article: Article = {
+    ...construire(slug, v.data, ancien.publieLe ?? maintenantParis()),
+    modifieLe: maintenantParis(),
+  }
+  const r = await redis([["HSET", CLE_ARTICLES, slug, JSON.stringify(article)]])
+  if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  revalidateTag(TAG_ARTICLES, { expire: 0 })
+  revalidatePath("/direction/articles")
+  const gardees = new Set(photosDe(article))
+  supprimerPlusTard(photosDe(ancien).filter((u) => !gardees.has(u)))
+  return { ok: true, message: "Modifications enregistrées.", lien: `/actualites/${slug}` }
+}
+
 export async function actionRetirerArticle(slug: unknown): Promise<Resultat> {
   if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
-  if (typeof slug !== "string" || !/^[a-z0-9-]{4,90}$/.test(slug))
-    return { ok: false, erreur: "Article invalide." }
+  if (!slugValide(slug)) return { ok: false, erreur: "Article invalide." }
   const lu = await redis([["HGET", CLE_ARTICLES, slug]])
   if (!lu || typeof lu[0] !== "string") return { ok: false, erreur: "Article introuvable." }
   const r = await redis([["HDEL", CLE_ARTICLES, slug]])
   if (!r) return { ok: false, erreur: "Base de données injoignable : réessayez." }
   revalidateTag(TAG_ARTICLES, { expire: 0 })
   revalidatePath("/direction/articles")
-  // Photos supprimées du stockage une fois la réponse partie : le retrait
-  // ne dépend pas du stockage, qui peut être lent ou injoignable.
-  after(async () => {
-    try {
-      const a = JSON.parse(lu[0] as string) as Article
-      const urls = [
-        a.visuel?.src,
-        ...a.corps.map((b) => (b.type === "image" ? b.visuel.src : undefined)),
-      ].filter((u): u is string => !!u && URL_PHOTO.test(u))
-      if (urls.length) await del(urls, { abortSignal: AbortSignal.timeout(15_000) })
-    } catch (e) {
-      console.error("[articles] suppression photos", (e as Error).message)
-    }
-  })
+  // Le retrait ne dépend pas du stockage : les photos partent après la réponse.
+  try {
+    supprimerPlusTard(photosDe(JSON.parse(lu[0]) as Article))
+  } catch {
+    /* article illisible : rien à supprimer */
+  }
   return { ok: true, message: "Article retiré du site." }
 }
