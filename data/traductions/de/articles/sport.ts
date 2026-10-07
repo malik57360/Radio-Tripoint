@@ -1,6 +1,26 @@
 import type { TradArticle } from "../../types"
 
 export const sport: Record<string, TradArticle> = {
+  "jubile-robert-pires-saint-symphorien-metz-octobre-2026": {
+    titre: "Abschiedsspiel von Robert Pirès: Saint-Symphorien ehrt das Kind des FC Metz",
+    chapeau:
+      "Mehr als 27.000 Zuschauer feierten Robert Pirès am Dienstag, 6. Oktober, im Stadion Saint-Symphorien. Henry, Vieira, Drogba, Ribéry, Eto’o und die Weltmeister von 1998 waren dabei – unter den Augen von Aimé Jacquet, Arsène Wenger und Joël Muller.",
+    corps: [
+      "Metz, Dienstag, 6. Oktober 2026. Unter dem Flutlicht von Saint-Symphorien kamen mehr als 27.000 Zuschauer, um das Abschiedsspiel von Robert Pirès zu feiern, achtundzwanzig Jahre nach seinem Weggang vom FC Metz. Ein Abend voller Fußball und Emotionen, an dem sich drei Generationen begegneten: die Legenden des Vereins in Granatrot, die Weltmeister von 1998 und die Ehemaligen von Arsenal.",
+      "Zurück dort, wo alles begann",
+      "Robert Pirès, geboren am 29. Oktober 1973 in Reims, startete seine Profikarriere 1993 beim FC Metz. Er blieb bis 1998, gewann 1996 den Ligapokal und wechselte dann zu Olympique Marseille. Der Rest ist bekannt: Arsenal, wo er in der Saison 2003-2004 zu den „Invincibles“ gehörte, und die französische Nationalmannschaft, Weltmeister 1998 und Europameister 2000.",
+      "Um seine Karriere zu feiern, wählte er dennoch Metz: den Verein, der ihn entdeckt hat, und das Publikum, das ihn hat aufblühen sehen.",
+      "Drei Mannschaften, drei Spielabschnitte",
+      "Das Format war neu: drei Mannschaften und drei Spielabschnitte von je dreißig Minuten. Die Legenden des FC Metz wurden von Joël Muller betreut, die Pirès All Stars von Aimé Jacquet und die Legenden von Arsenal von Arsène Wenger. Robert Pirès spielte nacheinander für alle drei Teams, zuerst im granatroten Trikot seiner Anfänge.",
+      "Die Besetzung ließ träumen: Thierry Henry, Franck Ribéry und Samuel Eto’o als Stargäste, dazu Didier Drogba, Marcel Desailly, Lilian Thuram, Bixente Lizarazu, Laurent Blanc, Youri Djorkaeff, Patrick Vieira, Samir Nasri, Lukas Podolski, Emmanuel Adebayor, Djibril Cissé, El Hadji Diouf und Olivier Dacourt.",
+      "Vor dem Anpfiff erhielt Robert Pirès lange Standing Ovations, an der Seite seiner früheren Trainer Aimé Jacquet, Arsène Wenger und Joël Muller.",
+      "Henry, Vieira… und Pirès",
+      "Auf dem Rasen meldeten sich die ehemaligen Gunners schnell zurück. Im Duell der Metzer Legenden mit denen von Arsenal traf Thierry Henry schon in der zweiten Minute nach Vorlage von Samir Nasri. Patrick Vieira legte kurz darauf nach, auf Pass von Thierry Henry. Robert Pirès verkürzte anschließend mit einem Schuss ins lange Eck auf 1:2.",
+      "Ein solidarischer Abend",
+      "Das Abschiedsspiel hatte auch einen guten Zweck: Die Einnahmen des Abends unterstützen das Institut de Myologie und den Moselle-Verein „L’Exceptionnelle Mia“, der sich für ein junges Mädchen mit einer seltenen Krankheit einsetzt. Tickets gab es ab 15 Euro.",
+      "Ein schöner Abend für Saint-Symphorien, das einem der größten Talente aus der eigenen Ausbildung die Ehre erwies, die er verdient.",
+    ],
+  },
   "l-espagne-est-championne-du-monde-2026": {
     titre: "Spanien ist Weltmeister 2026!",
     chapeau: "Spanien ist zurück an der Spitze des Weltfußballs.",

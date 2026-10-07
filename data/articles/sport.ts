@@ -6,6 +6,88 @@ import type { Article } from "@/types/article"
  * `ordre` reprend le rang d'apparition (1 = le plus récent).
  */
 export const sport: Article[] = [
+  // Sources : FC Metz, ICI Lorraine, L'essentiel, France 3 Grand Est, Le JDD
+  // (jubilé du 6 octobre 2026). Photo : Radio Tripoint, en tribune.
+  {
+    slug: "jubile-robert-pires-saint-symphorien-metz-octobre-2026",
+    titre: "Jubilé de Robert Pirès : Saint-Symphorien rend hommage à l’enfant du FC Metz",
+    chapeau:
+      "Plus de 27 000 spectateurs ont fêté Robert Pirès, mardi 6 octobre, au stade Saint-Symphorien. Henry, Vieira, Drogba, Ribéry, Eto’o et les champions du monde 1998 étaient de la fête, sous les yeux d’Aimé Jacquet, Arsène Wenger et Joël Muller.",
+    categorie: "sport",
+    publieLe: "2026-10-07T11:00:00+02:00",
+    auteur: "La rédaction de Radio Tripoint",
+    lieux: ["Metz", "Moselle"],
+    tags: ["football", "FC Metz", "Robert Pirès", "jubilé", "Arsenal", "France 98"],
+    visuel: {
+      src: "/media/articles/jubile-pires-saint-symphorien.webp",
+      alt: "Le stade Saint-Symphorien de nuit, tribunes pleines, pendant le jubilé de Robert Pirès : joueurs en maillot grenat et en maillot jaune sur la pelouse.",
+      largeur: 1170,
+      hauteur: 740,
+      credit: "Radio Tripoint",
+    },
+    corps: [
+      {
+        type: "paragraphe",
+        texte:
+          "Metz, mardi 6 octobre 2026. Sous les projecteurs de Saint-Symphorien, plus de 27 000 spectateurs sont venus célébrer le jubilé de Robert Pirès, vingt-huit ans après son départ du FC Metz. Une soirée de football et d’émotion, où se sont croisées trois générations : les légendes du club grenat, les champions du monde 1998 et les anciens d’Arsenal.",
+      },
+      { type: "intertitre", texte: "Retour là où tout a commencé" },
+      {
+        type: "paragraphe",
+        texte:
+          "Né à Reims le 29 octobre 1973, Robert Pirès a lancé sa carrière professionnelle au FC Metz en 1993. Il y est resté jusqu’en 1998, avec à la clé une Coupe de la Ligue remportée en 1996, avant de rejoindre l’Olympique de Marseille. La suite est connue : Arsenal, où il est devenu l’un des « Invincibles » de la saison 2003-2004, et l’équipe de France, championne du monde en 1998 et championne d’Europe en 2000.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Pour fêter sa carrière, c’est pourtant Metz qu’il a choisi : le club qui l’a révélé, et le public qui l’a vu éclore.",
+      },
+      { type: "intertitre", texte: "Trois équipes, trois périodes" },
+      {
+        type: "paragraphe",
+        texte:
+          "Le format était inédit : trois équipes et trois périodes de trente minutes. Les légendes du FC Metz étaient dirigées par Joël Muller, les Pirès All Stars par Aimé Jacquet, et les légendes d’Arsenal par Arsène Wenger. Robert Pirès a joué successivement avec chacune des trois formations, en commençant par le maillot grenat de ses débuts.",
+      },
+      {
+        type: "image",
+        visuel: {
+          src: "/media/articles/jubile-pires-tribune.webp",
+          alt: "Vue depuis la tribune de Saint-Symphorien pendant le jubilé : la pelouse éclairée, les joueurs et le public au premier plan.",
+          largeur: 1000,
+          hauteur: 1778,
+          credit: "Radio Tripoint",
+        },
+        legende: "Saint-Symphorien vu des tribunes, mardi soir, pendant le jubilé de Robert Pirès.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Le casting avait de quoi faire rêver : Thierry Henry, Franck Ribéry et Samuel Eto’o en invités vedettes, mais aussi Didier Drogba, Marcel Desailly, Lilian Thuram, Bixente Lizarazu, Laurent Blanc, Youri Djorkaeff, Patrick Vieira, Samir Nasri, Lukas Podolski, Emmanuel Adebayor, Djibril Cissé, El Hadji Diouf ou encore Olivier Dacourt.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Avant le coup d’envoi, Robert Pirès a reçu une longue ovation du public, aux côtés de ses anciens entraîneurs Aimé Jacquet, Arsène Wenger et Joël Muller.",
+      },
+      { type: "intertitre", texte: "Henry, Vieira… et Pirès" },
+      {
+        type: "paragraphe",
+        texte:
+          "Sur la pelouse, les anciens Gunners n’ont pas tardé à se rappeler au bon souvenir du public. Lors de l’opposition entre les légendes messines et celles d’Arsenal, Thierry Henry a ouvert le score dès la deuxième minute, sur un service de Samir Nasri. Patrick Vieira a doublé la mise peu après, sur une passe de Thierry Henry. Robert Pirès a ensuite réduit l’écart d’une frappe croisée, pour un score de 1-2.",
+      },
+      { type: "intertitre", texte: "Une soirée solidaire" },
+      {
+        type: "paragraphe",
+        texte:
+          "Le jubilé avait aussi une dimension solidaire : les recettes de la soirée sont destinées à soutenir l’Institut de Myologie et l’association mosellane « L’Exceptionnelle Mia », engagée auprès d’une jeune fille atteinte d’une maladie rare. Les billets étaient proposés à partir de 15 euros.",
+      },
+      {
+        type: "paragraphe",
+        texte:
+          "Une belle soirée pour Saint-Symphorien, qui a offert à l’un des plus grands talents formés au club l’hommage qu’il méritait.",
+      },
+    ],
+  },
   // Source : https://www.radio-tripoint-officiel.fr/sport
   {
     slug: "l-espagne-est-championne-du-monde-2026",

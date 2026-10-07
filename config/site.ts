@@ -82,6 +82,14 @@ export const site = {
     hero: null as string | null, // ex. "/media/hero-moselle.jpg"
   },
 
+  /**
+   * Campagnes du moment. Octobre rose : ruban rose sur le logo, bandeau rose
+   * en haut du site et touches de rose. Repasser à false le 1er novembre.
+   */
+  campagne: {
+    octobreRose: true,
+  },
+
   /** Mentions légales : à compléter par l'éditeur. */
   legal: {
     // Registre national des entreprises (recherche-entreprises.api.gouv.fr),

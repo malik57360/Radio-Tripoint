@@ -42,6 +42,9 @@
   --focus: #000000;
 
   --direct: #d8261c;
+  /* Octobre rose (campagne, config/site.ts) — distinct du rouge du direct. */
+  --rose: #e2347e;
+  --rose-doux: #fde4ef;
   --sur-direct: #ffffff;
 
   --succes: #1b6e45;
@@ -89,6 +92,8 @@
     --accent-doux: #2e2403;
     --focus: #f9b800;
     --direct: #ff4538;
+    --rose: #ff6fae;
+    --rose-doux: #3a1426;
     --succes: #4fbf86;
     --alerte: #ff9a5c;
     --erreur-fond: #2b1714;
@@ -111,6 +116,8 @@
   --accent-doux: #2e2403;
   --focus: #f9b800;
   --direct: #ff4538;
+  --rose: #ff6fae;
+  --rose-doux: #3a1426;
   --succes: #4fbf86;
   --alerte: #ff9a5c;
   --erreur-fond: #2b1714;
@@ -134,6 +141,8 @@
   --color-focus: var(--focus);
   --color-sur-accent: var(--sur-accent);
   --color-direct: var(--direct);
+  --color-rose: var(--rose);
+  --color-rose-doux: var(--rose-doux);
   --color-sur-direct: var(--sur-direct);
   --color-succes: var(--succes);
   --color-alerte: var(--alerte);
@@ -506,7 +515,8 @@
     height: 9px;
     background:
       repeating-linear-gradient(90deg, var(--trait-fort) 0 2px, transparent 2px 60px),
-      repeating-linear-gradient(90deg, var(--trait-fort) 0 1px, transparent 1px 12px) 0 0 / 100% 5px no-repeat;
+      repeating-linear-gradient(90deg, var(--trait-fort) 0 1px, transparent 1px 12px) 0 0 / 100% 5px
+        no-repeat;
     -webkit-mask: linear-gradient(90deg, #000 30%, transparent);
     mask: linear-gradient(90deg, #000 30%, transparent);
   }

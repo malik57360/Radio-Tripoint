@@ -1,6 +1,26 @@
 import type { TradArticle } from "../../types"
 
 export const sport: Record<string, TradArticle> = {
+  "jubile-robert-pires-saint-symphorien-metz-octobre-2026": {
+    titre: "Jubiläum vum Robert Pirès: Saint-Symphorien éiert d’Kand vum FC Metz",
+    chapeau:
+      "Méi wéi 27.000 Zuschauer hunn de Robert Pirès en Dënschdeg, de 6. Oktober, am Stadion Saint-Symphorien gefeiert. Henry, Vieira, Drogba, Ribéry, Eto’o an d’Weltmeeschtere vun 1998 waren derbäi, ënner den Ae vum Aimé Jacquet, Arsène Wenger a Joël Muller.",
+    corps: [
+      "Metz, Dënschdeg, 6. Oktober 2026. Ënnert de Luuchte vu Saint-Symphorien si méi wéi 27.000 Zuschauer komm, fir de Jubiläumsmatch vum Robert Pirès ze feieren, aachtazwanzeg Joer nodeems hien de FC Metz verlooss huet. En Owend mat Fussball an Emotiounen, wou sech dräi Generatioune begéint hunn: d’Legende vum granatrouden Club, d’Weltmeeschtere vun 1998 an déi fréier Arsenal-Spiller.",
+      "Zréck do, wou alles ugefaangen huet",
+      "De Robert Pirès, gebuer de 29. Oktober 1973 zu Reims, huet seng Profikarriär 1993 beim FC Metz ugefaangen. Hie blouf do bis 1998, huet 1996 de Ligapokal gewonnen an ass duerno op Olympique Marseille gewiesselt. De Rescht ass bekannt: Arsenal, wou hien an der Saison 2003-2004 zu den „Invincibles“ gehéiert huet, an d’franséisch Nationalekipp, Weltmeeschter 1998 an Europameeschter 2000.",
+      "Fir seng Karriär ze feieren, huet hien awer Metz gewielt: de Club, deen hien entdeckt huet, an de Public, deen hie grouss gesinn huet.",
+      "Dräi Ekippen, dräi Spillperioden",
+      "De Format war nei: dräi Ekippen an dräi Periode vun drësseg Minutten. D’Legende vum FC Metz goufe vum Joël Muller gecoacht, d’Pirès All Stars vum Aimé Jacquet an d’Legende vun Arsenal vum Arsène Wenger. De Robert Pirès huet nacheneen mat allen dräi Ekippe gespillt, als éischt am granatroude Maillot vu senge Ufäng.",
+      "De Casting huet beandrockt: den Thierry Henry, de Franck Ribéry an de Samuel Eto’o als Stargäscht, mä och den Didier Drogba, de Marcel Desailly, de Lilian Thuram, de Bixente Lizarazu, de Laurent Blanc, de Youri Djorkaeff, de Patrick Vieira, de Samir Nasri, de Lukas Podolski, den Emmanuel Adebayor, den Djibril Cissé, den El Hadji Diouf an den Olivier Dacourt.",
+      "Virum Ustouss krut de Robert Pirès laang Standing Ovations vum Public, nieft senge fréieren Traineren Aimé Jacquet, Arsène Wenger a Joël Muller.",
+      "Henry, Vieira… an de Pirès",
+      "Um Terrain hunn déi fréier Gunners sech séier a Erënnerung bruecht. Am Duell vun de Metzer Legende géint déi vun Arsenal huet den Thierry Henry schonn an der zweeter Minutt op Pass vum Samir Nasri de Score opgemaach. De Patrick Vieira huet kuerz drop op Pass vum Thierry Henry den zweete Gol geschoss. De Robert Pirès huet duerno mat engem gekräizte Schoss op 1-2 verkierzt.",
+      "E solidareschen Owend",
+      "De Jubiläumsmatch hat och eng solidaresch Säit: D’Recetten vum Owend ënnerstëtzen den Institut de Myologie an d’Associatioun „L’Exceptionnelle Mia“ aus der Moselle, déi sech fir e jonkt Meedchen mat enger rarer Krankheet asetzt. D’Ticketë waren ab 15 Euro ze kréien.",
+      "E schéinen Owend fir Saint-Symphorien, dat engem vun de gréissten Talenter aus dem eegene Club déi Éier erwisen huet, déi hie verdéngt.",
+    ],
+  },
   "l-espagne-est-championne-du-monde-2026": {
     titre: "Spuenien ass Weltmeeschter 2026!",
     chapeau: "Spuenien ass zréck un der Spëtzt vum Weltfussball.",

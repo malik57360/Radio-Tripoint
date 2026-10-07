@@ -1,6 +1,26 @@
 import type { TradArticle } from "../../types"
 
 export const sport: Record<string, TradArticle> = {
+  "jubile-robert-pires-saint-symphorien-metz-octobre-2026": {
+    titre: "Partido homenaje a Robert Pirès: Saint-Symphorien rinde tributo al hijo del FC Metz",
+    chapeau:
+      "Más de 27.000 espectadores homenajearon a Robert Pirès el martes 6 de octubre en el estadio Saint-Symphorien. Henry, Vieira, Drogba, Ribéry, Eto’o y los campeones del mundo de 1998 se sumaron a la fiesta, bajo la mirada de Aimé Jacquet, Arsène Wenger y Joël Muller.",
+    corps: [
+      "Metz, martes 6 de octubre de 2026. Bajo los focos de Saint-Symphorien, más de 27.000 espectadores acudieron a celebrar el partido homenaje a Robert Pirès, veintiocho años después de su salida del FC Metz. Una noche de fútbol y emoción en la que se cruzaron tres generaciones: las leyendas del club granate, los campeones del mundo de 1998 y los veteranos del Arsenal.",
+      "De vuelta donde todo empezó",
+      "Nacido en Reims el 29 de octubre de 1973, Robert Pirès comenzó su carrera profesional en el FC Metz en 1993. Allí jugó hasta 1998, con una Copa de la Liga ganada en 1996, antes de fichar por el Olympique de Marsella. Lo demás es historia: el Arsenal, donde fue uno de los «Invencibles» de la temporada 2003-2004, y la selección francesa, campeona del mundo en 1998 y de Europa en 2000.",
+      "Sin embargo, para celebrar su carrera eligió Metz: el club que lo descubrió y la afición que lo vio crecer.",
+      "Tres equipos, tres tiempos",
+      "El formato era inédito: tres equipos y tres tiempos de treinta minutos. Las leyendas del FC Metz estaban dirigidas por Joël Muller, los Pirès All Stars por Aimé Jacquet y las leyendas del Arsenal por Arsène Wenger. Robert Pirès jugó sucesivamente con los tres equipos, empezando por la camiseta granate de sus inicios.",
+      "El reparto era de ensueño: Thierry Henry, Franck Ribéry y Samuel Eto’o como invitados estrella, pero también Didier Drogba, Marcel Desailly, Lilian Thuram, Bixente Lizarazu, Laurent Blanc, Youri Djorkaeff, Patrick Vieira, Samir Nasri, Lukas Podolski, Emmanuel Adebayor, Djibril Cissé, El Hadji Diouf y Olivier Dacourt.",
+      "Antes del saque inicial, Robert Pirès recibió una larga ovación del público, junto a sus antiguos entrenadores Aimé Jacquet, Arsène Wenger y Joël Muller.",
+      "Henry, Vieira… y Pirès",
+      "Sobre el césped, los antiguos Gunners no tardaron en hacerse notar. En el duelo entre las leyendas de Metz y las del Arsenal, Thierry Henry abrió el marcador en el segundo minuto, a pase de Samir Nasri. Patrick Vieira amplió la ventaja poco después, con asistencia de Thierry Henry. Robert Pirès recortó después con un disparo cruzado, para un 1-2.",
+      "Una noche solidaria",
+      "El homenaje tuvo también una dimensión solidaria: la recaudación de la noche se destina al Institut de Myologie y a la asociación mosellana «L’Exceptionnelle Mia», que apoya a una niña con una enfermedad rara. Las entradas costaban desde 15 euros.",
+      "Una gran noche para Saint-Symphorien, que brindó a uno de los mayores talentos formados en el club el homenaje que merecía.",
+    ],
+  },
   "l-espagne-est-championne-du-monde-2026": {
     titre: "¡España es campeona del mundo 2026!",
     chapeau: "España vuelve a la cima del fútbol mundial.",
