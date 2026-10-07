@@ -522,11 +522,11 @@
   }
   .carte .carte-visuel img,
   .carte .carte-visuel .couverture {
-    transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .carte:hover .carte-visuel img,
   .carte:hover .carte-visuel .couverture {
-    transform: scale(1.03);
+    transform: scale(1.06);
   }
   .carte:has(:focus-visible) {
     outline: 2px solid var(--focus);
@@ -706,6 +706,224 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+/* ─── Mouvement premium : le site respire ──────────────────────────────── */
+/* Règle commune : aucune opacité nulle sur ce qui est visible au chargement
+   (LCP), tout est désactivé par prefers-reduced-motion (plus bas). */
+
+:root {
+  --ease-sortie: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Accueil : le titre monte ligne par ligne, puis le texte et les boutons. */
+.titre-ligne {
+  display: block;
+}
+.titre-ligne > span {
+  display: block;
+  animation: ligne-monte 1000ms var(--ease-sortie) both;
+}
+.titre-ligne + .titre-ligne > span {
+  animation-delay: 120ms;
+}
+@keyframes ligne-monte {
+  from {
+    opacity: 0.35;
+    transform: translateY(0.32em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-sous-titre {
+  animation: entree 800ms 280ms var(--ease-sortie) both;
+}
+.hero-actions {
+  animation: entree 800ms 400ms var(--ease-sortie) both;
+}
+
+/* Lumière qui dérive lentement sur le jaune. */
+.hero-lumiere {
+  position: absolute;
+  inset: -30%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(32% 38% at 22% 28%, rgb(255 255 255 / 0.5), transparent 70%),
+    radial-gradient(28% 34% at 78% 72%, rgb(255 128 0 / 0.26), transparent 70%);
+  animation: lumiere 16s ease-in-out infinite alternate;
+}
+@keyframes lumiere {
+  from {
+    transform: translate3d(-5%, -3%, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(6%, 4%, 0) rotate(9deg);
+  }
+}
+
+/* Bandeau défilant. */
+.defilant {
+  overflow: hidden;
+  padding-block: 0.65rem;
+}
+.defilant-piste {
+  display: flex;
+  width: max-content;
+  animation: defile 40s linear infinite;
+}
+.defilant:hover .defilant-piste {
+  animation-play-state: paused;
+}
+@keyframes defile {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Cadran : l'aiguille cherche la station, les stations s'allument au passage. */
+.aiguille {
+  animation:
+    aiguille-cherche 2400ms var(--ease-sortie) both,
+    aiguille-vit 3.6s 2400ms ease-in-out infinite alternate;
+}
+@keyframes aiguille-cherche {
+  0% {
+    left: 4%;
+  }
+  30% {
+    left: 18%;
+  }
+  58% {
+    left: 90%;
+  }
+  80% {
+    left: 46%;
+  }
+  100% {
+    left: 50%;
+  }
+}
+@keyframes aiguille-vit {
+  from {
+    margin-left: -2px;
+  }
+  to {
+    margin-left: 2px;
+  }
+}
+.station {
+  transform-origin: 50% 0;
+  animation: station 700ms ease both;
+}
+@keyframes station {
+  50% {
+    transform: scaleY(1.45);
+    box-shadow: 0 0 18px var(--nuit-accent);
+  }
+}
+
+/* Le bouton du direct appelle doucement tant qu'il n'est pas lancé. */
+.btn-direct {
+  position: relative;
+  isolation: isolate;
+}
+.btn-direct[aria-pressed="false"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: appel-direct 2.8s var(--ease-sortie) infinite;
+}
+@keyframes appel-direct {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--direct) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 16px transparent;
+  }
+}
+
+/* Révélation au défilement (navigateurs récents, sans JavaScript). Un
+   élément déjà à l'écran au chargement est entièrement visible. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .carte,
+    .revele {
+      animation: revele linear both;
+      animation-timeline: view(block);
+      animation-range: entry 0% cover 25%;
+    }
+  }
+}
+@keyframes revele {
+  from {
+    opacity: 0;
+    transform: translateY(36px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Article : barre de lecture et photo qui se pose. */
+.progression-lecture {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 70;
+  height: 3px;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+@supports (animation-timeline: scroll()) {
+  .progression-lecture {
+    animation: progression linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@supports not (animation-timeline: scroll()) {
+  .progression-lecture {
+    display: none;
+  }
+}
+@keyframes progression {
+  to {
+    transform: scaleX(1);
+  }
+}
+.visuel-entree img {
+  animation: pose 1800ms var(--ease-sortie) both;
+}
+@keyframes pose {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Entrée de page (app/[lang]/template.tsx) : jamais d'opacité nulle (LCP). */
+.page-entree {
+  animation: page-monte 560ms var(--ease-sortie) both;
+}
+@keyframes page-monte {
+  from {
+    opacity: 0.4;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 

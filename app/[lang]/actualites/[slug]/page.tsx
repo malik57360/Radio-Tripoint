@@ -72,6 +72,7 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
 
   return (
     <article>
+      <div className="progression-lecture" aria-hidden />
       <JsonLd data={jsonLdArticle(a, enVo ? "fr" : l)} />
       <header className="conteneur pt-6 sm:pt-8">
         <Breadcrumbs
@@ -172,6 +173,7 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
           }
         >
           <Visuel
+            className="visuel-entree"
             ratioNaturel={Boolean(a.visuel && a.visuel.hauteur > a.visuel.largeur)}
             visuel={a.visuel}
             repli={{

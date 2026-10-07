@@ -19,6 +19,7 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
   return (
     <section aria-labelledby="titre-accueil" className="relative isolate">
       <div className="bg-accent relative isolate overflow-hidden text-black">
+        <div className="hero-lumiere" aria-hidden />
         {site.visuels.hero && (
           <Image
             src={site.visuels.hero}
@@ -30,27 +31,35 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
           />
         )}
         <div className="conteneur pt-10 pb-10 sm:pt-14 lg:pt-16 lg:pb-14">
-          {/* Pas d'animation ici : le titre est l'élément LCP de la page. */}
+          {/* Titre = élément LCP : il monte ligne par ligne, mais reste peint
+              dès la première image (jamais d'opacité nulle). */}
           <h1 id="titre-accueil" className="titre-affiche text-[clamp(3.5rem,0.6rem+11vw,12.5rem)]">
-            {t({
-              fr: "Le Média des",
-              de: "Das Medium des",
-              lb: "D'Medium vum",
-              en: "The media of",
-              es: "El medio de",
-            })}
-            <br />
-            {t({
-              fr: "trois frontières",
-              // Traits d'union conditionnels : le mot tient sur un téléphone.
-              de: "Drei­länder­ecks",
-              lb: "Dräi­länner­eck",
-              en: "the Three Borders",
-              es: "las Tres Fronteras",
-            })}
+            <span className="titre-ligne">
+              <span>
+                {t({
+                  fr: "Le Média des",
+                  de: "Das Medium des",
+                  lb: "D'Medium vum",
+                  en: "The media of",
+                  es: "El medio de",
+                })}
+              </span>
+            </span>
+            <span className="titre-ligne">
+              <span>
+                {t({
+                  fr: "trois frontières",
+                  // Traits d'union conditionnels : le mot tient sur un téléphone.
+                  de: "Drei­länder­ecks",
+                  lb: "Dräi­länner­eck",
+                  en: "the Three Borders",
+                  es: "las Tres Fronteras",
+                })}
+              </span>
+            </span>
           </h1>
           <div className="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-12">
-            <p className="presse max-w-xl text-[1.2rem] leading-snug sm:text-[1.35rem]">
+            <p className="hero-sous-titre presse max-w-xl text-[1.2rem] leading-snug sm:text-[1.35rem]">
               {t({
                 fr: "La radio de Sierck-les-Bains, là où la France, le Luxembourg et l'Allemagne se touchent. L'actu, la musique et les sorties du territoire, en direct.",
                 de: "Das Radio aus Sierck-les-Bains, wo sich Frankreich, Luxemburg und Deutschland berühren. Nachrichten, Musik und Ausgehtipps aus der Region, live.",
@@ -59,7 +68,7 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
                 es: "La radio de Sierck-les-Bains, donde se tocan Francia, Luxemburgo y Alemania. Actualidad, música y planes del territorio, en directo.",
               })}
             </p>
-            <div className="grid gap-3 sm:flex sm:flex-wrap">
+            <div className="hero-actions grid gap-3 sm:flex sm:flex-wrap">
               <BoutonDirect taille="grand" />
               <Link
                 href="/emissions"
@@ -77,6 +86,14 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
             </div>
           </div>
         </div>
+        <Defilant
+          mots={[
+            t({ fr: "En direct", de: "Live", lb: "Live", en: "Live", es: "En directo" }),
+            ...pays,
+            "Sierck-les-Bains",
+            "Radio Tripoint",
+          ]}
+        />
       </div>
 
       <div className="bg-nuit text-nuit-encre">
@@ -109,13 +126,41 @@ function Cadran({ pays }: { pays: string[] }) {
           className="absolute top-0 flex -translate-x-1/2 flex-col items-center"
           style={{ left: positions[i] }}
         >
-          <span className="bg-nuit-accent block h-7 w-1" />
+          <span
+            className="station bg-nuit-accent block h-7 w-1"
+            style={{ animationDelay: `${0.35 + i * 0.35}s` }}
+          />
           <span className="text-nuit-encre mt-2 text-[0.85rem] font-bold whitespace-nowrap sm:text-base">
             {p}
           </span>
         </div>
       ))}
-      <span className="bg-direct absolute -top-6 left-1/2 h-12 w-0.5 -translate-x-1/2 shadow-[0_0_14px_var(--direct)]" />
+      {/* L'aiguille balaie le cadran comme on cherche une station, puis se cale sur le direct. */}
+      <span className="aiguille bg-direct absolute -top-6 left-1/2 h-12 w-0.5 -translate-x-1/2 shadow-[0_0_14px_var(--direct)]" />
+    </div>
+  )
+}
+
+/** Bandeau défilant sous le titre : le site respire, même à l'arrêt. */
+function Defilant({ mots }: { mots: string[] }) {
+  const suite = [...mots, ...mots]
+  return (
+    <div className="defilant border-t-2 border-black" aria-hidden>
+      <div className="defilant-piste">
+        {[0, 1].map((k) => (
+          <div key={k} className="flex shrink-0 items-center">
+            {suite.map((m, i) => (
+              <span
+                key={`${k}-${i}`}
+                className="titre-affiche flex items-center text-[1.35rem] sm:text-[1.6rem]"
+              >
+                <span className="px-5">{m}</span>
+                <span className="inline-block size-2.5 rounded-full bg-black" />
+              </span>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
