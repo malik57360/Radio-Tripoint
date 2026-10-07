@@ -24,24 +24,58 @@ type Photo = {
   credit: string
 }
 
-/** Réduit la photo et la convertit en WebP dans le navigateur (≈ 200 à 500 ko). */
-async function versWebp(f: File): Promise<{ blob: Blob; largeur: number; hauteur: number }> {
-  const img = await createImageBitmap(f)
-  const k = Math.min(1, MAX_COTE / Math.max(img.width, img.height))
-  const largeur = Math.round(img.width * k)
-  const hauteur = Math.round(img.height * k)
+/** Ouvre la photo : createImageBitmap si possible, sinon une <img> (vieux Safari). */
+async function ouvrir(
+  f: File,
+): Promise<{ source: CanvasImageSource; l: number; h: number; fin: () => void }> {
+  try {
+    const b = await createImageBitmap(f)
+    return { source: b, l: b.width, h: b.height, fin: () => b.close() }
+  } catch {
+    const url = URL.createObjectURL(f)
+    const img = new Image()
+    img.src = url
+    await img.decode()
+    return {
+      source: img,
+      l: img.naturalWidth,
+      h: img.naturalHeight,
+      fin: () => URL.revokeObjectURL(url),
+    }
+  }
+}
+
+/**
+ * Réduit la photo dans le navigateur (≈ 200 à 500 ko). WebP si le navigateur
+ * sait l'écrire, sinon JPEG : Safari sur iPhone n'écrit pas le WebP.
+ */
+async function reduire(f: File): Promise<{ blob: Blob; largeur: number; hauteur: number }> {
+  const img = await ouvrir(f)
+  const k = Math.min(1, MAX_COTE / Math.max(img.l, img.h))
+  const largeur = Math.round(img.l * k)
+  const hauteur = Math.round(img.h * k)
   const c = document.createElement("canvas")
   c.width = largeur
   c.height = hauteur
-  c.getContext("2d")!.drawImage(img, 0, 0, largeur, hauteur)
-  img.close()
-  const blob = await new Promise<Blob | null>((ok) => c.toBlob(ok, "image/webp", 0.84))
-  if (!blob || blob.type !== "image/webp") throw new Error("Ce navigateur ne sait pas convertir la photo.")
+  const ctx = c.getContext("2d")!
+  ctx.fillStyle = "#fff" // PNG transparent → fond blanc en JPEG
+  ctx.fillRect(0, 0, largeur, hauteur)
+  ctx.drawImage(img.source, 0, 0, largeur, hauteur)
+  img.fin()
+  const encoder = (type: string, q: number) =>
+    new Promise<Blob | null>((ok) => c.toBlob(ok, type, q))
+  let blob = await encoder("image/webp", 0.84)
+  if (!blob || blob.type !== "image/webp") blob = await encoder("image/jpeg", 0.85)
+  if (!blob || (blob.type !== "image/jpeg" && blob.type !== "image/webp"))
+    throw new Error("Cette photo n'a pas pu être préparée. Essayez une autre image.")
   return { blob, largeur, hauteur }
 }
 
 const nouveauDossier = () =>
-  Array.from(crypto.getRandomValues(new Uint8Array(12)), (b) => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36]).join("")
+  Array.from(
+    crypto.getRandomValues(new Uint8Array(12)),
+    (b) => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36],
+  ).join("")
 
 export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom: string }[] }) {
   const [titre, setTitre] = useState("")
@@ -97,10 +131,10 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
         const envoyees: DonneesArticle["photos"] = []
         for (const [i, p] of photos.entries()) {
           setEtape(`Photo ${i + 1} sur ${photos.length}…`)
-          const { blob, largeur, hauteur } = await versWebp(p.fichier)
+          const { blob, largeur, hauteur } = await reduire(p.fichier)
           const r = await fetch(`/api/direction/articles/photo?dossier=${dossier}`, {
             method: "POST",
-            headers: { "Content-Type": "image/webp" },
+            headers: { "Content-Type": blob.type },
             body: blob,
           })
           const d = (await r.json().catch(() => ({}))) as { url?: string; erreur?: string }
@@ -220,8 +254,8 @@ export function RedactionArticle({ rubriques }: { rubriques: { slug: string; nom
           className={cn(champ, "mt-1.5 leading-relaxed")}
         />
         <span className="text-encre-3 mt-1.5 block text-xs leading-relaxed">
-          Une ligne vide entre deux paragraphes. <b>## Titre</b> = intertitre · <b>&gt; texte</b>{" "}
-          = citation (<b>— Nom</b> sur la ligne suivante) · <b>- élément</b> = liste ·{" "}
+          Une ligne vide entre deux paragraphes. <b>## Titre</b> = intertitre · <b>&gt; texte</b> =
+          citation (<b>— Nom</b> sur la ligne suivante) · <b>- élément</b> = liste ·{" "}
           <b>[photo 2]</b> = place de la 2e photo. Sinon les photos se répartissent toutes seules.
         </span>
       </label>
@@ -381,4 +415,3 @@ export function RetirerArticle({ slug }: { slug: string }) {
     </button>
   )
 }
-

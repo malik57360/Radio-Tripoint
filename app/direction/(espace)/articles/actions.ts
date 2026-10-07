@@ -17,7 +17,7 @@ import type { Bloc, Visuel } from "@/types/media"
 type Resultat = { ok: true; message: string; lien?: string } | { ok: false; erreur: string }
 
 const URL_PHOTO =
-  /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/articles\/[a-z0-9]{12}\/[\w.-]+\.webp$/
+  /^https:\/\/[a-z0-9]+\.public\.blob\.vercel-storage\.com\/articles\/[a-z0-9]{12}\/[\w.-]+\.(?:webp|jpg)$/
 
 const photo = z.object({
   url: z.string().regex(URL_PHOTO, "Photo non reconnue."),
