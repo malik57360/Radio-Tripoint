@@ -57,23 +57,41 @@ export async function EmplacementPub({
           })}{" "}
           · {annonceur.nom}
         </p>
-        <a
-          href={annonceur.lien}
-          target="_blank"
-          rel="sponsored noopener"
-          className={cn(
+        {(() => {
+          const classe = cn(
             "bg-nuit relative block overflow-hidden",
-            format === "banniere" ? "aspect-[4/1] max-sm:aspect-[2/1]" : "aspect-square",
-          )}
-        >
-          <Image
-            src={annonceur.image}
-            alt={annonceur.nom}
-            fill
-            sizes={format === "banniere" ? "(min-width: 1024px) 1100px, 100vw" : "320px"}
-            className="object-cover"
-          />
-        </a>
+            !annonceur.largeur &&
+              (format === "banniere" ? "aspect-[4/1] max-sm:aspect-[2/1]" : "aspect-square"),
+          )
+          const style =
+            annonceur.largeur && annonceur.hauteur
+              ? { aspectRatio: `${annonceur.largeur} / ${annonceur.hauteur}` }
+              : undefined
+          const visuel = (
+            <Image
+              src={annonceur.image}
+              alt={annonceur.nom}
+              fill
+              sizes={format === "banniere" ? "(min-width: 1024px) 1100px, 100vw" : "320px"}
+              className="object-cover"
+            />
+          )
+          return annonceur.lien ? (
+            <a
+              href={annonceur.lien}
+              target="_blank"
+              rel="sponsored noopener"
+              className={classe}
+              style={style}
+            >
+              {visuel}
+            </a>
+          ) : (
+            <div className={classe} style={style}>
+              {visuel}
+            </div>
+          )
+        })()}
       </aside>
     )
   }

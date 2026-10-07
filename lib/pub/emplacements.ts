@@ -13,8 +13,11 @@ export interface Annonceur {
   nom: string
   /** Chemin d'un visuel dans public/ (ex. "/pub/garage-dupont.jpg"). */
   image: string
-  /** Site ou page de l'annonceur. */
-  lien: string
+  /** Site ou page de l'annonceur. Sans lien, le visuel n'est pas cliquable. */
+  lien?: string
+  /** Dimensions du visuel : l'encart garde ses proportions au lieu de recadrer. */
+  largeur?: number
+  hauteur?: number
 }
 
 export interface Emplacement {
@@ -31,6 +34,12 @@ export const emplacements = {
       lb: "Startsäit, ënner « Op der Une »",
       en: "Home page, below the top stories",
       es: "Portada, bajo las noticias destacadas",
+    },
+    annonceur: {
+      nom: "Africandles by Zaza — Collection Home",
+      image: "/pub/africandles-collection-home.webp",
+      largeur: 1774,
+      hauteur: 887,
     },
   },
   "accueil-agenda": {
