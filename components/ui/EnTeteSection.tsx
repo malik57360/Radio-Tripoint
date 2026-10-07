@@ -30,7 +30,13 @@ export function EnTeteSection({
               {surtitre}
             </p>
           )}
-          <h2 id={id} className={cn("titre-section mt-2", sombre && "text-nuit-encre")}>
+          <h2
+            id={id}
+            className={cn(
+              "titre-section titre-remplit mt-2",
+              sombre && "titre-remplit-nuit text-nuit-encre",
+            )}
+          >
             {titre}
           </h2>
         </div>

@@ -4,6 +4,8 @@ import Link from "@/components/ui/Lien"
 import { site } from "@/config/site"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { EnCeMoment } from "@/components/radio/EnCeMoment"
+import { Spectre } from "@/components/motion/Spectre"
+import { Tripoint } from "@/components/motion/Tripoint"
 import { traducteur } from "@/lib/i18n/serveur"
 import type { GrilleClient } from "@/lib/radio/types"
 
@@ -18,8 +20,9 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
   const pays = t(site.pays)
   return (
     <section aria-labelledby="titre-accueil" className="relative isolate">
-      <div className="bg-accent relative isolate overflow-hidden text-black">
+      <div className="hero-scene bg-accent relative isolate overflow-hidden text-black">
         <div className="hero-lumiere" aria-hidden />
+        <Tripoint className="hero-tripoint" />
         {site.visuels.hero && (
           <Image
             src={site.visuels.hero}
@@ -33,7 +36,10 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
         <div className="conteneur pt-10 pb-10 sm:pt-14 lg:pt-16 lg:pb-14">
           {/* Titre = élément LCP : il monte ligne par ligne, mais reste peint
               dès la première image (jamais d'opacité nulle). */}
-          <h1 id="titre-accueil" className="titre-affiche text-[clamp(3.5rem,0.6rem+11vw,12.5rem)]">
+          <h1
+            id="titre-accueil"
+            className="titre-accueil titre-affiche text-[clamp(3.5rem,0.6rem+11vw,12.5rem)]"
+          >
             <span className="titre-ligne">
               <span>
                 {t({
@@ -98,6 +104,7 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
 
       <div className="bg-nuit text-nuit-encre">
         <div className="conteneur pt-9 pb-8 lg:pb-10">
+          <Spectre className="spectre text-nuit-accent mb-7 block h-12 w-full sm:h-16" />
           <Cadran pays={pays} />
           <div className="mt-6 lg:mt-8">
             <EnCeMoment grille={grille} />

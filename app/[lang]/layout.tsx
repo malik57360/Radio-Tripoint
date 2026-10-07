@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next"
 import { Archivo, Newsreader } from "next/font/google"
 import { BandeauDemo } from "@/components/layout/BandeauDemo"
 import { BandeauOctobreRose } from "@/components/layout/BandeauOctobreRose"
+import { EtatAntenne } from "@/components/motion/EtatAntenne"
 import { Footer } from "@/components/layout/Footer"
 import { Header } from "@/components/layout/Header"
 import { scriptTheme } from "@/components/layout/ThemeToggle"
@@ -138,6 +139,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           </main>
           <Footer />
           <LecteurBarre grille={grille} />
+          <EtatAntenne />
           <BarreOnglets guide={process.env.GUIDE_ACTIF === "1"} />
           {process.env.GUIDE_ACTIF === "1" && <Guide />}
           <DirectAuto />
