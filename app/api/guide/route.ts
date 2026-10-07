@@ -60,7 +60,7 @@ function validerImage(brut: unknown): Image | null | false {
 
 /** Consignes ajoutées selon l'usage : réponse lue à voix haute, photo jointe. */
 const CONSIGNE_ORALE =
-  "\n\nMODE CONVERSATION VOCALE (prioritaire sur tout le reste) : c'est une vraie conversation à voix haute, comme au téléphone avec un ami. Réponds comme un humain, du tac au tac, et très court : une seule phrase la plupart du temps, deux au maximum, trois seulement si on te demande une information précise. Une salutation ou du bavardage appelle une réponse courte qui relance, et rien d'autre : « Salut, ça va ? » → « Ça va super, et toi ? Tu fais quoi de beau ? ». Ne présente jamais la radio, l'agenda ou la météo si on ne te les demande pas. Pas de liste, pas de titre, pas de Markdown, pas d'adresse web, pas d'émojis. Écris les nombres et les heures comme on les dit. Tutoie si l'utilisateur te tutoie. Ton : chaleureux, spontané, un peu taquin."
+  "\n\nMODE VOCAL : ta réponse sera lue à voix haute. Réponds en 2 à 4 phrases courtes et naturelles, sans liste, sans titre, sans Markdown, sans URL écrite en toutes lettres (dis plutôt « sur le site de Radio Tripoint »)."
 const CONSIGNE_PHOTO =
   "\n\nPHOTOS : l'utilisateur peut t'envoyer une photo. Décris ce que tu vois vraiment et réponds à sa question. Si tu n'es pas sûr de ce que montre la photo, dis-le. N'identifie jamais une personne à partir de son visage."
 
@@ -130,10 +130,7 @@ export async function POST(request: Request) {
   // agenda, langue) la suit.
   const { fixe, variable } = await consignesGuide(l)
 
-  // En appel vocal, chaque seconde compte : pas de réflexion entre les
-  // outils, une réponse courte, une seule recherche web au plus. Si l'API
-  // refuse ce réglage (400), on retombe sur le réglage normal plus bas.
-  const appeler = (conversation: unknown[], rapide = false) =>
+  const appeler = (conversation: unknown[]) =>
     fetch(cible.url, {
       method: "POST",
       headers: {
@@ -147,9 +144,8 @@ export async function POST(request: Request) {
         // compte dans max_tokens : à 1 500, réflexion + recherche web
         // épuisaient le plafond avant le premier mot (arrêt max_tokens,
         // Tripo « indisponible »). Effort bas : c'est une conversation.
-        max_tokens: rapide ? 1500 : 8000,
+        max_tokens: 8000,
         output_config: { effort: "low" },
-        ...(rapide ? { thinking: { type: "between_tools" } } : {}),
         stream: true,
         system: [
           { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
@@ -159,7 +155,7 @@ export async function POST(request: Request) {
           {
             type: "web_search_20250305",
             name: "web_search",
-            max_uses: rapide ? 1 : 4,
+            max_uses: 4,
             user_location: {
               type: "approximate",
               city: "Sierck-les-Bains",
@@ -189,14 +185,7 @@ export async function POST(request: Request) {
       ]
     : messages
 
-  let rapide = oral
-  let premier = await appeler(conversationInitiale, rapide)
-  if (rapide && premier && premier.status === 400) {
-    rapide = false
-    const detail = (await premier.text().catch(() => "")).slice(0, 300)
-    console.error(`[guide] réglage rapide refusé, réglage normal : ${detail}`)
-    premier = await appeler(conversationInitiale)
-  }
+  const premier = await appeler(conversationInitiale)
   if (!premier || !premier.ok || !premier.body) {
     // Message d'erreur de la passerelle seulement (jamais la conversation).
     const detail = premier ? (await premier.text().catch(() => "")).slice(0, 300) : ""
@@ -285,7 +274,7 @@ export async function POST(request: Request) {
             break
           }
           conversation = [...conversation, { role: "assistant", content: blocs.filter(Boolean) }]
-          reponse = await appeler(conversation, rapide)
+          reponse = await appeler(conversation)
           if (!reponse?.ok) {
             console.error(`[guide] reprise impossible (${reponse?.status ?? "réseau"})`)
             break
