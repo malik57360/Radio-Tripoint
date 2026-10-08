@@ -65,15 +65,59 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
             </span>
           </h1>
           <div className="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-12">
-            <p className="hero-sous-titre presse max-w-xl text-[1.2rem] leading-snug sm:text-[1.35rem]">
-              {t({
-                fr: "La radio transfrontalière, là où la France, le Luxembourg et l'Allemagne se touchent. L'actu, la musique et les sorties du territoire, en direct.",
-                de: "Das grenzüberschreitende Radio, wo sich Frankreich, Luxemburg und Deutschland berühren. Nachrichten, Musik und Ausgehtipps aus der Region, live.",
-                lb: "De grenziwwerschreidende Radio, do wou Frankräich, Lëtzebuerg an Däitschland sech beréieren. Neiegkeeten, Musek an Ausgoen aus der Regioun, live.",
-                en: "The cross-border radio, where France, Luxembourg and Germany meet. Local news, music and what's on, live.",
-                es: "La radio transfronteriza, donde se tocan Francia, Luxemburgo y Alemania. Actualidad, música y planes del territorio, en directo.",
-              })}
-            </p>
+            <div className="hero-sous-titre max-w-xl">
+              <p className="presse text-[1.2rem] leading-snug sm:text-[1.35rem]">
+                {t({
+                  fr: "Nous donnons de la visibilité à vos projets, vos entreprises, vos événements, votre musique.",
+                  de: "Wir machen Ihre Projekte, Ihre Unternehmen, Ihre Veranstaltungen und Ihre Musik sichtbar.",
+                  lb: "Mir maachen Är Projeten, Är Betriber, Är Evenementer an Är Musek siichtbar.",
+                  en: "We give visibility to your projects, your businesses, your events and your music.",
+                  es: "Damos visibilidad a sus proyectos, sus empresas, sus eventos y su música.",
+                })}
+              </p>
+              {/* La promesse, dans le lettrage des titres. */}
+              <p className="promesse mt-4 text-[1.3rem] sm:text-[1.55rem]">
+                <span className="block">
+                  {t({
+                    fr: "Nous vous apportons de la visibilité.",
+                    de: "Wir bringen Ihnen Sichtbarkeit.",
+                    lb: "Mir bréngen Iech Siichtbarkeet.",
+                    en: "We bring you visibility.",
+                    es: "Les aportamos visibilidad.",
+                  })}
+                </span>
+                <span className="block">
+                  {t({
+                    fr: "Vous la transformez en opportunités, en clients et en chiffre d’affaires.",
+                    de: "Sie machen daraus Chancen, Kunden und Umsatz.",
+                    lb: "Dir maacht doraus Chancen, Clienten an Ëmsaz.",
+                    en: "You turn it into opportunities, customers and revenue.",
+                    es: "Ustedes la convierten en oportunidades, clientes y facturación.",
+                  })}
+                </span>
+              </p>
+              {/* Chaque métier porte son point devant lui, et la liste déborde
+                  d'un point à gauche, rogné : si elle passe sur deux lignes,
+                  aucune ne commence par « • ». */}
+              <div className="mt-4 overflow-hidden">
+                <ul className="-ml-5 flex flex-wrap text-[0.72rem] font-bold tracking-[0.06em] text-black/75 uppercase [font-variation-settings:'wdth'_75]">
+                  {t({
+                    fr: ["Radio", "Média", "Reportages", "Podcasts", "Événements"],
+                    de: ["Radio", "Medien", "Reportagen", "Podcasts", "Events"],
+                    lb: ["Radio", "Medien", "Reportagen", "Podcasten", "Evenementer"],
+                    en: ["Radio", "Media", "Reports", "Podcasts", "Events"],
+                    es: ["Radio", "Medios", "Reportajes", "Podcasts", "Eventos"],
+                  }).map((m) => (
+                    <li key={m}>
+                      <span aria-hidden className="inline-block w-5 text-center">
+                        •
+                      </span>
+                      {m}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
             <div className="hero-actions grid gap-3 sm:flex sm:flex-wrap">
               <BoutonDirect taille="grand" />
               <Link

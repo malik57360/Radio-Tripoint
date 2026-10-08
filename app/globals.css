@@ -271,6 +271,14 @@
     letter-spacing: -0.01em;
     line-height: 1.12;
   }
+  /* Promesse de l'accueil : le lettrage des titres, à taille de lecture. */
+  .promesse {
+    font-family: var(--font-titre);
+    font-weight: 850;
+    font-variation-settings: "wdth" 75;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
 
   /* Surtitre : une indication courte, en bas de casse, pas une étiquette criée. */
   .surtitre {
