@@ -47,6 +47,8 @@ const nextConfig: NextConfig = {
   // Le flyer du week-end lit ses polices et le logo sur le disque.
   outputFileTracingIncludes: {
     "/api/flyer-weekend": ["./assets/fonts/**", "./public/media/agenda/**"],
+    // Images de la signature des mails envoyés depuis le tableau de bord.
+    "/direction/**": ["./assets/mail/**"],
   },
   images: {
     qualities: [75, 85],

@@ -191,8 +191,9 @@ export function Composer({
         Envoyer depuis info@
       </button>
       <p className="text-encre-3 text-xs">
-        Le message part de info@radio-tripoint-officiel.fr et une copie est rangée dans « Envoyés ».
-        L&apos;IA n&apos;invente ni prix ni chiffres d&apos;audience : relisez avant d&apos;envoyer.
+        Le message part de info@radio-tripoint-officiel.fr, avec la signature Radio Tripoint, et une
+        copie est rangée dans « Envoyés ». L&apos;IA n&apos;invente ni prix ni chiffres
+        d&apos;audience : relisez avant d&apos;envoyer.
       </p>
     </div>
   )

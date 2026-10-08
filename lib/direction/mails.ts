@@ -9,12 +9,14 @@ import { listerEmissions } from "@/lib/contenu/emissions"
 import { tousEvenements } from "@/lib/contenu/evenements"
 import { smtpConfigure } from "@/lib/formulaires/courriel"
 import { libelleCreneaux } from "@/lib/radio/grille"
+import { corpsSigne } from "./signature"
 
 /**
  * Boîte mail de la radio (info@, hébergée chez Webador) vue depuis le
  * tableau de bord : lecture en IMAP, réponses proposées par l'IA, envoi par
  * SMTP. Rien ne part sans un clic d'une personne : l'IA ne fait qu'écrire un
- * brouillon, signé « L'équipe Radio Tripoint ».
+ * brouillon, signé « L'équipe Radio Tripoint ». Tout ce qui part de la boîte
+ * porte en plus la signature du webmail (logo, contacts : ./signature.ts).
  */
 
 const SIGNATURE = "L'équipe Radio Tripoint"
@@ -238,14 +240,14 @@ export async function proposerReponse(uid: number) {
 
 /* ───────────────────────── Envoi et brouillons ───────────────────────── */
 
-function enTete(mail: Mail, texte: string) {
+async function enTete(mail: Mail, texte: string) {
   const { user } = compte()
   const sujet = /^re\s*:/i.test(mail.sujet) ? mail.sujet : `Re: ${mail.sujet}`
   return {
     from: { name: "Radio Tripoint", address: user },
     to: mail.repondreA,
     subject: sujet,
-    text: texte,
+    ...(await corpsSigne(texte)),
     inReplyTo: mail.messageId ?? undefined,
     references: [...mail.references, ...(mail.messageId ? [mail.messageId] : [])],
   }
@@ -275,7 +277,7 @@ export async function envoyerReponse(uid: number, texte: string) {
       verrou.release()
     }
     if (!mail?.repondreA) throw new Error("Impossible de trouver l'adresse de l'expéditeur.")
-    const message = enTete(mail, texte)
+    const message = await enTete(mail, texte)
 
     await transporteur(user, pass).sendMail(message)
 
@@ -306,7 +308,7 @@ export async function enregistrerBrouillon(uid: number, texte: string) {
     if (!mail) throw new Error("Message introuvable.")
     const brouillons = await dossier(client, "\\Drafts", "draft|brouillon")
     if (!brouillons) throw new Error("Dossier « Brouillons » introuvable dans la boîte.")
-    const brut = await new MailComposer({ ...enTete(mail, texte), date: new Date() })
+    const brut = await new MailComposer({ ...(await enTete(mail, texte)), date: new Date() })
       .compile()
       .build()
     await client.append(brouillons, brut, ["\\Draft", "\\Seen"])
@@ -327,7 +329,7 @@ export async function envoyerNouveau(a: string, objet: string, texte: string) {
     from: { name: "Radio Tripoint", address: user },
     to: destinataire,
     subject: objet.trim().slice(0, 200),
-    text: texte,
+    ...(await corpsSigne(texte)),
   }
   await transporteur(user, pass).sendMail(message)
   await avecBoite(async (client) => {

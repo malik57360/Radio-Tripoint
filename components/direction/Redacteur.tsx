@@ -107,7 +107,8 @@ export function Redacteur({ uid, destinataire }: { uid: number; destinataire: st
       </div>
       <p className="text-encre-3 mt-3 text-xs">
         Le message reçu est transmis à l&apos;IA (Anthropic) uniquement quand vous cliquez sur «
-        Proposer ». Rien n&apos;est envoyé sans votre clic sur « Envoyer ».
+        Proposer ». Rien n&apos;est envoyé sans votre clic sur « Envoyer ». La signature Radio
+        Tripoint (logo, e-mail, site, Instagram, Facebook) s&apos;ajoute toute seule à l&apos;envoi.
       </p>
     </div>
   )
