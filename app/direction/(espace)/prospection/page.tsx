@@ -1,7 +1,9 @@
-import { ExternalLink, PenLine, Search } from "lucide-react"
+import { Search } from "lucide-react"
 import Link from "next/link"
-import { SuiviProspect, type SuiviInitial } from "@/components/direction/SuiviProspect"
-import { AActiver, Carte, EnTetePage, Etat, Tuile, nombre } from "@/components/direction/ui"
+import { ListeProspects, type FicheProspect } from "@/components/direction/ListeProspects"
+import type { SuiviInitial } from "@/components/direction/SuiviProspect"
+import { AActiver, Carte, EnTetePage, Etat, nombre } from "@/components/direction/ui"
+import { coordonneesConnues } from "@/lib/direction/coordonnees"
 import { redisActif } from "@/lib/direction/redis"
 import {
   PAR_PAGE,
@@ -11,37 +13,25 @@ import {
   lireSuivis,
   rechercherProspects,
   type Statut,
+  type Suivi,
   type ZoneId,
 } from "@/lib/direction/prospection"
 import { cn } from "@/lib/utils/cn"
 
 export const metadata = { title: "Prospection — Direction Radio Tripoint" }
-
-const ecrire = (p: {
-  siren: string
-  nom: string
-  activite: string
-  commune: string
-  dirigeant?: string | null
-  email?: string
-}) => {
-  const q = new URLSearchParams({
-    nouveau: "1",
-    siren: p.siren,
-    nom: p.nom,
-    activite: p.activite,
-    commune: p.commune,
-  })
-  if (p.dirigeant) q.set("dirigeant", p.dirigeant)
-  if (p.email) q.set("a", p.email)
-  return `/direction/mails?${q}`
-}
-
-const google = (nom: string, commune: string) =>
-  `https://www.google.com/search?q=${encodeURIComponent(`${nom} ${commune}`)}`
+// La recherche des coordonnées (IA + web) et la rédaction des mails prennent du temps.
+export const maxDuration = 60
 
 const champ =
   "border-trait bg-carte-2 text-encre focus:border-accent rounded-lg border px-3 py-2 text-sm outline-none"
+
+const versSuiviInitial = (s: Suivi): SuiviInitial => ({
+  statut: s.statut,
+  note: s.note,
+  email: s.email,
+  telephone: s.telephone,
+  dernierEnvoi: s.dernierEnvoi,
+})
 
 export default async function PageProspection({
   searchParams,
@@ -57,11 +47,12 @@ export default async function PageProspection({
   const q = p("q").slice(0, 80)
   const page = Math.max(1, Number(p("page")) || 1)
 
-  const suivis = await lireSuivis().catch(() => ({}) as Awaited<ReturnType<typeof lireSuivis>>)
+  const suivis = await lireSuivis().catch(() => ({}) as Record<string, Suivi>)
   const parStatut = Object.values(suivis).reduce<Record<string, number>>((acc, s) => {
     acc[s.statut] = (acc[s.statut] ?? 0) + 1
     return acc
   }, {})
+  const contactees = (parStatut.contacte ?? 0) + (parStatut.interesse ?? 0) + (parStatut.rdv ?? 0)
 
   const lien = (changes: Record<string, string>) => {
     const u = new URLSearchParams({
@@ -99,7 +90,7 @@ export default async function PageProspection({
     <div className="space-y-4">
       <EnTetePage
         titre="Prospection"
-        source="Annuaire officiel des entreprises (INSEE, RNE) · données publiques, entreprises actives uniquement"
+        source="Entreprises actives de l'annuaire officiel (INSEE, RNE) · mails et téléphones trouvés sur le web par l'IA"
       >
         {onglets}
       </EnTetePage>
@@ -110,19 +101,13 @@ export default async function PageProspection({
         </AActiver>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Tuile
-          libelle="Suivies"
-          valeur={Object.keys(suivis).length}
-          detail="entreprises avec un statut"
-        />
-        <Tuile
-          libelle="Contactées"
-          valeur={(parStatut.contacte ?? 0) + (parStatut.interesse ?? 0) + (parStatut.rdv ?? 0)}
-        />
-        <Tuile accent libelle="Rendez-vous" valeur={parStatut.rdv ?? 0} />
-        <Tuile libelle="Clients" valeur={parStatut.client ?? 0} />
-      </div>
+      <p className="text-encre-2 text-sm">
+        <span className="text-encre font-bold">{contactees}</span> contactée
+        {contactees > 1 ? "s" : ""} ·{" "}
+        <span className="text-encre font-bold">{parStatut.rdv ?? 0}</span> rendez-vous ·{" "}
+        <span className="text-encre font-bold">{parStatut.client ?? 0}</span> client
+        {(parStatut.client ?? 0) > 1 ? "s" : ""}
+      </p>
 
       {vue === "suivi" ? (
         <VueSuivi suivis={suivis} />
@@ -179,11 +164,6 @@ export default async function PageProspection({
                 </button>
               </div>
             </form>
-            <p className="text-encre-3 mt-3 text-xs">
-              {ZONES.find((z) => z.id === zone)?.detail} · Côté Luxembourg et Allemagne, il
-              n&apos;existe pas d&apos;annuaire public équivalent en accès libre : ces entreprises
-              ne peuvent pas être listées ici.
-            </p>
           </Carte>
           <Resultats
             zone={zone}
@@ -214,7 +194,7 @@ async function Resultats({
   salaries: boolean
   q: string
   page: number
-  suivis: Awaited<ReturnType<typeof lireSuivis>>
+  suivis: Record<string, Suivi>
   lien: (c: Record<string, string>) => string
 }) {
   let res: Awaited<ReturnType<typeof rechercherProspects>>
@@ -228,67 +208,35 @@ async function Resultats({
     )
   }
   const pages = Math.min(res.pages, 400)
+  const fiches: FicheProspect[] = res.prospects.map((e) => ({
+    siren: e.siren,
+    nom: e.nom,
+    enseigne: e.enseigne,
+    activite: e.activite,
+    commune: e.commune,
+    effectif: e.effectif,
+    adresse: e.adresse,
+    dirigeant: e.dirigeant,
+  }))
+  const coordonnees = await coordonneesConnues(fiches.map((f) => f.siren)).catch(() => ({}))
+  const suivisPage = Object.fromEntries(
+    fiches.filter((f) => suivis[f.siren]).map((f) => [f.siren, versSuiviInitial(suivis[f.siren])]),
+  )
   return (
     <Carte
-      titre={`${nombre(res.total)} entreprise${res.total > 1 ? "s" : ""} actives`}
+      titre={`${nombre(res.total)} entreprise${res.total > 1 ? "s" : ""}`}
       note={`page ${page} sur ${nombre(pages || 1)} · ${PAR_PAGE} par page`}
     >
-      {res.prospects.length === 0 ? (
+      {fiches.length === 0 ? (
         <p className="text-encre-3 text-sm">Aucune entreprise sur cette page.</p>
       ) : (
-        <ul className="divide-trait divide-y">
-          {res.prospects.map((e) => {
-            const s = suivis[e.siren]
-            const nomAffiche = e.enseigne ?? e.nom
-            return (
-              <li key={e.siren} className="grid gap-3 py-4 lg:grid-cols-[1.3fr_1fr]">
-                <div className="min-w-0">
-                  <p className="font-bold">
-                    {nomAffiche}
-                    {e.enseigne && <span className="text-encre-3 font-normal"> · {e.nom}</span>}
-                  </p>
-                  <p className="text-encre-2 text-sm">
-                    {e.activite} · <span className="font-semibold">{e.commune}</span> · {e.effectif}
-                  </p>
-                  <p className="text-encre-3 text-xs">
-                    {e.adresse}
-                    {e.dirigeant && ` · Dirigeant : ${e.dirigeant}`}
-                    {e.siegeAilleurs && ` · Siège à ${e.siegeAilleurs}`}
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-3 text-xs font-bold">
-                    <Link
-                      href={ecrire({ ...e, nom: nomAffiche, email: s?.email })}
-                      className="text-accent inline-flex items-center gap-1 hover:underline"
-                    >
-                      <PenLine className="size-3.5" aria-hidden /> Écrire
-                    </Link>
-                    <a
-                      href={google(nomAffiche, e.commune)}
-                      target="_blank"
-                      rel="noopener"
-                      className="text-encre-2 hover:text-encre inline-flex items-center gap-1"
-                    >
-                      <Search className="size-3.5" aria-hidden /> Trouver site et téléphone
-                    </a>
-                    <a
-                      href={`https://annuaire-entreprises.data.gouv.fr/entreprise/${e.siren}`}
-                      target="_blank"
-                      rel="noopener"
-                      className="text-encre-2 hover:text-encre inline-flex items-center gap-1"
-                    >
-                      <ExternalLink className="size-3.5" aria-hidden /> Fiche officielle
-                    </a>
-                  </div>
-                </div>
-                <SuiviProspect
-                  siren={e.siren}
-                  fiche={{ nom: nomAffiche, commune: e.commune, activite: e.activite }}
-                  initial={s ? (s as SuiviInitial) : null}
-                />
-              </li>
-            )
-          })}
-        </ul>
+        <ListeProspects
+          key={`${zone}-${secteur}-${q}-${salaries}-${page}`}
+          fiches={fiches}
+          suivis={suivisPage}
+          coordonnees={coordonnees}
+          toutChercher
+        />
       )}
       {pages > 1 && (
         <nav
@@ -324,76 +272,42 @@ async function Resultats({
   )
 }
 
-function VueSuivi({ suivis }: { suivis: Awaited<ReturnType<typeof lireSuivis>> }) {
+async function VueSuivi({ suivis }: { suivis: Record<string, Suivi> }) {
   const liste = Object.entries(suivis).sort((a, b) => b[1].maj - a[1].maj)
   if (!liste.length)
     return (
       <Carte>
         <p className="text-encre-3 text-sm">
           Aucune entreprise suivie pour l&apos;instant. Dans « Trouver des entreprises », changez le
-          statut d&apos;une fiche ou écrivez-lui : elle apparaîtra ici.
+          statut d&apos;une fiche ou envoyez-lui un mail : elle apparaîtra ici.
         </p>
       </Carte>
     )
+  const coordonnees = await coordonneesConnues(liste.map(([siren]) => siren)).catch(() => ({}))
   const ordre = Object.keys(STATUTS) as Statut[]
   return (
     <div className="space-y-4">
       {ordre
         .filter((st) => liste.some(([, s]) => s.statut === st))
-        .map((st) => (
-          <Carte
-            key={st}
-            titre={STATUTS[st]}
-            note={`${liste.filter(([, s]) => s.statut === st).length}`}
-          >
-            <ul className="divide-trait divide-y">
-              {liste
-                .filter(([, s]) => s.statut === st)
-                .map(([siren, s]) => (
-                  <li key={siren} className="grid gap-3 py-3 lg:grid-cols-[1.3fr_1fr]">
-                    <div className="min-w-0">
-                      <p className="font-bold">{s.nom}</p>
-                      <p className="text-encre-2 text-sm">
-                        {s.activite} · {s.commune}
-                      </p>
-                      <p className="text-encre-3 text-xs">
-                        {[s.email, s.telephone].filter(Boolean).join(" · ") ||
-                          "Pas encore de coordonnées"}
-                        {s.note && ` · ${s.note}`}
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-3 text-xs font-bold">
-                        <Link
-                          href={ecrire({
-                            siren,
-                            nom: s.nom,
-                            activite: s.activite,
-                            commune: s.commune,
-                            email: s.email,
-                          })}
-                          className="text-accent inline-flex items-center gap-1 hover:underline"
-                        >
-                          <PenLine className="size-3.5" aria-hidden /> Écrire
-                        </Link>
-                        <a
-                          href={google(s.nom, s.commune)}
-                          target="_blank"
-                          rel="noopener"
-                          className="text-encre-2 hover:text-encre inline-flex items-center gap-1"
-                        >
-                          <Search className="size-3.5" aria-hidden /> Trouver site et téléphone
-                        </a>
-                      </div>
-                    </div>
-                    <SuiviProspect
-                      siren={siren}
-                      fiche={{ nom: s.nom, commune: s.commune, activite: s.activite }}
-                      initial={s as SuiviInitial}
-                    />
-                  </li>
-                ))}
-            </ul>
-          </Carte>
-        ))}
+        .map((st) => {
+          const groupe = liste.filter(([, s]) => s.statut === st)
+          return (
+            <Carte key={st} titre={STATUTS[st]} note={`${groupe.length}`}>
+              <ListeProspects
+                fiches={groupe.map(([siren, s]) => ({
+                  siren,
+                  nom: s.nom,
+                  activite: s.activite,
+                  commune: s.commune,
+                }))}
+                suivis={Object.fromEntries(
+                  groupe.map(([siren, s]) => [siren, versSuiviInitial(s)]),
+                )}
+                coordonnees={coordonnees}
+              />
+            </Carte>
+          )
+        })}
     </div>
   )
 }

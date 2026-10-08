@@ -12,7 +12,8 @@ import { redis, redisActif } from "./redis"
  * en accès libre : la page le dit.
  */
 
-const API = "https://recherche-entreprises.api.gouv.fr/search"
+// ANNUAIRE_API : autre adresse pour les essais en local (l'annuaire réel sinon).
+const API = process.env.ANNUAIRE_API || "https://recherche-entreprises.api.gouv.fr/search"
 export const PAR_PAGE = 25
 
 export const ZONES = [

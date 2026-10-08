@@ -43,10 +43,13 @@ export function SuiviProspect({
   siren,
   fiche,
   initial,
+  onStatut,
 }: {
   siren: string
   fiche: { nom: string; commune: string; activite: string }
   initial: SuiviInitial | null
+  /** Prévient la fiche (« Ne plus contacter » bloque l'envoi). */
+  onStatut?: (statut: Statut) => void
 }) {
   const [s, setS] = useState<SuiviInitial>(
     initial ?? { statut: "a_contacter", note: "", email: "", telephone: "" },
@@ -80,6 +83,7 @@ export function SuiviProspect({
           onChange={(e) => {
             const suivant = { ...s, statut: e.target.value as Statut }
             setS(suivant)
+            onStatut?.(suivant.statut)
             enregistrer(suivant)
           }}
           className={cn(
@@ -100,7 +104,7 @@ export function SuiviProspect({
           className="text-encre-2 hover:text-encre inline-flex items-center gap-1 text-xs font-semibold"
         >
           <NotebookPen className="size-3.5" aria-hidden />
-          {s.note || s.email || s.telephone ? "Notes et contact" : "Ajouter notes / contact"}
+          {s.note ? "Notes" : "Ajouter une note"}
         </button>
         {enCours && (
           <Loader2 className="text-encre-3 size-3.5 animate-spin" aria-label="Enregistrement" />
@@ -121,7 +125,7 @@ export function SuiviProspect({
             type="email"
             value={s.email}
             onChange={(e) => setS({ ...s, email: e.target.value })}
-            placeholder="E-mail trouvé"
+            placeholder="Autre e-mail"
             aria-label="E-mail"
             className={champ}
           />
@@ -129,7 +133,7 @@ export function SuiviProspect({
             type="tel"
             value={s.telephone}
             onChange={(e) => setS({ ...s, telephone: e.target.value })}
-            placeholder="Téléphone trouvé"
+            placeholder="Autre téléphone"
             aria-label="Téléphone"
             className={champ}
           />
