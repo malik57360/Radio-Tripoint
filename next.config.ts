@@ -55,6 +55,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "www.info-lux.com", pathname: "/wp-content/uploads/**" },
       { protocol: "https", hostname: "visitremich.lu", pathname: "/wp-content/uploads/**" },
       { protocol: "https", hostname: "www.jds.fr", pathname: "/medias/image/**" },
+      {
+        protocol: "https",
+        hostname: "www.mondorf-les-bains.lu",
+        pathname: "/visitmondorf/wp-content/uploads/**",
+      },
+      // Sites Wix des organisateurs (Marche pour Octobre Rose de Cattenom).
+      { protocol: "https", hostname: "static.wixstatic.com", pathname: "/media/**" },
       // Photos de presse envoyées depuis le tableau de bord (page Articles).
       {
         protocol: "https",

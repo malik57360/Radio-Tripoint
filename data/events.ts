@@ -624,4 +624,81 @@ export const evenements: Evenement[] = [
       lieu: "Bateau Princesse Marie-Astrid, Schengen (LU)",
     },
   },
+  // ─── Ajouts du 8 octobre 2026, vérifiés sur le site de l'organisateur
+  // (Cattenom) et sur l'agenda officiel de Mondorf-les-Bains (Visit Mondorf).
+  {
+    slug: "marche-octobre-rose-cattenom-2026",
+    titre: "Marche pour Octobre Rose",
+    description:
+      "Trois parcours de 5, 9 et 11,5 km au départ du gymnase. Inscription 7 €, une banane offerte : au Contrôle technique de Cattenom, ou sur place le jour même de 8 h 30 à 10 h 30 (espèces, chèque ou carte). Les bénéfices sont reversés à l'association Les Dames de Cœur. Au programme : échauffement avec Sandy à 9 h, concert de cuivres de Cattenom Loisirs Culture à l'église Saint-Martin de 9 h 30 à 11 h, initiation à la danse girly à 11 h 30 et démonstrations de danse à 12 h. Massages des pieds et des jambes offerts par Franck Delamarre au gymnase toute la matinée, marché artisanal (une partie des bénéfices va aux Dames de Cœur), restauration par Cattenom en fête (soupes, knacks, frites, sandwichs à la choucroute, tartes flambées, bières, crêpes) et buvette avec gâteaux au départ et à l'arrivée. À 15 h, concert de la chorale « Droit au Choeur » à l'auditorium de la médiathèque.",
+    debut: "2026-10-11T08:30:00+02:00",
+    horaires: "Dès 8 h 30 · inscriptions sur place jusqu'à 10 h 30",
+    lieu: "Gymnase",
+    ville: "Cattenom",
+    pays: "FR",
+    lienExterne: "https://www.octobrerose-cattenom.com/",
+    visuel: distant(
+      "https://static.wixstatic.com/media/210d83_d8af7021534d4101bfea0d92ffa99ed1~mv2.png",
+      "Marche pour Octobre Rose, le 11 octobre 2026 à Cattenom, à partir de 8 h 30",
+      1200,
+      628,
+    ),
+    flyer: {
+      accroche: "5, 9 ou 11,5 km au profit des Dames de Cœur",
+      tarif: "INSCRIPTION 7 €",
+      lieu: "Gymnase, Cattenom",
+    },
+  },
+  {
+    slug: "international-mustang-meeting-mondorf-2026",
+    titre: "International Mustang Meeting",
+    description:
+      "Rassemblement international de Ford Mustang organisé par le Vintage Mustang Club of Luxembourg, sur la place des Villes Jumelées à Mondorf-les-Bains, samedi et dimanche.",
+    debut: "2026-10-10T00:00:00+02:00",
+    fin: "2026-10-11T23:59:00+02:00",
+    journee: true,
+    horaires: "Samedi 10 et dimanche 11 octobre 2026",
+    lieu: "Place des Villes Jumelées",
+    adresse: "Place des Villes Jumelées, 5627 Mondorf-les-Bains",
+    ville: "Mondorf-les-Bains",
+    pays: "LU",
+    organisateur: "Vintage Mustang Club of Luxembourg",
+    lienExterne:
+      "https://www.mondorf-les-bains.lu/visitmondorf/evenement/international-mustang-meeting-2/",
+    visuel: distant(
+      "https://www.mondorf-les-bains.lu/visitmondorf/wp-content/uploads/sites/2/2026/06/Mustangstreff_2025-2-scaled.jpeg",
+      "Rassemblement Mustang à Mondorf-les-Bains lors d'une édition précédente (photo : Visit Mondorf)",
+      2560,
+      1920,
+    ),
+    flyer: {
+      titre: "Mustang Meeting",
+      accroche: "Rassemblement international de Ford Mustang",
+      lieu: "Mondorf-les-Bains (LU)",
+    },
+  },
+  {
+    slug: "fete-de-la-friture-ellange-2026",
+    titre: "Fête de la friture",
+    description:
+      "La fête de la friture du club de pêche « déi vun der Albaach », au centre culturel Martialis d'Ellange.",
+    debut: "2026-10-11T11:00:00+02:00",
+    fin: "2026-10-11T17:00:00+02:00",
+    lieu: "Centre culturel Martialis",
+    adresse: "Route d'Erpeldange, 5690 Ellange",
+    ville: "Ellange",
+    pays: "LU",
+    organisateur: "Fëscherveräin « déi vun der Albaach »",
+    lienExterne: "https://www.mondorf-les-bains.lu/visitmondorf/evenement/fete-de-la-friture/",
+    visuel: distant(
+      "https://www.mondorf-les-bains.lu/visitmondorf/wp-content/uploads/sites/2/2025/10/Friturfest_2024-1-scaled.jpeg",
+      "Assiettes de friture lors d'une fête précédente (photo : Visit Mondorf)",
+      2560,
+      1920,
+    ),
+    flyer: {
+      accroche: "Friture du club de pêche « déi vun der Albaach »",
+      lieu: "Centre Martialis, Ellange (LU)",
+    },
+  },
 ]
