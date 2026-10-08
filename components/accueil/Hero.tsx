@@ -67,11 +67,11 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
           <div className="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-12">
             <p className="hero-sous-titre presse max-w-xl text-[1.2rem] leading-snug sm:text-[1.35rem]">
               {t({
-                fr: "La radio de Sierck-les-Bains, là où la France, le Luxembourg et l'Allemagne se touchent. L'actu, la musique et les sorties du territoire, en direct.",
-                de: "Das Radio aus Sierck-les-Bains, wo sich Frankreich, Luxemburg und Deutschland berühren. Nachrichten, Musik und Ausgehtipps aus der Region, live.",
-                lb: "De Radio vu Sierck-les-Bains, do wou Frankräich, Lëtzebuerg an Däitschland sech beréieren. Neiegkeeten, Musek an Ausgoen aus der Regioun, live.",
-                en: "The radio from Sierck-les-Bains, where France, Luxembourg and Germany meet. Local news, music and what's on, live.",
-                es: "La radio de Sierck-les-Bains, donde se tocan Francia, Luxemburgo y Alemania. Actualidad, música y planes del territorio, en directo.",
+                fr: "La radio transfrontalière, là où la France, le Luxembourg et l'Allemagne se touchent. L'actu, la musique et les sorties du territoire, en direct.",
+                de: "Das grenzüberschreitende Radio, wo sich Frankreich, Luxemburg und Deutschland berühren. Nachrichten, Musik und Ausgehtipps aus der Region, live.",
+                lb: "De grenziwwerschreidende Radio, do wou Frankräich, Lëtzebuerg an Däitschland sech beréieren. Neiegkeeten, Musek an Ausgoen aus der Regioun, live.",
+                en: "The cross-border radio, where France, Luxembourg and Germany meet. Local news, music and what's on, live.",
+                es: "La radio transfronteriza, donde se tocan Francia, Luxemburgo y Alemania. Actualidad, música y planes del territorio, en directo.",
               })}
             </p>
             <div className="hero-actions grid gap-3 sm:flex sm:flex-wrap">
