@@ -203,6 +203,28 @@ export const personnes: Personne[] = [
     },
   },
   {
+    nom: "Rémy Dick",
+    role: {
+      fr: "Maire de Florange",
+      de: "Bürgermeister von Florange",
+      lb: "Buergermeeschter vu Florange",
+      en: "Mayor of Florange",
+      es: "Alcalde de Florange",
+    },
+    photo: {
+      src: "/media/confiance/remy-dick.webp",
+      alt: {
+        fr: "Rémy Dick, souriant, en blouson bleu marine et écharpe, dans une salle d'exposition entre des stands et des plantes vertes.",
+        de: "Rémy Dick lächelt in dunkelblauer Jacke und Schal in einer Ausstellungshalle zwischen Ständen und Grünpflanzen.",
+        lb: "De Rémy Dick laacht an enger donkelbloer Jackett a mat Schal an enger Ausstellungshal tëscht Stänn a grénge Planzen.",
+        en: "Rémy Dick, smiling, in a navy blue jacket and scarf, in an exhibition hall among stands and green plants.",
+        es: "Rémy Dick, sonriente, con cazadora azul marino y bufanda, en una sala de exposiciones entre estands y plantas verdes.",
+      },
+      largeur: 1000,
+      hauteur: 1333,
+    },
+  },
+  {
     nom: "Lucas Grandjean",
     role: {
       fr: "Adjoint au maire de Thionville, jeunesse et numérique",
