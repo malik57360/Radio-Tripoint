@@ -55,11 +55,11 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
       },
       {
         libelle: {
-          fr: "Soutenir la radio",
-          de: "Das Radio unterstützen",
-          lb: "De Radio ënnerstëtzen",
-          en: "Support the radio",
-          es: "Apoyar la radio",
+          fr: "Nous soutenir",
+          de: "Unterstützen Sie uns",
+          lb: "Ënnerstëtzt eis",
+          en: "Support us",
+          es: "Apóyenos",
         },
         href: "/soutenir",
       },

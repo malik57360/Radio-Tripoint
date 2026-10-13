@@ -43,6 +43,18 @@ export const navPrincipale: LienNav[] = [
   },
 ]
 
+/** Onglet « Nous soutenir » (cagnotte) : mis en avant, hors du menu « Plus ». */
+export const navSoutenir: LienNav = {
+  libelle: {
+    fr: "Nous soutenir",
+    de: "Unterstützen Sie uns",
+    lb: "Ënnerstëtzt eis",
+    en: "Support us",
+    es: "Apóyenos",
+  },
+  href: "/soutenir",
+}
+
 /** Menu « Plus ». */
 export const navPlus: LienNav[] = [
   {
@@ -102,16 +114,6 @@ export const navPlus: LienNav[] = [
       es: "Confían en nosotros",
     },
     href: "/ils-nous-font-confiance",
-  },
-  {
-    libelle: {
-      fr: "Soutenir la radio",
-      de: "Das Radio unterstützen",
-      lb: "De Radio ënnerstëtzen",
-      en: "Support the radio",
-      es: "Apoyar la radio",
-    },
-    href: "/soutenir",
   },
   {
     libelle: { fr: "Contact", de: "Kontakt", lb: "Kontakt", en: "Contact", es: "Contacto" },

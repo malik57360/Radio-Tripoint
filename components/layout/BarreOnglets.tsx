@@ -1,6 +1,6 @@
 "use client"
 
-import { CalendarDays, Headphones, House, Menu, Newspaper } from "lucide-react"
+import { CalendarDays, HandHeart, Headphones, House, Menu, Newspaper } from "lucide-react"
 import type { ComponentType, ReactNode } from "react"
 import { usePathname } from "next/navigation"
 import Link from "@/components/ui/Lien"
@@ -41,6 +41,13 @@ const AGENDA: Onglet = {
   href: "/agenda",
 }
 
+// Libellé court : six onglets tiennent sur 360 px de large.
+const SOUTENIR: Onglet = {
+  libelle: { fr: "Soutenir", de: "Spenden", lb: "Spenden", en: "Support", es: "Apoyar" },
+  icone: HandHeart,
+  href: "/soutenir",
+}
+
 const classeOnglet =
   "relative flex h-full flex-1 flex-col items-center justify-center gap-1 text-[0.68rem] font-semibold tracking-wide transition-colors"
 
@@ -58,7 +65,7 @@ function Indicateur({ actif }: { actif: boolean }) {
 
 /**
  * Navigation du téléphone, en bas de l'écran, à portée de pouce : les
- * rubriques les plus utilisées, Tripo et le menu complet. Absente sur
+ * rubriques les plus utilisées, Tripo, la cagnotte et le menu complet. Absente sur
  * grand écran, où l'en-tête porte la navigation.
  */
 export function BarreOnglets({ guide }: { guide: boolean }) {
@@ -111,6 +118,7 @@ export function BarreOnglets({ guide }: { guide: boolean }) {
         {guide
           ? bouton("Tripo", <Mascotte className="-my-1 size-7" />, () => ouvrirTripo())
           : lien(AGENDA)}
+        {lien(SOUTENIR)}
         {bouton(
           t({ fr: "Menu", de: "Menü", lb: "Menü", en: "Menu", es: "Menú" }),
           <Menu className="size-[1.35rem]" aria-hidden />,

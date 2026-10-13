@@ -1,10 +1,10 @@
 "use client"
 
-import { ChevronDown, Search } from "lucide-react"
+import { ChevronDown, HandHeart, Search } from "lucide-react"
 import Link from "@/components/ui/Lien"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { estActif, navPlus, navPrincipale } from "@/config/navigation"
+import { estActif, navPlus, navPrincipale, navSoutenir } from "@/config/navigation"
 import { useT } from "@/components/i18n/Langue"
 import { SelecteurLangue } from "@/components/i18n/SelecteurLangue"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
@@ -167,6 +167,17 @@ export function Header() {
                     id="menu-plus"
                     className="fondu border-trait bg-surface shadow-2 absolute top-full left-0 mt-2 w-56 border py-2"
                   >
+                    <li className="xl:hidden">
+                      <Link
+                        href={navSoutenir.href}
+                        onClick={() => setPlusOuvert(false)}
+                        aria-current={estActif(pathname, navSoutenir.href) ? "page" : undefined}
+                        className="text-encre hover:bg-papier-2 aria-[current=page]:text-accent-encre flex items-center gap-2 px-4 py-2.5 text-[0.92rem] font-bold"
+                      >
+                        <HandHeart className="size-4" aria-hidden />
+                        {t(navSoutenir.libelle)}
+                      </Link>
+                    </li>
                     {navPlus.map((l) => (
                       <li key={l.href}>
                         <Link
@@ -181,6 +192,21 @@ export function Header() {
                     ))}
                   </ul>
                 )}
+              </li>
+              {/* Le menu est déjà plein entre 1024 et 1280 px : la pastille n'apparaît qu'à
+                  partir de xl (icône seule), avec son libellé dès 1440 px. Avant, elle est en
+                  tête du menu « Plus ». */}
+              <li className="ml-2 hidden xl:list-item">
+                <Link
+                  href={navSoutenir.href}
+                  title={t(navSoutenir.libelle)}
+                  aria-label={t(navSoutenir.libelle)}
+                  aria-current={estActif(pathname, navSoutenir.href) ? "page" : undefined}
+                  className="bg-accent text-sur-accent hover:bg-encre hover:text-papier aria-[current=page]:bg-encre aria-[current=page]:text-papier inline-flex size-9 items-center justify-center gap-1.5 rounded-full text-[0.88rem] font-bold whitespace-nowrap transition-colors min-[1440px]:w-auto min-[1440px]:px-3.5"
+                >
+                  <HandHeart className="size-4" aria-hidden />
+                  <span className="hidden min-[1440px]:inline">{t(navSoutenir.libelle)}</span>
+                </Link>
               </li>
             </ul>
           </nav>
