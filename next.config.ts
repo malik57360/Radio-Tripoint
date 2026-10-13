@@ -29,7 +29,9 @@ const csp = [
   // Cartes intégrées : OpenStreetMap (territoire) et Google Maps (contact, au clic).
   "frame-src https://www.openstreetmap.org https://maps.google.com https://www.google.com",
   "frame-ancestors 'none'",
-  "form-action 'self'",
+  // La cagnotte (/soutenir) poste vers /api/cagnotte, qui redirige vers Stripe Checkout :
+  // form-action s'applique aussi à cette redirection.
+  "form-action 'self' https://checkout.stripe.com",
   "base-uri 'self'",
   "object-src 'none'",
   "upgrade-insecure-requests",

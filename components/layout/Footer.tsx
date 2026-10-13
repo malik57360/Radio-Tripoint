@@ -53,6 +53,16 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
         libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
         href: "/agenda",
       },
+      {
+        libelle: {
+          fr: "Soutenir la radio",
+          de: "Das Radio unterstützen",
+          lb: "De Radio ënnerstëtzen",
+          en: "Support the radio",
+          es: "Apoyar la radio",
+        },
+        href: "/soutenir",
+      },
     ],
   },
   {

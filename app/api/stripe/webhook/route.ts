@@ -1,9 +1,12 @@
-import { lireSessionPaiement, publier, signatureStripeValide } from "@/lib/agenda/propositions"
+import { lireSessionPaiement, publier } from "@/lib/agenda/propositions"
+import { enregistrerParticipation, lireSessionCagnotte } from "@/lib/cagnotte"
+import { signatureStripeValide } from "@/lib/stripe"
 
 /**
  * Webhook Stripe (checkout.session.completed / async_payment_succeeded).
  * Signature vérifiée, puis la session est relue chez Stripe avant de
- * publier : le corps du message ne suffit pas à lui seul.
+ * publier : le corps du message ne suffit pas à lui seul. Les métadonnées
+ * aiguillent seulement : cagnotte d'un côté, agenda de l'autre.
  */
 export const dynamic = "force-dynamic"
 
@@ -12,7 +15,10 @@ export async function POST(request: Request) {
   if (!signatureStripeValide(corps, request.headers.get("stripe-signature")))
     return new Response("signature invalide", { status: 400 })
 
-  let evt: { type?: string; data?: { object?: { id?: string } } }
+  let evt: {
+    type?: string
+    data?: { object?: { id?: string; metadata?: Record<string, string> | null } }
+  }
   try {
     evt = JSON.parse(corps)
   } catch {
@@ -25,6 +31,11 @@ export async function POST(request: Request) {
     return Response.json({ recu: true })
 
   try {
+    if (evt.data?.object?.metadata?.cagnotte) {
+      const c = await lireSessionCagnotte(evt.data.object.id ?? "")
+      if (c?.paye) await enregistrerParticipation(c)
+      return Response.json({ recu: true })
+    }
     const s = await lireSessionPaiement(evt.data?.object?.id ?? "")
     if (s?.paye && s.proposition)
       await publier(s.proposition, {
