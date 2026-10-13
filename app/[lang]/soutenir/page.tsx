@@ -4,6 +4,7 @@ import { Tripoint } from "@/components/marque/Tripoint"
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs"
 import { site } from "@/config/site"
 import {
+  AFFICHER_COMPTEUR,
   etatCagnotte,
   MAX_EUROS,
   MIN_EUROS,
@@ -44,11 +45,11 @@ const ETATS: Record<string, { ok?: boolean; titre: Trad; texte: Trad }> = {
       es: "¡Gracias por su aportación!",
     },
     texte: {
-      fr: "Votre paiement est bien reçu : le compteur avance. Toute l'équipe de Radio Tripoint vous remercie.",
-      de: "Ihre Zahlung ist eingegangen: Der Zähler steigt. Das ganze Team von Radio Tripoint dankt Ihnen.",
-      lb: "Är Bezuelung ass ukomm: De Compteur geet erop. Dat ganzt Team vu Radio Tripoint seet Iech Merci.",
-      en: "Your payment has been received: the counter is moving up. The whole Radio Tripoint team thanks you.",
-      es: "Hemos recibido su pago: el contador avanza. Todo el equipo de Radio Tripoint se lo agradece.",
+      fr: "Votre paiement est bien reçu. Toute l'équipe de Radio Tripoint vous remercie.",
+      de: "Ihre Zahlung ist eingegangen. Das ganze Team von Radio Tripoint dankt Ihnen.",
+      lb: "Är Bezuelung ass ukomm. Dat ganzt Team vu Radio Tripoint seet Iech Merci.",
+      en: "Your payment has been received. The whole Radio Tripoint team thanks you.",
+      es: "Hemos recibido su pago. Todo el equipo de Radio Tripoint se lo agradece.",
     },
   },
   annule: {
@@ -76,11 +77,11 @@ const ETATS: Record<string, { ok?: boolean; titre: Trad; texte: Trad }> = {
       es: "Pago en proceso de confirmación",
     },
     texte: {
-      fr: "Votre banque n'a pas encore confirmé le paiement. Votre participation sera ajoutée au compteur dès la confirmation.",
-      de: "Ihre Bank hat die Zahlung noch nicht bestätigt. Ihr Beitrag wird nach der Bestätigung zum Zähler hinzugefügt.",
-      lb: "Är Bank huet d'Bezuelung nach net bestätegt. Äre Bäitrag kënnt no der Bestätegung op de Compteur.",
-      en: "Your bank has not confirmed the payment yet. Your contribution will be added to the counter once it does.",
-      es: "Su banco aún no ha confirmado el pago. Su aportación se sumará al contador en cuanto lo haga.",
+      fr: "Votre banque n'a pas encore confirmé le paiement. Votre participation sera enregistrée dès la confirmation.",
+      de: "Ihre Bank hat die Zahlung noch nicht bestätigt. Ihr Beitrag wird nach der Bestätigung erfasst.",
+      lb: "Är Bank huet d'Bezuelung nach net bestätegt. Äre Bäitrag gëtt no der Bestätegung registréiert.",
+      en: "Your bank has not confirmed the payment yet. Your contribution will be recorded once it does.",
+      es: "Su banco aún no ha confirmado el pago. Su aportación quedará registrada en cuanto lo haga.",
     },
   },
   erreur: {
@@ -200,18 +201,18 @@ const etapes: { titre: Trad; texte: Trad }[] = [
   },
   {
     titre: {
-      fr: "Le compteur avance",
-      de: "Der Zähler steigt",
-      lb: "De Compteur geet erop",
-      en: "The counter moves up",
-      es: "El contador avanza",
+      fr: "Votre participation compte",
+      de: "Ihr Beitrag zählt",
+      lb: "Äre Bäitrag zielt",
+      en: "Your contribution counts",
+      es: "Su aportación cuenta",
     },
     texte: {
-      fr: "Votre participation s'ajoute au total affiché sur cette page.",
-      de: "Ihr Beitrag wird zur Summe auf dieser Seite addiert.",
-      lb: "Äre Bäitrag kënnt op d'Zomm op dëser Säit.",
-      en: "Your contribution is added to the total shown on this page.",
-      es: "Su aportación se suma al total que aparece en esta página.",
+      fr: "Elle rejoint la cagnotte pour le matériel de la radio.",
+      de: "Er fließt in die Spendenaktion für die Ausrüstung des Radios.",
+      lb: "En geet an d'Cagnotte fir d'Material vum Radio.",
+      en: "It goes into the fund for the radio's equipment.",
+      es: "Se suma a la colecta para el material de la radio.",
     },
   },
 ]
@@ -230,7 +231,8 @@ export default async function PageSoutenir(props: PageProps<"/[lang]/soutenir">)
   const sp = await props.searchParams
   const t = await traducteur()
   const etat = typeof sp.etat === "string" ? ETATS[sp.etat] : undefined
-  const total = await etatCagnotte()
+  // Compteur masqué : seul l'objectif s'affiche (voir AFFICHER_COMPTEUR).
+  const total = AFFICHER_COMPTEUR ? await etatCagnotte() : null
   const pourcent = total ? Math.min(100, Math.round((total.euros / OBJECTIF_EUROS) * 100)) : 0
 
   return (

@@ -16,6 +16,9 @@ import { estSessionStripe, LOCALES_STRIPE, stripe } from "@/lib/stripe"
  * (5 minutes), et rafraîchi tout de suite à chaque participation.
  */
 export const OBJECTIF_EUROS = 10_000
+/** Montant collecté et nombre de participations affichés sur /soutenir ? Masqués pour
+ *  l'instant (la page montre seulement l'objectif) ; le total reste compté dans Redis. */
+export const AFFICHER_COMPTEUR = false
 export const MONTANTS_PROPOSES = [10, 20, 50, 100] as const
 export const MIN_EUROS = 2
 export const MAX_EUROS = 5_000
