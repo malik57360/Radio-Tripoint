@@ -9,6 +9,7 @@ import { CLE_ARTICLES, TAG_ARTICLES } from "@/lib/contenu/articles-dashboard"
 import { slugsArticles } from "@/lib/contenu/articles"
 import { estConnecte } from "@/lib/direction/acces"
 import { redis } from "@/lib/direction/redis"
+import { oublierTraductions, traduireArticle } from "@/lib/direction/traduction-articles"
 import { normaliser } from "@/lib/utils/texte"
 import type { Article } from "@/types/article"
 import type { CategorieSlug } from "@/types/category"
@@ -186,6 +187,22 @@ function supprimerPlusTard(urls: string[]) {
   })
 }
 
+/**
+ * Traduction en allemand, luxembourgeois, anglais et espagnol, une fois la
+ * réponse partie : l'article est en ligne en français tout de suite, les
+ * traductions suivent en une minute environ.
+ */
+function traduirePlusTard(slug: string) {
+  after(async () => {
+    try {
+      const r = await traduireArticle(slug, true)
+      if (r.statut === "fait") revalidateTag(TAG_ARTICLES, { expire: 0 })
+    } catch (e) {
+      console.error("[articles] traduction", (e as Error).message)
+    }
+  })
+}
+
 const slugValide = (slug: unknown): slug is string =>
   typeof slug === "string" && /^[a-z0-9-]{4,90}$/.test(slug)
 
@@ -205,7 +222,12 @@ export async function actionPublierArticle(donnees: DonneesArticle): Promise<Res
   if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
   revalidateTag(TAG_ARTICLES, { expire: 0 })
   revalidatePath("/direction/articles")
-  return { ok: true, message: "Article en ligne.", lien: `/actualites/${slug}` }
+  traduirePlusTard(slug)
+  return {
+    ok: true,
+    message: "Article en ligne. Les traductions (DE, LB, EN, ES) arrivent dans une minute environ.",
+    lien: `/actualites/${slug}`,
+  }
 }
 
 /**
@@ -242,7 +264,13 @@ export async function actionModifierArticle(
   revalidatePath("/direction/articles")
   const gardees = new Set(photosDe(article))
   supprimerPlusTard(photosDe(ancien).filter((u) => !gardees.has(u)))
-  return { ok: true, message: "Modifications enregistrées.", lien: `/actualites/${slug}` }
+  traduirePlusTard(slug)
+  return {
+    ok: true,
+    message:
+      "Modifications enregistrées. Les traductions sont mises à jour dans une minute environ.",
+    lien: `/actualites/${slug}`,
+  }
 }
 
 export async function actionRetirerArticle(slug: unknown): Promise<Resultat> {
@@ -252,6 +280,7 @@ export async function actionRetirerArticle(slug: unknown): Promise<Resultat> {
   if (!lu || typeof lu[0] !== "string") return { ok: false, erreur: "Article introuvable." }
   const r = await redis([["HDEL", CLE_ARTICLES, slug]])
   if (!r) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  await oublierTraductions(slug).catch(() => {})
   revalidateTag(TAG_ARTICLES, { expire: 0 })
   revalidatePath("/direction/articles")
   // Le retrait ne dépend pas du stockage : les photos partent après la réponse.
@@ -261,4 +290,38 @@ export async function actionRetirerArticle(slug: unknown): Promise<Resultat> {
     /* article illisible : rien à supprimer */
   }
   return { ok: true, message: "Article retiré du site." }
+}
+
+/** Bouton « Traduire » (et rattrapage à l'ouverture de la page Articles). */
+export async function actionTraduireArticle(slug: unknown): Promise<Resultat> {
+  if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
+  if (!slugValide(slug)) return { ok: false, erreur: "Article invalide." }
+  try {
+    const r = await traduireArticle(slug, true)
+    if (r.statut === "fait") {
+      revalidateTag(TAG_ARTICLES, { expire: 0 })
+      revalidatePath("/direction/articles")
+    }
+    const noms = (l: string[]) => l.map((x) => x.toUpperCase()).join(", ")
+    switch (r.statut) {
+      case "fait":
+        return r.echecs.length
+          ? { ok: false, erreur: `Traduit en ${noms(r.langues)} ; à refaire : ${noms(r.echecs)}.` }
+          : { ok: true, message: `Traduit en ${noms(r.langues)}.` }
+      case "deja":
+        return { ok: true, message: "Déjà traduit dans toutes les langues." }
+      case "en-cours":
+        return { ok: true, message: "Traduction déjà en cours : revenez dans une minute." }
+      case "indisponible":
+        return {
+          ok: false,
+          erreur: "Traduction impossible : clé de l'IA absente ou article introuvable.",
+        }
+      default:
+        return { ok: false, erreur: "La traduction a échoué : réessayez dans un instant." }
+    }
+  } catch (e) {
+    console.error("[articles] traduction", (e as Error).message)
+    return { ok: false, erreur: "La traduction a échoué : réessayez dans un instant." }
+  }
 }

@@ -3,7 +3,9 @@
 import { Loader2, Send, Sparkles } from "lucide-react"
 import { useState, useTransition } from "react"
 import { actionEnvoyerNouveau, actionProposerMessage } from "@/app/direction/(espace)/mails/actions"
+import { problemePieces } from "@/lib/direction/pieces-jointes"
 import { cn } from "@/lib/utils/cn"
+import { PiecesJointes, versFormData } from "./PiecesJointes"
 
 export interface ProspectCible {
   siren: string
@@ -31,6 +33,7 @@ export function Composer({
   const [a, setA] = useState(initial.a)
   const [objet, setObjet] = useState(initial.objet)
   const [texte, setTexte] = useState("")
+  const [fichiers, setFichiers] = useState<File[]>([])
   const [consigne, setConsigne] = useState(
     prospect ? "Présenter nos solutions de publicité locale et proposer un court rendez-vous." : "",
   )
@@ -66,9 +69,13 @@ export function Composer({
     !objet.trim() && "l'objet",
     !texte.trim() && "le message",
   ].filter((m): m is string => Boolean(m))
+  const pjBloquent = problemePieces(fichiers) !== null
 
   const envoyer = () => {
-    if (!window.confirm(`Envoyer ce message à ${a} ?`)) return
+    const pj = fichiers.length
+      ? ` (avec ${fichiers.length} pièce${fichiers.length > 1 ? "s" : ""} jointe${fichiers.length > 1 ? "s" : ""})`
+      : ""
+    if (!window.confirm(`Envoyer ce message à ${a}${pj} ?`)) return
     setAction("envoyer")
     setStatut(null)
     demarrer(async () => {
@@ -82,11 +89,13 @@ export function Composer({
           commune: prospect.commune,
           activite: prospect.activite,
         },
+        versFormData(fichiers),
       )
       if (!r.ok) setStatut({ ok: false, message: r.erreur })
       else {
         setStatut({ ok: true, message: r.message ?? "Envoyé." })
         setTexte("")
+        setFichiers([])
       }
       setAction(null)
     })
@@ -164,6 +173,8 @@ export function Composer({
         />
       </label>
 
+      <PiecesJointes fichiers={fichiers} onChange={setFichiers} desactive={enCours} />
+
       {statut && (
         <p
           role="status"
@@ -180,7 +191,7 @@ export function Composer({
       <button
         type="button"
         onClick={envoyer}
-        disabled={enCours || manque.length > 0}
+        disabled={enCours || manque.length > 0 || pjBloquent}
         className="bg-encre inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold text-black disabled:opacity-40"
       >
         {enCours && action === "envoyer" ? (

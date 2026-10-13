@@ -6,14 +6,18 @@ import {
   RedactionArticle,
   RetirerArticle,
 } from "@/components/direction/RedactionArticle"
+import { RattrapageTraductions, TraductionArticle } from "@/components/direction/TraductionArticle"
 import { AActiver, Carte, date, EnTetePage } from "@/components/direction/ui"
 import { categories } from "@/data/categories"
 import { CLE_ARTICLES } from "@/lib/contenu/articles-dashboard"
 import { versBrouillon } from "@/lib/contenu/brouillon-article"
 import { redis, redisActif } from "@/lib/direction/redis"
+import { etatsTraductions } from "@/lib/direction/traduction-articles"
 import type { Article } from "@/types/article"
 
 export const metadata = { title: "Articles — Direction Radio Tripoint" }
+// La traduction d'un article (quatre langues en parallèle) prend jusqu'à une minute.
+export const maxDuration = 120
 
 /** Articles publiés depuis le tableau de bord, lus sans cache (état exact). */
 async function publies(): Promise<Article[]> {
@@ -39,6 +43,8 @@ export default async function PageArticles({
   await connection()
   const pret = redisActif() && Boolean(process.env.BLOB_READ_WRITE_TOKEN)
   const liste = pret ? await publies() : []
+  const etats = liste.length ? await etatsTraductions(liste) : {}
+  const aTraduire = liste.filter((a) => etats[a.slug] !== "complete").map((a) => a.slug)
   const rubriques = Object.values(categories).map((c) => ({ slug: c.slug, nom: c.nom }))
   // « Modifier » : ?modifier=<slug> rouvre le formulaire avec cet article.
   const { modifier } = await searchParams
@@ -81,6 +87,7 @@ export default async function PageArticles({
           )}
 
           <Carte titre="Publiés depuis le tableau de bord" note={`${liste.length} article(s)`}>
+            {process.env.ANTHROPIC_API_KEY && <RattrapageTraductions slugs={aTraduire} />}
             {liste.length === 0 ? (
               <p className="text-encre-3 text-sm">Aucun pour l&apos;instant.</p>
             ) : (
@@ -103,7 +110,8 @@ export default async function PageArticles({
                       {categories[a.categorie]?.court ?? a.categorie}
                     </span>
                     {/* Sur téléphone, les boutons passent sous le titre pour lui laisser la place. */}
-                    <div className="flex w-full justify-end gap-2 sm:w-auto">
+                    <div className="flex w-full flex-wrap justify-end gap-2 sm:w-auto">
+                      <TraductionArticle slug={a.slug} etat={etats[a.slug] ?? "absente"} />
                       <ModifierArticle slug={a.slug} actif={a.slug === cible?.slug} />
                       <RetirerArticle slug={a.slug} />
                     </div>

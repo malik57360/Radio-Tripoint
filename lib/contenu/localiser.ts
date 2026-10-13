@@ -7,7 +7,7 @@ import { traductions as de } from "@/data/traductions/de"
 import { traductions as en } from "@/data/traductions/en"
 import { traductions as es } from "@/data/traductions/es"
 import { traductions as lb } from "@/data/traductions/lb"
-import type { Traductions } from "@/data/traductions/types"
+import type { TradArticle, Traductions } from "@/data/traductions/types"
 import type { Langue } from "@/lib/i18n/langues"
 import type { Article } from "@/types/article"
 import type { Categorie, CategorieSlug } from "@/types/category"
@@ -30,8 +30,9 @@ function traduireCorps(corps: Bloc[], textes: (string | string[])[]): Bloc[] {
   })
 }
 
-export function localiserArticle(a: Article, l: Langue): Article {
-  const t = tables[l]?.articles[a.slug]
+/** `dashboard` : traduction faite par l'IA pour un article du tableau de bord (Redis). */
+export function localiserArticle(a: Article, l: Langue, dashboard?: TradArticle): Article {
+  const t = tables[l]?.articles[a.slug] ?? dashboard
   if (!t) return a
   return {
     ...a,
@@ -42,7 +43,8 @@ export function localiserArticle(a: Article, l: Langue): Article {
   }
 }
 
-/** L'article existe-t-il dans cette langue (sinon il s'affiche en français) ? */
+/** L'article du dépôt existe-t-il dans cette langue (sinon il s'affiche en français) ?
+ *  Pour tous les articles, tableau de bord compris : estTraduit (lib/contenu/articles). */
 export const articleTraduit = (slug: string, l: Langue) =>
   l === "fr" || Boolean(tables[l]?.articles[slug])
 

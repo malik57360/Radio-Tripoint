@@ -10,8 +10,9 @@ import type { CategorieSlug } from "@/types/category"
 import type { Langue } from "@/lib/i18n/langues"
 import { normaliser } from "@/lib/utils/texte"
 import { articlesDashboard } from "./articles-dashboard"
-import { localiserArticle } from "./localiser"
+import { articleTraduit, localiserArticle } from "./localiser"
 import { modeDemo } from "./demo"
+import { traductionsDashboard, traductionValide } from "./traductions-dashboard"
 
 /**
  * Du plus récent au plus ancien : par date quand les deux en ont une, sinon
@@ -37,7 +38,16 @@ async function tries(): Promise<Article[]> {
 /** Tous les articles, dans la langue demandée (français par défaut). */
 async function tous(l: Langue = "fr"): Promise<Article[]> {
   const liste = await tries()
-  return l === "fr" ? liste : liste.map((a) => localiserArticle(a, l))
+  if (l === "fr") return liste
+  const dashboard = await traductionsDashboard()
+  return liste.map((a) => localiserArticle(a, l, traductionValide(dashboard.get(a.slug), a, l)))
+}
+
+/** L'article existe-t-il dans cette langue (dépôt ou traduction du tableau de bord) ? */
+export async function estTraduit(slug: string, l: Langue): Promise<boolean> {
+  if (l === "fr" || articleTraduit(slug, l)) return true
+  const fr = (await tries()).find((a) => a.slug === slug)
+  return Boolean(fr && traductionValide((await traductionsDashboard()).get(slug), fr, l))
 }
 
 export interface Page<T> {
@@ -84,9 +94,7 @@ export async function articlesRecents(
   sauf?: string,
   l: Langue = "fr",
 ): Promise<Article[]> {
-  return (await tous(l))
-    .filter((a) => a.slug !== sauf)
-    .slice(0, n)
+  return (await tous(l)).filter((a) => a.slug !== sauf).slice(0, n)
 }
 
 /** Une : l'article marqué `une`, sinon le plus récent, puis les suivants. */

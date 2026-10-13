@@ -2,6 +2,7 @@ import { ArrowRight, Clock, MapPin } from "lucide-react"
 import Link from "@/components/ui/Lien"
 import { notFound } from "next/navigation"
 import { BlocsArticle } from "@/components/news/BlocsArticle"
+import { DemandeTraduction } from "@/components/news/DemandeTraduction"
 import { NewsCard } from "@/components/news/NewsCard"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs"
@@ -12,9 +13,11 @@ import {
   articleParSlug,
   articlesRecents,
   articlesSimilaires,
+  estTraduit,
   slugsArticles,
 } from "@/lib/contenu/articles"
-import { articleTraduit, categoriesLangue } from "@/lib/contenu/localiser"
+import { estArticleDashboard } from "@/lib/contenu/articles-dashboard"
+import { categoriesLangue } from "@/lib/contenu/localiser"
 import { teinteCategorie } from "@/lib/contenu/teintes"
 import { langue, traducteur } from "@/lib/i18n/serveur"
 import { jsonLdArticle } from "@/lib/seo/jsonld"
@@ -68,7 +71,10 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
   ])
   const url = urlAbsolue(t.lien(`/actualites/${a.slug}`))
   // Article pas encore traduit : il s'affiche en français, et on le dit.
-  const enVo = !articleTraduit(a.slug, l)
+  const enVo = !(await estTraduit(a.slug, l))
+  // Article du tableau de bord pas encore traduit : l'IA s'en charge, il sera
+  // traduit à la prochaine visite.
+  const traductionEnCours = enVo && (await estArticleDashboard(a.slug))
 
   return (
     <article>
@@ -94,15 +100,24 @@ export default async function PageArticle(props: PageProps<"/[lang]/actualites/[
           </p>
           {enVo && (
             <p className="border-accent bg-surface text-encre-2 mt-5 border-l-4 px-4 py-3 text-sm">
-              {t({
-                fr: "",
-                de: "Dieser Artikel ist nur auf Französisch verfügbar.",
-                lb: "Dësen Artikel gëtt et just op Franséisch.",
-                en: "This article is only available in French.",
-                es: "Este artículo solo está disponible en francés.",
-              })}
+              {traductionEnCours
+                ? t({
+                    fr: "",
+                    de: "Die Übersetzung dieses Artikels wird gerade erstellt. Bis dahin lesen Sie die französische Fassung.",
+                    lb: "D'Iwwersetzung vun dësem Artikel gëtt grad gemaach. Bis dohin liest Dir déi franséisch Versioun.",
+                    en: "This article is being translated. Until then, here is the French version.",
+                    es: "La traducción de este artículo está en curso. Mientras tanto, aquí tiene la versión en francés.",
+                  })
+                : t({
+                    fr: "",
+                    de: "Dieser Artikel ist nur auf Französisch verfügbar.",
+                    lb: "Dësen Artikel gëtt et just op Franséisch.",
+                    en: "This article is only available in French.",
+                    es: "Este artículo solo está disponible en francés.",
+                  })}
             </p>
           )}
+          {traductionEnCours && <DemandeTraduction slug={a.slug} />}
           <h1
             lang={enVo ? "fr" : undefined}
             className="titre-affiche mt-4 text-[clamp(2.1rem,1.2rem+3.6vw,4rem)] !leading-[1.02]"

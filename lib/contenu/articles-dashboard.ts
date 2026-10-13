@@ -37,3 +37,8 @@ export async function articlesDashboard(): Promise<Article[]> {
     return []
   }
 }
+
+/** Cet article vient-il du tableau de bord (et peut donc être traduit par l'IA) ? */
+export async function estArticleDashboard(slug: string) {
+  return (await articlesDashboard()).some((a) => a.slug === slug)
+}

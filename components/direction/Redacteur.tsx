@@ -8,7 +8,9 @@ import {
   actionEnvoyer,
   actionProposer,
 } from "@/app/direction/(espace)/mails/actions"
+import { problemePieces } from "@/lib/direction/pieces-jointes"
 import { cn } from "@/lib/utils/cn"
+import { PiecesJointes, versFormData } from "./PiecesJointes"
 
 /**
  * Réponse à un e-mail : l'IA propose un texte, une personne le relit et
@@ -17,12 +19,17 @@ import { cn } from "@/lib/utils/cn"
 export function Redacteur({ uid, destinataire }: { uid: number; destinataire: string }) {
   const router = useRouter()
   const [texte, setTexte] = useState("")
+  const [fichiers, setFichiers] = useState<File[]>([])
   const [statut, setStatut] = useState<{ ok: boolean; message: string } | null>(null)
   const [action, setAction] = useState<"proposer" | "envoyer" | "brouillon" | null>(null)
   const [enCours, demarrer] = useTransition()
 
   const lancer = (quoi: "proposer" | "envoyer" | "brouillon") => {
-    if (quoi === "envoyer" && !window.confirm(`Envoyer cette réponse à ${destinataire} ?`)) return
+    const pj = fichiers.length
+      ? ` (avec ${fichiers.length} pièce${fichiers.length > 1 ? "s" : ""} jointe${fichiers.length > 1 ? "s" : ""})`
+      : ""
+    if (quoi === "envoyer" && !window.confirm(`Envoyer cette réponse à ${destinataire}${pj} ?`))
+      return
     setAction(quoi)
     setStatut(null)
     demarrer(async () => {
@@ -30,8 +37,8 @@ export function Redacteur({ uid, destinataire }: { uid: number; destinataire: st
         quoi === "proposer"
           ? await actionProposer(uid)
           : quoi === "envoyer"
-            ? await actionEnvoyer(uid, texte)
-            : await actionBrouillon(uid, texte)
+            ? await actionEnvoyer(uid, texte, versFormData(fichiers))
+            : await actionBrouillon(uid, texte, versFormData(fichiers))
       if (!r.ok) setStatut({ ok: false, message: r.erreur })
       else if (quoi === "proposer" && r.texte) {
         setTexte(r.texte)
@@ -40,6 +47,7 @@ export function Redacteur({ uid, destinataire }: { uid: number; destinataire: st
         setStatut({ ok: true, message: r.message ?? "C'est fait." })
         if (quoi === "envoyer") {
           setTexte("")
+          setFichiers([])
           router.refresh()
         }
       }
@@ -79,6 +87,9 @@ export function Redacteur({ uid, destinataire }: { uid: number; destinataire: st
         placeholder="Cliquez sur « Proposer une réponse » : l'IA écrit un brouillon que vous pourrez modifier ici. Vous pouvez aussi écrire vous-même."
         className="border-trait bg-carte-2 text-encre focus:border-accent mt-3 block w-full rounded-lg border p-3 text-[0.95rem] leading-relaxed outline-none"
       />
+      <div className="mt-3">
+        <PiecesJointes fichiers={fichiers} onChange={setFichiers} desactive={enCours} />
+      </div>
       {statut && (
         <p
           role="status"
@@ -91,7 +102,7 @@ export function Redacteur({ uid, destinataire }: { uid: number; destinataire: st
         <button
           type="button"
           onClick={() => lancer("envoyer")}
-          disabled={enCours || !texte.trim()}
+          disabled={enCours || !texte.trim() || problemePieces(fichiers) !== null}
           className="bg-encre inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-black disabled:opacity-40"
         >
           {icone("envoyer", Send)} Envoyer
@@ -99,7 +110,7 @@ export function Redacteur({ uid, destinataire }: { uid: number; destinataire: st
         <button
           type="button"
           onClick={() => lancer("brouillon")}
-          disabled={enCours || !texte.trim()}
+          disabled={enCours || !texte.trim() || problemePieces(fichiers) !== null}
           className="border-trait hover:border-encre inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold disabled:opacity-40"
         >
           {icone("brouillon", Save)} Garder en brouillon

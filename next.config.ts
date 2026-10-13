@@ -41,6 +41,11 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
   poweredByHeader: false,
+  experimental: {
+    // Pièces jointes des mails du tableau de bord (4 Mo au plus, contrôlé dans
+    // lib/direction/pieces-jointes.ts). Vercel plafonne une requête à 4,5 Mo.
+    serverActions: { bodySizeLimit: "4.5mb" },
+  },
   // Racine explicite : si ce dossier se retrouve un jour sous un autre
   // projet qui a son propre package-lock.json, Turbopack ne remonte pas.
   turbopack: {

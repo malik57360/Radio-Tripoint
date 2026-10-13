@@ -240,14 +240,27 @@ export async function proposerReponse(uid: number) {
 
 /* ───────────────────────── Envoi et brouillons ───────────────────────── */
 
-async function enTete(mail: Mail, texte: string) {
+/** Fichier joint par l'équipe (contrat, devis, affiche…), tel que nodemailer l'attend. */
+export interface PieceJointe {
+  filename: string
+  content: Buffer
+  contentType?: string
+}
+
+/** Signature (logos en ligne) + fichiers joints par l'équipe. */
+async function corpsAvecPieces(texte: string, pieces: PieceJointe[]) {
+  const signe = await corpsSigne(texte)
+  return { ...signe, attachments: [...signe.attachments, ...pieces] }
+}
+
+async function enTete(mail: Mail, texte: string, pieces: PieceJointe[] = []) {
   const { user } = compte()
   const sujet = /^re\s*:/i.test(mail.sujet) ? mail.sujet : `Re: ${mail.sujet}`
   return {
     from: { name: "Radio Tripoint", address: user },
     to: mail.repondreA,
     subject: sujet,
-    ...(await corpsSigne(texte)),
+    ...(await corpsAvecPieces(texte, pieces)),
     inReplyTo: mail.messageId ?? undefined,
     references: [...mail.references, ...(mail.messageId ? [mail.messageId] : [])],
   }
@@ -266,7 +279,7 @@ function transporteur(user: string, pass: string) {
 }
 
 /** Envoie la réponse (texte relu par une personne) et la range dans « Envoyés ». */
-export async function envoyerReponse(uid: number, texte: string) {
+export async function envoyerReponse(uid: number, texte: string, pieces: PieceJointe[] = []) {
   const { user, pass } = compte()
   return avecBoite(async (client) => {
     const verrou = await client.getMailboxLock("INBOX")
@@ -277,7 +290,7 @@ export async function envoyerReponse(uid: number, texte: string) {
       verrou.release()
     }
     if (!mail?.repondreA) throw new Error("Impossible de trouver l'adresse de l'expéditeur.")
-    const message = await enTete(mail, texte)
+    const message = await enTete(mail, texte, pieces)
 
     await transporteur(user, pass).sendMail(message)
 
@@ -296,7 +309,7 @@ export async function envoyerReponse(uid: number, texte: string) {
 }
 
 /** Range la réponse dans « Brouillons » de la boîte, sans l'envoyer. */
-export async function enregistrerBrouillon(uid: number, texte: string) {
+export async function enregistrerBrouillon(uid: number, texte: string, pieces: PieceJointe[] = []) {
   return avecBoite(async (client) => {
     const verrou = await client.getMailboxLock("INBOX", { readOnly: true })
     let mail: Mail | null
@@ -308,7 +321,10 @@ export async function enregistrerBrouillon(uid: number, texte: string) {
     if (!mail) throw new Error("Message introuvable.")
     const brouillons = await dossier(client, "\\Drafts", "draft|brouillon")
     if (!brouillons) throw new Error("Dossier « Brouillons » introuvable dans la boîte.")
-    const brut = await new MailComposer({ ...(await enTete(mail, texte)), date: new Date() })
+    const brut = await new MailComposer({
+      ...(await enTete(mail, texte, pieces)),
+      date: new Date(),
+    })
       .compile()
       .build()
     await client.append(brouillons, brut, ["\\Draft", "\\Seen"])
@@ -320,7 +336,12 @@ export async function enregistrerBrouillon(uid: number, texte: string) {
 const EMAIL = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]{2,}$/
 
 /** Envoie un nouveau message depuis info@ et en garde une copie dans « Envoyés ». */
-export async function envoyerNouveau(a: string, objet: string, texte: string) {
+export async function envoyerNouveau(
+  a: string,
+  objet: string,
+  texte: string,
+  pieces: PieceJointe[] = [],
+) {
   const destinataire = a.trim()
   if (!EMAIL.test(destinataire)) throw new Error("Adresse e-mail du destinataire invalide.")
   if (!objet.trim()) throw new Error("L'objet est vide.")
@@ -329,7 +350,7 @@ export async function envoyerNouveau(a: string, objet: string, texte: string) {
     from: { name: "Radio Tripoint", address: user },
     to: destinataire,
     subject: objet.trim().slice(0, 200),
-    ...(await corpsSigne(texte)),
+    ...(await corpsAvecPieces(texte, pieces)),
   }
   await transporteur(user, pass).sendMail(message)
   await avecBoite(async (client) => {
