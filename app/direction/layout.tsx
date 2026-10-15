@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next"
 import { Archivo } from "next/font/google"
+import { EnregistrerApp } from "@/components/direction/AppDirection"
 import "./direction.css"
 
 const archivo = Archivo({
@@ -12,6 +13,10 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   title: "Direction — Radio Tripoint",
   robots: { index: false, follow: false, nocache: true },
+  // App installable à part (manifeste, icônes et service worker sous /direction).
+  manifest: "/direction/manifest.webmanifest",
+  applicationName: "Direction",
+  appleWebApp: { capable: true, title: "Direction", statusBarStyle: "black" },
 }
 
 export const viewport: Viewport = {
@@ -24,7 +29,10 @@ export const viewport: Viewport = {
 export default function LayoutDirection({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={archivo.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <EnregistrerApp />
+      </body>
     </html>
   )
 }

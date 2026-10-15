@@ -2,6 +2,7 @@ import { LogOut } from "lucide-react"
 import { redirect } from "next/navigation"
 import { connection } from "next/server"
 import { seDeconnecter } from "../actions"
+import { BoutonInstaller } from "@/components/direction/AppDirection"
 import { Horloge } from "@/components/direction/Horloge"
 import { Navigation } from "@/components/direction/Navigation"
 import { estConnecte } from "@/lib/direction/acces"
@@ -26,6 +27,7 @@ export default async function EspaceDirection({ children }: { children: React.Re
             </p>
           </div>
           <Horloge genereLe={horodatage()} />
+          <BoutonInstaller />
           <form action={seDeconnecter}>
             <button
               type="submit"
