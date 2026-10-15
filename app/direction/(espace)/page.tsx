@@ -20,13 +20,14 @@ import {
   chargerRadio,
   chargerTechnique,
 } from "@/lib/direction/alertes"
+import { AFFICHER_COMPTEUR, etatCagnotteDirect, OBJECTIF_EUROS } from "@/lib/cagnotte"
 import { libelleHeure } from "@/lib/radio/grille"
 
 export const metadata = { title: "Vue d'ensemble — Direction Radio Tripoint" }
 
 /** Ce qu'il faut savoir en dix secondes, avec un lien vers chaque page. */
 export default async function VueEnsemble() {
-  const [alertes, aud, dir, rad, cont, eng, tech] = await Promise.all([
+  const [alertes, aud, dir, rad, cont, eng, tech, cagnotte] = await Promise.all([
     chargerAlertes(),
     chargerAudience(30),
     chargerDirect(),
@@ -34,6 +35,7 @@ export default async function VueEnsemble() {
     chargerContenu(),
     chargerEngagement(),
     chargerTechnique(),
+    etatCagnotteDirect().catch(() => null),
   ])
   const audOk = aud && !aud.erreur ? aud : null
   const engOk = eng && !eng.erreur ? eng : null
@@ -117,6 +119,49 @@ export default async function VueEnsemble() {
           detail="visiteurs"
         />
       </div>
+
+      {/* Cagnotte matériel : le vrai total, visible ici même quand il est masqué sur le site. */}
+      <Carte
+        titre="Cagnotte matériel"
+        note={
+          AFFICHER_COMPTEUR ? "affiché sur le site" : "masqué sur le site · visible ici seulement"
+        }
+      >
+        {cagnotte ? (
+          <>
+            <p className="flex flex-wrap items-baseline gap-x-3">
+              <span className="text-3xl font-extrabold tabular-nums">
+                {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(
+                  cagnotte.euros,
+                )}
+              </span>
+              <span className="text-encre-2 text-sm font-semibold">
+                collectés sur {nombre(OBJECTIF_EUROS)} € · {cagnotte.participations} participation
+                {cagnotte.participations > 1 ? "s" : ""}
+              </span>
+            </p>
+            <div className="bg-carte-2 mt-3 h-2.5 overflow-hidden rounded-full">
+              <div
+                className="bg-accent h-full rounded-full"
+                style={{
+                  width: `${Math.min(100, (cagnotte.euros / OBJECTIF_EUROS) * 100)}%`,
+                }}
+              />
+            </div>
+            <p className="text-encre-3 mt-2 text-xs">
+              Paiements par carte confirmés par Stripe. Le détail de chaque don est dans Stripe,
+              rubrique Paiements.{" "}
+              <a href="/soutenir" target="_blank" rel="noopener" className="text-accent underline">
+                Voir la page
+              </a>
+            </p>
+          </>
+        ) : (
+          <p className="text-encre-3 text-sm">
+            Compteur indisponible (base de données injoignable).
+          </p>
+        )}
+      </Carte>
 
       <div className="grid gap-3 lg:grid-cols-[1fr_1.4fr]">
         <Carte titre="À l'antenne">

@@ -46,6 +46,18 @@ export function lireMontant(brut: string): number | null {
   return Math.round(euros * 100)
 }
 
+/** Total exact, sans cache, au centime près : la carte du tableau de bord. */
+export async function etatCagnotteDirect(): Promise<{
+  euros: number
+  participations: number
+} | null> {
+  const r = await redis([["HVALS", CLE]])
+  const valeurs = r?.[0]
+  if (!Array.isArray(valeurs)) return null
+  const centimes = valeurs.reduce((s: number, v) => s + (Number(v) || 0), 0)
+  return { euros: centimes / 100, participations: valeurs.length }
+}
+
 /** Total collecté ; null si le stockage n'est pas joignable (pas de faux chiffre). */
 export async function etatCagnotte(): Promise<{ euros: number; participations: number } | null> {
   const a = accesRedis()
