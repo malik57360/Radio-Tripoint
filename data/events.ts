@@ -701,4 +701,101 @@ export const evenements: Evenement[] = [
       lieu: "Centre Martialis, Ellange (LU)",
     },
   },
+  // ─── Ajouts du 15 octobre 2026 (week-end du 16 au 18 octobre), vérifiés sur
+  // le site de la CCCE, les Journées du patrimoine (Luxembourg), Visit Luxembourg
+  // et les agendas culturels de Moselle.
+  {
+    slug: "stand-up-ccce-cattenom-octobre-2026",
+    titre: "Stand-up de la CCCE avec Julien Strelzyk",
+    description:
+      "Deuxième soirée stand-up de l'année proposée par la Communauté de communes de Cattenom et environs, avec l'humoriste Julien Strelzyk. Ouverture des portes à 19 h, spectacle d'environ 1 h 15, placement libre. Entrée gratuite, uniquement sur réservation (billetterie en ligne Weezevent).",
+    debut: "2026-10-16T20:00:00+02:00",
+    lieu: "Salle du Casino",
+    ville: "Cattenom",
+    pays: "FR",
+    gratuit: true,
+    organisateur: "Communauté de communes de Cattenom et environs (CCCE)",
+    lienExterne: "https://www.ccce.fr/2026/09/spectacle-de-stand-up-2-de-la-ccce/",
+    flyer: {
+      titre: "Soirée stand-up",
+      accroche: "Avec l'humoriste Julien Strelzyk",
+      tarif: "GRATUIT SUR RÉSERVATION",
+      lieu: "Salle du Casino, Cattenom (FR)",
+    },
+  },
+  {
+    slug: "visite-sensorielle-musee-a-possen-2026",
+    titre: "Visite sensorielle au musée « A Possen »",
+    description:
+      "Pour les Journées du patrimoine, le musée folklorique et viticole « A Possen » propose une visite guidée les yeux bandés, à vivre avec les autres sens (environ 1 h). Départs à 11 h, 15 h et 17 h en luxembourgeois, à 14 h et 16 h en français. Ouvert à tous, enfants accompagnés d'un adulte.",
+    debut: "2026-10-17T11:00:00+02:00",
+    fin: "2026-10-17T18:00:00+02:00",
+    horaires: "Départs à 11 h, 14 h, 15 h, 16 h et 17 h (en français à 14 h et 16 h)",
+    lieu: "Musée « A Possen »",
+    ville: "Bech-Kleinmacher",
+    pays: "LU",
+    organisateur: "Musée « A Possen »",
+    lienExterne:
+      "https://journeesdupatrimoine.lu/submission/immersion-sensorielle-au-coeur-du-patrimoine/",
+    flyer: {
+      titre: "Visite les yeux bandés",
+      accroche: "Journées du patrimoine au musée « A Possen »",
+      lieu: "Musée A Possen, Bech-Kleinmacher (LU)",
+    },
+  },
+  {
+    slug: "les-trois-dames-en-terres-latines-thionville-2026",
+    titre: "Les Trois Dames : « En Terres Latines »",
+    description:
+      "Concert caritatif du Lions Club de Thionville au profit de l'association Enfants Cancers Santé : samba, flamenco et tango mêlés d'airs d'opéra et d'opérette, de Bizet à Márquez.",
+    debut: "2026-10-17T20:00:00+02:00",
+    lieu: "L'Adagio",
+    adresse: "8 place Marie-Louise, Thionville",
+    ville: "Thionville",
+    pays: "FR",
+    organisateur: "Lions Club de Thionville",
+    lienExterne:
+      "https://57.agendaculturel.fr/concert/thionville/les-trois-dames-en-terres-latines.html",
+    flyer: {
+      titre: "En Terres Latines",
+      accroche: "Concert caritatif des Trois Dames",
+      tarif: "25 € · 10 € (−15 ANS)",
+      lieu: "L'Adagio, Thionville (FR)",
+    },
+  },
+  {
+    slug: "hunnefeier-schengen-2026",
+    titre: "Hunnefeier",
+    description:
+      "Schengen fête la fin des vendanges : premières dégustations du « Fiederwäissen », le vin nouveau de l'année (blanc, rouge et rosé), et marché aux puces. Une fête organisée par le Syndicat d'initiative de Schengen.",
+    debut: "2026-10-18T10:00:00+02:00",
+    lieu: "Place de l'Étoile",
+    ville: "Schengen",
+    pays: "LU",
+    organisateur: "Syndicat d'initiative Schengen",
+    lienExterne: "https://www.visitluxembourg.com/de/veranstaltung/hunnefeier",
+    flyer: {
+      titre: "Hunnefeier",
+      accroche: "Fin des vendanges et vin nouveau",
+      lieu: "Schengen (LU)",
+    },
+  },
+  {
+    slug: "grand-concert-haendel-rutter-thionville-2026",
+    titre: "Grand concert : de Haendel à Rutter",
+    description:
+      "La chorale O.P.E.R.A de Thionville et l'Orchestre symphonique de Thionville-Moselle, avec la soprano Martine Hummel et l'organiste Olivier Schmitt, dans un programme qui va de Haendel et Vivaldi à Mozart, Vangelis, Jenkins et Rutter.",
+    debut: "2026-10-18T15:30:00+02:00",
+    lieu: "Église Saint-Pierre",
+    adresse: "70 rue de Longwy, Thionville",
+    ville: "Thionville",
+    pays: "FR",
+    lienExterne:
+      "https://57.agendaculturel.fr/concert/thionville/grand-concert-de-g-f-haendel-a-j-rutter.html",
+    flyer: {
+      titre: "De Haendel à Rutter",
+      accroche: "Chœur, orchestre, soprano et orgue",
+      lieu: "Église Saint-Pierre, Thionville (FR)",
+    },
+  },
 ]
