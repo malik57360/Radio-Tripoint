@@ -17,7 +17,9 @@ import { actionEnvoyerNouveau, actionProposerMessage } from "@/app/direction/(es
 import { actionTrouverCoordonnees } from "@/app/direction/(espace)/prospection/actions"
 import type { Coordonnees } from "@/lib/direction/coordonnees"
 import { telephoneLisible } from "@/lib/direction/coordonnees-outils"
+import { problemePieces } from "@/lib/direction/pieces-jointes"
 import { cn } from "@/lib/utils/cn"
+import { PiecesJointes, versFormData } from "./PiecesJointes"
 import { SuiviProspect, type SuiviInitial } from "./SuiviProspect"
 
 export interface FicheProspect {
@@ -41,8 +43,10 @@ const champ =
 
 /**
  * Les prospects d'une page : coordonnées trouvées par l'IA (une fois, puis
- * gardées), et l'envoi d'un mail en deux clics — « Envoyer un mail » ouvre
- * un mail déjà écrit, on relit, on envoie.
+ * gardées), et l'envoi d'un mail en deux clics — un clic sur le commerce (ou
+ * « Envoyer un mail ») ouvre un mail déjà écrit, objet compris, avec
+ * l'adresse cherchée au besoin ; on joint un fichier si on veut, on relit,
+ * on envoie.
  */
 export function ListeProspects({
   fiches,
@@ -158,6 +162,9 @@ function CarteProspect({
   )
   const [redaction, setRedaction] = useState(false)
   const [erreurRedaction, setErreurRedaction] = useState("")
+  // Gardés ici : « Réécrire » refait l'objet et le texte, pas l'adresse ni les fichiers.
+  const [aSaisi, setASaisi] = useState<string | null>(null)
+  const [fichiers, setFichiers] = useState<File[]>([])
   const email = coords?.email ?? suiviCourant?.email ?? ""
   const telephone = coords?.telephone ?? null
   const bloque = statut === "stop"
@@ -182,16 +189,32 @@ function CarteProspect({
     setRedaction(false)
   }
 
+  // Un clic sur le commerce : le mail s'écrit, et l'adresse se cherche si
+  // elle n'a pas encore été cherchée. L'envoi reste un clic de la personne.
+  const ouvrir = () => {
+    if (bloque) return
+    setPanneau(true)
+    setEnvoye(null)
+    if (!brouillon && !redaction) void rediger()
+    if (!coords && !enRecherche) onChercher()
+  }
+
   return (
     <li className="grid gap-3 py-4 lg:grid-cols-[1.4fr_1fr]">
       <div className="min-w-0 space-y-2">
         <div>
-          <p className="font-bold">
+          <button
+            type="button"
+            onClick={ouvrir}
+            disabled={bloque}
+            title={bloque ? undefined : `Écrire à ${nom}`}
+            className="hover:text-accent text-left font-bold disabled:cursor-default disabled:hover:text-inherit"
+          >
             {nom}
             {fiche.enseigne && fiche.enseigne !== fiche.nom && (
               <span className="text-encre-3 font-normal"> · {fiche.nom}</span>
             )}
-          </p>
+          </button>
           <p className="text-encre-2 text-sm">
             {fiche.activite} · <span className="font-semibold">{fiche.commune}</span>
             {fiche.effectif && ` · ${fiche.effectif}`}
@@ -208,11 +231,7 @@ function CarteProspect({
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <button
             type="button"
-            onClick={() => {
-              setPanneau(true)
-              setEnvoye(null)
-              if (!brouillon) void rediger()
-            }}
+            onClick={ouvrir}
             disabled={panneau || bloque}
             className="bg-accent inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold text-black disabled:opacity-50"
           >
@@ -249,7 +268,11 @@ function CarteProspect({
           <PanneauMail
             key={brouillon?.n ?? 0}
             fiche={fiche}
-            emailInitial={email}
+            a={aSaisi ?? email}
+            onA={setASaisi}
+            rechercheAdresse={enRecherche}
+            fichiers={fichiers}
+            onFichiers={setFichiers}
             brouillon={brouillon}
             redaction={redaction}
             erreurRedaction={erreurRedaction}
@@ -259,6 +282,7 @@ function CarteProspect({
               setPanneau(false)
               setEnvoye(message)
               setBrouillon(null)
+              setFichiers([])
               const s: SuiviInitial = {
                 statut: !suiviCourant || statut === "a_contacter" ? "contacte" : statut,
                 note: suiviCourant?.note ?? "",
@@ -393,7 +417,11 @@ function Valeur({
 /** Le mail, déjà écrit par l'IA à l'ouverture : on relit, on corrige au besoin, on envoie. */
 function PanneauMail({
   fiche,
-  emailInitial,
+  a,
+  onA,
+  rechercheAdresse,
+  fichiers,
+  onFichiers,
   brouillon,
   redaction,
   erreurRedaction,
@@ -402,7 +430,11 @@ function PanneauMail({
   onEnvoye,
 }: {
   fiche: FicheProspect
-  emailInitial: string
+  a: string
+  onA: (a: string) => void
+  rechercheAdresse: boolean
+  fichiers: File[]
+  onFichiers: (f: File[]) => void
   brouillon: { objet: string; texte: string } | null
   redaction: boolean
   erreurRedaction: string
@@ -411,29 +443,32 @@ function PanneauMail({
   onEnvoye: (a: string, message: string) => void
 }) {
   const nom = fiche.enseigne ?? fiche.nom
-  const [a, setA] = useState(emailInitial)
   const [objet, setObjet] = useState(brouillon?.objet ?? `Radio Tripoint × ${nom}`)
   const [texte, setTexte] = useState(brouillon?.texte ?? "")
   const [envoi, setEnvoi] = useState(false)
   const [erreurEnvoi, setErreurEnvoi] = useState("")
   const erreur = erreurEnvoi || erreurRedaction
 
+  const pj = fichiers.length
+    ? ` avec ${fichiers.length} pièce${fichiers.length > 1 ? "s" : ""} jointe${fichiers.length > 1 ? "s" : ""}`
+    : ""
   const envoyer = async () => {
-    if (!window.confirm(`Envoyer ce mail à ${a.trim()} ?`)) return
+    if (!window.confirm(`Envoyer ce mail à ${a.trim()}${pj} ?`)) return
     setEnvoi(true)
     setErreurEnvoi("")
-    const r = await actionEnvoyerNouveau(a, objet, texte, {
-      siren: fiche.siren,
-      nom,
-      commune: fiche.commune,
-      activite: fiche.activite,
-    })
+    const r = await actionEnvoyerNouveau(
+      a,
+      objet,
+      texte,
+      { siren: fiche.siren, nom, commune: fiche.commune, activite: fiche.activite },
+      versFormData(fichiers),
+    )
     setEnvoi(false)
     if (!r.ok) setErreurEnvoi(r.erreur)
     else onEnvoye(a.trim(), r.message ?? "Mail envoyé.")
   }
 
-  const pret = a.trim() && objet.trim() && texte.trim()
+  const pret = a.trim() && objet.trim() && texte.trim() && problemePieces(fichiers) === null
   return (
     <div className="border-accent bg-carte mt-2 space-y-3 rounded-xl border-2 p-3">
       <div className="flex items-center justify-between gap-2">
@@ -452,16 +487,22 @@ function PanneauMail({
         <input
           type="email"
           value={a}
-          onChange={(e) => setA(e.target.value)}
-          placeholder="adresse@entreprise.fr"
+          onChange={(e) => onA(e.target.value)}
+          placeholder={rechercheAdresse ? "Recherche de l'adresse…" : "adresse@entreprise.fr"}
           className={cn(champ, "mt-1")}
         />
       </label>
-      {!a.trim() && (
-        <p className="text-alerte text-xs font-semibold">
-          Pas d&apos;e-mail trouvé : collez l&apos;adresse si vous la connaissez.
-        </p>
-      )}
+      {!a.trim() &&
+        (rechercheAdresse ? (
+          <p className="text-encre-2 inline-flex items-center gap-2 text-xs font-semibold">
+            <Loader2 className="size-3.5 animate-spin" aria-hidden /> L&apos;IA cherche
+            l&apos;adresse e-mail…
+          </p>
+        ) : (
+          <p className="text-alerte text-xs font-semibold">
+            Pas d&apos;e-mail trouvé : collez l&apos;adresse si vous la connaissez.
+          </p>
+        ))}
       <label className="block">
         <span className="surtitre">Objet</span>
         <input
@@ -485,6 +526,7 @@ function PanneauMail({
           />
         )}
       </label>
+      <PiecesJointes fichiers={fichiers} onChange={onFichiers} desactive={envoi} />
       {erreur && <p className="text-alerte text-sm font-semibold">{erreur}</p>}
       <div className="flex flex-wrap items-center gap-2">
         <button
