@@ -71,13 +71,11 @@ function Indisponible() {
 
 function TuileEnLigne({ d, horsLigne }: { d: DirectOk; horsLigne: boolean }) {
   return (
-    <div className="border-direct/50 bg-carte flex flex-col rounded-xl border p-4">
-      <p className="surtitre flex items-center gap-2">
+    <div className="border-direct/45 bg-carte flex flex-col rounded-2xl border bg-[radial-gradient(130%_110%_at_0%_0%,rgb(239_59_47/0.16),transparent_62%)] p-4">
+      <p className="surtitre text-encre flex items-center gap-2">
         <span className="point-direct" aria-hidden /> En ligne maintenant
       </p>
-      <p className="mt-2 text-[3.2rem] leading-none font-extrabold tracking-tight">
-        {nombre(d.enLigne)}
-      </p>
+      <p className="chiffre mt-2 text-[3.6rem] leading-none">{nombre(d.enLigne)}</p>
       <p className="text-encre-3 mt-2 text-xs">
         {horsLigne
           ? "Connexion perdue, nouvel essai…"
@@ -232,7 +230,7 @@ export function Direct({ initial }: { initial: DonneesDirect }) {
           ].map(([l, v]) => (
             <div key={l as string}>
               <dt className="text-encre-3 text-xs">{l}</dt>
-              <dd className="mt-1 text-2xl font-extrabold">{nombre(Number(v) || 0)}</dd>
+              <dd className="chiffre mt-1 text-[1.75rem] leading-none">{nombre(Number(v) || 0)}</dd>
             </div>
           ))}
         </dl>

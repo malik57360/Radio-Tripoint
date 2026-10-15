@@ -37,7 +37,7 @@ export function Section({
   return (
     <section id={id} aria-labelledby={`t-${id}`} className="scroll-mt-20">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
-        <h2 id={`t-${id}`} className="text-xl font-extrabold tracking-tight sm:text-2xl">
+        <h2 id={`t-${id}`} className="titre-page text-[1.35rem] leading-tight sm:text-2xl">
           {titre}
         </h2>
         {sousTitre && <p className="text-encre-3 text-xs">{sousTitre}</p>}
@@ -59,7 +59,7 @@ export function Carte({
   className?: string
 }) {
   return (
-    <div className={cn("border-trait bg-carte rounded-xl border p-4 sm:p-5", className)}>
+    <div className={cn("border-trait bg-carte rounded-2xl border p-4 sm:p-5", className)}>
       {titre && (
         <div className="mb-3 flex items-baseline justify-between gap-3">
           <h3 className="surtitre">{titre}</h3>
@@ -101,15 +101,15 @@ export function Tuile({
   accent?: boolean
 }) {
   return (
-    <div className="border-trait bg-carte flex flex-col rounded-xl border p-4">
+    <div className="border-trait bg-carte flex flex-col rounded-2xl border p-4">
       <p className="surtitre">{libelle}</p>
       <p
         className={cn(
-          "mt-2 leading-none font-extrabold tracking-tight",
+          "chiffre mt-2 leading-none",
           // Un nom (émission…) se lit en plus petit qu'un chiffre.
           typeof valeur === "string" && valeur.length > 10
             ? "text-xl leading-tight"
-            : "text-[2rem]",
+            : "text-[2.4rem]",
           accent && "text-accent",
           valeur === null && "text-encre-3",
         )}
@@ -182,7 +182,7 @@ export function Etat({ ok, children }: { ok: boolean; children: ReactNode }) {
 /** Module qui attend une activation : on le dit, on ne montre pas de zéro trompeur. */
 export function AActiver({ titre, children }: { titre: string; children: ReactNode }) {
   return (
-    <div className="border-alerte/40 bg-carte rounded-xl border border-dashed p-5">
+    <div className="border-alerte/40 bg-carte rounded-2xl border border-dashed p-5">
       <Etat ok={false}>{titre}</Etat>
       <div className="text-encre-2 mt-2 text-sm leading-relaxed">{children}</div>
     </div>
@@ -202,8 +202,8 @@ export function EnTetePage({
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{titre}</h1>
-        <p className="text-encre-3 mt-1 text-xs">{source}</p>
+        <h1 className="titre-page text-[2rem] leading-none sm:text-[2.2rem]">{titre}</h1>
+        <p className="text-encre-3 mt-2 max-w-prose text-xs leading-relaxed">{source}</p>
       </div>
       {children}
     </div>
@@ -225,7 +225,7 @@ export function CarteLien({
   return (
     <a
       href={href}
-      className="border-trait bg-carte hover:border-accent/60 group flex flex-col rounded-xl border p-4 transition-colors"
+      className="border-trait bg-carte hover:border-accent/60 active:bg-carte-2 group flex flex-col rounded-2xl border p-4 transition-colors"
     >
       <span className="surtitre flex items-center justify-between">
         {titre}
@@ -234,7 +234,7 @@ export function CarteLien({
           aria-hidden
         />
       </span>
-      <span className="mt-2 text-2xl leading-none font-extrabold">{valeur}</span>
+      <span className="chiffre mt-2 text-[1.75rem] leading-none">{valeur}</span>
       {detail && <span className="text-encre-3 mt-2 text-xs">{detail}</span>}
     </a>
   )

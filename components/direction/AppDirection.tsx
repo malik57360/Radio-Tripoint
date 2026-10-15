@@ -29,11 +29,12 @@ const iosNavigateur = () =>
     (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1))
 
 /**
- * Bouton « Installer l'app » de l'en-tête : invitation du navigateur sur
- * Android et ordinateur, mode d'emploi sur iPhone. Invisible une fois l'app
- * installée.
+ * « Installer l'app » : invitation du navigateur sur Android et ordinateur,
+ * mode d'emploi sur iPhone. Invisible une fois l'app installée.
+ * `icone` : bouton rond de l'en-tête (ordinateur) ; `ligne` : rangée pleine
+ * largeur de la feuille « Plus » (téléphone).
  */
-export function BoutonInstaller() {
+export function BoutonInstaller({ variante = "icone" }: { variante?: "icone" | "ligne" }) {
   const [invitation, setInvitation] = useState<InvitationInstall | null>(null)
   const [aide, setAide] = useState(false)
   const ios = useSyncExternalStore(sansAbonnement, iosNavigateur, () => false)
@@ -54,16 +55,45 @@ export function BoutonInstaller() {
 
   if (!invitation && !ios) return null
 
+  const installer = async () => {
+    if (!invitation) return setAide((a) => !a)
+    await invitation.prompt()
+    await invitation.userChoice.catch(() => null)
+    setInvitation(null)
+  }
+
+  const modeEmploi = (
+    <ol className="text-encre-2 mt-2 list-decimal space-y-1.5 pl-5 text-sm">
+      <li>
+        Dans Safari, touchez <Share className="inline size-4 align-[-3px]" aria-label="Partager" />{" "}
+        (Partager).
+      </li>
+      <li>Choisissez « Sur l&apos;écran d&apos;accueil ».</li>
+      <li>Touchez « Ajouter » : l&apos;app « Direction » apparaît avec son icône.</li>
+    </ol>
+  )
+
+  if (variante === "ligne")
+    return (
+      <div className="bg-accent-doux border-accent/30 rounded-2xl border">
+        <button
+          type="button"
+          onClick={installer}
+          aria-expanded={ios ? aide : undefined}
+          className="text-accent flex min-h-12 w-full items-center gap-3 px-4 text-sm font-bold"
+        >
+          <Download className="size-4.5" aria-hidden />
+          Installer l&apos;app sur l&apos;écran d&apos;accueil
+        </button>
+        {aide && <div className="px-4 pb-4">{modeEmploi}</div>}
+      </div>
+    )
+
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={async () => {
-          if (!invitation) return setAide((a) => !a)
-          await invitation.prompt()
-          await invitation.userChoice.catch(() => null)
-          setInvitation(null)
-        }}
+        onClick={installer}
         aria-label="Installer l'app Direction"
         aria-expanded={ios ? aide : undefined}
         title="Installer l'app Direction"
@@ -88,14 +118,7 @@ export function BoutonInstaller() {
               <X className="size-4" aria-hidden />
             </button>
           </div>
-          <ol className="text-encre-2 mt-2 list-decimal space-y-1.5 pl-5">
-            <li>
-              Dans Safari, touchez{" "}
-              <Share className="inline size-4 align-[-3px]" aria-label="Partager" /> (Partager).
-            </li>
-            <li>Choisissez « Sur l&apos;écran d&apos;accueil ».</li>
-            <li>Touchez « Ajouter » : l&apos;app « Direction » apparaît avec son icône.</li>
-          </ol>
+          {modeEmploi}
         </div>
       )}
     </div>

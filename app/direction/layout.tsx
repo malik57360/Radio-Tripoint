@@ -23,6 +23,8 @@ export const viewport: Viewport = {
   themeColor: "#09090a",
   width: "device-width",
   initialScale: 1,
+  // L'app installée occupe tout l'écran : les barres tiennent compte des bords (encoche, barre d'accueil).
+  viewportFit: "cover",
 }
 
 /** Mise en page propre au tableau de bord : rien du site public. */

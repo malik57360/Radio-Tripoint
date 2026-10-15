@@ -1,3 +1,4 @@
+import { ChevronRight } from "lucide-react"
 import { EnLigneMini } from "@/components/direction/Direct"
 import { Histogramme } from "@/components/direction/Histogramme"
 import {
@@ -47,24 +48,28 @@ export default async function VueEnsemble() {
         source="L'essentiel de toutes les pages · chaque chiffre mène à son détail"
       />
 
-      {/* Alertes */}
-      <div className="space-y-2">
-        {alertes.length === 0 ? (
-          <Carte>
-            <Etat ok>Tout fonctionne : site, antenne, formulaires et mesures.</Etat>
-          </Carte>
-        ) : (
-          alertes.map((a) => (
-            <a
-              key={a.texte}
-              href={`/direction/${a.page}`}
-              className="border-alerte/40 bg-carte hover:border-alerte block rounded-xl border px-4 py-3"
-            >
-              <Etat ok={false}>{a.texte}</Etat>
-            </a>
-          ))
-        )}
-      </div>
+      {/* Alertes : une seule carte, une ligne par alerte, chacune mène à sa page. */}
+      {alertes.length === 0 ? (
+        <Carte>
+          <Etat ok>Tout fonctionne : site, antenne, formulaires et mesures.</Etat>
+        </Carte>
+      ) : (
+        <ul className="border-alerte/35 bg-carte divide-trait divide-y overflow-hidden rounded-2xl border">
+          {alertes.map((a) => (
+            <li key={a.texte}>
+              <a
+                href={`/direction/${a.page}`}
+                className="hover:bg-carte-2 active:bg-carte-2 flex min-h-14 items-center gap-3 px-4 py-3"
+              >
+                <span className="min-w-0 flex-1">
+                  <Etat ok={false}>{a.texte}</Etat>
+                </span>
+                <ChevronRight className="text-encre-3 size-4 flex-none" aria-hidden />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {/* Les chiffres du moment */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -105,19 +110,22 @@ export default async function VueEnsemble() {
           }
           detail="visiteurs"
         />
-        <Tuile
-          libelle="30 derniers jours"
-          valeur={audOk?.mois?.visiteurs ?? null}
-          evolution={
-            audOk?.mois && (
-              <Evolution
-                actuel={audOk.mois.visiteurs}
-                precedent={audOk.moisPrec?.visiteurs ?? null}
-              />
-            )
-          }
-          detail="visiteurs"
-        />
+        {/* Seule sur sa ligne au téléphone : elle prend toute la largeur. */}
+        <div className="col-span-2 lg:col-span-1">
+          <Tuile
+            libelle="30 derniers jours"
+            valeur={audOk?.mois?.visiteurs ?? null}
+            evolution={
+              audOk?.mois && (
+                <Evolution
+                  actuel={audOk.mois.visiteurs}
+                  precedent={audOk.moisPrec?.visiteurs ?? null}
+                />
+              )
+            }
+            detail="visiteurs"
+          />
+        </div>
       </div>
 
       {/* Cagnotte matériel : le vrai total, visible ici même quand il est masqué sur le site. */}
@@ -130,7 +138,7 @@ export default async function VueEnsemble() {
         {cagnotte ? (
           <>
             <p className="flex flex-wrap items-baseline gap-x-3">
-              <span className="text-3xl font-extrabold tabular-nums">
+              <span className="chiffre text-[2.2rem] leading-none">
                 {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(
                   cagnotte.euros,
                 )}
