@@ -122,6 +122,20 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
         },
         href: "/prevention",
       },
+      {
+        libelle: { fr: "Météo", de: "Wetter", lb: "Wieder", en: "Weather", es: "El tiempo" },
+        href: "/meteo",
+      },
+      {
+        libelle: {
+          fr: "Horoscope",
+          de: "Horoskop",
+          lb: "Horoskop",
+          en: "Horoscope",
+          es: "Horóscopo",
+        },
+        href: "/horoscope",
+      },
     ],
   },
   {

@@ -132,6 +132,18 @@ export function dateLongue(iso: string, l: Langue = "fr") {
   if (l === "es") return `${d.jour} de ${MOIS.es[d.mois]} de ${d.annee}`
   return `${d.jour}. ${MOIS[l][d.mois]} ${d.annee}`
 }
+/** Nom du jour (« lundi », « Montag »…), dans le fuseau de la radio. */
+export function nomJour(iso: string, l: Langue = "fr") {
+  return JOURS[l][parts(iso).semaine]
+}
+/** Jour et mois sans l'année (« 21 mars », « 21. März »), mois de 1 à 12. */
+export function jourMois(jour: number, mois: number, l: Langue = "fr") {
+  const m = MOIS[l][mois - 1]
+  if (l === "fr") return `${jour === 1 ? "1er" : jour} ${m}`
+  if (l === "en") return `${jour} ${m}`
+  if (l === "es") return `${jour} de ${m}`
+  return `${jour}. ${m}`
+}
 export function dateCourte(iso: string, l: Langue = "fr") {
   const d = parts(iso)
   if (l === "fr") return `${d.jour} ${MOIS_COURT.fr[d.mois]}.`

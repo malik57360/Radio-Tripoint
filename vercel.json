@@ -8,5 +8,11 @@
       "maxDuration": 30,
       "excludeFiles": "{.next/**,node_modules/**,public/**,app/**,components/**,data/**,lib/**,assets/**,scripts/**,types/**,config/**,*.md}"
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/horoscope",
+      "schedule": "5 23 * * *"
+    }
+  ]
 }

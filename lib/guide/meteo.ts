@@ -1,16 +1,10 @@
+import { LIEUX, previsions } from "@/lib/meteo"
+
 /**
  * Météo des Trois Frontières pour Tripo : prévisions Open-Meteo (gratuites,
  * sans clé, licence CC BY 4.0 — à citer), mises en cache 30 minutes.
  * En cas de panne, Tripo le sait et renvoie vers une recherche web.
  */
-
-const LIEUX = [
-  { nom: "Sierck-les-Bains", lat: 49.4406, lon: 6.3578 },
-  { nom: "Thionville", lat: 49.3579, lon: 6.1683 },
-  { nom: "Metz", lat: 49.1193, lon: 6.1757 },
-  { nom: "Luxembourg-Ville", lat: 49.6116, lon: 6.1319 },
-  { nom: "Merzig (Sarre)", lat: 49.4436, lon: 6.6374 },
-]
 
 /** Codes météo WMO utilisés par Open-Meteo. */
 const TEMPS: Record<number, string> = {
@@ -44,19 +38,6 @@ const TEMPS: Record<number, string> = {
   99: "orage avec forte grêle",
 }
 
-interface Prevision {
-  current?: { time: string; temperature_2m: number; weather_code: number; wind_speed_10m: number }
-  daily?: {
-    time: string[]
-    weather_code: number[]
-    temperature_2m_max: number[]
-    temperature_2m_min: number[]
-    precipitation_probability_max: (number | null)[]
-    precipitation_sum: number[]
-    wind_speed_10m_max: number[]
-  }
-}
-
 const temps = (code: number) => TEMPS[code] ?? `code météo ${code}`
 const r = (n: number) => Math.round(n)
 
@@ -69,25 +50,8 @@ const jour = (iso: string) =>
   }).format(new Date(`${iso}T12:00:00Z`))
 
 export async function meteoGuide(): Promise<string> {
-  const url = new URL("https://api.open-meteo.com/v1/forecast")
-  url.searchParams.set("latitude", LIEUX.map((l) => l.lat).join(","))
-  url.searchParams.set("longitude", LIEUX.map((l) => l.lon).join(","))
-  url.searchParams.set("current", "temperature_2m,weather_code,wind_speed_10m")
-  url.searchParams.set(
-    "daily",
-    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,wind_speed_10m_max",
-  )
-  url.searchParams.set("timezone", "Europe/Paris")
-  url.searchParams.set("forecast_days", "7")
-
   try {
-    const res = await fetch(url, {
-      next: { revalidate: 1800 },
-      signal: AbortSignal.timeout(5000),
-    })
-    if (!res.ok) throw new Error(String(res.status))
-    const brut: unknown = await res.json()
-    const liste = (Array.isArray(brut) ? brut : [brut]) as Prevision[]
+    const liste = await previsions()
 
     return LIEUX.map((lieu, i) => {
       const p = liste[i]

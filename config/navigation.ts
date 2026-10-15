@@ -78,6 +78,14 @@ export const navPlus: LienNav[] = [
     href: "/mode-style",
   },
   {
+    libelle: { fr: "Météo", de: "Wetter", lb: "Wieder", en: "Weather", es: "El tiempo" },
+    href: "/meteo",
+  },
+  {
+    libelle: { fr: "Horoscope", de: "Horoskop", lb: "Horoskop", en: "Horoscope", es: "Horóscopo" },
+    href: "/horoscope",
+  },
+  {
     libelle: {
       fr: "Prévention",
       de: "Prävention",

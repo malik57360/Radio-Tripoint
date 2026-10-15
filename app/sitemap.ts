@@ -31,6 +31,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: u("/emissions"), changeFrequency: "weekly", priority: 0.8 },
     { url: u("/podcasts"), changeFrequency: "daily", priority: 0.8 },
     { url: u("/agenda"), changeFrequency: "daily", priority: 0.8 },
+    { url: u("/meteo"), changeFrequency: "hourly", priority: 0.6 },
+    { url: u("/horoscope"), changeFrequency: "daily", priority: 0.6 },
     { url: u("/publicite"), changeFrequency: "monthly", priority: 0.6 },
     { url: u("/a-propos"), changeFrequency: "monthly", priority: 0.5 },
     { url: u("/ils-nous-font-confiance"), changeFrequency: "monthly", priority: 0.5 },

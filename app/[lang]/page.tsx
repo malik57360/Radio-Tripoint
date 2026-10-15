@@ -1,6 +1,7 @@
 import { ArrowRight, Mic } from "lucide-react"
 import Link from "@/components/ui/Lien"
 import { Hero } from "@/components/accueil/Hero"
+import { MeteoHoroscope } from "@/components/accueil/MeteoHoroscope"
 import { Newsletter } from "@/components/accueil/Newsletter"
 import { Professionnels } from "@/components/accueil/Professionnels"
 import { EventCard } from "@/components/events/EventCard"
@@ -137,6 +138,8 @@ export default async function Accueil() {
           </EtatVide>
         )}
       </section>
+
+      <MeteoHoroscope />
 
       <EmplacementPub id="accueil-une" className="conteneur pt-14 lg:pt-20" />
 
