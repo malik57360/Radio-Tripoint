@@ -32,6 +32,8 @@ export interface Coordonnees {
   sourceTelephone: string | null
   /** Faux si une valeur gardée vient d'une page que le serveur n'a pas pu relire. */
   verifie: boolean
+  /** L'e-mail seul a été relu sur sa page source (absent des recherches plus anciennes). */
+  emailVerifie?: boolean
   le: number
 }
 
@@ -200,6 +202,7 @@ export async function trouverCoordonnees(f: FicheRecherche): Promise<Coordonnees
     sourceEmail: e.source,
     sourceTelephone: t.source,
     verifie: e.sure && t.sure,
+    emailVerifie: Boolean(e.valeur) && e.sure,
     le: Date.now(),
   }
   if (redisActif()) await redis([["HSET", CLE, f.siren, JSON.stringify(c)]])

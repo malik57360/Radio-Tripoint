@@ -13,6 +13,10 @@
     {
       "path": "/api/horoscope",
       "schedule": "5 23 * * *"
+    },
+    {
+      "path": "/api/prospection/quotidien",
+      "schedule": "5 3 * * *"
     }
   ]
 }

@@ -257,6 +257,9 @@ const DIVISIONS: Record<string, string> = {
   "96": "Services à la personne",
 }
 
+/** Activité connue des annonceurs locaux (liste NAF ci-dessus). */
+export const activiteLocale = (code: string | null | undefined) => Boolean(code && NAF[code])
+
 export const libelleActivite = (code: string | null | undefined) =>
   code ? (NAF[code] ?? DIVISIONS[code.slice(0, 2)] ?? `Activité ${code}`) : "Activité non précisée"
 
@@ -272,6 +275,8 @@ export interface Prospect {
   adresse: string
   commune: string
   effectif: string
+  /** Tranche d'effectif INSEE (« 02 » = 3-5 salariés…), pour classer les conseils du jour. */
+  tranche: string | null
   dirigeant: string | null
   siegeAilleurs: string | null
   creation: string | null
@@ -335,6 +340,7 @@ function versProspect(r: Brut, codes: readonly string[]): Prospect | null {
     commune: titre(local.libelle_commune ?? ""),
     effectif:
       EFFECTIFS[local.tranche_effectif_salarie ?? r.tranche_effectif_salarie ?? "NN"] ?? "—",
+    tranche: local.tranche_effectif_salarie ?? r.tranche_effectif_salarie ?? null,
     dirigeant,
     siegeAilleurs: siegeLocal
       ? null

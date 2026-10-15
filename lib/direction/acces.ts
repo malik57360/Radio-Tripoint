@@ -27,6 +27,11 @@ export function motDePasseValide(saisie: string) {
   return accesConfigure() && egal(signer(saisie), signer(motDePasse()))
 }
 
+/** Jeton des tâches internes (tâche du matin qui se relance elle-même). */
+export const jetonInterne = (valeur: string) => signer(`interne:${valeur}`)
+export const jetonInterneValide = (valeur: string, jeton: string) =>
+  accesConfigure() && egal(jeton, jetonInterne(valeur))
+
 export function jetonSession() {
   const expire = String(Math.floor(Date.now() / 1000) + DUREE_S)
   return { valeur: `${expire}.${signer(expire)}`, maxAge: DUREE_S }

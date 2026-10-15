@@ -1,8 +1,15 @@
 import { Search } from "lucide-react"
 import Link from "next/link"
+import { ConseilsDuJour, type ConseilVue } from "@/components/direction/ConseilsDuJour"
 import { ListeProspects, type FicheProspect } from "@/components/direction/ListeProspects"
 import type { SuiviInitial } from "@/components/direction/SuiviProspect"
 import { AActiver, Carte, EnTetePage, Etat, nombre } from "@/components/direction/ui"
+import {
+  budgetRestant,
+  lireBrouillons,
+  RECHERCHES_PAR_JOUR,
+  selectionnerDuJour,
+} from "@/lib/direction/conseils"
 import { coordonneesConnues } from "@/lib/direction/coordonnees"
 import { redisActif } from "@/lib/direction/redis"
 import {
@@ -40,7 +47,8 @@ export default async function PageProspection({
 }) {
   const params = await searchParams
   const p = (k: string) => (typeof params[k] === "string" ? (params[k] as string) : "")
-  const vue = p("vue") === "suivi" ? "suivi" : "recherche"
+  // « Aujourd'hui » (les conseils du jour) par défaut ; « Chercher » garde la recherche à la main.
+  const vue = p("vue") === "suivi" ? "suivi" : p("vue") === "recherche" ? "recherche" : "jour"
   const zone = (ZONES.find((z) => z.id === p("zone"))?.id ?? "sierck") as ZoneId
   const secteur = SECTEURS.find((s) => s.id === p("secteur"))?.id ?? "I"
   const salaries = p("salaries") === "1"
@@ -68,8 +76,9 @@ export default async function PageProspection({
   const onglets = (
     <nav aria-label="Vue" className="bg-carte border-trait flex rounded-full border p-1">
       {[
-        ["recherche", "Trouver des entreprises", lien({ vue: "recherche" })],
+        ["jour", "Aujourd'hui", "/direction/prospection"],
         ["suivi", `Mon suivi (${Object.keys(suivis).length})`, lien({ vue: "suivi" })],
+        ["recherche", "Chercher", lien({ vue: "recherche" })],
       ].map(([id, libelle, href]) => (
         <Link
           key={id}
@@ -90,10 +99,9 @@ export default async function PageProspection({
     <div className="space-y-4">
       <EnTetePage
         titre="Prospection"
-        source="Entreprises actives de l'annuaire officiel (INSEE, RNE) · mails et téléphones trouvés sur le web par l'IA"
-      >
-        {onglets}
-      </EnTetePage>
+        source="Chaque matin, 100 entreprises de l'annuaire officiel à démarcher ; l'IA trouve le mail des 30 premières et écrit le message. Vous relisez, vous envoyez."
+      />
+      {onglets}
 
       {!redisActif() && (
         <AActiver titre="Suivi indisponible">
@@ -109,7 +117,9 @@ export default async function PageProspection({
         {(parStatut.client ?? 0) > 1 ? "s" : ""}
       </p>
 
-      {vue === "suivi" ? (
+      {vue === "jour" ? (
+        <VueJour suivis={suivis} />
+      ) : vue === "suivi" ? (
         <VueSuivi suivis={suivis} />
       ) : (
         <>
@@ -270,6 +280,51 @@ async function Resultats({
       )}
     </Carte>
   )
+}
+
+/** Les conseils du jour (créés le matin ; sinon à la première ouverture). */
+async function VueJour({ suivis }: { suivis: Record<string, Suivi> }) {
+  const conseils = await selectionnerDuJour().catch(() => null)
+  if (!conseils)
+    return (
+      <Carte>
+        <Etat ok={false}>
+          L&apos;annuaire des entreprises ne répond pas : les conseils du jour arrivent dès
+          qu&apos;il revient.
+        </Etat>
+      </Carte>
+    )
+  const sirens = conseils.entreprises.map((e) => e.siren)
+  const [coords, brouillons, budget] = await Promise.all([
+    coordonneesConnues(sirens).catch(() => ({}) as Awaited<ReturnType<typeof coordonneesConnues>>),
+    lireBrouillons(sirens),
+    budgetRestant(),
+  ])
+  const vues: ConseilVue[] = conseils.entreprises.map((e) => {
+    const c = coords[e.siren]
+    const s = suivis[e.siren]
+    return {
+      siren: e.siren,
+      rang: e.rang,
+      nom: e.nom,
+      enseigne: e.enseigne,
+      activite: e.activite,
+      commune: e.commune,
+      raison: e.raison,
+      email: c?.email ?? null,
+      telephone: c?.telephone ?? null,
+      verifie: Boolean(c?.email && c.sourceEmail && (c.emailVerifie ?? c.verifie)),
+      cherche: Boolean(c),
+      brouillon: brouillons[e.siren]
+        ? { objet: brouillons[e.siren].objet, texte: brouillons[e.siren].texte }
+        : null,
+      traitee: Boolean(s && s.statut !== "a_contacter"),
+    }
+  })
+  const tete = vues.slice(0, RECHERCHES_PAR_JOUR).filter((v) => !v.traitee)
+  const aPreparer =
+    (budget > 0 && tete.some((v) => !v.cherche)) || tete.some((v) => v.email && !v.brouillon)
+  return <ConseilsDuJour conseils={vues} aPreparer={aPreparer} />
 }
 
 async function VueSuivi({ suivis }: { suivis: Record<string, Suivi> }) {
