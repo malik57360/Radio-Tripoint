@@ -155,6 +155,17 @@
   --color-nuit-trait: var(--nuit-trait);
   --color-nuit-accent: var(--nuit-accent);
 
+  /* Panneau Tripo : les couleurs de heytripo.fr (définies sur .theme-tripo). */
+  --color-tr-fond: var(--tr-fond);
+  --color-tr-carte: var(--tr-carte);
+  --color-tr-carte-2: var(--tr-carte-2);
+  --color-tr-trait: var(--tr-trait);
+  --color-tr-encre: var(--tr-encre);
+  --color-tr-encre-2: var(--tr-encre-2);
+  --color-tr-encre-3: var(--tr-encre-3);
+  --color-tr-jaune: var(--tr-jaune);
+  --color-tr-violet: var(--tr-violet);
+
   --font-titre: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-presse: var(--font-newsreader), ui-serif, Georgia, serif;
@@ -1247,4 +1258,178 @@
 :lang(lb) :is(.titre-affiche, .titre-page, .titre-section, .titre-carte) {
   hyphens: auto;
   overflow-wrap: break-word;
+}
+
+/* ─── Tripo sur le site : le thème de heytripo.fr ───────────────────────
+   Nuit chaude : noir profond, jaune Tripoint pour l'action, violet de la
+   grappe pour l'ambiance. Mêmes valeurs que app/heytripo/heytripo.css.
+   Le rouge reste réservé au direct : il n'apparaît pas ici. */
+.theme-tripo {
+  --tr-fond: #07060a;
+  --tr-carte: #121018;
+  --tr-carte-2: #1b1824;
+  --tr-trait: #2a2633;
+  --tr-encre: #f6f4ef;
+  --tr-encre-2: #b4afbd;
+  --tr-encre-3: #7d7787;
+  --tr-jaune: #f9b800;
+  --tr-violet: #8546c2;
+  color-scheme: dark;
+  background: var(--tr-fond);
+  color: var(--tr-encre);
+}
+.theme-tripo ::selection {
+  background: rgb(249 184 0 / 0.35);
+}
+.tr-titre {
+  font-weight: 900;
+  font-variation-settings: "wdth" 68;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  line-height: 0.92;
+}
+/* Aurore lente et grain, dans le panneau seulement. */
+.tr-aurore {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 30% 30%, rgb(133 70 194 / 0.35), transparent 70%),
+    radial-gradient(35% 30% at 72% 60%, rgb(249 184 0 / 0.16), transparent 70%),
+    radial-gradient(30% 30% at 50% 90%, rgb(133 70 194 / 0.2), transparent 70%);
+  filter: blur(40px);
+  animation: tr-aurore 22s ease-in-out infinite alternate;
+}
+@keyframes tr-aurore {
+  0% {
+    transform: translate3d(-3%, -2%, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, 2%, 0) rotate(8deg) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-2%, 4%, 0) rotate(-6deg) scale(1.02);
+  }
+}
+.tr-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.tr-verre {
+  background: rgb(18 16 24 / 0.72);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+}
+.tr-entre {
+  animation: tr-entre 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes tr-entre {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+/* Halo jaune et violet derrière Tripo (en-tête, pastille). */
+.tr-halo {
+  position: absolute;
+  inset: -18%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgb(249 184 0 / 0.4),
+    rgb(133 70 194 / 0.22) 45%,
+    transparent 70%
+  );
+  filter: blur(8px);
+  animation: tr-halo 4s ease-in-out infinite;
+}
+@keyframes tr-halo {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+/* Trois points « Tripo réfléchit ». */
+.tr-points span {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 2px;
+  border-radius: 9999px;
+  background: var(--tr-jaune);
+  animation: tr-point 1.1s ease-in-out infinite;
+}
+.tr-points span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.tr-points span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes tr-point {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+/* Texte des réponses : gras en clair, liens en jaune, puces jaunes. */
+.tr-texte strong {
+  color: var(--tr-encre);
+  font-weight: 700;
+}
+.tr-texte a {
+  color: var(--tr-jaune);
+  text-decoration-color: rgb(249 184 0 / 0.4);
+  text-underline-offset: 4px;
+}
+.tr-texte a:hover {
+  text-decoration-color: var(--tr-jaune);
+}
+.tr-texte ul {
+  list-style: none;
+  padding-left: 0;
+}
+.tr-texte li {
+  position: relative;
+  padding-left: 1.1rem;
+}
+.tr-texte li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--tr-jaune);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tr-aurore,
+  .tr-halo,
+  .tr-points span,
+  .tr-entre {
+    animation: none;
+  }
 }

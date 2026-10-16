@@ -1,7 +1,7 @@
 "use client"
 
 import { ArrowUp, Globe, Loader2, RotateCcw, X } from "lucide-react"
-import { useCallback, useEffect, useId, useRef, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useId, useRef, useState } from "react"
 import { useT } from "@/components/i18n/Langue"
 import Link from "@/components/ui/Lien"
 import { cn } from "@/lib/utils/cn"
@@ -14,6 +14,20 @@ type Message = { role: "user" | "assistant"; content: string; sources?: Source[]
 
 const CLE = "guide-tripo-v1"
 const MAX_LONGUEUR = 1500
+
+/** Bulle de Tripo : sa tête à gauche, la réponse sur verre sombre (comme sur heytripo). */
+function BulleTripo({ children, anime }: { children: ReactNode; anime?: boolean }) {
+  return (
+    <div className="tr-entre flex gap-2.5">
+      <span className="mt-0.5 block size-8 flex-none">
+        <Mascotte anime={anime} className="h-full w-full" />
+      </span>
+      <div className="border-tr-trait bg-tr-carte/75 text-tr-encre-2 tr-texte min-w-0 rounded-3xl rounded-tl-lg border px-4 py-3 text-[15px] leading-relaxed backdrop-blur">
+        {children}
+      </div>
+    </div>
+  )
+}
 
 /**
  * Guide des Trois Frontières : bouton flottant au-dessus du lecteur, et
@@ -214,7 +228,7 @@ export function Guide() {
         aria-expanded={ouvert}
         aria-controls="guide-tripo"
         className={cn(
-          "bg-nuit text-nuit-encre shadow-2 border-accent fixed right-4 bottom-[calc(var(--bas-fixe)+1rem)] z-40 hidden h-13 items-center gap-2 rounded-full border-2 pr-5 pl-2 text-[0.95rem] font-bold tracking-wide transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 lg:inline-flex",
+          "theme-tripo border-tr-jaune/60 fixed right-4 bottom-[calc(var(--bas-fixe)+1rem)] z-40 hidden h-13 items-center gap-2 rounded-full border-2 pr-5 pl-2 shadow-[0_12px_40px_rgba(133,70,194,0.45)] transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 lg:inline-flex",
           ouvert && "max-sm:hidden",
         )}
       >
@@ -223,9 +237,14 @@ export function Guide() {
             <X className="size-5" aria-hidden />
           </span>
         ) : (
-          <Mascotte anime className="size-10" />
+          <span className="relative block size-10">
+            <span className="tr-halo" aria-hidden />
+            <Mascotte anime className="relative h-full w-full" />
+          </span>
         )}
-        Tripo
+        <span className="tr-titre text-xl">
+          hey <span className="text-tr-jaune">tripo</span>
+        </span>
       </button>
 
       {ouvert && (
@@ -233,21 +252,21 @@ export function Guide() {
           id="guide-tripo"
           role="dialog"
           aria-labelledby={idTitre}
-          className="bg-surface text-encre fondu sm:border-trait sm:shadow-2 fixed inset-0 z-50 flex flex-col sm:inset-auto sm:right-4 sm:bottom-[calc(var(--bas-fixe)+1rem)] sm:h-[min(640px,calc(100dvh-var(--bas-fixe)-8rem))] sm:w-[400px] sm:border lg:bottom-[calc(var(--bas-fixe)+4.5rem)]"
+          className="theme-tripo fondu sm:border-tr-trait fixed inset-0 isolate z-50 flex flex-col overflow-hidden sm:inset-auto sm:right-4 sm:bottom-[calc(var(--bas-fixe)+1rem)] sm:h-[min(640px,calc(100dvh-var(--bas-fixe)-8rem))] sm:w-[400px] sm:rounded-[28px] sm:border sm:shadow-[0_30px_80px_rgba(0,0,0,0.6)] lg:bottom-[calc(var(--bas-fixe)+4.5rem)]"
         >
-          <header className="bg-nuit text-nuit-encre flex items-center gap-3 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
-            <Mascotte anime className="size-11 flex-none" />
+          <div className="tr-aurore" aria-hidden />
+          <div className="tr-grain" aria-hidden />
+
+          <header className="relative z-10 flex items-center gap-3 px-4 pt-[max(0.9rem,env(safe-area-inset-top))] pb-3">
+            <span className="relative block size-11 flex-none">
+              <span className="tr-halo" aria-hidden />
+              <Mascotte anime className="relative h-full w-full" />
+            </span>
             <div className="min-w-0 flex-1">
-              <h2 id={idTitre} className="text-base leading-tight font-bold">
-                {t({
-                  fr: "Tripo, votre guide",
-                  de: "Tripo, Ihr Guide",
-                  lb: "Tripo, Äre Guide",
-                  en: "Tripo, your guide",
-                  es: "Tripo, su guía",
-                })}
+              <h2 id={idTitre} className="tr-titre text-[1.7rem]">
+                hey <span className="text-tr-jaune">tripo</span>
               </h2>
-              <p className="text-nuit-encre-2 truncate text-xs">
+              <p className="text-tr-encre-3 mt-1 truncate text-xs font-semibold">
                 {t({
                   fr: "Le guide des Trois Frontières",
                   de: "Der Guide für das Dreiländereck",
@@ -268,7 +287,7 @@ export function Guide() {
                   en: "New conversation",
                   es: "Nueva conversación",
                 })}
-                className="hover:bg-nuit-3 grid size-10 place-items-center rounded-full"
+                className="border-tr-trait text-tr-encre-2 hover:text-tr-encre grid size-10 place-items-center rounded-full border"
               >
                 <RotateCcw className="size-4.5" aria-hidden />
               </button>
@@ -283,7 +302,7 @@ export function Guide() {
                 en: "Close the guide",
                 es: "Cerrar el guía",
               })}
-              className="hover:bg-nuit-3 grid size-10 place-items-center rounded-full"
+              className="border-tr-trait text-tr-encre-2 hover:text-tr-encre grid size-10 place-items-center rounded-full border"
             >
               <X className="size-5" aria-hidden />
             </button>
@@ -291,10 +310,10 @@ export function Guide() {
 
           <div
             ref={fil}
-            className="flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4"
+            className="relative z-10 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-3"
             aria-live="polite"
           >
-            <div className="bg-papier-2 max-w-[92%] px-4 py-3 text-[15px] leading-relaxed">
+            <BulleTripo anime={messages.length === 0}>
               <p>
                 {t({
                   fr: "Salut ! Moi c'est Tripo. Je connais le coin par cœur, de Sierck à Schengen en passant par Perl : balades, châteaux, vins, fêtes de village, bons plans. Dites-moi ce qui vous ferait plaisir.",
@@ -304,11 +323,11 @@ export function Guide() {
                   es: "¡Hola! Soy Tripo. Me conozco la zona de memoria, de Sierck a Schengen pasando por Perl: paseos, castillos, vinos, fiestas de pueblo, buenos planes. Dígame qué le apetece.",
                 })}
               </p>
-            </div>
+            </BulleTripo>
 
             {messages.length === 0 && (
               <ul
-                className="flex flex-wrap gap-2"
+                className="grid grid-cols-2 gap-2"
                 aria-label={t({
                   fr: "Suggestions",
                   de: "Vorschläge",
@@ -317,12 +336,16 @@ export function Guide() {
                   es: "Sugerencias",
                 })}
               >
-                {suggestions.map((s) => (
-                  <li key={s}>
+                {suggestions.map((s, i) => (
+                  <li
+                    key={s}
+                    className={cn(i === suggestions.length - 1 && i % 2 === 0 && "col-span-2")}
+                  >
                     <button
                       type="button"
                       onClick={() => envoyer(s)}
-                      className="puce-filtre h-auto py-2 text-left whitespace-normal"
+                      className="tr-entre border-tr-trait bg-tr-carte/60 hover:border-tr-jaune/60 hover:bg-tr-carte text-tr-encre h-full w-full rounded-2xl border px-3.5 py-3 text-left text-sm font-semibold backdrop-blur transition-colors"
+                      style={{ animationDelay: `${80 + i * 60}ms` }}
                     >
                       {s}
                     </button>
@@ -333,20 +356,17 @@ export function Guide() {
 
             {messages.map((m, i) =>
               m.role === "user" ? (
-                <div key={i} className="flex justify-end">
-                  <p className="bg-encre text-papier max-w-[85%] px-4 py-2.5 text-[15px] leading-relaxed whitespace-pre-wrap">
+                <div key={i} className="tr-entre flex justify-end">
+                  <p className="bg-tr-jaune max-w-[85%] rounded-3xl rounded-br-lg px-4 py-2.5 text-[15px] leading-relaxed font-semibold whitespace-pre-wrap text-black">
                     {m.content}
                   </p>
                 </div>
               ) : m.content || m.sources?.length ? (
-                <div
-                  key={i}
-                  className="bg-papier-2 max-w-[92%] px-4 py-3 text-[15px] leading-relaxed"
-                >
+                <BulleTripo key={i} anime={i === messages.length - 1 && enCours}>
                   <TexteGuide texte={m.content} />
                   {!!m.sources?.length && (
-                    <div className="border-trait mt-3 border-t pt-2">
-                      <p className="surtitre text-encre-3">
+                    <div className="mt-3">
+                      <p className="text-tr-encre-3 text-[0.7rem] font-bold tracking-wider uppercase">
                         {t({
                           fr: "Sources",
                           de: "Quellen",
@@ -355,14 +375,14 @@ export function Guide() {
                           es: "Fuentes",
                         })}
                       </p>
-                      <ul className="mt-1 space-y-1 text-xs">
+                      <ul className="mt-1.5 flex flex-wrap gap-1.5">
                         {m.sources.map((s) => (
-                          <li key={s.url} className="truncate">
+                          <li key={s.url} className="min-w-0">
                             <a
                               href={s.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-encre-2 underline underline-offset-2"
+                              className="border-tr-trait text-tr-encre-3 hover:text-tr-encre block max-w-[14rem] truncate rounded-full border px-2.5 py-1 text-xs no-underline"
                             >
                               {s.titre}
                             </a>
@@ -371,45 +391,51 @@ export function Guide() {
                       </ul>
                     </div>
                   )}
-                </div>
+                </BulleTripo>
               ) : null,
             )}
 
             {enCours && !messages[messages.length - 1]?.content && (
-              <p className="text-encre-3 flex items-center gap-2 text-sm">
-                {recherche ? (
-                  <>
-                    <Globe className="size-4 animate-pulse" aria-hidden />
-                    <span className="truncate">
+              <BulleTripo anime>
+                <span className="text-tr-encre-3 flex items-center gap-2 text-sm font-semibold">
+                  {recherche ? (
+                    <>
+                      <Globe className="text-tr-jaune size-4 flex-none animate-pulse" aria-hidden />
+                      <span className="truncate">
+                        {t({
+                          fr: "Je vérifie :",
+                          de: "Ich prüfe:",
+                          lb: "Ech kucken no:",
+                          en: "Checking:",
+                          es: "Lo compruebo:",
+                        })}{" "}
+                        « {recherche} »
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="tr-points" aria-hidden>
+                        <span />
+                        <span />
+                        <span />
+                      </span>
                       {t({
-                        fr: "Je vérifie :",
-                        de: "Ich prüfe:",
-                        lb: "Ech kucken no:",
-                        en: "Checking:",
-                        es: "Lo compruebo:",
-                      })}{" "}
-                      « {recherche} »
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <Loader2 className="size-4 animate-spin" aria-hidden />
-                    {t({
-                      fr: "Tripo réfléchit…",
-                      de: "Tripo überlegt…",
-                      lb: "Den Tripo iwwerleet…",
-                      en: "Tripo is thinking…",
-                      es: "Tripo está pensando…",
-                    })}
-                  </>
-                )}
-              </p>
+                        fr: "Tripo réfléchit…",
+                        de: "Tripo überlegt…",
+                        lb: "Den Tripo iwwerleet…",
+                        en: "Tripo is thinking…",
+                        es: "Tripo está pensando…",
+                      })}
+                    </>
+                  )}
+                </span>
+              </BulleTripo>
             )}
 
             {erreur && (
               <p
                 role="alert"
-                className="border-l-4 border-[var(--alerte)] bg-[var(--erreur-fond)] px-3 py-2 text-sm"
+                className="tr-entre border-tr-jaune/40 bg-tr-carte text-tr-encre rounded-2xl border px-4 py-2.5 text-sm"
               >
                 {erreur === "debit"
                   ? t({
@@ -435,9 +461,9 @@ export function Guide() {
               e.preventDefault()
               envoyer(saisie)
             }}
-            className="border-trait border-t px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+            className="relative z-10 px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
           >
-            <div className="border-trait focus-within:border-encre flex items-end gap-2 border bg-[var(--surface)] p-1.5">
+            <div className="tr-verre border-tr-trait focus-within:border-tr-jaune/50 flex items-end gap-1.5 rounded-[28px] border p-1.5 shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-colors">
               <label htmlFor="guide-saisie" className="sr-only">
                 {t({
                   fr: "Votre question",
@@ -467,7 +493,7 @@ export function Guide() {
                   en: "Ask your question…",
                   es: "Haga su pregunta…",
                 })}
-                className="placeholder:text-encre-3 max-h-32 min-h-10 flex-1 resize-none bg-transparent px-2 py-2 text-base outline-none"
+                className="text-tr-encre placeholder:text-tr-encre-3 max-h-32 min-h-11 flex-1 resize-none bg-transparent px-3 py-2.5 text-base outline-none"
               />
               <button
                 type="submit"
@@ -479,16 +505,16 @@ export function Guide() {
                   en: "Send",
                   es: "Enviar",
                 })}
-                className="bg-accent text-sur-accent grid size-10 flex-none place-items-center rounded-full disabled:opacity-40"
+                className="bg-tr-jaune grid size-11 flex-none place-items-center rounded-full text-black transition-transform active:scale-95 disabled:opacity-50"
               >
                 {enCours ? (
                   <Loader2 className="size-5 animate-spin" aria-hidden />
                 ) : (
-                  <ArrowUp className="size-5" aria-hidden />
+                  <ArrowUp className="size-5" strokeWidth={2.6} aria-hidden />
                 )}
               </button>
             </div>
-            <p className="text-encre-3 mt-2 text-[11px] leading-snug">
+            <p className="text-tr-encre-3 mt-2 text-center text-[11px] leading-snug">
               {t({
                 fr: "Réponses générées par une IA à partir de sources publiques : vérifiez horaires et tarifs avant de partir.",
                 de: "Von einer KI aus öffentlichen Quellen erstellte Antworten: Prüfen Sie Zeiten und Preise vor der Abfahrt.",
@@ -498,7 +524,7 @@ export function Guide() {
               })}{" "}
               <Link
                 href="/politique-confidentialite#guide"
-                className="underline underline-offset-2"
+                className="hover:text-tr-encre underline underline-offset-2"
               >
                 {t({
                   fr: "Confidentialité",
