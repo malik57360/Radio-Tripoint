@@ -65,6 +65,9 @@ const CONSIGNE_ORALE =
 const CONSIGNE_PHOTO =
   "\n\nPHOTOS : l'utilisateur peut t'envoyer une photo. Décris ce que tu vois vraiment et réponds à sa question. Si tu n'es pas sûr de ce que montre la photo, dis-le. N'identifie jamais une personne à partir de son visage."
 
+const CONSIGNE_SECOURS =
+  "\n\nRÉPONSE IMMÉDIATE : la recherche web n'a pas abouti à temps pour ce message. Réponds tout de suite avec ta mémoire et tes connaissances sûres, sans dire que tu vas chercher. Si un point demande une vérification récente, dis-le simplement et propose de réessayer un peu plus tard."
+
 type Message = { role: "user" | "assistant"; content: string }
 
 /** Ce qui nous intéresse dans les évènements SSE de l'API Messages. */
@@ -143,7 +146,63 @@ export async function POST(request: Request) {
     .join("\n")
   const { fixe, variable } = await consignesGuide(l, question)
 
-  const appeler = (conversation: unknown[]) =>
+  // Délais : la fonction a 60 s. Sans un mot de réponse au bout de 35 s
+  // (recherches trop longues), on coupe et Tripo répond de mémoire, sans
+  // recherche, plutôt que de laisser la personne devant une erreur.
+  const debutRequete = Date.now()
+  const principal = new AbortController()
+  let texteEnvoye = false
+  const delaiRecherche = setTimeout(() => {
+    if (!texteEnvoye) principal.abort()
+  }, 35_000)
+  const delaiTotal = setTimeout(() => principal.abort(), 55_000)
+  const finDesDelais = () => {
+    clearTimeout(delaiRecherche)
+    clearTimeout(delaiTotal)
+  }
+
+  const corpsRequete = (conversation: unknown[], avecRecherche: boolean) => ({
+    model: cible.modele,
+    // Sonnet 5.5 réfléchit toujours avant de répondre, et cette réflexion
+    // compte dans max_tokens : à 1 500, réflexion + recherche web
+    // épuisaient le plafond avant le premier mot (arrêt max_tokens,
+    // Tripo « indisponible »). Effort bas : c'est une conversation.
+    max_tokens: 8000,
+    output_config: { effort: "low" },
+    stream: true,
+    system: [
+      { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
+      {
+        type: "text",
+        text:
+          variable +
+          CONSIGNE_PHOTO +
+          (oral ? CONSIGNE_ORALE : "") +
+          (avecRecherche ? "" : CONSIGNE_SECOURS),
+      },
+    ],
+    ...(avecRecherche
+      ? {
+          tools: [
+            {
+              type: "web_search_20250305",
+              name: "web_search",
+              max_uses: 3,
+              user_location: {
+                type: "approximate",
+                city: "Sierck-les-Bains",
+                region: "Grand Est",
+                country: "FR",
+                timezone: "Europe/Paris",
+              },
+            },
+          ],
+        }
+      : {}),
+    messages: conversation,
+  })
+
+  const appeler = (conversation: unknown[], avecRecherche = true, signal = principal.signal) =>
     fetch(cible.url, {
       method: "POST",
       headers: {
@@ -151,36 +210,8 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         "anthropic-version": "2023-06-01",
       },
-      body: JSON.stringify({
-        model: cible.modele,
-        // Sonnet 5.5 réfléchit toujours avant de répondre, et cette réflexion
-        // compte dans max_tokens : à 1 500, réflexion + recherche web
-        // épuisaient le plafond avant le premier mot (arrêt max_tokens,
-        // Tripo « indisponible »). Effort bas : c'est une conversation.
-        max_tokens: 8000,
-        output_config: { effort: "low" },
-        stream: true,
-        system: [
-          { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
-          { type: "text", text: variable + CONSIGNE_PHOTO + (oral ? CONSIGNE_ORALE : "") },
-        ],
-        tools: [
-          {
-            type: "web_search_20250305",
-            name: "web_search",
-            max_uses: 5,
-            user_location: {
-              type: "approximate",
-              city: "Sierck-les-Bains",
-              region: "Grand Est",
-              country: "FR",
-              timezone: "Europe/Paris",
-            },
-          },
-        ],
-        messages: conversation,
-      }),
-      signal: AbortSignal.timeout(55_000),
+      body: JSON.stringify(corpsRequete(conversation, avecRecherche)),
+      signal,
     }).catch(() => null)
 
   // La photo accompagne le dernier message, et lui seul (l'historique n'en garde pas).
@@ -200,6 +231,7 @@ export async function POST(request: Request) {
 
   const premier = await appeler(conversationInitiale)
   if (!premier || !premier.ok || !premier.body) {
+    finDesDelais()
     // Message d'erreur de la passerelle seulement (jamais la conversation).
     const detail = premier ? (await premier.text().catch(() => "")).slice(0, 300) : ""
     console.error(`[guide] passerelle indisponible (${premier?.status ?? "réseau"}) ${detail}`)
@@ -210,103 +242,140 @@ export async function POST(request: Request) {
   const decodeur = new TextDecoder()
   const vues = new Set<string>()
   let lecteurCourant: ReadableStreamDefaultReader<Uint8Array> | null = null
+  let annule = false
 
   const flux = new ReadableStream<Uint8Array>({
     async start(ctrl) {
-      const envoyer = (o: object) => ctrl.enqueue(encodeur.encode(JSON.stringify(o) + "\n"))
+      const envoyer = (o: { t: string } & Record<string, unknown>) => {
+        if (o.t === "texte") texteEnvoye = true
+        ctrl.enqueue(encodeur.encode(JSON.stringify(o) + "\n"))
+      }
+
+      /** Lit une réponse en flux : relaie le texte, reconstitue les blocs. */
+      const lire = async (reponse: Response) => {
+        const lecteur = reponse.body!.getReader()
+        lecteurCourant = lecteur
+        // Blocs de la réponse, reconstitués pour une éventuelle reprise.
+        const blocs: Record<string, unknown>[] = []
+        const entreesOutil = new Map<number, string>()
+        let arret = ""
+        let erreur = ""
+        let tampon = ""
+        for (;;) {
+          const { done, value } = await lecteur.read()
+          if (done) break
+          tampon += decodeur.decode(value, { stream: true })
+          let i: number
+          while ((i = tampon.indexOf("\n\n")) >= 0) {
+            const brut = tampon.slice(0, i)
+            tampon = tampon.slice(i + 2)
+            const ligne = brut.split("\n").find((x) => x.startsWith("data:"))
+            if (!ligne) continue
+            let ev: EvenementSSE
+            try {
+              ev = JSON.parse(ligne.slice(5))
+            } catch {
+              continue
+            }
+            const n = ev.index ?? -1
+            if (ev.type === "content_block_start" && ev.content_block) {
+              blocs[n] = structuredClone(ev.content_block)
+              if (ev.content_block.type === "server_tool_use") entreesOutil.set(n, "")
+            } else if (ev.type === "content_block_delta") {
+              const d = ev.delta ?? {}
+              const b = blocs[n]
+              if (d.type === "text_delta" && d.text) {
+                if (b) b.text = String(b.text ?? "") + d.text
+                envoyer({ t: "texte", v: d.text })
+              } else if (d.type === "thinking_delta" && b) {
+                // Réflexion et signature gardées telles quelles : la reprise
+                // après une pause de la recherche web doit les renvoyer.
+                b.thinking = String(b.thinking ?? "") + (d.thinking ?? "")
+              } else if (d.type === "signature_delta" && b) {
+                b.signature = d.signature ?? ""
+              } else if (d.type === "input_json_delta" && entreesOutil.has(n)) {
+                entreesOutil.set(n, (entreesOutil.get(n) ?? "") + (d.partial_json ?? ""))
+              } else if (d.type === "citations_delta" && d.citation) {
+                if (b) b.citations = [...((b.citations as unknown[]) ?? []), d.citation]
+                const { url, title } = d.citation
+                if (url && !vues.has(url)) {
+                  vues.add(url)
+                  envoyer({ t: "source", url, titre: String(title ?? url).slice(0, 140) })
+                }
+              }
+            } else if (ev.type === "content_block_stop" && entreesOutil.has(n)) {
+              try {
+                const entree = JSON.parse(entreesOutil.get(n) || "{}")
+                if (blocs[n]) blocs[n].input = entree
+                if (entree.query) envoyer({ t: "recherche", v: String(entree.query).slice(0, 120) })
+              } catch {
+                /* entrée incomplète : on n'affiche rien */
+              }
+              entreesOutil.delete(n)
+            } else if (ev.type === "message_delta") {
+              arret = ev.delta?.stop_reason ?? arret
+            } else if (ev.type === "error") {
+              erreur = ev.error?.type ?? "flux"
+            }
+          }
+        }
+        return { blocs, arret, erreur }
+      }
+
       let conversation: unknown[] = conversationInitiale
       let reponse: Response | null = premier
+      let probleme = ""
       try {
         // La recherche web peut « mettre en pause » le tour (stop_reason
         // pause_turn) : on renvoie alors le début de réponse pour qu'il
         // reprenne, deux fois au plus.
         for (let tour = 0; tour < 3 && reponse?.body; tour++) {
-          const lecteur = reponse.body.getReader()
-          lecteurCourant = lecteur
-          // Blocs de la réponse, reconstitués pour une éventuelle reprise.
-          const blocs: Record<string, unknown>[] = []
-          const entreesOutil = new Map<number, string>()
-          let arret = ""
-          let tampon = ""
-          for (;;) {
-            const { done, value } = await lecteur.read()
-            if (done) break
-            tampon += decodeur.decode(value, { stream: true })
-            let i: number
-            while ((i = tampon.indexOf("\n\n")) >= 0) {
-              const brut = tampon.slice(0, i)
-              tampon = tampon.slice(i + 2)
-              const ligne = brut.split("\n").find((x) => x.startsWith("data:"))
-              if (!ligne) continue
-              let ev: EvenementSSE
-              try {
-                ev = JSON.parse(ligne.slice(5))
-              } catch {
-                continue
-              }
-              const n = ev.index ?? -1
-              if (ev.type === "content_block_start" && ev.content_block) {
-                blocs[n] = structuredClone(ev.content_block)
-                if (ev.content_block.type === "server_tool_use") entreesOutil.set(n, "")
-              } else if (ev.type === "content_block_delta") {
-                const d = ev.delta ?? {}
-                const b = blocs[n]
-                if (d.type === "text_delta" && d.text) {
-                  if (b) b.text = String(b.text ?? "") + d.text
-                  envoyer({ t: "texte", v: d.text })
-                } else if (d.type === "thinking_delta" && b) {
-                  // Réflexion et signature gardées telles quelles : la reprise
-                  // après une pause de la recherche web doit les renvoyer.
-                  b.thinking = String(b.thinking ?? "") + (d.thinking ?? "")
-                } else if (d.type === "signature_delta" && b) {
-                  b.signature = d.signature ?? ""
-                } else if (d.type === "input_json_delta" && entreesOutil.has(n)) {
-                  entreesOutil.set(n, (entreesOutil.get(n) ?? "") + (d.partial_json ?? ""))
-                } else if (d.type === "citations_delta" && d.citation) {
-                  if (b) b.citations = [...((b.citations as unknown[]) ?? []), d.citation]
-                  const { url, title } = d.citation
-                  if (url && !vues.has(url)) {
-                    vues.add(url)
-                    envoyer({ t: "source", url, titre: String(title ?? url).slice(0, 140) })
-                  }
-                }
-              } else if (ev.type === "content_block_stop" && entreesOutil.has(n)) {
-                try {
-                  const entree = JSON.parse(entreesOutil.get(n) || "{}")
-                  if (blocs[n]) blocs[n].input = entree
-                  if (entree.query)
-                    envoyer({ t: "recherche", v: String(entree.query).slice(0, 120) })
-                } catch {
-                  /* entrée incomplète : on n'affiche rien */
-                }
-                entreesOutil.delete(n)
-              } else if (ev.type === "message_delta") {
-                arret = ev.delta?.stop_reason ?? arret
-              } else if (ev.type === "error") {
-                console.error("[guide] erreur de flux :", ev.error?.type)
-                envoyer({ t: "erreur", v: "flux" })
-              }
-            }
+          const { blocs, arret, erreur } = await lire(reponse)
+          if (erreur) {
+            probleme = `erreur de flux ${erreur}`
+            break
           }
           if (arret !== "pause_turn") {
-            if (arret && arret !== "end_turn") console.error(`[guide] arrêt : ${arret}`)
+            if (arret && arret !== "end_turn") probleme = `arrêt ${arret}`
             break
           }
           conversation = [...conversation, { role: "assistant", content: blocs.filter(Boolean) }]
           reponse = await appeler(conversation)
-          if (!reponse?.ok) {
-            console.error(`[guide] reprise impossible (${reponse?.status ?? "réseau"})`)
+          if (!reponse?.ok || !reponse.body) {
+            probleme = `reprise impossible (${reponse?.status ?? "réseau"})`
             break
           }
         }
-        envoyer({ t: "fin" })
       } catch {
-        envoyer({ t: "erreur", v: "coupure" })
-      } finally {
-        ctrl.close()
+        probleme = principal.signal.aborted
+          ? `délai dépassé (${Math.round((Date.now() - debutRequete) / 1000)} s)`
+          : "coupure"
       }
+      finDesDelais()
+      if (probleme)
+        console.error(`[guide] ${probleme}${texteEnvoye ? "" : " : réponse sans recherche"}`)
+
+      if (annule) return
+      // Rien n'est encore parti : Tripo répond de mémoire, sans recherche.
+      if (!texteEnvoye) {
+        const reste = Math.max(8_000, 58_000 - (Date.now() - debutRequete))
+        try {
+          const r = await appeler(conversationInitiale, false, AbortSignal.timeout(reste))
+          if (r?.ok && r.body) await lire(r)
+          else console.error(`[guide] réponse sans recherche impossible (${r?.status ?? "réseau"})`)
+        } catch {
+          console.error("[guide] réponse sans recherche coupée")
+        }
+      }
+      if (annule) return
+      if (!texteEnvoye) envoyer({ t: "erreur", v: "indisponible" })
+      envoyer({ t: "fin" })
+      ctrl.close()
     },
     cancel() {
+      annule = true
+      finDesDelais()
+      principal.abort()
       lecteurCourant?.cancel().catch(() => {})
     },
   })
