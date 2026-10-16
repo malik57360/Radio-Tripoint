@@ -40,7 +40,8 @@ function acces(request: Request) {
     entetes: { Authorization: `Bearer ${jeton}` } as Record<string, string>,
   }
 }
-const MAX_MESSAGES = 16
+/** Mémoire de la conversation : les 24 derniers messages (12 échanges). */
+const MAX_MESSAGES = 24
 const MAX_CARACTERES = 1500
 /** Photo jointe au dernier message (heytripo.fr) : réduite dans le navigateur, ≈ 2 Mo max. */
 const MAX_IMAGE_B64 = 2_800_000
@@ -75,6 +76,8 @@ type EvenementSSE = {
     type?: string
     stop_reason?: string
     text?: string
+    thinking?: string
+    signature?: string
     partial_json?: string
     citation?: { url?: string; title?: string }
   }
@@ -85,9 +88,10 @@ const json = (corps: object, status = 200) =>
   Response.json(corps, { status, headers: { "Cache-Control": "no-store" } })
 
 function valider(brut: unknown): Message[] | null {
-  if (!Array.isArray(brut) || brut.length === 0 || brut.length > MAX_MESSAGES * 2) return null
+  if (!Array.isArray(brut) || brut.length === 0) return null
+  // Une longue discussion n'est pas une erreur : on garde la fin.
   const liste: Message[] = []
-  for (const m of brut) {
+  for (const m of brut.slice(-MAX_MESSAGES * 2)) {
     if (!m || typeof m !== "object") return null
     const { role, content } = m as Record<string, unknown>
     if ((role !== "user" && role !== "assistant") || typeof content !== "string") return null
@@ -95,10 +99,12 @@ function valider(brut: unknown): Message[] | null {
     if (!texte) continue
     liste.push({ role, content: texte })
   }
-  // L'API exige d'ouvrir et de finir sur l'utilisateur.
-  while (liste.length && liste[0].role !== "user") liste.shift()
-  if (!liste.length || liste[liste.length - 1].role !== "user") return null
-  return liste.slice(-MAX_MESSAGES)
+  // L'API exige d'ouvrir et de finir sur l'utilisateur : on coupe d'abord,
+  // puis on retire une éventuelle réponse de Tripo restée en tête.
+  const fin = liste.slice(-MAX_MESSAGES)
+  while (fin.length && fin[0].role !== "user") fin.shift()
+  if (!fin.length || fin[fin.length - 1].role !== "user") return null
+  return fin
 }
 
 export async function POST(request: Request) {
@@ -128,7 +134,14 @@ export async function POST(request: Request) {
 
   // Partie fixe mise en cache chez Anthropic ; la partie variable (date,
   // agenda, langue) la suit.
-  const { fixe, variable } = await consignesGuide(l)
+  // La question (et la précédente, pour « et lui ? ») sert à retrouver les
+  // articles du site qui en parlent.
+  const question = messages
+    .filter((m) => m.role === "user")
+    .slice(-2)
+    .map((m) => m.content)
+    .join("\n")
+  const { fixe, variable } = await consignesGuide(l, question)
 
   const appeler = (conversation: unknown[]) =>
     fetch(cible.url, {
@@ -155,7 +168,7 @@ export async function POST(request: Request) {
           {
             type: "web_search_20250305",
             name: "web_search",
-            max_uses: 4,
+            max_uses: 5,
             user_location: {
               type: "approximate",
               city: "Sierck-les-Bains",
@@ -241,6 +254,12 @@ export async function POST(request: Request) {
                 if (d.type === "text_delta" && d.text) {
                   if (b) b.text = String(b.text ?? "") + d.text
                   envoyer({ t: "texte", v: d.text })
+                } else if (d.type === "thinking_delta" && b) {
+                  // Réflexion et signature gardées telles quelles : la reprise
+                  // après une pause de la recherche web doit les renvoyer.
+                  b.thinking = String(b.thinking ?? "") + (d.thinking ?? "")
+                } else if (d.type === "signature_delta" && b) {
+                  b.signature = d.signature ?? ""
                 } else if (d.type === "input_json_delta" && entreesOutil.has(n)) {
                   entreesOutil.set(n, (entreesOutil.get(n) ?? "") + (d.partial_json ?? ""))
                 } else if (d.type === "citations_delta" && d.citation) {
