@@ -62,6 +62,9 @@ function validerImage(brut: unknown): Image | null | false {
 /** Consignes ajoutées selon l'usage : réponse lue à voix haute, photo jointe. */
 const CONSIGNE_ORALE =
   "\n\nMODE VOCAL : ta réponse sera lue à voix haute. Réponds en 2 à 4 phrases courtes et naturelles, sans liste, sans titre, sans Markdown, sans URL écrite en toutes lettres (dis plutôt « sur le site de Radio Tripoint »)."
+/** Appel vocal (heytripo.fr) : vraie conversation au téléphone, réponses du tac au tac. */
+const CONSIGNE_APPEL =
+  "\n\nAPPEL VOCAL (prioritaire sur tout le reste) : c'est une vraie conversation à voix haute, comme au téléphone avec un ami. Réponds du tac au tac et très court : une seule phrase la plupart du temps, deux au maximum, trois seulement si on te demande une information précise. Une salutation ou du bavardage appelle une réponse courte qui relance, et rien d'autre : « Salut, ça va ? » → « Ça va super, et toi ? Tu fais quoi de beau ? ». Ne présente jamais la radio, l'agenda ou la météo si on ne te les demande pas. Pas de liste, pas de titre, pas de Markdown, pas d'adresse web, pas d'émojis. Écris les nombres et les heures comme on les dit. Tutoie si l'utilisateur te tutoie. Ce que dit la personne vient d'une reconnaissance vocale, sans ponctuation et parfois avec des mots mal reconnus, surtout les noms propres (« tripot » pour Tripo, « sierque » pour Sierck…) : comprends le sens le plus probable sans le faire remarquer ; si c'est vraiment incompréhensible, demande simplement de répéter. Ne fais une recherche web que si c'est indispensable."
 const CONSIGNE_PHOTO =
   "\n\nPHOTOS : l'utilisateur peut t'envoyer une photo. Décris ce que tu vois vraiment et réponds à sa question. Si tu n'es pas sûr de ce que montre la photo, dis-le. N'identifie jamais une personne à partir de son visage."
 
@@ -111,7 +114,13 @@ function valider(brut: unknown): Message[] | null {
 }
 
 export async function POST(request: Request) {
-  let corps: { messages?: unknown; langue?: unknown; image?: unknown; oral?: unknown }
+  let corps: {
+    messages?: unknown
+    langue?: unknown
+    image?: unknown
+    oral?: unknown
+    appel?: unknown
+  }
   try {
     corps = await request.json()
   } catch {
@@ -123,6 +132,7 @@ export async function POST(request: Request) {
   const image = validerImage(corps.image)
   if (image === false) return json({ erreur: "image" }, 400)
   const oral = corps.oral === true
+  const appel = corps.appel === true
 
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`guide:${ip}`).digest("hex").slice(0, 24)
@@ -152,15 +162,23 @@ export async function POST(request: Request) {
   const debutRequete = Date.now()
   const principal = new AbortController()
   let texteEnvoye = false
-  const delaiRecherche = setTimeout(() => {
-    if (!texteEnvoye) principal.abort()
-  }, 35_000)
+  // En appel vocal, la personne attend au bout du fil : 15 s au plus.
+  const delaiRecherche = setTimeout(
+    () => {
+      if (!texteEnvoye) principal.abort()
+    },
+    appel ? 15_000 : 35_000,
+  )
   const delaiTotal = setTimeout(() => principal.abort(), 55_000)
   const finDesDelais = () => {
     clearTimeout(delaiRecherche)
     clearTimeout(delaiTotal)
   }
 
+  // Appel vocal : pas de réflexion avant de répondre (« between_tools »),
+  // réponse courte, une recherche au plus. Si l'API refuse ce réglage (400),
+  // on reprend le normal.
+  let rapide = appel
   const corpsRequete = (conversation: unknown[], avecRecherche: boolean) => ({
     model: cible.modele,
     // Sonnet 5.5 réfléchit toujours avant de répondre, et cette réflexion
@@ -169,6 +187,7 @@ export async function POST(request: Request) {
     // Tripo « indisponible »). Effort bas : c'est une conversation.
     max_tokens: 8000,
     output_config: { effort: "low" },
+    ...(rapide ? { thinking: { type: "between_tools" } } : {}),
     stream: true,
     system: [
       { type: "text", text: fixe, cache_control: { type: "ephemeral" } },
@@ -177,7 +196,7 @@ export async function POST(request: Request) {
         text:
           variable +
           CONSIGNE_PHOTO +
-          (oral ? CONSIGNE_ORALE : "") +
+          (appel ? CONSIGNE_APPEL : oral ? CONSIGNE_ORALE : "") +
           (avecRecherche ? "" : CONSIGNE_SECOURS),
       },
     ],
@@ -187,7 +206,7 @@ export async function POST(request: Request) {
             {
               type: "web_search_20250305",
               name: "web_search",
-              max_uses: 3,
+              max_uses: rapide ? 1 : 3,
               user_location: {
                 type: "approximate",
                 city: "Sierck-les-Bains",
@@ -229,7 +248,13 @@ export async function POST(request: Request) {
       ]
     : messages
 
-  const premier = await appeler(conversationInitiale)
+  let premier = await appeler(conversationInitiale)
+  if (rapide && premier?.status === 400) {
+    rapide = false
+    const detail = (await premier.text().catch(() => "")).slice(0, 300)
+    console.error(`[guide] réglage rapide refusé, réglage normal : ${detail}`)
+    premier = await appeler(conversationInitiale)
+  }
   if (!premier || !premier.ok || !premier.body) {
     finDesDelais()
     // Message d'erreur de la passerelle seulement (jamais la conversation).

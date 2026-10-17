@@ -1,10 +1,23 @@
 "use client"
 
-import { ArrowUp, Camera, Mic, Plus, Radio, Square, Volume2, VolumeX, X } from "lucide-react"
+import {
+  ArrowUp,
+  Camera,
+  Mic,
+  Phone,
+  PhoneOff,
+  Plus,
+  Radio,
+  Square,
+  Volume2,
+  VolumeX,
+  X,
+} from "lucide-react"
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { Mascotte } from "@/components/guide/Mascotte"
 import { estLangue, type Langue } from "@/lib/i18n/langues"
 import { cn } from "@/lib/utils/cn"
+import { useAppel, type EtatAppel } from "./appel"
 import { ECOUTE, LANGUES, TEXTES } from "./textes"
 
 /*
@@ -152,6 +165,138 @@ function GrandTripo({
   )
 }
 
+/* ─── Écran d'appel ─────────────────────────────────────────────────── */
+
+const LIBELLES_APPEL: Record<EtatAppel, string> = {
+  repos: "",
+  connexion: "Tripo décroche…",
+  ecoute: "Je t'écoute…",
+  parole: "Je t'écoute…",
+  comprend: "…",
+  reflechit: "Je réfléchis…",
+  parle: "",
+  erreur: "Appel impossible",
+}
+
+function EcranAppel({
+  etat,
+  niveau,
+  entendu,
+  reponse,
+  erreur,
+  aToucher,
+  onToucher,
+  onCouper,
+  onRaccrocher,
+  onReessayer,
+}: {
+  etat: EtatAppel
+  niveau: number
+  entendu: string
+  reponse: string
+  erreur: string | null
+  aToucher: boolean
+  onToucher: () => void
+  onCouper: () => void
+  onRaccrocher: () => void
+  onReessayer: () => void
+}) {
+  const ecoute = etat === "ecoute" || etat === "parole"
+  const peutCouper = etat === "parle" || etat === "reflechit" || etat === "comprend"
+  return (
+    <div
+      role="dialog"
+      aria-label="Appel avec Tripo"
+      className="bg-fond entre fixed inset-0 z-50 flex flex-col items-center px-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))] text-center"
+    >
+      <p className="text-encre-3 text-sm font-semibold tracking-wide">Appel avec Tripo</p>
+      <div className="flex w-full flex-1 flex-col items-center justify-center">
+        <button
+          type="button"
+          onClick={peutCouper ? onCouper : undefined}
+          aria-label={peutCouper ? "Couper la parole à Tripo" : undefined}
+          className="relative"
+        >
+          {/* Anneau : il grossit avec ta voix quand Tripo t'écoute */}
+          <span
+            aria-hidden
+            className={cn(
+              "absolute inset-[6%] rounded-full border-4 transition-[transform,opacity] duration-100",
+              ecoute ? "border-jaune opacity-100" : "border-trait opacity-40",
+            )}
+            style={{ transform: `scale(${1 + (ecoute ? niveau * 0.18 : 0)})` }}
+          />
+          <GrandTripo
+            className="size-60 sm:size-72"
+            etat={etat === "parle" ? "parle" : ecoute ? "ecoute" : "repos"}
+          />
+        </button>
+        <p className="titre-tripo text-jaune mt-6 min-h-[2.5rem] text-4xl">
+          {etat === "comprend" ? (
+            <span className="points" aria-label="Tripo écoute ce que tu as dit">
+              <span />
+              <span />
+              <span />
+            </span>
+          ) : (
+            LIBELLES_APPEL[etat]
+          )}
+        </p>
+        {erreur ? (
+          <p className="text-encre mt-4 max-w-md text-lg font-semibold">{erreur}</p>
+        ) : (
+          <div className="mt-4 min-h-[6rem] max-w-xl space-y-3">
+            {entendu && <p className="text-encre-3 text-base">« {entendu} »</p>}
+            {reponse && etat !== "connexion" && (
+              <p className="text-encre text-xl leading-snug font-semibold">{reponse}</p>
+            )}
+          </div>
+        )}
+      </div>
+      <div className="flex w-full max-w-sm flex-col items-center gap-3">
+        {aToucher && (
+          <button
+            type="button"
+            onClick={onToucher}
+            className="bg-jaune w-full rounded-full px-6 py-4 text-lg font-extrabold text-black"
+          >
+            Toucher pour continuer
+          </button>
+        )}
+        {erreur && (
+          <button
+            type="button"
+            onClick={onReessayer}
+            className="bg-jaune w-full rounded-full px-6 py-4 text-lg font-extrabold text-black"
+          >
+            Réessayer
+          </button>
+        )}
+        {peutCouper && (
+          <button
+            type="button"
+            onClick={onCouper}
+            className="border-trait text-encre w-full rounded-full border px-6 py-3 font-bold"
+          >
+            Couper la parole
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={onRaccrocher}
+          className="bg-encre flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-lg font-extrabold text-black"
+        >
+          <PhoneOff className="size-5" strokeWidth={2.4} />
+          Raccrocher
+        </button>
+        <p className="text-encre-3 text-xs">
+          Parle quand l’anneau est jaune. Ta voix n’est pas enregistrée.
+        </p>
+      </div>
+    </div>
+  )
+}
+
 /* ─── Types minimaux de la reconnaissance vocale (absents de lib.dom) ─── */
 type Reco = {
   lang: string
@@ -212,6 +357,18 @@ export function AppTripo() {
   const enFile = useRef(0)
   const sonRef = useRef(son)
   sonRef.current = son
+  const messagesRef = useRef(messages)
+  messagesRef.current = messages
+
+  /* ─── Appel vocal (français) : voir ./appel.ts ─── */
+  const appelVocal = useAppel({
+    historique: () =>
+      messagesRef.current
+        .filter((m) => m.content.trim())
+        .map(({ role, content }) => ({ role, content })),
+    ajouter: (l) => setMessages((liste) => [...liste, l]),
+  })
+  const enAppel = appelVocal.etat !== "repos" || Boolean(appelVocal.erreur)
 
   useEffect(() => {
     document.documentElement.lang = langue
@@ -571,6 +728,20 @@ export function AppTripo() {
               </option>
             ))}
           </select>
+          {langue === "fr" && (
+            <button
+              onClick={() => {
+                taire()
+                annul.current?.abort()
+                appelVocal.demarrer()
+              }}
+              aria-label="Appeler Tripo"
+              title="Appeler Tripo"
+              className="bg-jaune grid size-10 place-items-center rounded-full text-black transition-transform active:scale-95"
+            >
+              <Phone className="size-4.5" strokeWidth={2.4} />
+            </button>
+          )}
           <button
             onClick={() => {
               if (son) taire()
@@ -630,6 +801,19 @@ export function AppTripo() {
             >
               {t.intro}
             </p>
+            {langue === "fr" && (
+              <button
+                onClick={() => {
+                  taire()
+                  appelVocal.demarrer()
+                }}
+                className="entre bg-jaune mt-6 flex items-center gap-2.5 rounded-full px-6 py-3.5 text-base font-extrabold text-black shadow-[0_12px_40px_rgba(249,184,0,0.35)] transition-transform active:scale-95"
+                style={{ animationDelay: "430ms" }}
+              >
+                <Phone className="size-5" strokeWidth={2.4} />
+                Appeler Tripo
+              </button>
+            )}
             <div className="mt-7 grid w-full max-w-xl grid-cols-2 gap-2 sm:gap-2.5">
               {t.suggestions.map((s, i) => (
                 <button
@@ -835,6 +1019,22 @@ export function AppTripo() {
           </p>
         </div>
       </div>
+
+      {/* Appel vocal avec Tripo */}
+      {enAppel && (
+        <EcranAppel
+          etat={appelVocal.etat}
+          niveau={appelVocal.niveau}
+          entendu={appelVocal.entendu}
+          reponse={appelVocal.reponse}
+          erreur={appelVocal.erreur}
+          aToucher={appelVocal.aToucher}
+          onToucher={appelVocal.toucher}
+          onCouper={appelVocal.couper}
+          onRaccrocher={appelVocal.raccrocher}
+          onReessayer={appelVocal.demarrer}
+        />
+      )}
 
       {/* Écoute : Tripo tend l'oreille */}
       {ecoute && (
