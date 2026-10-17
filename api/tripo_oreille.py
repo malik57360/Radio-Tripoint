@@ -6,13 +6,20 @@ Modèle : Zipformer français de sherpa-onnx (k2-fsa, licence Apache 2.0,
 appris sur Common Voice), en int8. Il reconnaît une phrase de 5 s en moins
 d'une seconde, même sur un seul cœur.
 
-POST corps = PCM 16 bits, mono, 16 kHz (20 s au plus) -> {"texte": "..."}
-GET        -> réveil : charge le modèle d'avance (appelé à l'ouverture d'un appel).
+POST {"pcm": "<base64>"} : PCM 16 bits, mono, 16 kHz (20 s au plus) -> {"texte": "..."}
+     (le son en base64 dans du JSON : du texte passe partout, sans souci
+     d'encodage binaire entre la plateforme et la fonction ; le corps brut
+     application/octet-stream reste accepté)
+GET  -> réveil : charge le modèle d'avance (appelé à l'ouverture d'un appel).
+En cas d'échec, la réponse donne le type d'erreur (jamais le son ni le
+texte) : l'écran d'appel l'affiche en petit pour qu'on sache quoi réparer.
 Rien n'est enregistré : le son n'existe qu'en mémoire, le temps de la requête.
 """
+import base64
 import json
 import os
 import shutil
+import threading
 import time
 from http.server import BaseHTTPRequestHandler
 
@@ -34,33 +41,48 @@ ORIGINES = (
 )
 
 _reco = None
+# Le réveil (GET) et la première phrase (POST) peuvent arriver ensemble sur la
+# même instance : un seul chargement à la fois, l'autre attend.
+_verrou = threading.Lock()
 
 
 def _encodeur() -> str:
-    if not os.path.exists(ENCODEUR):
-        provisoire = f"{ENCODEUR}.{os.getpid()}"
-        with open(provisoire, "wb") as sortie:
-            for i in (0, 1):
-                with open(os.path.join(ICI, f"encodeur.int8.onnx.{i}"), "rb") as morceau:
-                    shutil.copyfileobj(morceau, sortie, 1 << 20)
-        os.replace(provisoire, ENCODEUR)
+    morceaux = [os.path.join(ICI, f"encodeur.int8.onnx.{i}") for i in (0, 1)]
+    attendu = sum(os.path.getsize(m) for m in morceaux)
+    # Un fichier incomplet (instance coupée en pleine copie) est refait.
+    if os.path.exists(ENCODEUR) and os.path.getsize(ENCODEUR) == attendu:
+        return ENCODEUR
+    provisoire = f"{ENCODEUR}.{os.getpid()}.{threading.get_ident()}"
+    with open(provisoire, "wb") as sortie:
+        for chemin in morceaux:
+            with open(chemin, "rb") as morceau:
+                shutil.copyfileobj(morceau, sortie, 1 << 20)
+    if os.path.getsize(provisoire) != attendu:
+        os.remove(provisoire)
+        raise OSError("encodeur incomplet")
+    os.replace(provisoire, ENCODEUR)
     return ENCODEUR
 
 
 def reco():
     global _reco
-    if _reco is None:
-        _reco = sherpa_onnx.OnlineRecognizer.from_transducer(
-            tokens=os.path.join(ICI, "jetons.txt"),
-            encoder=_encodeur(),
-            decoder=os.path.join(ICI, "decodeur.int8.onnx"),
-            joiner=os.path.join(ICI, "joncteur.int8.onnx"),
-            num_threads=2,
-            sample_rate=TAUX,
-            feature_dim=80,
-            decoding_method="greedy_search",
-        )
+    with _verrou:
+        if _reco is None:
+            _reco = _charger()
     return _reco
+
+
+def _charger():
+    return sherpa_onnx.OnlineRecognizer.from_transducer(
+        tokens=os.path.join(ICI, "jetons.txt"),
+        encoder=_encodeur(),
+        decoder=os.path.join(ICI, "decodeur.int8.onnx"),
+        joiner=os.path.join(ICI, "joncteur.int8.onnx"),
+        num_threads=2,
+        sample_rate=TAUX,
+        feature_dim=80,
+        decoding_method="greedy_search",
+    )
 
 
 def mise_en_forme(brut: str) -> str:
@@ -80,6 +102,12 @@ def transcrire(pcm: bytes) -> str:
     while r.is_ready(flux):
         r.decode_stream(flux)
     return mise_en_forme(r.get_result(flux))
+
+
+def lire_pcm(corps: bytes, type_contenu: str) -> bytes:
+    if "json" in type_contenu:
+        return base64.b64decode(json.loads(corps)["pcm"], validate=True)
+    return corps
 
 
 class handler(BaseHTTPRequestHandler):
@@ -103,8 +131,8 @@ class handler(BaseHTTPRequestHandler):
             reco()
             return self._repondre(200, {"ok": True, "ms": int((time.time() - debut) * 1000)})
         except Exception as e:
-            print(f"[tripo_oreille] réveil impossible : {type(e).__name__}")
-            return self._repondre(500, {"ok": False})
+            print(f"[tripo_oreille] réveil impossible : {type(e).__name__} {str(e)[:200]}")
+            return self._repondre(500, {"ok": False, "type": type(e).__name__})
 
     def do_POST(self):
         if not self._origine_ok():
@@ -113,11 +141,17 @@ class handler(BaseHTTPRequestHandler):
             n = int(self.headers.get("content-length") or 0)
         except ValueError:
             n = 0
-        if n <= 0 or n > MAX_OCTETS:
+        if n <= 0 or n > MAX_OCTETS * 2:
             return self._repondre(400, {"erreur": "taille"})
-        pcm = self.rfile.read(n)
+        corps = self.rfile.read(n)
+        try:
+            pcm = lire_pcm(corps, self.headers.get("content-type") or "")
+        except Exception:
+            return self._repondre(400, {"erreur": "format"})
+        if not pcm or len(pcm) > MAX_OCTETS:
+            return self._repondre(400, {"erreur": "taille"})
         try:
             return self._repondre(200, {"texte": transcrire(pcm)})
         except Exception as e:  # journal minimal, sans le son ni le texte
-            print(f"[tripo_oreille] échec : {type(e).__name__}")
-            return self._repondre(500, {"erreur": "reconnaissance"})
+            print(f"[tripo_oreille] échec : {type(e).__name__} {str(e)[:200]}")
+            return self._repondre(500, {"erreur": "reconnaissance", "type": type(e).__name__})

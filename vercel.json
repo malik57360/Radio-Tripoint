@@ -10,7 +10,7 @@
     },
     "api/tripo_oreille.py": {
       "memory": 2048,
-      "maxDuration": 30,
+      "maxDuration": 60,
       "excludeFiles": "{.next/**,node_modules/**,public/**,app/**,components/**,data/**,lib/**,assets/**,scripts/**,types/**,config/**,*.md,api/voix/**}"
     }
   },

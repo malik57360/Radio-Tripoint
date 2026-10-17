@@ -36,6 +36,7 @@ const PAROLE_MAX_MS = 15000
 const AVANT_MS = 300
 const PAUSE_APRES_TRIPO_MS = 350
 const DELAI_OREILLE_MS = 25000
+const REESSAI_SI_ECHEC_AVANT_MS = 12000
 const DELAI_CERVEAU_MS = 50000
 const DELAI_VOIX_MS = 15000
 const BONJOUR = "Allô ! C'est Tripo. Je t'écoute !"
@@ -90,6 +91,15 @@ function versSeizeK(morceaux: Float32Array[], taux: number): Int16Array {
   return sortie
 }
 
+/** Le son en base64 : envoyé comme du texte, il arrive intact quelle que soit la plateforme. */
+function enBase64(pcm: Int16Array): string {
+  const octets = new Uint8Array(pcm.buffer, pcm.byteOffset, pcm.byteLength)
+  let s = ""
+  for (let i = 0; i < octets.length; i += 0x2000)
+    s += String.fromCharCode(...octets.subarray(i, i + 0x2000))
+  return btoa(s)
+}
+
 const avecDelai = (ms: number, parent?: AbortSignal) => {
   const c = new AbortController()
   const minuterie = setTimeout(() => c.abort(), ms)
@@ -138,8 +148,12 @@ class Appel {
       ajouter: (l: Ligne) => void
       erreur: (m: string) => void
       toucher: (attendu: boolean) => void
+      diagnostic: (d: string) => void
     },
   ) {}
+
+  /** Résultat du réveil du serveur, gardé pour le diagnostic. */
+  private reveil = ""
 
   private apresToucher: (() => void) | null = null
 
@@ -179,7 +193,14 @@ class Appel {
       /* propriété en lecture seule ou absente */
     }
     // Le serveur se réveille pendant que Tripo dit bonjour.
-    void fetch("/api/tripo_oreille", { cache: "no-store" }).catch(() => {})
+    void fetch("/api/tripo_oreille", { cache: "no-store" })
+      .then(async (r) => {
+        if (!r.ok) {
+          const d = (await r.json().catch(() => ({}))) as { type?: string }
+          this.reveil = `réveil ${r.status}${d.type ? ` ${d.type}` : ""}`
+        }
+      })
+      .catch(() => (this.reveil = "réveil réseau"))
     try {
       this.flux = await navigator.mediaDevices.getUserMedia({
         audio: {
@@ -367,34 +388,24 @@ class Appel {
     const pcm = versSeizeK(morceaux, taux)
 
     // 1. Ce que la personne a dit
-    let texte = ""
-    let echec = false
-    const d1 = avecDelai(DELAI_OREILLE_MS, tour.signal)
-    try {
-      const r = await fetch("/api/tripo_oreille", {
-        method: "POST",
-        headers: { "Content-Type": "application/octet-stream" },
-        body: pcm.buffer as ArrayBuffer,
-        signal: d1.signal,
-      })
-      if (r.ok) texte = String(((await r.json()) as { texte?: string }).texte ?? "").trim()
-      else echec = true
-    } catch {
-      echec = true // délai dépassé ou réseau coupé
-    } finally {
-      d1.fin()
-    }
+    const corps = JSON.stringify({ pcm: enBase64(pcm) })
+    let r = await this.oreille(corps, tour.signal)
+    // Un échec rapide (instance qui redémarre…) : un second essai, sans rien demander.
+    if (r.echec && !r.delai && gen === this.generation) r = await this.oreille(corps, tour.signal)
     if (gen !== this.generation) return
+    const texte = r.texte
     if (texte.length < 2) {
       // Un bruit : Tripo réécoute sans rien dire. Le serveur n'a pas répondu :
       // il le dit, pour que personne ne parle dans le vide.
-      if (echec) {
+      if (r.echec) {
+        this.rappels.diagnostic([r.echec, this.reveil].filter(Boolean).join(" · "))
         this.rappels.repond(PAS_ENTENDU)
         await this.dire([PAS_ENTENDU], gen)
         if (gen !== this.generation) return
       }
       return this.ecouter()
     }
+    this.rappels.diagnostic("")
     this.rappels.entendu(texte)
     this.rappels.repond("")
     const historique = this.rappels.historique()
@@ -485,6 +496,36 @@ class Appel {
     if (reponse.trim()) this.rappels.ajouter({ role: "assistant", content: reponse.trim() })
     if (gen !== this.generation) return
     this.ecouter()
+  }
+
+  /** Envoie la phrase au serveur. « echec » dit pourquoi ça n'a pas marché, pour le diagnostic. */
+  private async oreille(
+    corps: string,
+    signal: AbortSignal,
+  ): Promise<{ texte: string; echec: string; delai: boolean }> {
+    const debut = performance.now()
+    const d = avecDelai(DELAI_OREILLE_MS, signal)
+    try {
+      const r = await fetch("/api/tripo_oreille", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: corps,
+        signal: d.signal,
+      })
+      const j = (await r.json().catch(() => ({}))) as {
+        texte?: string
+        erreur?: string
+        type?: string
+      }
+      if (r.ok) return { texte: String(j.texte ?? "").trim(), echec: "", delai: false }
+      const cause = [j.erreur, j.type].filter(Boolean).join(" ")
+      return { texte: "", echec: `oreille ${r.status}${cause ? ` ${cause}` : ""}`, delai: false }
+    } catch {
+      const delai = performance.now() - debut >= REESSAI_SI_ECHEC_AVANT_MS
+      return { texte: "", echec: delai ? "oreille délai" : "oreille réseau", delai }
+    } finally {
+      d.fin()
+    }
   }
 
   /** Dit des phrases avec la voix de Tripo, dans l'ordre ; les suivantes se préparent pendant ce temps. */
@@ -588,6 +629,7 @@ export function useAppel(o: { historique: () => Ligne[]; ajouter: (l: Ligne) => 
   const [reponse, setReponse] = useState("")
   const [erreur, setErreur] = useState<string | null>(null)
   const [aToucher, setAToucher] = useState(false)
+  const [diagnostic, setDiagnostic] = useState("")
   const options = useRef(o)
   useEffect(() => {
     options.current = o
@@ -598,6 +640,7 @@ export function useAppel(o: { historique: () => Ligne[]; ajouter: (l: Ligne) => 
     setErreur(null)
     setEntendu("")
     setReponse("")
+    setDiagnostic("")
     appel.current?.raccrocher()
     const a = new Appel({
       etat: setEtat,
@@ -608,6 +651,7 @@ export function useAppel(o: { historique: () => Ligne[]; ajouter: (l: Ligne) => 
       ajouter: (l) => options.current.ajouter(l),
       erreur: setErreur,
       toucher: setAToucher,
+      diagnostic: setDiagnostic,
     })
     appel.current = a
     void a.demarrer()
@@ -638,5 +682,17 @@ export function useAppel(o: { historique: () => Ligne[]; ajouter: (l: Ligne) => 
     }
   }, [raccrocher])
 
-  return { etat, niveau, entendu, reponse, erreur, aToucher, demarrer, raccrocher, couper, toucher }
+  return {
+    etat,
+    niveau,
+    entendu,
+    reponse,
+    erreur,
+    aToucher,
+    diagnostic,
+    demarrer,
+    raccrocher,
+    couper,
+    toucher,
+  }
 }

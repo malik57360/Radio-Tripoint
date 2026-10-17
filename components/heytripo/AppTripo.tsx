@@ -185,6 +185,7 @@ function EcranAppel({
   reponse,
   erreur,
   aToucher,
+  diagnostic,
   onToucher,
   onCouper,
   onRaccrocher,
@@ -196,6 +197,7 @@ function EcranAppel({
   reponse: string
   erreur: string | null
   aToucher: boolean
+  diagnostic: string
   onToucher: () => void
   onCouper: () => void
   onRaccrocher: () => void
@@ -252,6 +254,8 @@ function EcranAppel({
             )}
           </div>
         )}
+        {/* En cas de panne, un code discret : une capture d'écran suffit pour réparer. */}
+        {diagnostic && <p className="text-encre-3 mt-2 text-[11px]">Code : {diagnostic}</p>}
       </div>
       <div className="flex w-full max-w-sm flex-col items-center gap-3">
         {aToucher && (
@@ -1029,6 +1033,7 @@ export function AppTripo() {
           reponse={appelVocal.reponse}
           erreur={appelVocal.erreur}
           aToucher={appelVocal.aToucher}
+          diagnostic={appelVocal.diagnostic}
           onToucher={appelVocal.toucher}
           onCouper={appelVocal.couper}
           onRaccrocher={appelVocal.raccrocher}
