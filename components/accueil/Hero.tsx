@@ -2,8 +2,11 @@ import { ArrowRight } from "lucide-react"
 import Image from "next/image"
 import Link from "@/components/ui/Lien"
 import { site } from "@/config/site"
+import { Citrouille } from "@/components/marque/Citrouille"
+import { cn } from "@/lib/utils/cn"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
 import { EnCeMoment } from "@/components/radio/EnCeMoment"
+import { LuneHalloween } from "@/components/motion/NuitHalloween"
 import { Spectre } from "@/components/motion/Spectre"
 import { Tripoint } from "@/components/motion/Tripoint"
 import { traducteur } from "@/lib/i18n/serveur"
@@ -18,10 +21,17 @@ import type { GrilleClient } from "@/lib/radio/types"
 export async function Hero({ grille }: { grille: GrilleClient }) {
   const t = await traducteur()
   const pays = t(site.pays)
+  // Halloween : le jaune devient la pleine lune d'un ciel de nuit (globals.css).
+  const nuit = site.campagne.halloween
   return (
     <section aria-labelledby="titre-accueil" className="relative isolate">
-      <div className="hero-scene bg-accent relative isolate overflow-hidden text-black">
-        <div className="hero-lumiere" aria-hidden />
+      <div
+        className={cn(
+          "hero-scene relative isolate overflow-hidden",
+          nuit ? "hero-halloween" : "bg-accent text-black",
+        )}
+      >
+        {nuit ? <LuneHalloween /> : <div className="hero-lumiere" aria-hidden />}
         <Tripoint className="hero-tripoint" />
         {site.visuels.hero && (
           <Image
@@ -100,7 +110,12 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
                   d'un point à gauche, rogné : si elle passe sur deux lignes,
                   aucune ne commence par « • ». */}
               <div className="mt-4 overflow-hidden">
-                <ul className="-ml-5 flex flex-wrap text-[0.72rem] font-bold tracking-[0.06em] text-black/75 uppercase [font-variation-settings:'wdth'_75]">
+                <ul
+                  className={cn(
+                    "-ml-5 flex flex-wrap text-[0.72rem] font-bold tracking-[0.06em] uppercase [font-variation-settings:'wdth'_75]",
+                    nuit ? "opacity-75" : "text-black/75",
+                  )}
+                >
                   {t({
                     fr: ["Radio", "Média", "Reportages", "Podcasts", "Événements"],
                     de: ["Radio", "Medien", "Reportagen", "Podcasts", "Events"],
@@ -122,7 +137,12 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
               <BoutonDirect taille="grand" />
               <Link
                 href="/emissions"
-                className="btn min-h-14 bg-black !px-6 text-white hover:bg-white hover:text-black"
+                className={cn(
+                  "btn min-h-14 !px-6",
+                  nuit
+                    ? "hero-halloween-bouton"
+                    : "bg-black text-white hover:bg-white hover:text-black",
+                )}
               >
                 {t({
                   fr: "Voir les émissions",
@@ -137,6 +157,7 @@ export async function Hero({ grille }: { grille: GrilleClient }) {
           </div>
         </div>
         <Defilant
+          nuit={nuit}
           mots={[
             t({ fr: "En direct", de: "Live", lb: "Live", en: "Live", es: "En directo" }),
             ...pays,
@@ -193,10 +214,13 @@ function Cadran({ pays }: { pays: string[] }) {
 }
 
 /** Bandeau défilant sous le titre : le site respire, même à l'arrêt. */
-function Defilant({ mots }: { mots: string[] }) {
+function Defilant({ mots, nuit }: { mots: string[]; nuit: boolean }) {
   const suite = [...mots, ...mots]
   return (
-    <div className="defilant border-t-2 border-black" aria-hidden>
+    <div
+      className={cn("defilant border-t-2", nuit ? "defilant-halloween" : "border-black")}
+      aria-hidden
+    >
       <div className="defilant-piste">
         {[0, 1].map((k) => (
           <div key={k} className="flex shrink-0 items-center">
@@ -206,7 +230,11 @@ function Defilant({ mots }: { mots: string[] }) {
                 className="titre-affiche flex items-center text-[1.35rem] sm:text-[1.6rem]"
               >
                 <span className="px-5">{m}</span>
-                <span className="inline-block size-2.5 rounded-full bg-black" />
+                {nuit ? (
+                  <Citrouille className="h-[1.1em] w-auto" />
+                ) : (
+                  <span className="inline-block size-2.5 rounded-full bg-black" />
+                )}
               </span>
             ))}
           </div>

@@ -1433,3 +1433,378 @@
     animation: none;
   }
 }
+
+/* ─── Saison : Halloween — « la nuit des Trois Frontières » ───────────────
+   Piloté par config/site.ts (campagne.halloween → classe .halloween sur
+   <html>, posée par app/[lang]/layout.tsx). Le site passe la nuit pour tout
+   le monde ; qui a choisi « clair » à la main (data-theme) garde un
+   crépuscule lisible. Le jaune du logo devient la pleine lune, la citrouille
+   éclaire les détails. La citrouille est orange : elle ne se confond jamais
+   avec le rouge du direct, qui garde son rôle. */
+:root.halloween {
+  --citrouille: #ff7a1a;
+  --citrouille-sombre: #d4560b;
+  --bougie: #ffd96a;
+  --sortilege: #8b5cf6;
+  --hw-os: #f5eee3;
+  --hw-ciel-haut: #0b0614;
+  --hw-ciel-bas: #1c0f30;
+  --hw-ombre: #07040c;
+}
+:root.halloween,
+:root.halloween[data-theme="sombre"] {
+  --papier: #0a0710;
+  --papier-2: #130e1b;
+  --papier-3: #1e1729;
+  --surface: #100c17;
+  --encre: #f5eee3;
+  --encre-2: #c4b9c9;
+  --encre-3: #968b9e;
+  --trait: #2b2336;
+  --trait-fort: #f5eee3;
+  --accent-encre: #f9b800;
+  --accent-doux: #2b1f06;
+  --focus: #f9b800;
+  --direct: #ff4538;
+  --succes: #4fbf86;
+  --alerte: #ff9a5c;
+  --erreur-fond: #2b1714;
+  --nuit: #060409;
+  --nuit-2: #110c18;
+  --nuit-3: #1d1627;
+  --nuit-encre: #f5eee3;
+  --nuit-encre-2: #a99fb1;
+  --nuit-trait: #2b2336;
+  --ombre-2: 0 10px 34px -12px rgb(0 0 0 / 0.85);
+  color-scheme: dark;
+}
+/* « Clair » choisi à la main : un parchemin à la tombée du jour. */
+:root.halloween[data-theme="clair"] {
+  --papier: #f7f1e8;
+  --papier-2: #efe6d8;
+  --papier-3: #e2d6c4;
+  --surface: #fcf8f2;
+  --encre: #160f1d;
+  --encre-2: #43384b;
+  --encre-3: #675c6f;
+  --trait: #ddd0bd;
+  --trait-fort: #160f1d;
+  --accent-encre: #160f1d;
+  --accent-doux: #fbe7b5;
+  --focus: #160f1d;
+  --direct: #d8261c;
+  --succes: #1b6e45;
+  --alerte: #b54708;
+  --erreur-fond: #fdece2;
+  color-scheme: light;
+}
+
+/* La nuit derrière les pages : un halo de lune en haut, une brume violette en bas. */
+:root.halloween:not([data-theme="clair"]) body {
+  background:
+    radial-gradient(60rem 40rem at 88% -12%, rgb(249 184 0 / 0.07), transparent 62%),
+    radial-gradient(52rem 36rem at -12% 108%, rgb(139 92 246 / 0.11), transparent 62%),
+    var(--papier);
+  background-attachment: fixed;
+}
+
+/* Un ciel étoilé en haut de chaque page, qui s'efface en descendant ; les
+   blocs pleins (accueil, cartes) passent par-dessus. */
+:root.halloween:not([data-theme="clair"]) body {
+  position: relative;
+}
+:root.halloween:not([data-theme="clair"]) body::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 90vh;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.2px 1.2px at 24px 38px, rgb(255 255 255 / 0.5), transparent),
+    radial-gradient(1px 1px at 132px 92px, rgb(255 255 255 / 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 214px 154px, rgb(255 236 190 / 0.55), transparent),
+    radial-gradient(1px 1px at 296px 44px, rgb(255 255 255 / 0.4), transparent);
+  background-size: 340px 230px;
+  mask-image: linear-gradient(180deg, #000, transparent);
+}
+
+/* Bandeau du haut. */
+.bandeau-halloween {
+  color: var(--bougie);
+  background: linear-gradient(
+    90deg,
+    #1c0f30,
+    var(--hw-ciel-haut) 28%,
+    var(--hw-ciel-haut) 72%,
+    #1c0f30
+  );
+  border-bottom: 1px solid rgb(255 122 26 / 0.35);
+  box-shadow: inset 0 -14px 26px -20px rgb(255 122 26 / 0.7);
+}
+.bandeau-halloween-lien {
+  color: var(--citrouille);
+}
+
+/* Citrouille du logo : la bougie vacille. */
+.citrouille-logo {
+  filter: drop-shadow(0 2px 6px rgb(255 122 26 / 0.55));
+}
+.citrouille-bougie {
+  animation: bougie 2.6s ease-in-out infinite;
+}
+@keyframes bougie {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  38% {
+    opacity: 0.78;
+  }
+  44% {
+    opacity: 0.95;
+  }
+  61% {
+    opacity: 0.7;
+  }
+}
+
+/* ── Accueil : le ciel de nuit, la lune, les chauves-souris, la brume. ── */
+.hero-halloween {
+  color: var(--hw-os);
+  background:
+    radial-gradient(120% 70% at 50% 125%, rgb(139 92 246 / 0.3), transparent 62%),
+    linear-gradient(180deg, var(--hw-ciel-haut) 0%, #140a22 55%, var(--hw-ciel-bas) 100%);
+}
+.hero-halloween .titre-accueil {
+  text-shadow: 0 0.04em 0.35em rgb(7 4 12 / 0.7);
+}
+.hero-halloween .promesse {
+  color: var(--accent);
+}
+.hero-halloween .hero-tripoint {
+  color: var(--citrouille);
+  opacity: 0.42;
+  filter: drop-shadow(0 0 5px rgb(255 122 26 / 0.65));
+}
+.hero-halloween-bouton {
+  color: var(--hw-os);
+  background: rgb(245 238 227 / 0.07);
+  box-shadow: inset 0 0 0 1.5px rgb(245 238 227 / 0.5);
+}
+.hero-halloween-bouton:hover {
+  color: var(--hw-ombre);
+  background: var(--hw-os);
+}
+.defilant-halloween {
+  color: var(--accent);
+  background: var(--hw-ombre);
+  border-color: rgb(255 122 26 / 0.45);
+  box-shadow: 0 -18px 40px -24px rgb(255 122 26 / 0.6);
+}
+
+.hw-ciel {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+/* Étoiles : quelques points, plus denses en haut, qui s'éteignent dans la brume. */
+.hw-etoiles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.2px 1.2px at 24px 38px, rgb(255 255 255 / 0.75), transparent),
+    radial-gradient(1px 1px at 132px 92px, rgb(255 255 255 / 0.5), transparent),
+    radial-gradient(1.6px 1.6px at 214px 154px, rgb(255 236 190 / 0.8), transparent),
+    radial-gradient(1px 1px at 296px 44px, rgb(255 255 255 / 0.55), transparent),
+    radial-gradient(1.3px 1.3px at 82px 196px, rgb(255 255 255 / 0.45), transparent);
+  background-size: 340px 230px;
+  mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 85%);
+  animation: scintille 6s ease-in-out infinite alternate;
+}
+@keyframes scintille {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* La lune : le jaune du logo, dans le coin, là où le titre ne passe pas. */
+.hw-lune {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.9rem;
+  width: clamp(4.25rem, 2rem + 9vw, 13rem);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 36% 34%,
+    #fffbe6 0%,
+    #ffe48f 26%,
+    var(--accent) 60%,
+    #dc8a00 100%
+  );
+  box-shadow:
+    0 0 40px 6px rgb(249 184 0 / 0.38),
+    0 0 140px 50px rgb(249 184 0 / 0.16);
+}
+@media (min-width: 64rem) {
+  .hw-lune {
+    top: 1.6rem;
+    right: 5%;
+  }
+}
+.hw-cratere {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgb(196 120 0 / 0.38),
+    rgb(196 120 0 / 0.12) 70%,
+    transparent
+  );
+}
+.hw-cratere-1 {
+  width: 22%;
+  height: 22%;
+  top: 22%;
+  left: 52%;
+}
+.hw-cratere-2 {
+  width: 14%;
+  height: 14%;
+  top: 58%;
+  left: 30%;
+}
+.hw-cratere-3 {
+  width: 10%;
+  height: 10%;
+  top: 46%;
+  left: 68%;
+}
+/* Chauves-souris : silhouettes noires, ourlées de clair de lune. */
+.hw-chauve-souris {
+  position: absolute;
+  color: var(--hw-ombre);
+  filter: drop-shadow(0 0 1px rgb(255 217 106 / 0.55));
+  width: 2.6rem;
+}
+.hw-chauve-souris .aile {
+  transform-origin: 32px 12px;
+  animation: battement 0.32s ease-in-out infinite alternate;
+}
+.hw-chauve-souris .aile-d {
+  animation-delay: 0.02s;
+}
+@keyframes battement {
+  to {
+    transform: scaleY(0.35);
+  }
+}
+.hw-vol-1 {
+  top: 12%;
+  right: 12%;
+  animation: vol-1 19s linear infinite;
+  animation-delay: -6s;
+}
+.hw-vol-2 {
+  top: 34%;
+  right: 38%;
+  width: 1.7rem;
+  opacity: 0.85;
+  animation: vol-2 26s linear infinite;
+  animation-delay: -15s;
+}
+.hw-vol-3 {
+  top: 8%;
+  right: 30%;
+  width: 1.3rem;
+  opacity: 0.7;
+  animation: vol-3 31s linear infinite;
+  animation-delay: -22s;
+}
+@media (min-width: 64rem) {
+  .hw-chauve-souris {
+    width: 3.4rem;
+  }
+}
+/* Trajectoires : elles traversent le ciel de droite à gauche, en ondulant. */
+@keyframes vol-1 {
+  0% {
+    transform: translate(30vw, 6vh) rotate(-6deg);
+  }
+  25% {
+    transform: translate(-10vw, -2vh) rotate(4deg);
+  }
+  50% {
+    transform: translate(-45vw, 5vh) rotate(-5deg);
+  }
+  75% {
+    transform: translate(-80vw, -3vh) rotate(5deg);
+  }
+  100% {
+    transform: translate(-120vw, 4vh) rotate(-4deg);
+  }
+}
+@keyframes vol-2 {
+  0% {
+    transform: translate(70vw, -4vh) scaleX(-1);
+  }
+  50% {
+    transform: translate(10vw, 6vh) scaleX(-1);
+  }
+  100% {
+    transform: translate(-80vw, -2vh) scaleX(-1);
+  }
+}
+@keyframes vol-3 {
+  0% {
+    transform: translate(60vw, 3vh);
+  }
+  50% {
+    transform: translate(-5vw, -3vh);
+  }
+  100% {
+    transform: translate(-90vw, 4vh);
+  }
+}
+/* Brume : deux nappes qui dérivent lentement au ras du bandeau défilant. */
+.hw-brume {
+  position: absolute;
+  inset: auto -20% 0;
+  height: 45%;
+  background:
+    radial-gradient(40% 60% at 25% 100%, rgb(214 200 255 / 0.13), transparent 70%),
+    radial-gradient(35% 55% at 70% 100%, rgb(245 238 227 / 0.1), transparent 70%),
+    radial-gradient(50% 50% at 50% 110%, rgb(139 92 246 / 0.22), transparent 70%);
+  animation: brume 24s ease-in-out infinite alternate;
+}
+@keyframes brume {
+  to {
+    transform: translateX(8%);
+  }
+}
+
+/* Pied de page : la silhouette du pays la nuit, qui monte de la page. */
+/* La nuit, une lueur violette à l'horizon détache les collines du ciel noir. */
+.hw-silhouette {
+  color: var(--nuit);
+  background: linear-gradient(180deg, var(--papier) 0%, var(--papier) 25%, #351a58 100%);
+  filter: drop-shadow(0 -1px 0 rgb(255 122 26 / 0.5));
+}
+:root.halloween[data-theme="clair"] .hw-silhouette {
+  background: var(--papier);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .citrouille-bougie,
+  .hw-etoiles,
+  .hw-chauve-souris,
+  .hw-chauve-souris .aile,
+  .hw-brume {
+    animation: none;
+  }
+}

@@ -83,11 +83,17 @@ export const site = {
   },
 
   /**
-   * Campagnes du moment. Octobre rose : ruban rose sur le logo, bandeau rose
-   * en haut du site et touches de rose. Repasser à false le 1er novembre.
+   * Campagnes du moment.
+   * - Octobre rose : ruban rose sur le logo, bandeau rose en haut du site.
+   * - Halloween, « la nuit des Trois Frontières » : le site passe la nuit
+   *   (lune, brume, chauves-souris, citrouille sur le logo). Tout le thème
+   *   vit dans app/globals.css sous :root.halloween. Repasser à false le
+   *   2 novembre.
+   * Une seule campagne à la fois.
    */
   campagne: {
-    octobreRose: true,
+    octobreRose: false,
+    halloween: true,
   },
 
   /** Mentions légales : à compléter par l'éditeur. */

@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { site } from "@/config/site"
 import { cn } from "@/lib/utils/cn"
+import { Citrouille } from "./Citrouille"
 import { RubanRose } from "./RubanRose"
 
 /**
@@ -21,6 +22,12 @@ export function Logo({
   preload?: boolean
 }) {
   const src = sombre ? (site.visuels.logoSombre ?? site.visuels.logo) : site.visuels.logo
+  // Campagne du moment : un insigne s'épingle en bas à droite du logo.
+  const insigne = site.campagne.halloween ? (
+    <Citrouille className="citrouille-logo absolute -right-[10%] -bottom-[6%] h-[50%] w-auto rotate-[10deg]" />
+  ) : site.campagne.octobreRose ? (
+    <RubanRose className="absolute -right-[6%] -bottom-[4%] h-[46%] w-auto rotate-[12deg] drop-shadow-sm" />
+  ) : null
   if (src) {
     const image = (
       <Image
@@ -30,18 +37,14 @@ export function Logo({
         height={taille}
         sizes={`${taille}px`}
         preload={preload}
-        className={cn(
-          "aspect-square rounded-full",
-          site.campagne.octobreRose ? "size-full" : className,
-        )}
+        className={cn("aspect-square rounded-full", insigne ? "size-full" : className)}
       />
     )
-    if (!site.campagne.octobreRose) return image
-    // Octobre rose : le ruban s'épingle en bas à droite du logo.
+    if (!insigne) return image
     return (
       <span className={cn("relative inline-block aspect-square rounded-full", className)}>
         {image}
-        <RubanRose className="absolute -right-[6%] -bottom-[4%] h-[46%] w-auto rotate-[12deg] drop-shadow-sm" />
+        {insigne}
       </span>
     )
   }

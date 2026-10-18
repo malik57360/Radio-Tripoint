@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Archivo, Newsreader } from "next/font/google"
 import { BandeauDemo } from "@/components/layout/BandeauDemo"
+import { BandeauHalloween } from "@/components/layout/BandeauHalloween"
 import { BandeauOctobreRose } from "@/components/layout/BandeauOctobreRose"
 import { EtatAntenne } from "@/components/motion/EtatAntenne"
 import { Footer } from "@/components/layout/Footer"
@@ -108,7 +109,9 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
     <html
       lang={codesLangues[l].html}
-      className={`${archivo.variable} ${newsreader.variable}`}
+      className={[archivo.variable, newsreader.variable, site.campagne.halloween && "halloween"]
+        .filter(Boolean)
+        .join(" ")}
       suppressHydrationWarning
     >
       <head>
@@ -133,6 +136,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           </a>
           <BandeauDemo />
           <BandeauOctobreRose />
+          <BandeauHalloween />
           <Header />
           <main id="contenu" tabIndex={-1} className="outline-none">
             {children}

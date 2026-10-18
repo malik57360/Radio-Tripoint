@@ -4,6 +4,7 @@ import { site } from "@/config/site"
 import { reseauxActifs } from "@/config/socialLinks"
 import { IconeReseau } from "@/components/marque/IconesReseaux"
 import { Logo } from "@/components/marque/Logo"
+import { SilhouetteHalloween } from "@/components/motion/NuitHalloween"
 import { Tripoint } from "@/components/marque/Tripoint"
 import type { Trad } from "@/lib/i18n/langues"
 import { traducteur } from "@/lib/i18n/serveur"
@@ -217,6 +218,7 @@ export async function Footer() {
   const a = site.contact.adresse
   return (
     <footer className="bg-nuit text-nuit-encre relative overflow-hidden pb-[var(--bas-fixe)]">
+      {site.campagne.halloween && <SilhouetteHalloween />}
       <Tripoint
         className="text-nuit-trait/70 pointer-events-none absolute top-10 -right-40 size-[36rem]"
         epaisseur={1}
