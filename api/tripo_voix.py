@@ -1,25 +1,30 @@
 """
 Voix de Tripo pour heytripo.fr : la même que dans les vidéos de Radio Tripoint.
 
-Piper (voix SIWIS, CC BY 4.0) puis le « traitement Tripo » des vidéos :
+Le modèle Piper (voix SIWIS, CC BY 4.0), lu par sherpa-onnx, puis le
+« traitement Tripo » des vidéos :
   ffmpeg asetrate=22050*1.28, atempo=0.86, volume=1.4
 reproduit sans ffmpeg :
   - atempo 0.86  -> parole plus lente à la synthèse (length_scale / 0.86) ;
   - asetrate 1.28 -> même échantillons, fréquence annoncée × 1,28 (voix plus
     aiguë et plus rapide d'autant) ;
-  - volume 1.4   -> gain, borné pour ne pas saturer.
+  - volume 1.4   -> crête ramenée au maximum (comme Piper), gain, borné.
+sherpa-onnx plutôt que le paquet piper : mêmes poids, mais sans onnxruntime
+ni numpy, la fonction tient sous les 225 Mo de Vercel (voir api/voix/MODELE.md).
 POST {"texte": "..."} -> audio/wav. Rien n'est enregistré.
 """
 import array
 import io
 import json
 import os
+import sys
+import threading
 import wave
 from http.server import BaseHTTPRequestHandler
 
-from piper import PiperVoice, SynthesisConfig
+import sherpa_onnx
 
-MODELE = os.path.join(os.path.dirname(__file__), "voix", "fr-siwis-medium.onnx")
+ICI = os.path.join(os.path.dirname(os.path.abspath(__file__)), "voix")
 MAX_TEXTE = 900
 ORIGINES = (
     "https://heytripo.fr",
@@ -30,34 +35,45 @@ ORIGINES = (
 )
 
 _voix = None
+_verrou = threading.Lock()
 
 
 def voix():
     global _voix
-    if _voix is None:
-        _voix = PiperVoice.load(MODELE)
+    with _verrou:
+        if _voix is None:
+            _voix = sherpa_onnx.OfflineTts(
+                sherpa_onnx.OfflineTtsConfig(
+                    model=sherpa_onnx.OfflineTtsModelConfig(
+                        vits=sherpa_onnx.OfflineTtsVitsModelConfig(
+                            model=os.path.join(ICI, "fr-siwis-medium.onnx"),
+                            tokens=os.path.join(ICI, "jetons.txt"),
+                            data_dir=os.path.join(ICI, "espeak-ng-data"),
+                            noise_scale=0.667,
+                            noise_scale_w=0.8,
+                            length_scale=1 / 0.86,
+                        ),
+                        num_threads=2,
+                    ),
+                    max_num_sentences=1,
+                )
+            )
     return _voix
 
 
 def synthese(texte: str) -> bytes:
-    brut = io.BytesIO()
-    with wave.open(brut, "wb") as w:
-        voix().synthesize_wav(texte, w, syn_config=SynthesisConfig(length_scale=1 / 0.86))
-    brut.seek(0)
-    with wave.open(brut, "rb") as r:
-        taux, largeur, canaux = r.getframerate(), r.getsampwidth(), r.getnchannels()
-        donnees = r.readframes(r.getnframes())
-    if largeur == 2:
-        ech = array.array("h", donnees)
-        for i, v in enumerate(ech):
-            ech[i] = max(-32768, min(32767, int(v * 1.4)))
-        donnees = ech.tobytes()
+    audio = voix().generate(texte, sid=0, speed=1.0)
+    crete = max([0.01] + [abs(x) for x in audio.samples])
+    gain = 32767 / crete * 1.4
+    ech = array.array("h", (max(-32768, min(32767, int(x * gain))) for x in audio.samples))
+    if sys.byteorder != "little":
+        ech.byteswap()
     sortie = io.BytesIO()
     with wave.open(sortie, "wb") as w:
-        w.setnchannels(canaux)
-        w.setsampwidth(largeur)
-        w.setframerate(int(taux * 1.28))
-        w.writeframes(donnees)
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(int(audio.sample_rate * 1.28))
+        w.writeframes(ech.tobytes())
     return sortie.getvalue()
 
 
