@@ -1,3 +1,4 @@
+import { CarteConcours } from "@/components/direction/CarteConcours"
 import { Histogramme } from "@/components/direction/Histogramme"
 import {
   AActiver,
@@ -92,6 +93,8 @@ export default async function PageEngagement() {
           detail={t.formPerdu30 ? `dont ${nombre(t.formPerdu30)} non transmis` : "30 jours"}
         />
       </div>
+
+      <CarteConcours />
 
       <div className="grid gap-3 md:grid-cols-2">
         {SERIES.map((s) => (

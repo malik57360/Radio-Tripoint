@@ -1,5 +1,6 @@
 import { ArrowRight, Mic } from "lucide-react"
 import Link from "@/components/ui/Lien"
+import { ConcoursHalloween } from "@/components/accueil/ConcoursHalloween"
 import { Hero } from "@/components/accueil/Hero"
 import { MeteoHoroscope } from "@/components/accueil/MeteoHoroscope"
 import { Newsletter } from "@/components/accueil/Newsletter"
@@ -60,6 +61,8 @@ export default async function Accueil() {
   return (
     <>
       <Hero grille={versGrille(emissions)} />
+
+      <ConcoursHalloween />
 
       {/* ─── À la une ─── */}
       <section aria-labelledby="titre-une" className="conteneur pt-14 lg:pt-20">

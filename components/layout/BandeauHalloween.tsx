@@ -4,7 +4,7 @@ import { Citrouille } from "@/components/marque/Citrouille"
 import { site } from "@/config/site"
 import { traducteur } from "@/lib/i18n/serveur"
 
-/** Halloween : bandeau fin en haut du site (campagne, config/site.ts). */
+/** Halloween : bandeau fin en haut du site (campagne, config/site.ts), qui annonce le jeu concours de l'accueil. */
 export async function BandeauHalloween() {
   if (!site.campagne.halloween) return null
   const t = await traducteur()
@@ -17,24 +17,24 @@ export async function BandeauHalloween() {
         <Citrouille className="h-4 w-auto flex-none" />
         <span>
           {t({
-            fr: "La nuit des Trois Frontières : c’est Halloween sur Radio Tripoint.",
-            de: "Die Nacht des Dreiländerecks: Halloween bei Radio Tripoint.",
-            lb: "D’Nuecht vum Dräilännereck: Halloween op Radio Tripoint.",
-            en: "The night of the Three Borders: it’s Halloween on Radio Tripoint.",
-            es: "La noche de las Tres Fronteras: es Halloween en Radio Tripoint.",
+            fr: "Jeu concours d’Halloween : un gaufrier, une tasse et des bonbons à gagner.",
+            de: "Halloween-Gewinnspiel: Waffeleisen, Tasse und Süßigkeiten zu gewinnen.",
+            lb: "Halloween-Gewinnspill: Wafeleisen, Taass a Séissegkeeten ze gewannen.",
+            en: "Halloween contest: win a waffle maker, a mug and sweets.",
+            es: "Concurso de Halloween: gana una gofrera, una taza y golosinas.",
           })}
         </span>
       </span>
       <Link
-        href="/agenda"
+        href="/#concours"
         className="bandeau-halloween-lien inline-flex items-center gap-1 underline-offset-4 hover:underline"
       >
         {t({
-          fr: "Les sorties du week-end",
-          de: "Ausgehtipps fürs Wochenende",
-          lb: "Sortien fir de Weekend",
-          en: "This weekend’s outings",
-          es: "Planes del fin de semana",
+          fr: "Jouer et gagner",
+          de: "Spielen und gewinnen",
+          lb: "Spillen a gewannen",
+          en: "Play and win",
+          es: "Jugar y ganar",
         })}
         <ArrowRight className="size-3.5" aria-hidden />
       </Link>
