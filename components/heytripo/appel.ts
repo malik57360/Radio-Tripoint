@@ -12,7 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
  *   jusqu'au raccrochage ;
  * - la page repère elle-même le début et la fin de la parole (niveau sonore
  *   comparé au bruit de fond) ;
- * - la phrase est transcrite sur le serveur (api/tripo_oreille.py) ;
+ * - la phrase est transcrite sur le serveur (api/oreille/index.py) ;
  * - la voix de Tripo est jouée dans le même contexte audio que le micro, sans
  *   lecteur <audio> : rien à « débloquer » à chaque réponse ;
  * - pendant que Tripo parle, la page n'écoute pas (pas d'écho) ; un toucher
@@ -193,11 +193,11 @@ class Appel {
       /* propriété en lecture seule ou absente */
     }
     // Le serveur se réveille pendant que Tripo dit bonjour.
-    void fetch("/api/tripo_oreille", { cache: "no-store" })
+    void fetch("/api/oreille", { cache: "no-store" })
       .then(async (r) => {
         if (!r.ok) {
-          const d = (await r.json().catch(() => ({}))) as { type?: string }
-          this.reveil = `réveil ${r.status}${d.type ? ` ${d.type}` : ""}`
+          const d = (await r.json().catch(() => ({}))) as { type?: string; detail?: string }
+          this.reveil = [`réveil ${r.status}`, d.type, d.detail].filter(Boolean).join(" ")
         }
       })
       .catch(() => (this.reveil = "réveil réseau"))
@@ -506,7 +506,7 @@ class Appel {
     const debut = performance.now()
     const d = avecDelai(DELAI_OREILLE_MS, signal)
     try {
-      const r = await fetch("/api/tripo_oreille", {
+      const r = await fetch("/api/oreille", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: corps,
@@ -516,9 +516,10 @@ class Appel {
         texte?: string
         erreur?: string
         type?: string
+        detail?: string
       }
       if (r.ok) return { texte: String(j.texte ?? "").trim(), echec: "", delai: false }
-      const cause = [j.erreur, j.type].filter(Boolean).join(" ")
+      const cause = [j.erreur, j.type, j.detail].filter(Boolean).join(" ")
       return { texte: "", echec: `oreille ${r.status}${cause ? ` ${cause}` : ""}`, delai: false }
     } catch {
       const delai = performance.now() - debut >= REESSAI_SI_ECHEC_AVANT_MS

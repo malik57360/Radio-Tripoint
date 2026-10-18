@@ -19,14 +19,25 @@ import base64
 import json
 import os
 import shutil
+import sys
 import threading
 import time
+from array import array
 from http.server import BaseHTTPRequestHandler
 
-import numpy as np
-import sherpa_onnx
+try:
+    import sherpa_onnx
 
-ICI = os.path.join(os.path.dirname(__file__), "oreille")
+    ECHEC_IMPORT = ""
+except Exception as e:  # le module se charge quand même : l'écran d'appel affichera la cause
+    sherpa_onnx = None
+    ECHEC_IMPORT = f"{type(e).__name__}: {e}"
+
+# Fonction à part, avec son propre requirements.txt (sherpa-onnx seul, sans
+# numpy ni la voix de Tripo) : elle reste sous les 225 Mo au-delà desquels
+# Vercel réinstalle les paquets à chaque démarrage, dans le même /tmp que
+# l'encodeur recollé.
+ICI = os.path.dirname(os.path.abspath(__file__))
 # GitHub refuse les fichiers de plus de 100 Mo : l'encodeur est rangé en deux
 # morceaux, recollés une fois par instance dans /tmp.
 ENCODEUR = "/tmp/tripo-oreille-encodeur.int8.onnx"
@@ -66,6 +77,8 @@ def _encodeur() -> str:
 
 def reco():
     global _reco
+    if ECHEC_IMPORT:
+        raise ImportError(ECHEC_IMPORT)
     with _verrou:
         if _reco is None:
             _reco = _charger()
@@ -92,12 +105,15 @@ def mise_en_forme(brut: str) -> str:
 
 
 def transcrire(pcm: bytes) -> str:
-    echantillons = np.frombuffer(pcm[: len(pcm) // 2 * 2], dtype="<i2").astype(np.float32) / 32768
+    entiers = array("h")
+    entiers.frombytes(pcm[: len(pcm) // 2 * 2])
+    if sys.byteorder != "little":
+        entiers.byteswap()
     r = reco()
     flux = r.create_stream()
-    flux.accept_waveform(TAUX, echantillons)
+    flux.accept_waveform(TAUX, [x / 32768 for x in entiers])
     # Un peu de silence à la fin : le modèle « en continu » finit sa phrase.
-    flux.accept_waveform(TAUX, np.zeros(int(0.66 * TAUX), dtype=np.float32))
+    flux.accept_waveform(TAUX, [0.0] * int(0.66 * TAUX))
     flux.input_finished()
     while r.is_ready(flux):
         r.decode_stream(flux)
@@ -131,8 +147,10 @@ class handler(BaseHTTPRequestHandler):
             reco()
             return self._repondre(200, {"ok": True, "ms": int((time.time() - debut) * 1000)})
         except Exception as e:
-            print(f"[tripo_oreille] réveil impossible : {type(e).__name__} {str(e)[:200]}")
-            return self._repondre(500, {"ok": False, "type": type(e).__name__})
+            print(f"[oreille] réveil impossible : {type(e).__name__} {str(e)[:200]}")
+            return self._repondre(
+                500, {"ok": False, "type": type(e).__name__, "detail": str(e)[:160]}
+            )
 
     def do_POST(self):
         if not self._origine_ok():
@@ -153,5 +171,8 @@ class handler(BaseHTTPRequestHandler):
         try:
             return self._repondre(200, {"texte": transcrire(pcm)})
         except Exception as e:  # journal minimal, sans le son ni le texte
-            print(f"[tripo_oreille] échec : {type(e).__name__} {str(e)[:200]}")
-            return self._repondre(500, {"erreur": "reconnaissance", "type": type(e).__name__})
+            print(f"[oreille] échec : {type(e).__name__} {str(e)[:200]}")
+            return self._repondre(
+                500,
+                {"erreur": "reconnaissance", "type": type(e).__name__, "detail": str(e)[:160]},
+            )
