@@ -76,4 +76,40 @@ export const evenements: Record<string, TradEvenement> = {
       "Verpflegung vor Ort, Erzeugermarkt mit zahlreichen regionalen Erzeugern und Handwerkern, handgemachter Apfelsaft. Kontakt: comite.fetes.apach@gmail.com.",
     alt: "Plakat: Apfelmarkt in Apach-Belmach, Sonntag, 11. Oktober, 10–19 Uhr",
   },
+  "wein-und-musik-mosellandkeller-perl-2026": {
+    titre: "Wein und Musik im Mosellandkeller",
+    description:
+      "Drei Tage Wein und Musik im Weingut Hartmann mit den Musikfreunden Perl-Besch. Freitag und Samstag ab 20 Uhr: Wine & Music mit DJ Heiko. Sonntag ab 12 Uhr: Musik am Wingert mit Musikvereinen aus der Region. Täglich: MV-Imbiss im Hof, hausgemachter Flammkuchen uvm. Nur Sonntag: Schnitzel (15 €) oder Schweinebraten mit dunkler Sauce (16 €), jeweils mit Kartoffelgratin und Salat; Vorbestellung laut Plakat bis 12. Oktober (reservierung@mv-perl.de, +49 174 2705747).",
+    horaires: "Freitag ab 19 Uhr, Samstag ab 16 Uhr, Sonntag ab 12 Uhr",
+    alt: "Plakat: Wein und Musik im Mosellandkeller, 23. bis 25. Oktober, Weingut Hartmann in Perl",
+  },
+  "kurbis-schnitzen-frutenkeller-perl-2026": {
+    titre: "Kürbis Schnitzen für alle Kinder",
+    description:
+      "Kürbisschnitzen für alle Kinder im Frutenkeller des Weinguts Ökonomierat Herber. Anmeldung bis zum 21. Oktober 2026: mail@cdu-perl.de oder WhatsApp +49 6867 4669825.",
+    alt: "Plakat: Kürbis Schnitzen für alle Kinder, Sonntag, 25. Oktober 2026, Frutenkeller in Perl",
+  },
+  "kurbisschnitzen-jugendfeuerwehr-buschdorf-2026": {
+    titre: "Kürbisschnitzen mit der Jugendfeuerwehr Büschdorf",
+    description:
+      "Alle interessierten Kinder sind herzlich eingeladen, zusammen mit der Jugendfeuerwehr Büschdorf Kürbisse zu schnitzen. Anmeldung erbeten, Kontakt auf dem Plakat. Schnitzwerkzeug mitbringen!",
+    alt: "Plakat: Kürbisschnitzen mit der Jugendfeuerwehr Büschdorf, 25. Oktober, 15 Uhr",
+  },
+  "musikalische-fruherziehung-perl-2026": {
+    titre: "Musikalische Früherziehung in Perl",
+    description:
+      "Musikalische Früherziehung der Musikschule im Landkreis Merzig-Wadern für Kinder ab 4 Jahren, in Zusammenarbeit mit dem Musikverein 1867 Perl-Mosel.",
+    alt: "Plakat: Musikalische Früherziehung in Perl, Donnerstag, 29. Oktober, 16 bis 17 Uhr",
+  },
+  "halloweenparty-vereinshaus-perl-2026": {
+    description: "Halloweenparty im Vereinshaus Perl von 18 bis 24 Uhr. Eintritt ab 14 Jahren.",
+    alt: "Plakat: Halloweenparty, 31.10.2026, 18 bis 24 Uhr, Vereinshaus Perl",
+  },
+  "band-factory-mzg-nennig-2026": {
+    titre: "Band Factory MZG in Nennig",
+    description:
+      "„Wir kommen zu euch!“ Die Band Factory MZG der Musikschule im Kreiskulturzentrum Villa Fuchs geht auf Landkreis-Tour und macht Station in Nennig. Deine Bühne. Deine Leute.",
+    lieu: "Bürgerhaus, Kleiner Saal",
+    alt: "Plakat: Band Factory MZG, Freitag, 20. November 2026, 17 bis 19 Uhr, Bürgerhaus Nennig",
+  },
 }
