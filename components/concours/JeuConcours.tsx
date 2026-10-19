@@ -24,21 +24,30 @@ import { choisir, type Langue, type Trad } from "@/lib/i18n/langues"
 import { cn } from "@/lib/utils/cn"
 
 /**
- * « Frontières hantées » : le bouton Jouer, le classement, et la partie en
+ * « Le village hanté » : le bouton Jouer, le classement du jour, et la partie en
  * plein écran. Le score affiché ici est recalculé par le serveur à
  * l'enregistrement (app/api/concours/score) ; seules les réponses et leurs
  * temps partent.
  */
 
-type Classement = { total: number; lignes: { pseudo: string; points: number }[] }
+type Classement = {
+  manche: string
+  tirage: number
+  termine: boolean
+  total: number
+  lignes: { pseudo: string; points: number }[]
+  gagnants: { jour: string; pseudo: string; points: number }[]
+  /** Le tirage de la manche tombe-t-il aujourd'hui (sinon demain, après 18 h) ? */
+  aujourdhui: boolean
+}
 
 const TX = {
   titre: {
-    fr: "Frontières hantées",
-    de: "Spuk an der Grenze",
-    lb: "Spuk op der Grenz",
-    en: "Haunted Borders",
-    es: "Fronteras embrujadas",
+    fr: "Le village hanté",
+    de: "Das Spukdorf",
+    lb: "D’Spukduerf",
+    en: "The Haunted Village",
+    es: "El pueblo embrujado",
   },
   commentJouer: {
     fr: "Comment participer",
@@ -62,11 +71,11 @@ const TX = {
     es: "60 segundos, 3 vidas. Cuanto más rápido responda, más puntos; 5 aciertos seguidos duplican los puntos.",
   },
   etape3: {
-    fr: "Enregistrez votre score avec un pseudo. Le {fin}, le meilleur score gagne tous les lots.",
-    de: "Speichern Sie Ihr Ergebnis mit einem Spitznamen. Am {fin} gewinnt die beste Punktzahl alle Preise.",
-    lb: "Späichert Äre Score mat engem Spëtznumm. Den {fin} gewënnt de beschte Score all d’Präisser.",
-    en: "Save your score under a nickname. On {fin}, the best score wins all the prizes.",
-    es: "Guarde su puntuación con un seudónimo. El {fin}, la mejor puntuación gana todos los premios.",
+    fr: "Enregistrez votre score avec un pseudo. Chaque jour à 18 h, le meilleur score du jour remporte le lot du jour, jusqu’au 31 octobre.",
+    de: "Speichern Sie Ihr Ergebnis mit einem Spitznamen. Jeden Tag um 18 Uhr gewinnt die beste Punktzahl des Tages den Tagespreis, bis zum 31. Oktober.",
+    lb: "Späichert Äre Score mat engem Spëtznumm. All Dag um 18 Auer gewënnt de beschte Score vum Dag de Präis vum Dag, bis den 31. Oktober.",
+    en: "Save your score under a nickname. Every day at 6 pm, the day’s best score wins the prize of the day, until 31 October.",
+    es: "Guarde su puntuación con un seudónimo. Cada día a las 18:00, la mejor puntuación del día gana el premio del día, hasta el 31 de octubre.",
   },
   jouer: { fr: "Jouer", de: "Spielen", lb: "Spillen", en: "Play", es: "Jugar" },
   jouerPlaisir: {
@@ -84,11 +93,27 @@ const TX = {
     es: "El concurso ha terminado. ¡Gracias por jugar!",
   },
   classement: {
-    fr: "Classement",
-    de: "Rangliste",
-    lb: "Classement",
-    en: "Leaderboard",
-    es: "Clasificación",
+    fr: "Classement du jour",
+    de: "Rangliste des Tages",
+    lb: "Classement vum Dag",
+    en: "Today’s leaderboard",
+    es: "Clasificación del día",
+  },
+  tirage: {
+    fr: "Fin de la manche : {quand} à 18 h",
+    de: "Ende der Runde: {quand} um 18 Uhr",
+    lb: "Enn vun der Ronn: {quand} um 18 Auer",
+    en: "Round ends {quand} at 6 pm",
+    es: "Fin de la ronda: {quand} a las 18:00",
+  },
+  aujourdhui: { fr: "aujourd’hui", de: "heute", lb: "haut", en: "today", es: "hoy" },
+  demain: { fr: "demain", de: "morgen", lb: "muer", en: "tomorrow", es: "mañana" },
+  gagnants: {
+    fr: "Gagnants du lot du jour",
+    de: "Gewinner des Tagespreises",
+    lb: "Gewënner vum Präis vum Dag",
+    en: "Prize of the day winners",
+    es: "Ganadores del premio del día",
   },
   classementVide: {
     fr: "Personne n’a encore joué : la première place est à prendre.",
@@ -193,18 +218,18 @@ const TX = {
     es: "Jugar otra vez",
   },
   record: {
-    fr: "Score enregistré : vous êtes {rang} sur {total}.",
-    de: "Gespeichert: Sie sind auf Platz {rang} von {total}.",
-    lb: "Gespäichert: Dir sidd op der Plaz {rang} vun {total}.",
-    en: "Saved: you are number {rang} of {total}.",
-    es: "Guardado: está en el puesto {rang} de {total}.",
+    fr: "Score enregistré : vous êtes {rang} sur {total} dans la manche du jour.",
+    de: "Gespeichert: Sie sind auf Platz {rang} von {total} in der Runde des Tages.",
+    lb: "Gespäichert: Dir sidd op der Plaz {rang} vun {total} an der Ronn vum Dag.",
+    en: "Saved: you are number {rang} of {total} in today’s round.",
+    es: "Guardado: está en el puesto {rang} de {total} en la ronda del día.",
   },
   pasRecord: {
-    fr: "Votre meilleur score reste {meilleur} pts : vous êtes {rang} sur {total}.",
-    de: "Ihr bestes Ergebnis bleibt {meilleur} Pkt.: Platz {rang} von {total}.",
-    lb: "Äre beschte Score bleift {meilleur} Pkt.: Plaz {rang} vun {total}.",
-    en: "Your best score stays at {meilleur} pts: you are number {rang} of {total}.",
-    es: "Su mejor puntuación sigue en {meilleur} pts: puesto {rang} de {total}.",
+    fr: "Votre meilleur score du jour reste {meilleur} pts : vous êtes {rang} sur {total}.",
+    de: "Ihr bestes Ergebnis des Tages bleibt {meilleur} Pkt.: Platz {rang} von {total}.",
+    lb: "Äre beschte Score vum Dag bleift {meilleur} Pkt.: Plaz {rang} vun {total}.",
+    en: "Your best score today stays at {meilleur} pts: you are number {rang} of {total}.",
+    es: "Su mejor puntuación del día sigue en {meilleur} pts: puesto {rang} de {total}.",
   },
   horsFerme: {
     fr: "Le concours est terminé : cette partie est pour le plaisir.",
@@ -282,10 +307,20 @@ const rangTexte = (rang: number, l: Langue) =>
 
 const nombre = (n: number, l: Langue) => n.toLocaleString(l === "lb" ? "de-LU" : l)
 
+/** « lun. 19 oct. » dans la langue du visiteur. */
+const dateCourte = (jour: string, l: Langue) =>
+  new Date(`${jour}T12:00:00Z`).toLocaleDateString(l === "lb" ? "de-LU" : l, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "Europe/Paris",
+  })
+
 async function lireClassement(): Promise<Classement | "erreur"> {
   try {
     const r = await fetch("/api/concours/classement", { cache: "no-store" })
-    return r.ok ? ((await r.json()) as Classement) : "erreur"
+    if (!r.ok) return "erreur"
+    return (await r.json()) as Classement
   } catch {
     return "erreur"
   }
@@ -360,6 +395,13 @@ export function JeuConcours({ ferme, reglement }: { ferme: boolean; reglement: R
             </p>
           )}
         </div>
+        {classement && classement !== "erreur" && !classement.termine && (
+          <p className="concours-hw-texte mt-1 text-sm">
+            {remplir(t(TX.tirage), {
+              quand: t(classement.aujourdhui ? TX.aujourdhui : TX.demain),
+            })}
+          </p>
+        )}
         <div className="concours-classement mt-3" aria-live="polite">
           {classement === null ? (
             <ol aria-hidden className="space-y-1.5">
@@ -394,6 +436,29 @@ export function JeuConcours({ ferme, reglement }: { ferme: boolean; reglement: R
             </ol>
           )}
         </div>
+        {classement && classement !== "erreur" && classement.gagnants.length > 0 && (
+          <div className="mt-6">
+            <p className="surtitre concours-hw-surtitre">{t(TX.gagnants)}</p>
+            <ul className="mt-3 space-y-1.5">
+              {[...classement.gagnants].reverse().map((g) => (
+                <li
+                  key={g.jour}
+                  className="concours-ligne flex items-center gap-3 px-3 py-2.5 text-sm"
+                >
+                  <Citrouille className="h-5 w-auto flex-none" />
+                  <span className="concours-lot-detail w-[5.5rem] flex-none text-xs">
+                    {dateCourte(g.jour, langue)}
+                  </span>
+                  <span className="min-w-0 flex-1 truncate font-bold">{g.pseudo}</span>
+                  <span className="flex-none tabular-nums">
+                    {nombre(g.points, langue)}{" "}
+                    <span className="concours-lot-detail text-xs">{t(TX.points)}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       {ouvert && (

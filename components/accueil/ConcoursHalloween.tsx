@@ -7,7 +7,7 @@ import { traducteur } from "@/lib/i18n/serveur"
 
 /**
  * Jeu concours d'Halloween : les lots, photographiés par l'équipe, dessinés
- * ici en pictogrammes (aucun logo de marque), le jeu « Frontières hantées »
+ * ici en pictogrammes (aucun logo de marque), le jeu « Le village hanté »
  * (components/concours/JeuConcours) et son règlement. Le bandeau du haut
  * (BandeauHalloween) renvoie ici, sur l'ancre #concours. Suit la campagne
  * Halloween de config/site.ts.
@@ -230,11 +230,11 @@ const ARTICLES: { titre: Trad; texte: Trad }[] = [
   {
     titre: { fr: "Durée", de: "Dauer", lb: "Dauer", en: "Dates", es: "Duración" },
     texte: {
-      fr: "Du lancement du jeu sur ce site jusqu’au {fin} (heure de Paris).",
-      de: "Vom Start des Spiels auf dieser Website bis zum {fin} (Pariser Zeit).",
-      lb: "Vum Start vum Spill op dësem Site bis den {fin} (Paräisser Zäit).",
-      en: "From the launch of the game on this site until {fin} (Paris time).",
-      es: "Desde el lanzamiento del juego en este sitio hasta el {fin} (hora de París).",
+      fr: "Du lancement du jeu sur ce site jusqu’au {fin} (heure de Paris), en manches d’un jour : chaque manche se termine à 18 h. Une partie commencée avant 18 h compte pour la manche du jour.",
+      de: "Vom Start des Spiels auf dieser Website bis zum {fin} (Pariser Zeit), in Tagesrunden: Jede Runde endet um 18 Uhr. Eine vor 18 Uhr begonnene Runde zählt für den laufenden Tag.",
+      lb: "Vum Start vum Spill op dësem Site bis den {fin} (Paräisser Zäit), an Ronne vun engem Dag: All Ronn hält um 18 Auer op. Eng Partie, déi virun 18 Auer ugefaang gouf, zielt fir deen Dag.",
+      en: "From the launch of the game on this site until {fin} (Paris time), in daily rounds: each round ends at 6 pm. A game started before 6 pm counts for that day’s round.",
+      es: "Desde el lanzamiento del juego en este sitio hasta el {fin} (hora de París), en rondas diarias: cada ronda termina a las 18:00. Una partida empezada antes de las 18:00 cuenta para la ronda del día.",
     },
   },
   {
@@ -246,21 +246,21 @@ const ARTICLES: { titre: Trad; texte: Trad }[] = [
       es: "Participación",
     },
     texte: {
-      fr: "Gratuite, sans obligation d’achat, ouverte à toute personne physique ; les mineurs jouent avec l’accord d’un parent. Parties illimitées : seul le meilleur score de chaque adresse e-mail compte.",
-      de: "Kostenlos, ohne Kaufverpflichtung, offen für alle natürlichen Personen; Minderjährige spielen mit Zustimmung eines Elternteils. Unbegrenzt viele Runden: Es zählt nur das beste Ergebnis jeder E-Mail-Adresse.",
-      lb: "Gratis, ouni Kafverflichtung, op fir all natierlech Persoun; Mannerjäreg spille mam Accord vun engem Elterendeel. Onlimitéiert Parties: Just de beschte Score vun all E-Mail-Adress zielt.",
-      en: "Free, no purchase necessary, open to any individual; minors play with a parent’s consent. Unlimited games: only the best score of each email address counts.",
-      es: "Gratuita, sin obligación de compra, abierta a cualquier persona física; los menores juegan con el permiso de un padre o madre. Partidas ilimitadas: solo cuenta la mejor puntuación de cada correo.",
+      fr: "Gratuite, sans obligation d’achat, ouverte à toute personne physique ; les mineurs jouent avec l’accord d’un parent. Parties illimitées : dans chaque manche, seul le meilleur score de chaque adresse e-mail compte.",
+      de: "Kostenlos, ohne Kaufverpflichtung, offen für alle natürlichen Personen; Minderjährige spielen mit Zustimmung eines Elternteils. Unbegrenzt viele Spiele: In jeder Tagesrunde zählt nur das beste Ergebnis jeder E-Mail-Adresse.",
+      lb: "Gratis, ouni Kafverflichtung, op fir all natierlech Persoun; Mannerjäreg spille mam Accord vun engem Elterendeel. Onlimitéiert Parties: An all Ronn zielt just de beschte Score vun all E-Mail-Adress.",
+      en: "Free, no purchase necessary, open to any individual; minors play with a parent’s consent. Unlimited games: in each round, only the best score of each email address counts.",
+      es: "Gratuita, sin obligación de compra, abierta a cualquier persona física; los menores juegan con el permiso de un padre o madre. Partidas ilimitadas: en cada ronda solo cuenta la mejor puntuación de cada correo.",
     },
   },
   {
-    titre: { fr: "Gagnant", de: "Gewinner", lb: "Gewënner", en: "Winner", es: "Ganador" },
+    titre: { fr: "Gagnants", de: "Gewinner", lb: "Gewënner", en: "Winners", es: "Ganadores" },
     texte: {
-      fr: "Le meilleur score du classement à la clôture remporte l’ensemble des lots présentés ci-dessus. À égalité, le premier à avoir atteint ce score l’emporte.",
-      de: "Die beste Punktzahl der Rangliste bei Spielende gewinnt alle oben gezeigten Preise. Bei Gleichstand gewinnt, wer die Punktzahl zuerst erreicht hat.",
-      lb: "De beschte Score vum Classement um Enn gewënnt all d’Präisser hei uewen. Bei Gläichstand gewënnt deen, deen de Score fir d’éischt erreecht huet.",
-      en: "The best score on the leaderboard at closing wins all the prizes shown above. In a tie, whoever reached that score first wins.",
-      es: "La mejor puntuación de la clasificación al cierre gana todos los premios presentados arriba. En caso de empate, gana quien alcanzó primero esa puntuación.",
+      fr: "Chaque jour à 18 h, le meilleur score de la manche remporte le lot du jour, parmi les lots présentés ci-dessus. À égalité, le premier à avoir atteint ce score l’emporte. Les gagnants sont affichés sous le classement, par leur pseudo.",
+      de: "Jeden Tag um 18 Uhr gewinnt die beste Punktzahl der Runde den Tagespreis, aus den oben gezeigten Preisen. Bei Gleichstand gewinnt, wer die Punktzahl zuerst erreicht hat. Die Gewinner stehen mit ihrem Spitznamen unter der Rangliste.",
+      lb: "All Dag um 18 Auer gewënnt de beschte Score vun der Ronn de Präis vum Dag, ënnert de Präisser hei uewen. Bei Gläichstand gewënnt deen, deen de Score fir d’éischt erreecht huet. D’Gewënner stinn mat hirem Spëtznumm ënner dem Classement.",
+      en: "Every day at 6 pm, the round’s best score wins the prize of the day, from the prizes shown above. In a tie, whoever reached that score first wins. Winners are listed by nickname under the leaderboard.",
+      es: "Cada día a las 18:00, la mejor puntuación de la ronda gana el premio del día, entre los premios presentados arriba. En caso de empate, gana quien alcanzó primero esa puntuación. Los ganadores aparecen con su seudónimo bajo la clasificación.",
     },
   },
   {
@@ -272,11 +272,11 @@ const ARTICLES: { titre: Trad; texte: Trad }[] = [
       es: "Entrega",
     },
     texte: {
-      fr: "Le gagnant est prévenu par e-mail dans les 7 jours suivant la clôture. Sans réponse 7 jours après ce message, les lots reviennent au joueur suivant du classement. Les lots ne sont ni échangeables ni remboursables en argent.",
-      de: "Der Gewinner wird innerhalb von 7 Tagen nach Spielende per E-Mail benachrichtigt. Ohne Antwort 7 Tage nach dieser Nachricht gehen die Preise an den Nächsten der Rangliste. Die Preise können nicht getauscht oder ausgezahlt werden.",
-      lb: "De Gewënner kritt bannent 7 Deeg nom Enn eng E-Mail. Ouni Äntwert 7 Deeg no dësem Message ginn d’Präisser un deen nächste vum Classement. D’Präisser kënnen net getosch oder an Suen ausbezuelt ginn.",
-      en: "The winner is notified by email within 7 days of closing. With no reply 7 days after that message, the prizes go to the next player on the leaderboard. Prizes cannot be exchanged or paid out in cash.",
-      es: "El ganador recibe un correo en los 7 días siguientes al cierre. Sin respuesta 7 días después de ese mensaje, los premios pasan al siguiente jugador de la clasificación. Los premios no se cambian ni se canjean por dinero.",
+      fr: "Chaque gagnant est prévenu par e-mail dans les 7 jours suivant sa manche. Sans réponse 7 jours après ce message, le lot revient au joueur suivant de la manche. Les lots ne sont ni échangeables ni remboursables en argent.",
+      de: "Jeder Gewinner wird innerhalb von 7 Tagen nach seiner Runde per E-Mail benachrichtigt. Ohne Antwort 7 Tage nach dieser Nachricht geht der Preis an den Nächsten der Runde. Die Preise können nicht getauscht oder ausgezahlt werden.",
+      lb: "All Gewënner kritt bannent 7 Deeg no senger Ronn eng E-Mail. Ouni Äntwert 7 Deeg no dësem Message geet de Präis un deen nächste vun der Ronn. D’Präisser kënnen net getosch oder an Suen ausbezuelt ginn.",
+      en: "Each winner is notified by email within 7 days of their round. With no reply 7 days after that message, the prize goes to the next player of that round. Prizes cannot be exchanged or paid out in cash.",
+      es: "Cada ganador recibe un correo en los 7 días siguientes a su ronda. Sin respuesta 7 días después de ese mensaje, el premio pasa al siguiente jugador de la ronda. Los premios no se cambian ni se canjean por dinero.",
     },
   },
   {

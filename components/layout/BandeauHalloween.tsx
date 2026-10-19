@@ -17,11 +17,11 @@ export async function BandeauHalloween() {
         <Citrouille className="h-4 w-auto flex-none" />
         <span>
           {t({
-            fr: "Jeu concours d’Halloween : un gaufrier, une tasse et des bonbons à gagner.",
-            de: "Halloween-Gewinnspiel: Waffeleisen, Tasse und Süßigkeiten zu gewinnen.",
-            lb: "Halloween-Gewinnspill: Wafeleisen, Taass a Séissegkeeten ze gewannen.",
-            en: "Halloween contest: win a waffle maker, a mug and sweets.",
-            es: "Concurso de Halloween: gana una gofrera, una taza y golosinas.",
+            fr: "Jeu concours d’Halloween : un lot à gagner chaque jour à 18 h.",
+            de: "Halloween-Gewinnspiel: jeden Tag um 18 Uhr ein Preis zu gewinnen.",
+            lb: "Halloween-Gewinnspill: all Dag um 18 Auer e Präis ze gewannen.",
+            en: "Halloween contest: a prize to win every day at 6 pm.",
+            es: "Concurso de Halloween: un premio cada día a las 18:00.",
           })}
         </span>
       </span>

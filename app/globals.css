@@ -1880,7 +1880,7 @@
   }
 }
 
-/* Jeu « Frontières hantées » : étapes, bouton, classement, règlement. */
+/* Jeu « Le village hanté » : étapes, bouton, classement, gagnants, règlement. */
 .concours-etape-num {
   display: grid;
   place-items: center;

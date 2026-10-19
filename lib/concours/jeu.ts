@@ -1,5 +1,5 @@
 /**
- * « Frontières hantées », le jeu du concours d'Halloween : une ville des
+ * « Le village hanté », le jeu du concours d'Halloween : une ville des
  * Trois Frontières apparaît, on dit vite de quel pays elle est.
  *
  * Ce fichier est partagé par le navigateur (le jeu) et le serveur (qui
@@ -78,16 +78,21 @@ export const VILLES: { nom: string; pays: Pays }[] = [
   { nom: "Losheim am See", pays: "DE" },
 ]
 
-/** Clôture du concours (heure de Paris) : le meilleur score à cette heure gagne. */
-export const FIN_CONCOURS = "2026-10-31T23:59:59+01:00"
+/**
+ * Le concours se joue en manches d'un jour : chaque jour à 18 h (heure de
+ * Paris), le meilleur score de la manche gagne le lot du jour. La dernière
+ * manche se termine le 31 octobre à 18 h.
+ */
+export const HEURE_TIRAGE = 18
+export const FIN_CONCOURS = "2026-10-31T18:00:00+01:00"
 export const concoursTermine = (maintenant = Date.now()) =>
   maintenant >= new Date(FIN_CONCOURS).getTime()
 export const FIN_TEXTE: Trad = {
-  fr: "31 octobre, 23 h 59",
-  de: "31. Oktober, 23:59 Uhr",
-  lb: "31. Oktober, 23.59 Auer",
-  en: "31 October, 11.59 pm",
-  es: "31 de octubre, 23:59",
+  fr: "31 octobre, 18 h",
+  de: "31. Oktober, 18 Uhr",
+  lb: "31. Oktober, 18 Auer",
+  en: "31 October, 6 pm",
+  es: "31 de octubre, 18:00",
 }
 
 /** Durée d'une partie : le temps passé devant les villes, pauses entre deux villes exclues. */
