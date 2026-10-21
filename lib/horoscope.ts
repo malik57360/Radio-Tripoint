@@ -1,20 +1,26 @@
 import "server-only"
 import Anthropic from "@anthropic-ai/sdk"
 import { z } from "zod"
+import ecrits from "@/data/horoscope.json"
 import { accesRedis, jourParis, redis } from "@/lib/direction/redis"
 import { langues, type Langue, type Trad } from "@/lib/i18n/langues"
 import { dateLongue, nomJour } from "@/lib/utils/dates"
 
 /**
- * Horoscope du jour, pour le plaisir : l'IA écrit les douze signes en
- * français chaque nuit (tâche planifiée, vercel.json), puis les traduit dans
- * les autres langues du site. Le tout est gardé dans Redis (une clé par jour,
- * huit jours) et lu en cache (tag « horoscope »).
+ * Horoscope du jour, pour le plaisir.
  *
- * Si la tâche de la nuit n'a pas tourné, la première visite du jour la lance
- * (POST /api/horoscope) et la page montre en attendant l'horoscope de la
- * veille, daté. Un verrou évite deux rédactions en même temps ; quatre essais
- * ratés le même jour, et on s'arrête jusqu'au lendemain.
+ * D'abord l'horoscope écrit à l'avance : data/horoscope.json, un jour par
+ * entrée dans les cinq langues, ajouté chaque soir pour le lendemain
+ * (scripts/horoscope.mjs, qui garde huit jours). Il ne dépend ni de Redis
+ * ni d'une clé d'API : la page change de jour toute seule à minuit.
+ *
+ * À défaut, l'IA écrit les douze signes en français chaque nuit (tâche
+ * planifiée, vercel.json), puis les traduit ; le tout est gardé dans Redis
+ * (une clé par jour, huit jours) et lu en cache (tag « horoscope »). Si la
+ * tâche n'a pas tourné, la première visite du jour la lance (POST
+ * /api/horoscope) et la page montre en attendant l'horoscope de la veille,
+ * daté. Un verrou évite deux rédactions en même temps ; quatre essais ratés
+ * le même jour, et on s'arrête jusqu'au lendemain.
  */
 
 export const SIGNES = [
@@ -213,12 +219,23 @@ async function lireDirect(jour: string): Promise<Horoscope | null> {
 const veille = (jour: string) =>
   new Date(Date.parse(`${jour}T12:00:00Z`) - 24 * 3600 * 1000).toISOString().slice(0, 10)
 
+/** L'horoscope écrit à l'avance pour ce jour, s'il y en a un (data/horoscope.json). */
+function ecrit(jour: string): Horoscope | null {
+  const langues = (ecrits as Record<string, Horoscope["langues"] | undefined>)[jour]
+  return langues?.fr ? { jour, langues } : null
+}
+
+/** L'horoscope d'un jour : l'écrit d'abord, sinon celui de l'IA (Redis). */
+async function duJour(jour: string) {
+  return ecrit(jour) ?? (await lire(jour))
+}
+
 /** L'horoscope à montrer : celui du jour, sinon celui de la veille (daté), sinon null. */
 export async function horoscopeAffiche(): Promise<{ h: Horoscope; duJour: boolean } | null> {
   const jour = jourParis()
-  const h = await lire(jour)
+  const h = await duJour(jour)
   if (h?.langues.fr) return { h, duJour: true }
-  const v = await lire(veille(jour))
+  const v = await duJour(veille(jour))
   return v?.langues.fr ? { h: v, duJour: false } : null
 }
 
@@ -229,6 +246,9 @@ export type ResultatHoroscope = "fait" | "deja" | "en-cours" | "abandon" | "indi
  * L'appelant rafraîchit le cache (revalidateTag TAG_HOROSCOPE) si « fait ».
  */
 export async function genererHoroscope(jour = jourParis()): Promise<ResultatHoroscope> {
+  // Déjà écrit à l'avance dans toutes les langues : rien à dépenser.
+  const deja = ecrit(jour)
+  if (deja && langues.every((l) => deja.langues[l])) return "deja"
   const cle = process.env.ANTHROPIC_API_KEY
   if (!cle || !accesRedis()) return "indisponible"
   const avant = await lireDirect(jour)
