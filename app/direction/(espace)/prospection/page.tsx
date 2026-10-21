@@ -2,6 +2,7 @@ import { Search } from "lucide-react"
 import Link from "next/link"
 import { ConseilsDuJour, type ConseilVue } from "@/components/direction/ConseilsDuJour"
 import { ListeProspects, type FicheProspect } from "@/components/direction/ListeProspects"
+import { MailsPrepares, type MailPrepareVue } from "@/components/direction/MailsPrepares"
 import type { SuiviInitial } from "@/components/direction/SuiviProspect"
 import { AActiver, Carte, EnTetePage, Etat, nombre } from "@/components/direction/ui"
 import {
@@ -11,6 +12,7 @@ import {
   selectionnerDuJour,
 } from "@/lib/direction/conseils"
 import { coordonneesConnues } from "@/lib/direction/coordonnees"
+import { lirePrepares } from "@/lib/direction/prepares"
 import { redisActif } from "@/lib/direction/redis"
 import {
   PAR_PAGE,
@@ -284,15 +286,36 @@ async function Resultats({
 
 /** Les conseils du jour (créés le matin ; sinon à la première ouverture). */
 async function VueJour({ suivis }: { suivis: Record<string, Suivi> }) {
-  const conseils = await selectionnerDuJour().catch(() => null)
+  const [conseils, prepares] = await Promise.all([
+    selectionnerDuJour().catch(() => null),
+    lirePrepares().catch(() => []),
+  ])
+  // Les mails préparés à l'avance passent en tête, tant qu'ils ne sont ni envoyés ni écartés.
+  const aRelire: MailPrepareVue[] = prepares
+    .filter((m) => !m.suite)
+    .map((m) => ({
+      id: m.id,
+      nom: m.nom,
+      activite: m.activite,
+      commune: m.commune,
+      email: m.email,
+      verifie: m.verifie,
+      source: m.source,
+      objet: m.objet,
+      texte: m.texte,
+    }))
+  const blocPrepares = aRelire.length > 0 && <MailsPrepares mails={aRelire} />
   if (!conseils)
     return (
-      <Carte>
-        <Etat ok={false}>
-          L&apos;annuaire des entreprises ne répond pas : les conseils du jour arrivent dès
-          qu&apos;il revient.
-        </Etat>
-      </Carte>
+      <div className="space-y-6">
+        {blocPrepares}
+        <Carte>
+          <Etat ok={false}>
+            L&apos;annuaire des entreprises ne répond pas : les conseils du jour arrivent dès
+            qu&apos;il revient.
+          </Etat>
+        </Carte>
+      </div>
     )
   const sirens = conseils.entreprises.map((e) => e.siren)
   const [coords, brouillons, budget] = await Promise.all([
@@ -324,7 +347,12 @@ async function VueJour({ suivis }: { suivis: Record<string, Suivi> }) {
   const tete = vues.slice(0, RECHERCHES_PAR_JOUR).filter((v) => !v.traitee)
   const aPreparer =
     (budget > 0 && tete.some((v) => !v.cherche)) || tete.some((v) => v.email && !v.brouillon)
-  return <ConseilsDuJour conseils={vues} aPreparer={aPreparer} />
+  return (
+    <div className="space-y-6">
+      {blocPrepares}
+      <ConseilsDuJour conseils={vues} aPreparer={aPreparer} />
+    </div>
+  )
 }
 
 async function VueSuivi({ suivis }: { suivis: Record<string, Suivi> }) {

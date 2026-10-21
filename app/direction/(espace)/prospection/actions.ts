@@ -14,6 +14,7 @@ import {
   type Coordonnees,
 } from "@/lib/direction/coordonnees"
 import { envoyerNouveau } from "@/lib/direction/mails"
+import { mailPrepare, noterPrepare, suitePrepare } from "@/lib/direction/prepares"
 import {
   STATUTS,
   ecrireSuivi,
@@ -163,5 +164,47 @@ export async function actionChercherConseil(
   } catch (e) {
     console.error("[conseils] recherche :", (e as Error).message)
     return { ok: false, erreur: "Recherche impossible pour le moment : réessayez." }
+  }
+}
+
+/* ───────────── Mails préparés à l'avance ───────────── */
+
+/** Envoie un mail préparé (adresse, objet et texte relus dans la page), une seule fois. */
+export async function actionEnvoyerPrepare(
+  id: string,
+  email: string,
+  objet: string,
+  texte: string,
+): Promise<{ ok: true; a: string } | { ok: false; erreur: string }> {
+  if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
+  if (!mailPrepare(id)) return { ok: false, erreur: "Mail introuvable." }
+  if (!texte.trim() || !objet.trim()) return { ok: false, erreur: "Le message est vide." }
+  try {
+    if ((await suitePrepare(id))?.etat === "envoye") return { ok: false, erreur: "Déjà envoyé." }
+    const a = await envoyerNouveau(
+      String(email).slice(0, 200),
+      objet.slice(0, 200),
+      texte.slice(0, 20_000),
+    )
+    await noterPrepare(id, { etat: "envoye", a, quand: Date.now() })
+    return { ok: true, a }
+  } catch (e) {
+    console.error("[prepares] envoi :", (e as Error).message)
+    return { ok: false, erreur: (e as Error).message || "Envoi impossible." }
+  }
+}
+
+/** Écarte un mail préparé : il ne sera pas envoyé. */
+export async function actionEcarterPrepare(
+  id: string,
+): Promise<{ ok: true } | { ok: false; erreur: string }> {
+  if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
+  if (!mailPrepare(id)) return { ok: false, erreur: "Mail introuvable." }
+  try {
+    if ((await suitePrepare(id))?.etat === "envoye") return { ok: false, erreur: "Déjà envoyé." }
+    await noterPrepare(id, { etat: "ecarte", quand: Date.now() })
+    return { ok: true }
+  } catch (e) {
+    return { ok: false, erreur: (e as Error).message || "Impossible pour le moment." }
   }
 }
