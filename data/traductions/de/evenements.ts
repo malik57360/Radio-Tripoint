@@ -112,4 +112,16 @@ export const evenements: Record<string, TradEvenement> = {
     lieu: "Bürgerhaus, Kleiner Saal",
     alt: "Plakat: Band Factory MZG, Freitag, 20. November 2026, 17 bis 19 Uhr, Bürgerhaus Nennig",
   },
+  "lanterne-magique-musee-a-possen-2026": {
+    titre: "Die Magie bewegter Bilder im Musée „A Possen“",
+    description:
+      "Workshop rund um die Laterna Magica, den Vorläufer des Kinos: Mit einer Museumsvermittlerin oder einem Museumsvermittler entdeckt man, wie das Gerät funktioniert, und baut dann seine eigene Version. Kinder sind in Begleitung eines Erwachsenen willkommen. Tickets online.",
+    lieu: "Musée „A Possen“",
+  },
+  "marche-aux-puces-thionville-25-octobre-2026": {
+    titre: "Flohmarkt in Thionville",
+    description:
+      "Am Sonntagmorgen wird die Place de la Liberté zum Treffpunkt für Schnäppchenjäger: Vintage, Trödel und gute Gelegenheiten, von 6 bis 12 Uhr.",
+    lieu: "Place de la Liberté",
+  },
 }

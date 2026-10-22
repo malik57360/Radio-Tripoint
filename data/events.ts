@@ -938,4 +938,40 @@ export const evenements: Evenement[] = [
       lieu: "Bürgerhaus, Nennig (DE)",
     },
   },
+  {
+    slug: "lanterne-magique-musee-a-possen-2026",
+    titre: "La magie des images animées au Musée « A Possen »",
+    description:
+      "Atelier autour de la lanterne magique (Laterna Magica), l'ancêtre du cinéma : avec un médiateur, on découvre comment fonctionne l'appareil, puis on fabrique sa propre version. Les enfants sont les bienvenus, accompagnés d'un adulte. Billets en ligne.",
+    debut: "2026-10-24T14:00:00+02:00",
+    fin: "2026-10-24T17:30:00+02:00",
+    lieu: "Musée « A Possen »",
+    ville: "Bech-Kleinmacher",
+    pays: "LU",
+    organisateur: "Musée « A Possen »",
+    lienExterne: "https://musee-possen.lu/agenda/",
+    flyer: {
+      titre: "Lanterne magique",
+      accroche: "Atelier en famille : l'ancêtre du cinéma",
+      lieu: "Musée A Possen, Bech-Kleinmacher (LU)",
+    },
+  },
+  {
+    slug: "marche-aux-puces-thionville-25-octobre-2026",
+    titre: "Marché aux puces de Thionville",
+    description:
+      "Le dimanche matin, la place de la Liberté devient le rendez-vous des chineurs : objets vintage, brocante et bonnes affaires, de 6 h à midi.",
+    debut: "2026-10-25T06:00:00+01:00",
+    fin: "2026-10-25T12:00:00+01:00",
+    lieu: "Place de la Liberté",
+    ville: "Thionville",
+    pays: "FR",
+    lienExterne:
+      "https://www.ici.fr/grand-est/moselle-57/ou-sortir-le-week-end-du-24-au-25-octobre-en-moselle-et-pays-haut-6610758",
+    flyer: {
+      titre: "Marché aux puces",
+      accroche: "Vintage et bonnes affaires, dès 6 h",
+      lieu: "Place de la Liberté, Thionville",
+    },
+  },
 ]
