@@ -27,3 +27,11 @@ export function tempsLecture(blocs: Bloc[]): number {
 export function normaliser(s: string): string {
   return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim()
 }
+
+/** « Le Schengen Museum fête… » → « le-schengen-museum-fete… » (80 caractères au plus). */
+export const versSlug = (titre: string) =>
+  normaliser(titre)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80)
+    .replace(/-+$/, "")

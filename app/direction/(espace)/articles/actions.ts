@@ -10,7 +10,7 @@ import { slugsArticles } from "@/lib/contenu/articles"
 import { estConnecte } from "@/lib/direction/acces"
 import { redis } from "@/lib/direction/redis"
 import { oublierTraductions, traduireArticle } from "@/lib/direction/traduction-articles"
-import { normaliser } from "@/lib/utils/texte"
+import { versSlug } from "@/lib/utils/texte"
 import type { Article } from "@/types/article"
 import type { CategorieSlug } from "@/types/category"
 import type { Bloc, Visuel } from "@/types/media"
@@ -43,14 +43,6 @@ const schema = z.object({
   une: z.boolean().optional(),
 })
 export type DonneesArticle = z.infer<typeof schema>
-
-/** « Le Schengen Museum fête… » → « le-schengen-museum-fete… » */
-const versSlug = (titre: string) =>
-  normaliser(titre)
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80)
-    .replace(/-+$/, "")
 
 /** Maintenant, à l'heure de Paris, au format des articles (2026-10-06T13:00:00+02:00). */
 function maintenantParis() {

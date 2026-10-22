@@ -8,6 +8,7 @@ import {
   ImagePlus,
   LayoutDashboard,
   Mail,
+  Mic,
   Newspaper,
   PenLine,
   Radio,
@@ -62,6 +63,14 @@ export const PAGES = [
     icone: PenLine,
     onglet: true,
     desc: "Écrire et publier un article",
+  },
+  {
+    href: "/direction/podcasts",
+    libelle: "Podcasts",
+    court: "Podcasts",
+    icone: Mic,
+    onglet: false,
+    desc: "Publier un replay ou un podcast",
   },
   {
     href: "/direction/agenda",

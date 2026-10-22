@@ -5,6 +5,7 @@ import type { Langue, Trad } from "@/lib/i18n/langues"
 import { normaliser } from "@/lib/utils/texte"
 import { localiserEpisode } from "./localiser"
 import { modeDemo } from "./demo"
+import { localiserEpisodeDashboard, podcastsDashboard } from "./podcasts-dashboard"
 
 export const themesPodcast: { valeur: ThemePodcast | "toutes"; libelle: Trad }[] = [
   { valeur: "toutes", libelle: { fr: "Toutes", de: "Alle", lb: "All", en: "All", es: "Todas" } },
@@ -36,20 +37,23 @@ export const themesPodcast: { valeur: ThemePodcast | "toutes"; libelle: Trad }[]
   },
 ]
 
-function tous(l: Langue = "fr"): Episode[] {
-  const liste = modeDemo ? [...episodesReels, ...episodesDemo] : episodesReels
-  return [...liste]
-    .sort(
-      (a, b) =>
-        (b.publieLe ?? "").localeCompare(a.publieLe ?? "") || (b.ordre ?? 0) - (a.ordre ?? 0),
-    )
-    .map((e) => localiserEpisode(e, l))
+/** Épisodes du dépôt + ceux publiés depuis le tableau de bord (un slug du dépôt prime). */
+async function tous(l: Langue = "fr"): Promise<Episode[]> {
+  const base = modeDemo ? [...episodesReels, ...episodesDemo] : episodesReels
+  const connus = new Set(base.map((e) => e.slug))
+  const ajoutes = (await podcastsDashboard()).filter((e) => !connus.has(e.slug))
+  return [
+    ...base.map((e) => localiserEpisode(e, l)),
+    ...ajoutes.map((e) => localiserEpisodeDashboard(e, l)),
+  ].sort(
+    (a, b) => (b.publieLe ?? "").localeCompare(a.publieLe ?? "") || (b.ordre ?? 0) - (a.ordre ?? 0),
+  )
 }
 
 export async function listerEpisodes(
   options: { theme?: string; q?: string; emission?: string; langue?: Langue } = {},
 ): Promise<Episode[]> {
-  let liste = tous(options.langue)
+  let liste = await tous(options.langue)
   if (options.theme && options.theme !== "toutes")
     liste = liste.filter((e) => e.theme === options.theme)
   if (options.emission) liste = liste.filter((e) => e.emission === options.emission)
@@ -61,5 +65,5 @@ export async function listerEpisodes(
 }
 
 export async function episodeParSlug(slug: string, l: Langue = "fr"): Promise<Episode | null> {
-  return tous(l).find((e) => e.slug === slug) ?? null
+  return (await tous(l)).find((e) => e.slug === slug) ?? null
 }
