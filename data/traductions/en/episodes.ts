@@ -1,6 +1,11 @@
 import type { TradEpisode } from "../types"
 
 export const episodes: Record<string, TradEpisode> = {
+  "histoire-memoire-regionale-norbert-noel-maire-de-bouzonville": {
+    titre: "“Norbert Noël, mayor of Bouzonville (1949–1971)”",
+    description:
+      "Replay of the programme “Histoire & Mémoire régionale” broadcast on Wednesday 21 October 2026 on Radio Tripoint. The story of Norbert Noël, mayor of Bouzonville from 1949 to 1971: post-war reconstruction, housing, schools, sports facilities, and a name that remains tied to the town.",
+  },
   "histoire-memoire-regionale-episode-1-identite-transfrontaliere-version-allemande": {
     titre: "Episode 1: “Cross-border identity” (German version)",
     description:

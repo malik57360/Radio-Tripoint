@@ -1,6 +1,11 @@
 import type { TradEpisode } from "../types"
 
 export const episodes: Record<string, TradEpisode> = {
+  "histoire-memoire-regionale-norbert-noel-maire-de-bouzonville": {
+    titre: "«Norbert Noël, alcalde de Bouzonville (1949-1971)»",
+    description:
+      "Reemisión del programa «Histoire & Mémoire régionale» del miércoles 21 de octubre de 2026 en Radio Tripoint. La trayectoria de Norbert Noël, alcalde de Bouzonville de 1949 a 1971: la reconstrucción de posguerra, las viviendas, las escuelas, las instalaciones deportivas y un nombre que sigue unido a la ciudad.",
+  },
   "histoire-memoire-regionale-episode-1-identite-transfrontaliere-version-allemande": {
     titre: "Episodio 1: «Identidad transfronteriza» (versión alemana)",
     description:

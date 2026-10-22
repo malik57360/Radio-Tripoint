@@ -15,6 +15,18 @@ const audio = (id: string) => `${BASE_AUDIO}${id}.mp3`
  */
 export const episodes: Episode[] = [
   {
+    slug: "histoire-memoire-regionale-norbert-noel-maire-de-bouzonville",
+    titre: "« Norbert Noël, maire de Bouzonville (1949-1971) »",
+    description:
+      "Replay de l'émission « Histoire & Mémoire régionale » du mercredi 21 octobre 2026 sur Radio Tripoint. Le parcours de Norbert Noël, maire de Bouzonville de 1949 à 1971 : la reconstruction d'après-guerre, les logements, les écoles, les équipements sportifs, et un nom qui reste attaché à la ville.",
+    emission: "histoire-memoire-regionale",
+    theme: "culture",
+    publieLe: "2026-10-21T20:00:00+02:00",
+    duree: 227,
+    // Hébergé avec le site (les anciens replays sont dans le stockage Blob).
+    audioUrl: "/media/podcasts/histoire-memoire-regionale-norbert-noel-bouzonville.mp3",
+  },
+  {
     slug: "histoire-memoire-regionale-episode-1-identite-transfrontaliere-version-allemande",
     titre: "Épisode 1 : « Identité transfrontalière » (version allemande)",
     description:
