@@ -347,17 +347,17 @@ export const evenements: Evenement[] = [
     slug: "betes-et-sorcieres-chateau-sierck-2026",
     titre: "Bêtes & Sorcières : le Château de Sierck s'enchante",
     description:
-      "Un week-end d'Halloween au château, dans le cadre du festival Bêtes & Sorcières du Département de la Moselle : contes, ateliers créatifs, maquillage, saynète, rencontres avec les sorcières et décoration fantastique. Venez déguisés ! Buvette sur place. Entrée 8 €.",
+      "Un week-end d'Halloween au château, dans le cadre du festival Bêtes & Sorcières du Département de la Moselle : contes, ateliers créatifs, maquillage, saynète, rencontres avec les sorcières et décoration fantastique. Venez déguisés ! Buvette sur place. Entrée 7 € (seniors 6 €, réduit 4 € pour les 6-12 ans, étudiants et demandeurs d'emploi), gratuit pour les moins de 6 ans.",
     debut: "2026-10-24T00:00:00+02:00",
     fin: "2026-10-25T23:59:00+01:00",
     journee: true,
-    horaires: "Samedi 24 et dimanche 25 octobre 2026",
+    horaires: "Samedi 24 et dimanche 25 octobre, de 11 h à 17 h",
     lieu: "Château de Sierck",
     adresse: "5 rue du château, 57480 Sierck-les-Bains",
     ville: "Sierck-les-Bains",
     pays: "FR",
     lienExterne:
-      "https://www.info-lux.com/sierck-les-bains-patrimoine-festival-betes-sorcieres-le-chateau-de-sierck-senchante/themes/evenements-traditions/fete/",
+      "https://www.chateau-sierck.com/agenda/festival-betes-sorcieres-chateau-sierck.html",
     visuel: distant(
       "https://www.info-lux.com/wp-content/uploads/2026/09/festival-betes-sorcieres-le-chateau-de-si-sierck-les-bains-halloween-2.png",
       "Visuel du festival Bêtes & Sorcières au Château de Sierck (photo : Sybil Becker)",
@@ -367,7 +367,7 @@ export const evenements: Evenement[] = [
     flyer: {
       titre: "Bêtes & Sorcières",
       accroche: "Halloween au château : contes, ateliers, maquillage",
-      tarif: "ENTRÉE 8 €",
+      tarif: "ENTRÉE 7 €",
       lieu: "Château de Sierck",
     },
   },
