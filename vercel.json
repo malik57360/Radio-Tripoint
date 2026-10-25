@@ -22,6 +22,10 @@
     {
       "path": "/api/prospection/quotidien",
       "schedule": "5 3 * * *"
+    },
+    {
+      "path": "/api/annonces/quotidien",
+      "schedule": "17 5 * * *"
     }
   ]
 }

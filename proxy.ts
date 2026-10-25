@@ -25,7 +25,15 @@ export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const premier = pathname.split("/")[1]
 
-  if (PREFIXES.has(premier)) return NextResponse.next()
+  if (PREFIXES.has(premier)) {
+    // Les petites annonces n'existent qu'en français pour l'instant.
+    if (/^\/[a-z]{2}\/annonces(\/|$)/.test(pathname)) {
+      const url = request.nextUrl.clone()
+      url.pathname = pathname.slice(3)
+      return NextResponse.redirect(url, 307)
+    }
+    return NextResponse.next()
+  }
 
   if (premier === "fr") {
     const url = request.nextUrl.clone()

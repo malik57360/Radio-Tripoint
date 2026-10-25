@@ -67,6 +67,23 @@ const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
       es: "Salir por la región",
     },
   },
+  {
+    libelle: {
+      fr: "Petites annonces",
+      de: "Kleinanzeigen",
+      lb: "Kleng Annoncen",
+      en: "Classifieds",
+      es: "Anuncios clasificados",
+    },
+    href: "/annonces",
+    detail: {
+      fr: "Acheter, vendre, recruter près de chez vous",
+      de: "Kaufen, verkaufen, Stellen anbieten (auf Französisch)",
+      lb: "Kafen, verkafen, Leit astellen (op Franséisch)",
+      en: "Buy, sell, hire locally (in French)",
+      es: "Comprar, vender, contratar cerca (en francés)",
+    },
+  },
 ]
 
 export function MobileMenu({

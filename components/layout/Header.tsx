@@ -129,7 +129,10 @@ export function Header() {
               {navPrincipale.map((l) => {
                 const actif = estActif(pathname, l.href)
                 return (
-                  <li key={l.href}>
+                  <li
+                    key={l.href}
+                    className={l.large ? "hidden min-[1440px]:list-item" : undefined}
+                  >
                     <Link
                       href={l.href}
                       aria-current={actif ? "page" : undefined}
@@ -178,6 +181,20 @@ export function Header() {
                         {t(navSoutenir.libelle)}
                       </Link>
                     </li>
+                    {navPrincipale
+                      .filter((l) => l.large)
+                      .map((l) => (
+                        <li key={l.href} className="min-[1440px]:hidden">
+                          <Link
+                            href={l.href}
+                            onClick={() => setPlusOuvert(false)}
+                            aria-current={estActif(pathname, l.href) ? "page" : undefined}
+                            className="text-encre hover:bg-papier-2 aria-[current=page]:text-accent-encre block px-4 py-2.5 text-[0.92rem] font-bold"
+                          >
+                            {t(l.libelle)}
+                          </Link>
+                        </li>
+                      ))}
                     {navPlus.map((l) => (
                       <li key={l.href}>
                         <Link

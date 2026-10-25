@@ -56,6 +56,16 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
       },
       {
         libelle: {
+          fr: "Petites annonces",
+          de: "Kleinanzeigen",
+          lb: "Kleng Annoncen",
+          en: "Classifieds",
+          es: "Anuncios clasificados",
+        },
+        href: "/annonces",
+      },
+      {
+        libelle: {
           fr: "Nous soutenir",
           de: "Unterstützen Sie uns",
           lb: "Ënnerstëtzt eis",

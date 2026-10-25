@@ -3,6 +3,8 @@ import { sansLangue, type Trad } from "@/lib/i18n/langues"
 export interface LienNav {
   libelle: Trad
   href: string
+  /** Dans la barre seulement dès 1440 px ; en dessous, en tête du menu « Plus ». */
+  large?: boolean
 }
 
 /** Navigation principale (desktop). */
@@ -28,6 +30,17 @@ export const navPrincipale: LienNav[] = [
   {
     libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
     href: "/agenda",
+  },
+  {
+    libelle: {
+      fr: "Annonces",
+      de: "Kleinanzeigen",
+      lb: "Annoncen",
+      en: "Classifieds",
+      es: "Anuncios",
+    },
+    href: "/annonces",
+    large: true,
   },
   {
     libelle: { fr: "Culture", de: "Kultur", lb: "Kultur", en: "Culture", es: "Cultura" },

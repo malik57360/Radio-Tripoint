@@ -13,6 +13,7 @@ import {
   PenLine,
   Radio,
   ServerCog,
+  Store,
   Target,
 } from "lucide-react"
 import Link from "next/link"
@@ -79,6 +80,14 @@ export const PAGES = [
     icone: CalendarCheck,
     onglet: false,
     desc: "Événements proposés par les organisateurs",
+  },
+  {
+    href: "/direction/annonces",
+    libelle: "Petites annonces",
+    court: "Annonces",
+    icone: Store,
+    onglet: false,
+    desc: "Modération, paiements et tarifs des annonces",
   },
   {
     href: "/direction/flyer",

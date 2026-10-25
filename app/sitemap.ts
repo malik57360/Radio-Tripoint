@@ -6,6 +6,9 @@ import { listerEmissions } from "@/lib/contenu/emissions"
 import { tousEvenements } from "@/lib/contenu/evenements"
 import { listerEpisodes } from "@/lib/contenu/podcasts"
 import { codesLangues, langues, lienLangue } from "@/lib/i18n/langues"
+import { annoncesPubliques } from "@/lib/annonces/annonces"
+import { categoriesOuvertes, configPublique } from "@/lib/annonces/config"
+import { cheminAnnonce } from "@/lib/annonces/types"
 
 /**
  * Sitemap dynamique, dans toutes les langues du site : chaque page y figure en
@@ -15,11 +18,13 @@ import { codesLangues, langues, lienLangue } from "@/lib/i18n/langues"
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const u = (p: string) => `${site.url}${p}`
-  const [articles, emissions, episodes, evenements] = await Promise.all([
+  const [articles, emissions, episodes, evenements, annonces, cfgAnnonces] = await Promise.all([
     tousArticles(),
     listerEmissions(),
     listerEpisodes(),
     tousEvenements(),
+    annoncesPubliques(),
+    configPublique(),
   ])
   const statiques: MetadataRoute.Sitemap = [
     { url: u("/"), changeFrequency: "daily", priority: 1 },
@@ -69,15 +74,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((e) => !e.demo)
       .map((e) => ({ url: u(`/agenda/${e.slug}`), lastModified: e.debut, priority: 0.6 })),
   ]
-  return pages.flatMap((p) => {
-    const chemin = p.url.slice(site.url.length) || "/"
-    const languages = Object.fromEntries(
-      langues.map((l) => [codesLangues[l].html, u(lienLangue(chemin, l))]),
-    )
-    return langues.map((l) => ({
-      ...p,
-      url: u(lienLangue(chemin, l)),
-      alternates: { languages },
-    }))
-  })
+  // Petites annonces : en français seulement pour l'instant, donc sans équivalents.
+  const petitesAnnonces: MetadataRoute.Sitemap = [
+    { url: u("/annonces"), changeFrequency: "daily", priority: 0.8 },
+    ...categoriesOuvertes(cfgAnnonces).map((c) => ({
+      url: u(`/annonces/${c.slug}`),
+      changeFrequency: "daily" as const,
+      priority: 0.6,
+    })),
+    { url: u("/annonces/regles"), changeFrequency: "monthly", priority: 0.3 },
+    ...annonces.map((a) => ({
+      url: u(cheminAnnonce(a)),
+      lastModified: new Date(a.remonteeLe).toISOString(),
+      priority: 0.5,
+    })),
+  ]
+  return [
+    ...pages.flatMap((p) => {
+      const chemin = p.url.slice(site.url.length) || "/"
+      const languages = Object.fromEntries(
+        langues.map((l) => [codesLangues[l].html, u(lienLangue(chemin, l))]),
+      )
+      return langues.map((l) => ({
+        ...p,
+        url: u(lienLangue(chemin, l)),
+        alternates: { languages },
+      }))
+    }),
+    ...petitesAnnonces,
+  ]
 }
