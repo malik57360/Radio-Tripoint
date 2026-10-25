@@ -12,7 +12,7 @@ import {
   actionProfil,
   actionRenvoyerVerification,
   actionSupprimerCompte,
-} from "@/app/[lang]/annonces/actions"
+} from "@/app/petites-annonces/actions"
 import { PAYS, type Pays } from "@/lib/annonces/categories"
 import { cn } from "@/lib/utils/cn"
 
@@ -302,7 +302,7 @@ export function FormulaireInscription() {
         />
         <span>
           J&apos;accepte{" "}
-          <Link href="/annonces/conditions" target="_blank" className="underline">
+          <Link href="/conditions" target="_blank" className="underline">
             les conditions d&apos;utilisation
           </Link>{" "}
           et{" "}

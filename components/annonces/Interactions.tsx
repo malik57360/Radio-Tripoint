@@ -9,7 +9,7 @@ import {
   actionPayer,
   actionRetirer,
   actionSignaler,
-} from "@/app/[lang]/annonces/actions"
+} from "@/app/petites-annonces/actions"
 import { euros, type Offre } from "@/lib/annonces/offres"
 import { cn } from "@/lib/utils/cn"
 
@@ -50,7 +50,7 @@ export function FormulaireContact({
       <p className="text-encre-2 text-[0.9rem] leading-snug">
         Confirmez d&apos;abord votre adresse e-mail (lien reçu à l&apos;inscription), puis revenez
         écrire à l&apos;annonceur.{" "}
-        <Link href="/annonces/mon-espace" className="font-semibold underline">
+        <Link href="/mon-espace" className="font-semibold underline">
           Mon espace
         </Link>
       </p>
@@ -63,12 +63,12 @@ export function FormulaireContact({
           arnaqueurs à distance.
         </p>
         <Link
-          href={`/annonces/connexion?suite=${encodeURIComponent(chemin)}`}
+          href={`/connexion?suite=${encodeURIComponent(chemin)}`}
           className="btn btn-plein w-full"
         >
           Se connecter pour écrire
         </Link>
-        <Link href="/annonces/inscription" className="btn btn-trait w-full">
+        <Link href="/inscription" className="btn btn-trait w-full">
           Créer un compte
         </Link>
       </div>
@@ -258,10 +258,7 @@ export function ActionsMonAnnonce({
           </button>
         )}
         {modifiable && (
-          <Link
-            href={`/annonces/deposer?modifier=${id}`}
-            className="btn btn-trait min-h-10 text-sm"
-          >
+          <Link href={`/deposer?modifier=${id}`} className="btn btn-trait min-h-10 text-sm">
             Modifier
           </Link>
         )}

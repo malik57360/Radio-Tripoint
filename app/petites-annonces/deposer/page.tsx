@@ -14,9 +14,9 @@ import { idAnnonceValide } from "@/lib/annonces/types"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Déposer une annonce — Petites annonces",
+    titre: "Déposer une annonce",
     description: "Déposez votre annonce : vue en France, au Luxembourg et en Allemagne.",
-    chemin: "/annonces/deposer",
+    chemin: "/deposer",
     noindex: true,
   })
 
@@ -26,18 +26,18 @@ const ETAPES = [
   ["C'est en ligne", "Les acheteurs vous écrivent par le site."],
 ]
 
-export default async function PageDeposer(props: PageProps<"/[lang]/annonces/deposer">) {
+export default async function PageDeposer(props: PageProps<"/petites-annonces/deposer">) {
   const sp = await props.searchParams
   const modifier = typeof sp.modifier === "string" ? sp.modifier : undefined
   const c = await compteConnecte()
   if (!c)
     redirect(
-      `/annonces/connexion?suite=${encodeURIComponent(modifier ? `/annonces/deposer?modifier=${modifier}` : "/annonces/deposer")}`,
+      `/connexion?suite=${encodeURIComponent(modifier ? `/deposer?modifier=${modifier}` : "/deposer")}`,
     )
   const cfg = await lireConfig()
   const titre = modifier ? "Modifier l'annonce" : "Déposer une annonce"
   const cadre = (contenu: React.ReactNode) => (
-    <CadreCompte titre={titre} chemin="/annonces/deposer" connecte={c.nom} large>
+    <CadreCompte titre={titre} chemin="/deposer" large>
       <div className="grid gap-10 lg:grid-cols-[1fr_20rem] lg:gap-14">
         <div className="min-w-0">{contenu}</div>
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
@@ -73,7 +73,7 @@ export default async function PageDeposer(props: PageProps<"/[lang]/annonces/dep
       <EtatVide
         titre="Il manque les informations de votre entreprise"
         actions={
-          <Link href="/annonces/mon-espace#compte" className="btn btn-plein">
+          <Link href="/mon-espace#compte" className="btn btn-plein">
             Compléter mon compte
           </Link>
         }
@@ -127,7 +127,7 @@ export default async function PageDeposer(props: PageProps<"/[lang]/annonces/dep
       <EtatVide
         titre={`Vous avez déjà ${cfg.limites.activesParticulier} annonces actives`}
         actions={
-          <Link href="/annonces/mon-espace" className="btn btn-plein">
+          <Link href="/mon-espace" className="btn btn-plein">
             Gérer mes annonces
           </Link>
         }

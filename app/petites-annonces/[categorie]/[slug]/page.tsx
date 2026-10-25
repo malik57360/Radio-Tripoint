@@ -1,19 +1,19 @@
 import { Building2, CalendarClock, ExternalLink, MapPin, Phone } from "lucide-react"
 import { notFound, permanentRedirect } from "next/navigation"
+import { ViewTransition } from "react"
 import { FormulaireContact, Signalement } from "@/components/annonces/Interactions"
 import {
   BadgeMiseEnAvant,
   BadgePro,
-  CarteAnnonce,
+  GrilleAnnonces,
   Drapeau,
   EncadreArnaques,
-  NavAnnonces,
   dateLongue,
   IconeCategorie,
   prixAffiche,
   teinte,
 } from "@/components/annonces/Vitrine"
-import { Breadcrumbs } from "@/components/ui/Breadcrumbs"
+import { FilAnnonces } from "@/components/annonces/Chrome"
 import { EtatVide } from "@/components/ui/EtatVide"
 import Link from "@/components/ui/Lien"
 import { ShareButtons } from "@/components/ui/ShareButtons"
@@ -24,12 +24,12 @@ import { configPublique, nomCategorie } from "@/lib/annonces/config"
 import { trier } from "@/lib/annonces/recherche"
 import { metaAnnonces } from "@/lib/annonces/seo"
 import { cheminAnnonce, idDuSlug, misEnAvant } from "@/lib/annonces/types"
-import { urlAbsolue } from "@/lib/seo/metadata"
+import { lienAnnonces } from "@/lib/annonces/liens"
 import { cn } from "@/lib/utils/cn"
 
 /** Fiche d'une annonce. Le contact passe par le site : l'adresse de l'annonceur reste privée. */
 
-type Props = PageProps<"/[lang]/annonces/[categorie]/[slug]">
+type Props = PageProps<"/petites-annonces/[categorie]/[slug]">
 
 async function charger(props: Props) {
   const { categorie, slug } = await props.params
@@ -63,7 +63,7 @@ export default async function PageAnnonce(props: Props) {
         <EtatVide
           titre="Cette annonce n'est plus en ligne"
           actions={
-            <Link href={`/annonces/${ancienne.categorie}`} className="btn btn-plein">
+            <Link href={`/${ancienne.categorie}`} className="btn btn-plein">
               Voir les annonces de la catégorie
             </Link>
           }
@@ -99,12 +99,10 @@ export default async function PageAnnonce(props: Props) {
 
   return (
     <>
-      <NavAnnonces connecte={compte?.nom ?? null} />
       <div className="conteneur pt-5 sm:pt-7">
-        <Breadcrumbs
+        <FilAnnonces
           elements={[
-            { nom: "Petites annonces", chemin: "/annonces" },
-            { nom: nomCat, chemin: `/annonces/${a.categorie}` },
+            { nom: nomCat, chemin: `/${a.categorie}` },
             { nom: a.titre, chemin },
           ]}
         />
@@ -112,7 +110,15 @@ export default async function PageAnnonce(props: Props) {
       <article className="conteneur grid gap-8 pt-5 pb-14 lg:grid-cols-[1.4fr_1fr] lg:gap-12 lg:pt-8">
         <div className="min-w-0">
           {a.photos.length ? (
-            <div>
+            <div className="relative">
+              {prix && (
+                <span
+                  className="etiquette-prix grande apparait"
+                  style={{ "--angle": "-6deg", "--delai": "0.25s" } as React.CSSProperties}
+                >
+                  {prix}
+                </span>
+              )}
               <ul
                 className="-mx-4 flex snap-x snap-mandatory overflow-x-auto sm:mx-0 sm:rounded-xl"
                 aria-label="Photos"
@@ -123,16 +129,22 @@ export default async function PageAnnonce(props: Props) {
                     id={`photo-${i + 1}`}
                     className="bg-papier-2 w-full flex-none snap-center"
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element -- déjà réduite dans le navigateur */}
-                    <img
-                      src={p.url}
-                      alt={i === 0 ? a.titre : `${a.titre}, photo ${i + 1}`}
-                      width={p.l}
-                      height={p.h}
-                      loading={i === 0 ? "eager" : "lazy"}
-                      fetchPriority={i === 0 ? "high" : undefined}
-                      className="mx-auto max-h-[70vh] w-full object-contain"
-                    />
+                    <ViewTransition
+                      name={i === 0 ? `photo-${a.id}` : undefined}
+                      share={i === 0 ? "morph" : undefined}
+                      default="none"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element -- déjà réduite dans le navigateur */}
+                      <img
+                        src={p.url}
+                        alt={i === 0 ? a.titre : `${a.titre}, photo ${i + 1}`}
+                        width={p.l}
+                        height={p.h}
+                        loading={i === 0 ? "eager" : "lazy"}
+                        fetchPriority={i === 0 ? "high" : undefined}
+                        className="mx-auto max-h-[70vh] w-full object-contain"
+                      />
+                    </ViewTransition>
                   </li>
                 ))}
               </ul>
@@ -159,18 +171,34 @@ export default async function PageAnnonce(props: Props) {
               )}
             </div>
           ) : (
-            <div
-              className={cn(
-                "grid aspect-[16/9] place-items-center rounded-xl",
-                teinte(a.categorie),
+            <div className="relative">
+              {prix && (
+                <span
+                  className="etiquette-prix grande apparait"
+                  style={{ "--angle": "-6deg", "--delai": "0.25s" } as React.CSSProperties}
+                >
+                  {prix}
+                </span>
               )}
-            >
-              <IconeCategorie slug={a.categorie} className="size-16 opacity-90" strokeWidth={1.5} />
+              <ViewTransition name={`photo-${a.id}`} share="morph" default="none">
+                <div
+                  className={cn(
+                    "grid aspect-[16/9] place-items-center rounded-xl",
+                    teinte(a.categorie),
+                  )}
+                >
+                  <IconeCategorie
+                    slug={a.categorie}
+                    className="size-16 opacity-90"
+                    strokeWidth={1.5}
+                  />
+                </div>
+              </ViewTransition>
             </div>
           )}
 
           <p className="mt-5 flex flex-wrap items-center gap-2">
-            <Link href={`/annonces/${a.categorie}`} className="badge">
+            <Link href={`/${a.categorie}`} className="badge">
               {nomCat}
             </Link>
             {misEnAvant(a) && <BadgeMiseEnAvant />}
@@ -183,7 +211,6 @@ export default async function PageAnnonce(props: Props) {
           <h1 className="titre-carte mt-3 text-[clamp(1.7rem,1.2rem+2vw,2.6rem)] leading-[1.08]">
             {a.titre}
           </h1>
-          {prix && <p className="mt-2 text-[1.7rem] font-extrabold">{prix}</p>}
           <p className="text-encre-2 mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.92rem]">
             <span className="inline-flex items-center gap-1.5">
               <MapPin className="size-4" aria-hidden />
@@ -260,7 +287,7 @@ export default async function PageAnnonce(props: Props) {
             </section>
           )}
           <div className="mt-8">
-            <ShareButtons url={urlAbsolue(chemin)} titre={a.titre} />
+            <ShareButtons url={lienAnnonces(chemin)} titre={a.titre} />
           </div>
         </div>
 
@@ -288,13 +315,9 @@ export default async function PageAnnonce(props: Props) {
           <h2 id="t-proches" className="titre-section text-[clamp(1.6rem,1.2rem+1.6vw,2.4rem)]">
             Dans la même catégorie
           </h2>
-          <ul className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
-            {proches.map((x) => (
-              <li key={x.id} className="border-trait border-t pt-5">
-                <CarteAnnonce a={x} />
-              </li>
-            ))}
-          </ul>
+          <div className="mt-5">
+            <GrilleAnnonces liste={proches} />
+          </div>
         </section>
       )}
     </>

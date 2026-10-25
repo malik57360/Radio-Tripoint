@@ -16,6 +16,7 @@ import { listerComptes, type Compte } from "@/lib/annonces/comptes"
 import { lireConfig, nomCategorie, type Config } from "@/lib/annonces/config"
 import { mailsActifs } from "@/lib/annonces/mails"
 import { euros } from "@/lib/annonces/offres"
+import { URL_ANNONCES, lienAnnonces } from "@/lib/annonces/liens"
 import { LIBELLES_STATUT, cheminAnnonce, type Annonce } from "@/lib/annonces/types"
 import { redis, redisActif } from "@/lib/direction/redis"
 import { cn } from "@/lib/utils/cn"
@@ -227,7 +228,7 @@ function Dossier({
           )}
           {a.statut === "publiee" && (
             <a
-              href={cheminAnnonce(a)}
+              href={lienAnnonces(cheminAnnonce(a))}
               target="_blank"
               className="text-accent inline-flex items-center gap-1 font-semibold"
             >
@@ -247,7 +248,10 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
   if (!redisActif())
     return (
       <>
-        <EnTetePage titre="Petites annonces" source="Annonces déposées sur /annonces" />
+        <EnTetePage
+          titre="Petites annonces"
+          source="Annonces déposées sur annonces.radio-tripoint-officiel.fr"
+        />
         <AActiver titre="Redis n'est pas branché">
           Les annonces, comptes et paiements sont rangés dans Redis.
         </AActiver>
@@ -308,10 +312,10 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
     <>
       <EnTetePage
         titre="Petites annonces"
-        source="Annonces déposées sur /annonces · modération avant publication"
+        source="annonces.radio-tripoint-officiel.fr · modération avant publication"
       >
         <a
-          href="/annonces"
+          href={URL_ANNONCES}
           target="_blank"
           className="border-trait inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold"
         >
@@ -476,7 +480,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
                     <li key={a.id} className="space-y-2 py-3 first:pt-0">
                       <p>
                         <a
-                          href={cheminAnnonce(a)}
+                          href={lienAnnonces(cheminAnnonce(a))}
                           target="_blank"
                           className="font-bold hover:underline"
                         >

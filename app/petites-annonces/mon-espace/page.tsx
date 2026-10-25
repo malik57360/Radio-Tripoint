@@ -1,6 +1,6 @@
 import { LogOut, MessageSquare } from "lucide-react"
 import { redirect } from "next/navigation"
-import { actionDeconnexion } from "@/app/[lang]/annonces/actions"
+import { actionDeconnexion } from "@/app/petites-annonces/actions"
 import { CadreCompte } from "@/components/annonces/CadreCompte"
 import {
   FormulaireChangerMotDePasse,
@@ -22,9 +22,9 @@ import { cn } from "@/lib/utils/cn"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Mon espace — Petites annonces",
+    titre: "Mon espace",
     description: "Gérer vos annonces et votre compte.",
-    chemin: "/annonces/mon-espace",
+    chemin: "/mon-espace",
     noindex: true,
   })
 
@@ -66,13 +66,24 @@ const COULEURS: Record<string, string> = {
   retiree: "bg-papier-3 text-encre-2",
 }
 
-export default async function PageMonEspace(props: PageProps<"/[lang]/annonces/mon-espace">) {
+export default async function PageMonEspace(props: PageProps<"/petites-annonces/mon-espace">) {
   const c = await compteConnecte()
-  if (!c) redirect("/annonces/connexion?suite=/annonces/mon-espace")
+  if (!c) redirect("/connexion?suite=/mon-espace")
   const sp = await props.searchParams
   const message = Object.entries(MESSAGES)
     .map(([k, v]) => (typeof sp[k] === "string" ? v[sp[k] as string] : undefined))
     .find(Boolean)
+  // Le tampon confirme ce qui vient d'aboutir (jamais sur un simple clic).
+  const tampon =
+    sp.paiement === "ok"
+      ? "Payée"
+      : sp.depot === "ok"
+        ? "Reçue"
+        : sp.verifie === "ok"
+          ? "Confirmé"
+          : sp.options === "ok"
+            ? "Activée"
+            : null
   const [annonces, cfg] = await Promise.all([annoncesDuCompte(c.id), lireConfig()])
   const contacts = annonces.length
     ? (((await redis([["HMGET", "rt:annonces:contacts", ...annonces.map((a) => a.id)]]))?.[0] as
@@ -104,14 +115,15 @@ export default async function PageMonEspace(props: PageProps<"/[lang]/annonces/m
   }
 
   return (
-    <CadreCompte titre="Mon espace" chemin="/annonces/mon-espace" connecte={c.nom} large>
+    <CadreCompte titre="Mon espace" chemin="/mon-espace" large>
       {message && (
-        <p
+        <div
           role="status"
-          className="bg-papier-2 border-trait-fort mb-6 rounded-lg border-l-4 p-4 font-semibold"
+          className="bg-surface border-trait mb-6 flex items-center gap-4 rounded-2xl border p-4 shadow-sm"
         >
-          {message}
-        </p>
+          {tampon && <span className="tampon flex-none text-lg">{tampon}</span>}
+          <p className="font-semibold">{message}</p>
+        </div>
       )}
       {!c.emailVerifie && (
         <div className="mb-6 rounded-lg bg-[#fdefc0] p-4 text-black">
@@ -134,7 +146,7 @@ export default async function PageMonEspace(props: PageProps<"/[lang]/annonces/m
             >
               Mes annonces
             </h2>
-            <Link href="/annonces/deposer" className="btn btn-accent min-h-11">
+            <Link href="/deposer" className="btn btn-accent min-h-11">
               + Déposer
             </Link>
           </div>

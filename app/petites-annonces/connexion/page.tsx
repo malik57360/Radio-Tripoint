@@ -7,27 +7,27 @@ import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Se connecter — Petites annonces",
+    titre: "Se connecter",
     description: "Connexion à votre compte des Petites annonces de Radio Tripoint.",
-    chemin: "/annonces/connexion",
+    chemin: "/connexion",
     noindex: true,
   })
 
-export default async function PageConnexion(props: PageProps<"/[lang]/annonces/connexion">) {
+export default async function PageConnexion(props: PageProps<"/petites-annonces/connexion">) {
   const sp = await props.searchParams
   const suite = typeof sp.suite === "string" ? sp.suite : undefined
-  if (await compteConnecte()) redirect("/annonces/mon-espace")
+  if (await compteConnecte()) redirect("/mon-espace")
   return (
-    <CadreCompte titre="Se connecter" chemin="/annonces/connexion">
+    <CadreCompte titre="Se connecter" chemin="/connexion">
       <FormulaireConnexion suite={suite} />
       <p className="mt-5 text-sm">
-        <Link href="/annonces/mot-de-passe-oublie" className="underline">
+        <Link href="/mot-de-passe-oublie" className="underline">
           Mot de passe oublié ?
         </Link>
       </p>
       <p className="border-trait text-encre-2 mt-6 border-t pt-5">
         Pas encore de compte ?{" "}
-        <Link href="/annonces/inscription" className="font-bold underline">
+        <Link href="/inscription" className="font-bold underline">
           Créer un compte
         </Link>
       </p>

@@ -85,7 +85,7 @@ const enLigne = (a: Annonce) => a.statut === "publiee" && (a.expireLe ?? 0) > Da
 /** Pages publiques à rafraîchir après chaque changement visible. */
 export function rafraichir() {
   revalidateTag(TAG_ANNONCES, { expire: 0 })
-  revalidatePath("/[lang]/annonces", "layout")
+  revalidatePath("/petites-annonces", "layout")
 }
 
 async function enregistrer(a: Annonce) {

@@ -1,6 +1,7 @@
 import "server-only"
 import { randomBytes } from "node:crypto"
 import { site } from "@/config/site"
+import { URL_ANNONCES } from "./liens"
 import { redis } from "@/lib/direction/redis"
 import { estSessionStripe, stripe, stripeActif } from "@/lib/stripe"
 import { appliquerOptions, journal, lireAnnonce, paiementDepotRecu } from "./annonces"
@@ -120,8 +121,8 @@ export async function urlPaiement(c: Commande, titreAnnonce: string) {
     "payment_intent_data[receipt_email]": c.email,
     "payment_intent_data[description]": `Petites annonces — ${titreAnnonce}`.slice(0, 300),
     "invoice_creation[enabled]": "true",
-    success_url: `${site.url}/api/annonces/retour?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${site.url}/annonces/mon-espace?paiement=annule`,
+    success_url: `${URL_ANNONCES}/api/annonces/retour?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${URL_ANNONCES}/mon-espace?paiement=annule`,
   })
   // Les lignes gratuites (formule classique) ne passent pas par Stripe.
   c.lignes

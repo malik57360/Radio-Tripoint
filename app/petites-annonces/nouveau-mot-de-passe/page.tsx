@@ -7,28 +7,28 @@ import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Nouveau mot de passe — Petites annonces",
+    titre: "Nouveau mot de passe",
     description: "Choisir un nouveau mot de passe.",
-    chemin: "/annonces/nouveau-mot-de-passe",
+    chemin: "/nouveau-mot-de-passe",
     noindex: true,
   })
 
 export default async function PageNouveauMotDePasse(
-  props: PageProps<"/[lang]/annonces/nouveau-mot-de-passe">,
+  props: PageProps<"/petites-annonces/nouveau-mot-de-passe">,
 ) {
   const sp = await props.searchParams
   const jeton = typeof sp.j === "string" ? sp.j : ""
   // Le lien n'est consommé qu'à l'enregistrement : un antivirus qui l'ouvre ne le grille pas.
   const valide = await jetonValide("reinitialisation", jeton)
   return (
-    <CadreCompte titre="Nouveau mot de passe" chemin="/annonces/nouveau-mot-de-passe">
+    <CadreCompte titre="Nouveau mot de passe" chemin="/nouveau-mot-de-passe">
       {valide ? (
         <FormulaireNouveauMotDePasse jeton={jeton} />
       ) : (
         <EtatVide
           titre="Ce lien a expiré"
           actions={
-            <Link href="/annonces/mot-de-passe-oublie" className="btn btn-plein">
+            <Link href="/mot-de-passe-oublie" className="btn btn-plein">
               Recevoir un nouveau lien
             </Link>
           }

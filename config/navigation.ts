@@ -1,4 +1,5 @@
 import { sansLangue, type Trad } from "@/lib/i18n/langues"
+import { URL_ANNONCES } from "@/lib/annonces/liens"
 
 export interface LienNav {
   libelle: Trad
@@ -39,7 +40,7 @@ export const navPrincipale: LienNav[] = [
       en: "Classifieds",
       es: "Anuncios",
     },
-    href: "/annonces",
+    href: URL_ANNONCES,
     large: true,
   },
   {

@@ -1,4 +1,4 @@
-import { site } from "@/config/site"
+import { URL_ANNONCES } from "@/lib/annonces/liens"
 import { confirmerPaiement } from "@/lib/annonces/commandes"
 
 /**
@@ -8,7 +8,7 @@ import { confirmerPaiement } from "@/lib/annonces/commandes"
  */
 export const dynamic = "force-dynamic"
 
-const vers = (etat: string) => new URL(`/annonces/mon-espace?paiement=${etat}`, site.url)
+const vers = (etat: string) => `${URL_ANNONCES}/mon-espace?paiement=${etat}`
 
 export async function GET(request: Request) {
   const id = new URL(request.url).searchParams.get("session_id") ?? ""

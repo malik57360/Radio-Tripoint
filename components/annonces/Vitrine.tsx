@@ -15,6 +15,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react"
+import { ViewTransition } from "react"
 import Link from "@/components/ui/Lien"
 import { PAYS, type Pays } from "@/lib/annonces/categories"
 import {
@@ -184,48 +185,87 @@ export function BadgePro({ className }: { className?: string }) {
 }
 
 /** Carte d'une annonce : photo, titre, prix, lieu, date, badges. */
-export function CarteAnnonce({
-  a,
-  categorie,
-  grande = false,
-}: {
-  a: AnnoncePublique
-  categorie?: string
-  grande?: boolean
-}) {
+/** Angle d'accroche de l'étiquette : propre à chaque annonce, stable d'un affichage à l'autre. */
+const angle = (id: string) => `${-9 + (parseInt(id.slice(-2), 16) % 6)}deg`
+
+/**
+ * Carte d'une annonce : la photo d'abord, l'étiquette de prix accrochée
+ * dessus (elle se balance quand on touche la carte). La photo garde le
+ * même nom de transition sur la fiche : elle s'y agrandit sans coupure.
+ */
+export function CarteAnnonce({ a, categorie }: { a: AnnoncePublique; categorie?: string }) {
   const prix = prixAffiche(a)
+  const p = a.photos[0]
   return (
-    <article
-      className={cn("carte group relative flex gap-3.5", grande ? "flex-col" : "items-start")}
-    >
-      <Vignette
-        a={a}
-        className={cn(
-          "bg-papier-2 rounded-md",
-          grande ? "aspect-[4/3] w-full" : "size-[6.5rem] flex-none sm:size-32",
+    <article className="carte-annonce">
+      <div className="photo">
+        <ViewTransition name={`photo-${a.id}`} share="morph" default="none">
+          {p ? (
+            // eslint-disable-next-line @next/next/no-img-element -- déjà réduite dans le navigateur
+            <img
+              src={p.vignette}
+              alt=""
+              width={p.l}
+              height={p.h}
+              loading="lazy"
+              decoding="async"
+              className="size-full object-cover"
+            />
+          ) : (
+            <div className={cn("grid size-full place-items-center", teinte(a.categorie))}>
+              <IconeCategorie slug={a.categorie} className="size-12 opacity-90" strokeWidth={1.4} />
+            </div>
+          )}
+        </ViewTransition>
+        {prix && (
+          <span
+            className="etiquette-prix"
+            style={{ "--angle": angle(a.id) } as React.CSSProperties}
+          >
+            {prix}
+          </span>
         )}
-      />
-      <div className="min-w-0 flex-1">
-        <p className="flex flex-wrap items-center gap-1.5 text-[0.75rem]">
-          {misEnAvant(a) && <BadgeMiseEnAvant />}
-          {a.annonceur === "pro" && <BadgePro />}
-          {categorie && <span className="text-encre-3 font-semibold">{categorie}</span>}
-        </p>
-        <h3 className="carte-titre titre-carte mt-1 line-clamp-2 text-[1.06rem] leading-tight">
-          <Link href={cheminAnnonce(a)} className="carte-lien">
-            {a.titre}
-          </Link>
-        </h3>
-        {prix && <p className="mt-1 text-[1.05rem] font-extrabold">{prix}</p>}
-        <p className="text-encre-3 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.78rem]">
-          <MapPin className="size-3.5 flex-none" aria-hidden />
-          <span className="text-encre-2 font-semibold">{a.ville}</span>
-          <Drapeau pays={a.pays} />
-          <span aria-hidden>·</span>
-          <span>{quand(a.remonteeLe)}</span>
-        </p>
+        {misEnAvant(a) && (
+          <span className="ruban" title="Mise en avant payée par l'annonceur">
+            <Sparkles className="size-3" aria-hidden />
+            Mise en avant
+          </span>
+        )}
       </div>
+      <p className="text-encre-3 mt-2.5 flex flex-wrap items-center gap-1.5 text-[0.74rem]">
+        {a.annonceur === "pro" && <BadgePro />}
+        {categorie && <span className="font-semibold">{categorie}</span>}
+      </p>
+      <h3 className="titre-carte mt-0.5 line-clamp-2 text-[1rem] leading-tight sm:text-[1.06rem]">
+        <Link href={cheminAnnonce(a)} className="titre-lien">
+          {a.titre}
+        </Link>
+      </h3>
+      <p className="text-encre-3 mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[0.76rem]">
+        <span className="text-encre-2 font-semibold">{a.ville}</span>
+        <Drapeau pays={a.pays} />
+        <span className="ml-auto">{quand(a.remonteeLe)}</span>
+      </p>
     </article>
+  )
+}
+
+/** Grille de cartes : deux colonnes au téléphone, jusqu'à quatre sur grand écran. */
+export function GrilleAnnonces({
+  liste,
+  nomCategorie,
+}: {
+  liste: AnnoncePublique[]
+  nomCategorie?: (slug: string) => string | undefined
+}) {
+  return (
+    <ul className="grid grid-cols-2 gap-x-3.5 gap-y-7 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4">
+      {liste.map((a) => (
+        <li key={a.id}>
+          <CarteAnnonce a={a} categorie={nomCategorie?.(a.categorie)} />
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -233,7 +273,7 @@ export function CarteAnnonce({
 export function BarreRecherche({
   q,
   lieu,
-  action = "/annonces",
+  action = "/",
   sombre = false,
 }: {
   q?: string
@@ -242,7 +282,7 @@ export function BarreRecherche({
   sombre?: boolean
 }) {
   return (
-    <form action={action} role="search" className="grid gap-2 sm:grid-cols-[1.6fr_1fr_auto]">
+    <form action={action} role="search" className="grid gap-1.5 sm:grid-cols-[1.6fr_1fr_auto]">
       <label className="relative block">
         <span className="sr-only">Que cherchez-vous ?</span>
         <Search
@@ -270,7 +310,11 @@ export function BarreRecherche({
           className={cn("champ pl-11", sombre && "border-transparent")}
         />
       </label>
-      <button type="submit" className="btn btn-accent min-h-12 px-6">
+      <button
+        type="submit"
+        className="btn btn-accent min-h-12 rounded-[0.9rem] px-6 text-[0.95rem]"
+      >
+        <Search className="size-4.5" aria-hidden />
         Rechercher
       </button>
     </form>
@@ -299,47 +343,5 @@ export function EncadreArnaques({ className }: { className?: string }) {
         ni acheteur, et ne garantit pas les transactions.
       </p>
     </aside>
-  )
-}
-
-/** Petite barre de navigation de la rubrique : recherche, dépôt, compte. */
-export function NavAnnonces({
-  connecte,
-  actif,
-}: {
-  connecte: string | null
-  actif?: "deposer" | "espace"
-}) {
-  const lien = "rounded-full px-3.5 py-2 text-[0.85rem] font-bold transition-colors"
-  return (
-    <div className="border-trait bg-papier-2/60 border-b">
-      <nav
-        aria-label="Petites annonces"
-        className="conteneur flex items-center gap-1.5 overflow-x-auto py-2 lg:pl-40"
-      >
-        <Link href="/annonces" className={cn(lien, "hover:bg-papier-3 flex-none")}>
-          Les annonces
-        </Link>
-        <Link
-          href="/annonces/deposer"
-          aria-current={actif === "deposer" ? "page" : undefined}
-          className={cn(lien, "bg-accent text-sur-accent flex-none hover:brightness-95")}
-        >
-          + Déposer
-        </Link>
-        <span className="flex-1" />
-        <Link
-          href={connecte ? "/annonces/mon-espace" : "/annonces/connexion"}
-          aria-current={actif === "espace" ? "page" : undefined}
-          className={cn(
-            lien,
-            "hover:bg-papier-3 max-w-[11rem] flex-none truncate",
-            actif === "espace" && "bg-papier-3",
-          )}
-        >
-          {connecte ? "Mon espace" : "Se connecter"}
-        </Link>
-      </nav>
-    </div>
   )
 }

@@ -4,26 +4,25 @@ import Link from "@/components/ui/Lien"
 import { ProseLegale } from "@/components/ui/ProseLegale"
 import { site } from "@/config/site"
 import { CATEGORIES_DEPART, INTERDITS } from "@/lib/annonces/categories"
-import { compteConnecte } from "@/lib/annonces/comptes"
 import { categoriesOuvertes, configPublique } from "@/lib/annonces/config"
 import { euros } from "@/lib/annonces/offres"
 import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Règles et aide — Petites annonces",
+    titre: "Règles et aide",
     description:
       "Comment fonctionnent les Petites annonces de Radio Tripoint : dépôt, vérification, classement, tarifs, sécurité et signalement.",
-    chemin: "/annonces/regles",
+    chemin: "/regles",
   })
 
 export default async function PageRegles() {
-  const [cfg, c] = await Promise.all([configPublique(), compteConnecte()])
+  const cfg = await configPublique()
   const fermees = cfg.categories.filter((x) => !x.actif)
   const offres = cfg.offres.filter((o) => o.actif)
   const emploi = CATEGORIES_DEPART.find((x) => x.slug === "emploi")
   return (
-    <CadreCompte titre="Règles et aide" chemin="/annonces/regles" connecte={c?.nom ?? null} large>
+    <CadreCompte titre="Règles et aide" chemin="/regles" large>
       <div className="grid gap-10 lg:grid-cols-[1fr_20rem] lg:gap-14">
         <ProseLegale>
           <h2 id="fonctionnement">Comment ça marche</h2>
@@ -41,7 +40,7 @@ export default async function PageRegles() {
             <li>
               Une fois publiée, l&apos;annonce reste en ligne la durée de sa formule (30 jours au
               départ). Vous pouvez la modifier — elle est alors revérifiée — ou la retirer à tout
-              moment depuis <Link href="/annonces/mon-espace">Mon espace</Link>.
+              moment depuis <Link href="/mon-espace">Mon espace</Link>.
             </li>
             <li>
               Les personnes intéressées vous écrivent par le formulaire de l&apos;annonce : leur
@@ -148,7 +147,7 @@ export default async function PageRegles() {
         <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
           <EncadreArnaques />
           <p className="text-sm">
-            <Link href="/annonces/conditions" className="underline">
+            <Link href="/conditions" className="underline">
               Conditions d&apos;utilisation et de vente
             </Link>
           </p>

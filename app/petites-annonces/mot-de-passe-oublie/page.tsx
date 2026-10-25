@@ -4,9 +4,9 @@ import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Mot de passe oublié — Petites annonces",
+    titre: "Mot de passe oublié",
     description: "Recevoir un lien pour choisir un nouveau mot de passe.",
-    chemin: "/annonces/mot-de-passe-oublie",
+    chemin: "/mot-de-passe-oublie",
     noindex: true,
   })
 
@@ -14,7 +14,7 @@ export default function PageOubli() {
   return (
     <CadreCompte
       titre="Mot de passe oublié"
-      chemin="/annonces/mot-de-passe-oublie"
+      chemin="/mot-de-passe-oublie"
       intro="Indiquez l'adresse de votre compte : vous recevrez un lien pour choisir un nouveau mot de passe."
     >
       <FormulaireOubli />

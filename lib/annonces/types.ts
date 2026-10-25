@@ -121,4 +121,4 @@ export const idAnnonceValide = (id: unknown): id is string =>
 export const idDuSlug = (slug: string) => slug.match(/([a-f0-9]{12})$/)?.[1] ?? null
 
 export const cheminAnnonce = (a: Pick<AnnoncePublique, "categorie" | "slug">) =>
-  `/annonces/${a.categorie}/${a.slug}`
+  `/${a.categorie}/${a.slug}`

@@ -95,13 +95,11 @@ type Etat = { erreur?: string; ok?: string } | null
 export type Resultat = { ok: true; url: string; message?: string } | { ok: false; erreur: string }
 
 const ALERTES = () => process.env.FORM_EMAIL_TO || site.contact.email
-const ESPACE = "/annonces/mon-espace"
+const ESPACE = "/mon-espace"
 
 /** Chemin de retour après connexion : seulement une page des annonces. */
 const suiteSure = (s: unknown) =>
-  typeof s === "string" && /^\/annonces(\/[\w\-/?=&%.]*)?$/.test(s) && !s.includes("//")
-    ? s
-    : ESPACE
+  typeof s === "string" && /^\/[\w\-/?=&%.]*$/.test(s) && !s.includes("//") ? s : ESPACE
 
 const champ = (fd: FormData, k: string, max = 200) => String(fd.get(k) ?? "").slice(0, max)
 
@@ -205,7 +203,7 @@ export async function actionConnexion(_e: Etat, fd: FormData): Promise<Etat> {
 
 export async function actionDeconnexion() {
   await fermerSession()
-  redirect("/annonces")
+  redirect("/")
 }
 
 export async function actionRenvoyerVerification(): Promise<Etat> {
@@ -306,7 +304,7 @@ export async function actionSupprimerCompte(_e: Etat, fd: FormData): Promise<Eta
   await supprimerCompte(c)
   await journal("suppression-compte", { compte: c.id })
   await fermerSession()
-  redirect("/annonces?compte=supprime")
+  redirect("/?compte=supprime")
 }
 
 /* ───────────────────────── Dépôt ───────────────────────── */

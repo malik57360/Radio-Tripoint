@@ -15,6 +15,7 @@ import { Logo } from "@/components/marque/Logo"
 import { Tripoint } from "@/components/marque/Tripoint"
 import { cn } from "@/lib/utils/cn"
 import { Dialogue } from "./Dialogue"
+import { URL_ANNONCES } from "@/lib/annonces/liens"
 
 const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
   {
@@ -75,7 +76,7 @@ const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
       en: "Classifieds",
       es: "Anuncios clasificados",
     },
-    href: "/annonces",
+    href: URL_ANNONCES,
     detail: {
       fr: "Acheter, vendre, recruter près de chez vous",
       de: "Kaufen, verkaufen, Stellen anbieten (auf Französisch)",

@@ -5,7 +5,7 @@ import { EtatVide } from "@/components/ui/EtatVide"
 import { ETATS, PAYS, type Pays } from "@/lib/annonces/categories"
 import { resultats, versParams, type Filtres } from "@/lib/annonces/recherche"
 import type { AnnoncePublique } from "@/lib/annonces/types"
-import { BadgeMiseEnAvant, CarteAnnonce } from "./Vitrine"
+import { BadgeMiseEnAvant, GrilleAnnonces } from "./Vitrine"
 
 /**
  * Résultats de recherche avec leurs filtres (formulaire GET : marche sans
@@ -177,7 +177,7 @@ export function Resultats({
             titre="Rien pour l'instant"
             actions={
               <>
-                <Link href="/annonces/deposer" className="btn btn-plein">
+                <Link href="/deposer" className="btn btn-plein">
                   Déposer une annonce
                 </Link>
                 <Link href={base} className="btn btn-trait">
@@ -199,25 +199,12 @@ export function Resultats({
                     Annonces mises en avant par leurs annonceurs
                   </span>
                 </p>
-                <ul className="grid gap-5 sm:grid-cols-2">
-                  {premium.map((a) => (
-                    <li key={a.id}>
-                      <CarteAnnonce
-                        a={a}
-                        categorie={categorieFixe ? undefined : nom(a.categorie)}
-                      />
-                    </li>
-                  ))}
-                </ul>
+                <GrilleAnnonces liste={premium} nomCategorie={categorieFixe ? undefined : nom} />
               </div>
             )}
-            <ul className="mt-6 grid gap-x-8 gap-y-5 sm:grid-cols-2">
-              {visibles.map((a) => (
-                <li key={a.id} className="border-trait border-t pt-5">
-                  <CarteAnnonce a={a} categorie={categorieFixe ? undefined : nom(a.categorie)} />
-                </li>
-              ))}
-            </ul>
+            <div className="mt-6">
+              <GrilleAnnonces liste={visibles} nomCategorie={categorieFixe ? undefined : nom} />
+            </div>
             <Pagination
               page={p}
               pages={pages}

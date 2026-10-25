@@ -2,15 +2,14 @@ import { CadreCompte } from "@/components/annonces/CadreCompte"
 import Link from "@/components/ui/Lien"
 import { ACompleter, ProseLegale } from "@/components/ui/ProseLegale"
 import { site } from "@/config/site"
-import { compteConnecte } from "@/lib/annonces/comptes"
 import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Conditions d'utilisation et de vente — Petites annonces",
+    titre: "Conditions d'utilisation et de vente",
     description:
       "Conditions d'utilisation et conditions de vente des Petites annonces de Radio Tripoint.",
-    chemin: "/annonces/conditions",
+    chemin: "/conditions",
   })
 
 /**
@@ -19,10 +18,9 @@ export const generateMetadata = () =>
  * définitive. Ce qui n'est pas connu (médiateur, TVA) reste « à compléter ».
  */
 export default async function PageConditions() {
-  const c = await compteConnecte()
   const l = site.legal
   return (
-    <CadreCompte titre="Conditions" chemin="/annonces/conditions" connecte={c?.nom ?? null} large>
+    <CadreCompte titre="Conditions" chemin="/conditions" large>
       <p className="mb-8 max-w-3xl rounded-lg bg-[#fdefc0] p-4 text-sm font-semibold text-black">
         Version provisoire du 26 octobre 2026, en cours de relecture juridique. Elle s&apos;applique
         dès maintenant ; toute nouvelle version sera publiée sur cette page.
@@ -66,9 +64,9 @@ export default async function PageConditions() {
           </li>
           <li>
             Radio Tripoint peut suspendre ou fermer un compte en cas de manquement à ces conditions
-            ou aux <Link href="/annonces/regles">règles de la rubrique</Link>, notamment en cas de
-            fraude ou de tentative d&apos;arnaque. Vous pouvez supprimer votre compte à tout moment
-            depuis Mon espace.
+            ou aux <Link href="/regles">règles de la rubrique</Link>, notamment en cas de fraude ou
+            de tentative d&apos;arnaque. Vous pouvez supprimer votre compte à tout moment depuis Mon
+            espace.
           </li>
         </ul>
 

@@ -2,6 +2,7 @@ import "server-only"
 import { createTransport } from "nodemailer"
 import { site } from "@/config/site"
 import { smtpConfigure } from "@/lib/formulaires/courriel"
+import { URL_ANNONCES } from "./liens"
 import { euros, type Ligne } from "./offres"
 import { cheminAnnonce, type Annonce } from "./types"
 
@@ -35,7 +36,7 @@ ${texte
   .split(/\n{2,}/)
   .map((p) => `<p style="margin:0 0 14px">${liens(p).replace(/\n/g, "<br>")}</p>`)
   .join("\n")}
-<p style="margin:22px 0 0;color:#777;font-size:12px">Radio Tripoint · ${echapper(site.url.replace("https://", ""))}</p>
+<p style="margin:22px 0 0;color:#777;font-size:12px">Radio Tripoint · ${echapper(URL_ANNONCES.replace(/^https?:\/\//, ""))}</p>
 </div>`
 }
 
@@ -80,8 +81,8 @@ export async function envoyerSansEchec(o: Parameters<typeof envoyerMail>[0]) {
   }
 }
 
-const lien = (chemin: string) => `${site.url}${chemin}`
-export const ESPACE = "/annonces/mon-espace"
+const lien = (chemin: string) => `${URL_ANNONCES}${chemin === "/" ? "" : chemin}`
+export const ESPACE = "/mon-espace"
 
 /* ───────────────────────── Compte ───────────────────────── */
 
@@ -100,7 +101,7 @@ export const mailReinitialisation = (nom: string, jeton: string) => ({
   texte: `Bonjour ${nom},
 
 Vous avez demandé à changer le mot de passe de votre compte ${RUBRIQUE}. Ouvrez ce lien pour en choisir un nouveau (valable 1 heure) :
-${lien(`/annonces/nouveau-mot-de-passe?j=${jeton}`)}
+${lien(`/nouveau-mot-de-passe?j=${jeton}`)}
 
 Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : votre mot de passe ne change pas.`,
 })
@@ -163,7 +164,7 @@ Merci d'avoir déposé « ${a.titre} ». Nous ne pouvons pas la publier.${motif 
       : ""
   }
 
-Les règles de la rubrique : ${lien("/annonces/regles")}`,
+Les règles de la rubrique : ${lien("/regles")}`,
 })
 
 export const mailRetireeModeration = (nom: string, a: Annonce, motif: string) => ({
@@ -174,7 +175,7 @@ Votre annonce « ${a.titre} » a été retirée par l'équipe de modération.${m
 
 Si vous pensez qu'il s'agit d'une erreur, répondez simplement à ce message en expliquant pourquoi : une personne de l'équipe relira votre demande.
 
-Les règles de la rubrique : ${lien("/annonces/regles")}`,
+Les règles de la rubrique : ${lien("/regles")}`,
 })
 
 export const mailExpireBientot = (nom: string, a: Annonce, prix: number) => ({
@@ -249,5 +250,5 @@ export const alerteModeration = (a: Annonce, motif: "depot" | "modification" | "
       : `L'annonce « ${a.titre} » (${a.ville}) attend votre vérification.`
   }
 
-Tableau de bord : ${lien("/direction/annonces")}`,
+Tableau de bord : ${site.url}/direction/annonces`,
 })

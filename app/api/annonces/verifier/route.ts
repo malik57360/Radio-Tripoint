@@ -1,4 +1,4 @@
-import { site } from "@/config/site"
+import { URL_ANNONCES } from "@/lib/annonces/liens"
 import { consommerJeton, enregistrerCompte } from "@/lib/annonces/comptes"
 import { journal } from "@/lib/annonces/annonces"
 
@@ -8,7 +8,7 @@ import { journal } from "@/lib/annonces/annonces"
  */
 export const dynamic = "force-dynamic"
 
-const vers = (etat: string) => new URL(`/annonces/mon-espace?verifie=${etat}`, site.url)
+const vers = (etat: string) => `${URL_ANNONCES}/mon-espace?verifie=${etat}`
 
 export async function GET(request: Request) {
   const jeton = new URL(request.url).searchParams.get("j") ?? ""

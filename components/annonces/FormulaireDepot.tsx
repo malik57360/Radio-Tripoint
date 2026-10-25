@@ -3,7 +3,7 @@
 import Link from "@/components/ui/Lien"
 import { ArrowLeft, Check, ImagePlus, Loader2, Star, Trash2 } from "lucide-react"
 import { useMemo, useRef, useState, useTransition } from "react"
-import { actionDeposer, actionModifier } from "@/app/[lang]/annonces/actions"
+import { actionDeposer, actionModifier } from "@/app/petites-annonces/actions"
 import {
   CATEGORIES_DEPART,
   PAYS,
@@ -61,18 +61,27 @@ function Etape({
   titre,
   children,
   aide,
+  fait = false,
 }: {
   n: number
   titre: string
   children: React.ReactNode
   aide?: string
+  /** Étape complète : son numéro devient une coche (elle « tamponne » en passant). */
+  fait?: boolean
 }) {
   return (
-    <fieldset className="border-trait bg-surface rounded-xl border p-4 sm:p-6">
+    <fieldset className="border-trait bg-surface rounded-2xl border p-4 shadow-sm sm:p-6">
       <legend className="sr-only">{titre}</legend>
       <div className="mb-4 flex items-center gap-3">
-        <span className="bg-accent text-sur-accent grid size-8 flex-none place-items-center rounded-full text-sm font-extrabold">
-          {n}
+        <span
+          key={fait ? "fait" : "a-faire"}
+          className={cn(
+            "grid size-8 flex-none place-items-center rounded-full text-sm font-extrabold",
+            fait ? "etape-faite bg-[var(--moselle)] text-white" : "bg-accent text-sur-accent",
+          )}
+        >
+          {fait ? <Check className="size-4.5" strokeWidth={3} aria-label="Étape complète" /> : n}
         </span>
         <div>
           <p className="titre-carte text-[1.2rem] leading-tight">{titre}</p>
@@ -275,11 +284,44 @@ export function FormulaireDepot({
 
   const enLigne = existante?.statut === "publiee" || existante?.statut === "signalee"
   let n = 0
+  const requisRemplis = (def?.champs ?? []).every((c) => !c.requis || (details[c.cle] ?? "").trim())
+  const faits = {
+    categorie: Boolean(def),
+    texte: titre.trim().length >= 5 && description.trim().length >= 20 && requisRemplis,
+    photos: pretes.length > 0,
+    lieu: codePostal.trim().length >= 4 && ville.trim().length >= 2,
+    formule: certification,
+  }
+  const etapes = existante
+    ? [faits.categorie, faits.texte, faits.photos, faits.lieu]
+    : [faits.categorie, faits.texte, faits.photos, faits.lieu, faits.formule]
+  const nbFaits = etapes.filter(Boolean).length
 
   return (
     <form onSubmit={envoyer} className="space-y-5" noValidate>
+      <div className="bg-papier sticky top-16 z-30 -mx-1 px-1 py-2.5 shadow-[0_10px_12px_-12px_rgb(0_0_0/0.35)]">
+        <div
+          className="rail-etapes"
+          style={{ "--etapes": etapes.length } as React.CSSProperties}
+          aria-hidden
+        >
+          {etapes.map((f, i) => (
+            <span key={i} data-fait={f ? "1" : "0"} />
+          ))}
+        </div>
+        <p className="text-encre-3 mt-1.5 text-xs font-semibold" aria-live="polite">
+          {nbFaits === etapes.length
+            ? "Tout est prêt"
+            : `${nbFaits} étape${nbFaits > 1 ? "s" : ""} sur ${etapes.length}`}
+        </p>
+      </div>
       {!existante || !categorie ? (
-        <Etape n={++n} titre="Catégorie" aide="Où les acheteurs chercheront-ils votre annonce ?">
+        <Etape
+          n={++n}
+          titre="Catégorie"
+          aide="Où les acheteurs chercheront-ils votre annonce ?"
+          fait={faits.categorie}
+        >
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {categories.map((c) => {
               const choisi = c.slug === categorie
@@ -326,6 +368,7 @@ export function FormulaireDepot({
         <>
           <Etape
             n={++n}
+            fait={faits.texte}
             titre="Votre annonce"
             aide="Soyez précis : une annonce claire se vend plus vite."
           >
@@ -426,6 +469,7 @@ export function FormulaireDepot({
 
           <Etape
             n={++n}
+            fait={faits.photos}
             titre="Photos"
             aide={`${photosMax} photos au plus · la première est la vignette.`}
           >
@@ -502,7 +546,12 @@ export function FormulaireDepot({
             </p>
           </Etape>
 
-          <Etape n={++n} titre="Où ?" aide="Seule la commune est affichée, jamais votre adresse.">
+          <Etape
+            n={++n}
+            fait={faits.lieu}
+            titre="Où ?"
+            aide="Seule la commune est affichée, jamais votre adresse."
+          >
             <div className="flex flex-wrap gap-2">
               {(Object.keys(PAYS) as Pays[]).map((p) => (
                 <button
@@ -556,6 +605,7 @@ export function FormulaireDepot({
           {!existante && (
             <Etape
               n={++n}
+              fait={faits.formule}
               titre={annonceur === "pro" ? "Formule professionnelle" : "Formule et options"}
             >
               <div className="space-y-2.5">
@@ -683,11 +733,11 @@ export function FormulaireDepot({
                 />
                 <span>
                   Je certifie que mon annonce est exacte et respecte{" "}
-                  <Link href="/annonces/regles" target="_blank" className="underline">
+                  <Link href="/regles" target="_blank" className="underline">
                     les règles de la rubrique
                   </Link>{" "}
                   et{" "}
-                  <Link href="/annonces/conditions" target="_blank" className="underline">
+                  <Link href="/conditions" target="_blank" className="underline">
                     les conditions
                   </Link>
                   .
@@ -739,7 +789,7 @@ export function FormulaireDepot({
                   : "Envoyer pour vérification"}
             </button>
             {existante && (
-              <Link href="/annonces/mon-espace" className="lien-fleche text-sm">
+              <Link href="/mon-espace" className="lien-fleche text-sm">
                 <ArrowLeft className="size-4" aria-hidden />
                 Annuler
               </Link>

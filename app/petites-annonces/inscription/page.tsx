@@ -7,24 +7,24 @@ import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
   metaAnnonces({
-    titre: "Créer un compte — Petites annonces",
+    titre: "Créer un compte",
     description: "Créez votre compte pour déposer une annonce sur Radio Tripoint.",
-    chemin: "/annonces/inscription",
+    chemin: "/inscription",
     noindex: true,
   })
 
 export default async function PageInscription() {
-  if (await compteConnecte()) redirect("/annonces/mon-espace")
+  if (await compteConnecte()) redirect("/mon-espace")
   return (
     <CadreCompte
       titre="Créer un compte"
-      chemin="/annonces/inscription"
+      chemin="/inscription"
       intro="Pour déposer une annonce et écrire aux annonceurs. Votre adresse e-mail n'est jamais affichée."
     >
       <FormulaireInscription />
       <p className="border-trait text-encre-2 mt-6 border-t pt-5">
         Déjà un compte ?{" "}
-        <Link href="/annonces/connexion" className="font-bold underline">
+        <Link href="/connexion" className="font-bold underline">
           Se connecter
         </Link>
       </p>

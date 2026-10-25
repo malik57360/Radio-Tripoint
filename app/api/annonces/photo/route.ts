@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto"
 import { put } from "@vercel/blob"
-import { site } from "@/config/site"
+import { URL_ANNONCES } from "@/lib/annonces/liens"
 import { compteConnecte } from "@/lib/annonces/comptes"
 import { autoriser } from "@/lib/annonces/limiteur"
 
@@ -19,7 +19,11 @@ const refus = (erreur: string, status: number) => Response.json({ erreur }, { st
 
 export async function POST(request: Request) {
   const origine = request.headers.get("origin")
-  if (origine && origine !== new URL(site.url).origin && origine !== new URL(request.url).origin)
+  if (
+    origine &&
+    origine !== new URL(URL_ANNONCES).origin &&
+    origine !== new URL(request.url).origin
+  )
     return refus("Origine refusée.", 403)
   const c = await compteConnecte()
   if (!c) return refus("Session expirée : reconnectez-vous.", 401)
