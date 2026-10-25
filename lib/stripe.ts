@@ -4,17 +4,26 @@ import type { Langue } from "@/lib/i18n/langues"
 
 /**
  * Accès minimal à Stripe (API REST) : pas de dépendance, un fetch par
- * appel. Partagé par l'agenda payant et la cagnotte.
+ * appel. Partagé par l'agenda payant, la cagnotte et les petites annonces.
  */
 const cleStripe = () => (process.env.STRIPE_SECRET_KEY ?? "").trim()
 export const stripeActif = () => /^(sk|rk)_(live|test)_/.test(cleStripe())
 
-export async function stripe<T>(chemin: string, corps?: URLSearchParams): Promise<T> {
-  const r = await fetch(`https://api.stripe.com/v1/${chemin}`, {
+// Remplaçable seulement pour les essais en local (faux Stripe) : jamais posée en ligne.
+const API = (process.env.STRIPE_API_URL || "https://api.stripe.com").replace(/\/$/, "")
+
+export async function stripe<T>(
+  chemin: string,
+  corps?: URLSearchParams,
+  /** Clé d'idempotence : la même opération rejouée ne s'exécute qu'une fois chez Stripe. */
+  idempotence?: string,
+): Promise<T> {
+  const r = await fetch(`${API}/v1/${chemin}`, {
     method: corps ? "POST" : "GET",
     headers: {
       Authorization: `Bearer ${cleStripe()}`,
       ...(corps ? { "Content-Type": "application/x-www-form-urlencoded" } : {}),
+      ...(idempotence ? { "Idempotency-Key": idempotence } : {}),
     },
     body: corps,
     cache: "no-store",

@@ -1,4 +1,5 @@
 import { lireSessionPaiement, publier } from "@/lib/agenda/propositions"
+import { confirmerPaiement } from "@/lib/annonces/commandes"
 import { enregistrerParticipation, lireSessionCagnotte } from "@/lib/cagnotte"
 import { signatureStripeValide } from "@/lib/stripe"
 
@@ -6,7 +7,7 @@ import { signatureStripeValide } from "@/lib/stripe"
  * Webhook Stripe (checkout.session.completed / async_payment_succeeded).
  * Signature vérifiée, puis la session est relue chez Stripe avant de
  * publier : le corps du message ne suffit pas à lui seul. Les métadonnées
- * aiguillent seulement : cagnotte d'un côté, agenda de l'autre.
+ * aiguillent seulement : cagnotte, petites annonces, ou agenda.
  */
 export const dynamic = "force-dynamic"
 
@@ -31,6 +32,11 @@ export async function POST(request: Request) {
     return Response.json({ recu: true })
 
   try {
+    if (evt.data?.object?.metadata?.type === "annonce") {
+      // Idempotent : une commande déjà payée ne s'applique pas deux fois.
+      await confirmerPaiement(evt.data.object.id ?? "")
+      return Response.json({ recu: true })
+    }
     if (evt.data?.object?.metadata?.cagnotte) {
       const c = await lireSessionCagnotte(evt.data.object.id ?? "")
       if (c?.paye) await enregistrerParticipation(c)
