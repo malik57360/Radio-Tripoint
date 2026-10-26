@@ -17,35 +17,37 @@ export async function EnTeteAnnonces() {
   const compte = await compteConnecte()
   return (
     <header className="bg-nuit text-nuit-encre border-nuit-trait sticky top-0 z-40 border-b">
-      <div className="conteneur flex h-16 items-center gap-3">
+      {/* L'en-tête se règle sur sa propre largeur, pas sur celle de l'écran : un
+          iPhone dont le texte est agrandi (réglage « aA ») n'offre que 300 px environ. */}
+      <div className="conteneur @container flex h-16 items-center gap-2 sm:gap-3">
         <Link
           href="/"
-          className="flex min-w-0 items-center gap-2.5"
+          className="flex min-w-0 items-center gap-2 sm:gap-2.5"
           aria-label="Les Petites Annonces du Tripoint — accueil"
         >
-          <Logo sombre taille={44} className="size-11 flex-none" />
-          <span className="min-w-0 leading-none">
+          <Logo sombre taille={44} className="size-10 flex-none sm:size-11" />
+          {/* Trop étroit pour le nom : le logo seul, plutôt qu'un nom qui passe sous « Déposer ». */}
+          <span className="min-w-0 leading-none @max-[17rem]:hidden">
             <span className="text-nuit-accent hidden text-[0.62rem] font-extrabold tracking-[0.14em] uppercase sm:block">
               Radio Tripoint
             </span>
             {/* Au téléphone, le logo dit déjà « Radio Tripoint » : le nom tient sur deux lignes. */}
-            <span className="titre-affiche block text-[1.15rem] leading-[0.92] sm:text-[1.6rem] sm:leading-none">
+            <span className="titre-affiche block text-[clamp(0.95rem,4.6vw,1.15rem)] leading-[0.92] sm:text-[1.6rem] sm:leading-none">
               <span className="text-nuit-accent sm:text-inherit">Petites</span>
               <br className="sm:hidden" /> annonces
             </span>
           </span>
         </Link>
-        <span className="flex-1" />
         <Link
           href="/deposer"
-          className="bg-accent text-sur-accent inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-3.5 text-sm font-extrabold hover:brightness-95 sm:px-4"
+          className="bg-accent text-sur-accent ml-auto inline-flex min-h-10 flex-none items-center gap-1 rounded-full px-3 text-sm font-extrabold hover:brightness-95 sm:gap-1.5 sm:px-4"
         >
           <Plus className="size-4" aria-hidden />
           Déposer
         </Link>
         <Link
           href={compte ? "/mon-espace" : "/connexion"}
-          className="hover:bg-nuit-2 inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-2 text-sm font-bold sm:px-3"
+          className="hover:bg-nuit-2 -mr-1 inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-1.5 text-sm font-bold sm:mr-0 sm:px-3"
           aria-label={compte ? "Mon espace" : "Se connecter"}
         >
           <CircleUserRound className="size-6" aria-hidden />

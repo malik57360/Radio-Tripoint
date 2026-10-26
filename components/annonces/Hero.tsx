@@ -1,6 +1,13 @@
 import { BarreRecherche } from "./Vitrine"
 
 /**
+ * L'ouverture ne démarre qu'une fois la police des titres arrivée (1,2 s au
+ * plus). Sans cela, au téléphone, le titre monte dans la police de secours,
+ * plus large, puis saute d'un coup à Archivo en pleine animation.
+ */
+const ATTENDRE_POLICE = `(function(){var s=document.currentScript,o=s&&s.closest(".ouverture-tripoint"),t=o&&o.querySelector(".titre-hero");if(!t||!document.fonts||!document.fonts.load)return;var go=function(){o.removeAttribute("data-attente")};try{var f="900 1em "+getComputedStyle(t).fontFamily.split(",")[0];if(document.fonts.check(f))return;o.setAttribute("data-attente","");document.fonts.load(f).then(go,go);setTimeout(go,1200)}catch(e){go()}})()`
+
+/**
  * Ouverture de l'accueil des annonces : le tripoint. Trois lignes partent
  * du sud-ouest (France), du nord (Luxembourg) et de l'est (Allemagne) et se
  * rejoignent en un point — là où, à Schengen, les trois pays se touchent.
@@ -18,7 +25,12 @@ export function HeroTripoint({
   enLigne: number
 }) {
   return (
-    <section className="ouverture-tripoint" aria-labelledby="titre-annonces">
+    // data-attente est posé par le script avant l'hydratation : React ne doit pas s'en émouvoir.
+    <section
+      className="ouverture-tripoint"
+      aria-labelledby="titre-annonces"
+      suppressHydrationWarning
+    >
       <svg
         className="traces"
         viewBox="0 0 400 320"
@@ -55,17 +67,14 @@ export function HeroTripoint({
           stroke="rgb(255 255 255 / 0.32)"
           strokeWidth="1.4"
         />
-        <circle cx="270" cy="112" r="34" fill="url(#halo)" className="point" />
-        <circle
-          cx="270"
-          cy="112"
-          r="4"
-          fill="none"
-          stroke="#f9b800"
-          strokeWidth="0.8"
-          className="onde"
-        />
-        <circle cx="270" cy="112" r="3.6" fill="#f9b800" className="point" />
+        {/* Les cercles sont centrés sur l'origine d'un groupe placé au point de
+            rencontre : ils grandissent depuis leur centre sur tous les navigateurs,
+            Safari d'iPhone compris, sans dépendre de transform-box. */}
+        <g transform="translate(270 112)">
+          <circle r="34" fill="url(#halo)" className="point" />
+          <circle r="4" fill="none" stroke="#f9b800" strokeWidth="0.8" className="onde" />
+          <circle r="3.6" fill="#f9b800" className="point" />
+        </g>
       </svg>
 
       <div className="conteneur relative pt-9 pb-11 sm:pt-14 sm:pb-16 lg:pt-20 lg:pb-24">
@@ -86,6 +95,7 @@ export function HeroTripoint({
             <span>Recrutez.</span>
           </span>
         </h1>
+        <script dangerouslySetInnerHTML={{ __html: ATTENDRE_POLICE }} />
         <p
           className="apparait text-nuit-encre-2 mt-5 max-w-xl text-[1.05rem] leading-snug sm:text-[1.15rem]"
           style={{ "--delai": "0.55s" } as React.CSSProperties}

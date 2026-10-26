@@ -83,15 +83,14 @@
     stroke-dashoffset: 0;
   }
 }
+/* Cercles centrés sur l'origine de leur groupe : l'échelle part de leur centre partout. */
 .ouverture-tripoint .point {
-  transform-box: fill-box;
-  transform-origin: center;
+  transform-origin: 0 0;
   transform: scale(0);
   animation: point 0.5s var(--ressort) 0.95s forwards;
 }
 .ouverture-tripoint .onde {
-  transform-box: fill-box;
-  transform-origin: center;
+  transform-origin: 0 0;
   opacity: 0;
   animation: onde 1.6s var(--sortie) 1.2s 2 forwards;
 }
@@ -129,9 +128,20 @@
   display: inline-block;
   font-variation-settings: "wdth" 66;
   transform: translateY(105%);
-  animation:
-    monte 0.8s var(--sortie) forwards,
-    resserre 1.2s var(--sortie) forwards;
+  animation: monte 0.8s var(--sortie) forwards;
+}
+/* Le resserrement seulement à la souris : animer la largeur d'une police
+   recompose le texte à chaque image, et un téléphone saccade. Là, le titre monte. */
+@media (hover: hover) and (pointer: fine) {
+  .titre-hero .ligne > span {
+    animation:
+      monte 0.8s var(--sortie) forwards,
+      resserre 1.2s var(--sortie) forwards;
+  }
+}
+/* En attendant la police des titres (voir Hero.tsx), toute l'ouverture patiente. */
+.ouverture-tripoint[data-attente] * {
+  animation-play-state: paused !important;
 }
 .titre-hero .ligne:nth-child(2) > span {
   animation-delay: 0.1s, 0.1s;
@@ -244,9 +254,14 @@
   height: 0.55rem;
   margin-top: -0.275rem;
 }
-.carte-annonce:hover .etiquette-prix,
-.carte-annonce:active .etiquette-prix,
-.carte-annonce:focus-within .etiquette-prix {
+/* L'étiquette se balance au survol de la souris ou au clavier. Pas au doigt :
+   en faisant défiler la liste, chaque carte touchée la faisait bouger. */
+@media (hover: hover) {
+  .carte-annonce:hover .etiquette-prix {
+    animation: balance 1.1s var(--sortie);
+  }
+}
+.carte-annonce:has(:focus-visible) .etiquette-prix {
   animation: balance 1.1s var(--sortie);
 }
 @keyframes balance {
