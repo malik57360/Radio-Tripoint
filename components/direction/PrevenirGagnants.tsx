@@ -6,9 +6,9 @@ import { actionPrevenirGagnants } from "@/app/direction/(espace)/engagement/acti
 import { cn } from "@/lib/utils/cn"
 
 /**
- * Prévenir les gagnants du jeu concours : un e-mail par personne, depuis
- * info@. On coche, on relit l'aperçu (avec le vrai pseudo), on envoie.
- * Ceux déjà prévenus restent décochés.
+ * Prévenir les gagnants du jeu concours : un e-mail par personne (même si
+ * elle a gagné plusieurs manches), depuis info@. On coche, on relit l'aperçu
+ * (avec le vrai pseudo), on envoie. Ceux déjà prévenus restent décochés.
  */
 const OBJET = "🎃 Vous avez gagné au jeu-concours Le Village Hanté !"
 const MESSAGE = `🎃 Bonjour {pseudo} ! Félicitations, vous faites partie des gagnants du jeu-concours Le Village Hanté de Radio Tripoint ! 👻🏆
@@ -24,19 +24,26 @@ const champ =
   "border-trait bg-carte-2 text-encre block w-full rounded-lg border px-2.5 py-2 text-sm outline-none focus:border-accent"
 
 export function PrevenirGagnants({
-  gagnants,
+  personnes,
 }: {
-  gagnants: { jour: string; joueur: string; pseudo: string; libelle: string; prevenuLe: number }[]
+  personnes: {
+    cle: string
+    pseudo: string
+    manches: { jour: string; joueur: string }[]
+    libelle: string
+    prevenuLe: number
+  }[]
 }) {
   const [objet, setObjet] = useState(OBJET)
   const [message, setMessage] = useState(MESSAGE)
   const [coches, setCoches] = useState(
-    () => new Set(gagnants.filter((g) => !g.prevenuLe).map((g) => `${g.jour}:${g.joueur}`)),
+    () => new Set(personnes.filter((p) => !p.prevenuLe).map((p) => p.cle)),
   )
   const [enCours, demarrer] = useTransition()
   const [retour, setRetour] = useState<{ ok: boolean; texte: string } | null>(null)
-  const choisis = gagnants.filter((g) => coches.has(`${g.jour}:${g.joueur}`))
-  const apercu = choisis[0] ?? gagnants[0]
+  const choisis = personnes.filter((p) => coches.has(p.cle))
+  const aPrevenir = personnes.filter((p) => !p.prevenuLe).length
+  const apercu = choisis[0] ?? personnes[0]
 
   function envoyer() {
     if (!choisis.length) return
@@ -47,7 +54,7 @@ export function PrevenirGagnants({
       const r = await actionPrevenirGagnants({
         objet,
         message,
-        cibles: choisis.map((g) => ({ jour: g.jour, joueur: g.joueur })),
+        cibles: choisis.flatMap((p) => p.manches),
       })
       setRetour({
         ok: r.ok,
@@ -63,15 +70,20 @@ export function PrevenirGagnants({
   }
 
   return (
-    <details className="border-trait mb-5 rounded-xl border p-3">
-      <summary className="flex cursor-pointer items-center gap-2 text-sm font-bold">
+    <details className="border-trait mb-5 rounded-xl border p-3 open:pb-4">
+      <summary className="bg-accent inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full px-4 text-sm font-extrabold text-black [&::-webkit-details-marker]:hidden">
         <Mail className="size-4" aria-hidden />
         Prévenir les gagnants par e-mail
+        {aPrevenir > 0 && (
+          <span className="rounded-full bg-black/15 px-2 py-0.5 text-xs">
+            {aPrevenir} à prévenir
+          </span>
+        )}
       </summary>
       <div className="mt-3 space-y-3">
         <ul className="space-y-1.5 text-sm">
-          {gagnants.map((g) => {
-            const cle = `${g.jour}:${g.joueur}`
+          {personnes.map((g) => {
+            const cle = g.cle
             return (
               <li key={cle}>
                 <label className="flex items-center gap-2">

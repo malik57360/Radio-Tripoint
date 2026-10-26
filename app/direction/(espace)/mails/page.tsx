@@ -1,10 +1,10 @@
-import { CornerUpLeft, Mail as IconeMail, PenLine } from "lucide-react"
+import { CornerUpLeft, Inbox, Mail as IconeMail, PenLine, Send } from "lucide-react"
 import Link from "next/link"
 import { Composer, type ProspectCible } from "@/components/direction/Composer"
 import { Redacteur } from "@/components/direction/Redacteur"
 import { lireSuivi } from "@/lib/direction/prospection"
 import { AActiver, Carte, EnTetePage, Etat, date } from "@/components/direction/ui"
-import { boiteConfiguree, lireMail, listerMails } from "@/lib/direction/mails"
+import { boiteConfiguree, lireMail, listerMails, type DossierMail } from "@/lib/direction/mails"
 import { cn } from "@/lib/utils/cn"
 
 export const metadata = { title: "Mails — Direction Radio Tripoint" }
@@ -43,6 +43,9 @@ export default async function PageMails({
   const params = await searchParams
   const p = (k: string) => (typeof params[k] === "string" ? (params[k] as string) : "")
   const uid = Number(p("uid")) || null
+  // « Envoyés » : tout ce qui est parti d'info@ (tableau de bord et webmail).
+  const envoyes = p("dossier") === "envoyes"
+  const dossierMail: DossierMail = envoyes ? "envoyes" : "recus"
   const nouveau = p("nouveau") === "1"
   const siren = /^\d{9}$/.test(p("siren")) ? p("siren") : ""
   const suivi = siren ? await lireSuivi(siren).catch(() => null) : null
@@ -58,7 +61,10 @@ export default async function PageMails({
   let mails: Awaited<ReturnType<typeof listerMails>>
   let choisi: Awaited<ReturnType<typeof lireMail>> = null
   try {
-    ;[mails, choisi] = await Promise.all([listerMails(40), uid ? lireMail(uid) : null])
+    ;[mails, choisi] = await Promise.all([
+      listerMails(40, dossierMail),
+      uid ? lireMail(uid, dossierMail) : null,
+    ])
   } catch (e) {
     return (
       <div>
@@ -77,8 +83,35 @@ export default async function PageMails({
   return (
     <div>
       {entete}
-      <div className="grid gap-4 xl:grid-cols-[minmax(18rem,26rem)_1fr]">
-        <Carte titre="Boîte de réception" note={`${aTraiter} sans réponse sur ${mails.length}`}>
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-[minmax(18rem,26rem)_minmax(0,1fr)]">
+        <Carte>
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <nav aria-label="Dossiers" className="bg-carte-2 inline-flex rounded-full p-1 text-sm">
+              {(
+                [
+                  ["recus", "Reçus", Inbox, "/direction/mails"],
+                  ["envoyes", "Envoyés", Send, "/direction/mails?dossier=envoyes"],
+                ] as const
+              ).map(([d, nom, Icone, href]) => (
+                <Link
+                  key={d}
+                  href={href}
+                  aria-current={dossierMail === d ? "page" : undefined}
+                  className={cn(
+                    "inline-flex min-h-9 items-center gap-1.5 rounded-full px-3.5 font-bold",
+                    dossierMail === d ? "bg-accent text-black" : "text-encre-2 hover:text-encre",
+                  )}
+                >
+                  <Icone className="size-4" aria-hidden /> {nom}
+                </Link>
+              ))}
+            </nav>
+            <span className="text-encre-3 text-[0.7rem]">
+              {envoyes
+                ? `${mails.length} derniers envois`
+                : `${aTraiter} sans réponse sur ${mails.length}`}
+            </span>
+          </div>
           {mails.length === 0 ? (
             <p className="text-encre-3 text-sm">Aucun message.</p>
           ) : (
@@ -86,7 +119,7 @@ export default async function PageMails({
               {mails.map((m) => (
                 <li key={m.uid}>
                   <Link
-                    href={`/direction/mails?uid=${m.uid}`}
+                    href={`/direction/mails?${envoyes ? "dossier=envoyes&" : ""}uid=${m.uid}`}
                     aria-current={m.uid === uid ? "true" : undefined}
                     className={cn(
                       "block rounded-lg px-2 py-2.5",
@@ -94,16 +127,18 @@ export default async function PageMails({
                     )}
                   >
                     <span className="flex items-center gap-2 text-sm">
-                      {!m.lu && (
+                      {!m.lu && !envoyes && (
                         <span
                           className="bg-accent size-2 flex-none rounded-full"
                           aria-label="non lu"
                         />
                       )}
-                      <span className={cn("min-w-0 flex-1 truncate", !m.lu && "font-bold")}>
-                        {m.de}
+                      <span
+                        className={cn("min-w-0 flex-1 truncate", !m.lu && !envoyes && "font-bold")}
+                      >
+                        {envoyes ? `À : ${m.pour}` : m.de}
                       </span>
-                      {m.repondu && (
+                      {m.repondu && !envoyes && (
                         <CornerUpLeft
                           className="text-bon size-3.5 flex-none"
                           aria-label="répondu"
@@ -135,11 +170,19 @@ export default async function PageMails({
             <Carte>
               <p className="text-xl leading-tight font-extrabold">{choisi.sujet}</p>
               <p className="text-encre-2 mt-2 text-sm">
-                <span className="font-semibold">{choisi.de}</span> &lt;{choisi.adresse}&gt;
+                {envoyes ? (
+                  <>
+                    Envoyé à <span className="font-semibold">{choisi.a}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="font-semibold">{choisi.de}</span> &lt;{choisi.adresse}&gt;
+                  </>
+                )}
                 {choisi.date &&
                   ` · ${date(choisi.date, { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}`}
               </p>
-              {choisi.repondu && (
+              {choisi.repondu && !envoyes && (
                 <p className="text-bon mt-2 inline-flex items-center gap-1.5 text-xs font-bold">
                   <CornerUpLeft className="size-3.5" aria-hidden /> Déjà répondu
                 </p>
@@ -148,13 +191,26 @@ export default async function PageMails({
                 {choisi.texte || "(message sans texte)"}
               </div>
             </Carte>
-            <Redacteur key={choisi.uid} uid={choisi.uid} destinataire={choisi.repondreA} />
+            {envoyes ? (
+              choisi.adresseA && (
+                <Link
+                  href={`/direction/mails?nouveau=1&a=${encodeURIComponent(choisi.adresseA)}`}
+                  className="border-trait hover:bg-carte-2 inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-sm font-bold"
+                >
+                  <PenLine className="size-4" aria-hidden /> Réécrire à cette personne
+                </Link>
+              )
+            ) : (
+              <Redacteur key={choisi.uid} uid={choisi.uid} destinataire={choisi.repondreA} />
+            )}
           </div>
         ) : (
           <Carte>
             <p className="text-encre-3 flex items-center gap-2 text-sm">
-              <IconeMail className="size-4" aria-hidden /> Choisissez un message pour le lire et y
-              répondre.
+              <IconeMail className="size-4" aria-hidden />
+              {envoyes
+                ? "Choisissez un message envoyé pour le relire."
+                : "Choisissez un message pour le lire et y répondre."}
             </p>
           </Carte>
         )}

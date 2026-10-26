@@ -5,7 +5,8 @@ import { site } from "@/config/site"
 import { REPONSE_MIN_MS } from "@/lib/concours/jeu"
 import { classementDirection } from "@/lib/concours/serveur"
 
-type Ligne = NonNullable<Awaited<ReturnType<typeof classementDirection>>>["lignes"][number]
+type Classement = NonNullable<Awaited<ReturnType<typeof classementDirection>>>
+type Ligne = Classement["lignes"][number]
 
 /**
  * Jeu concours d'Halloween : le gagnant de chaque jour (tirage à 18 h) avec
@@ -26,6 +27,7 @@ export async function CarteConcours() {
     >
       {c.gagnants.length > 0 && (
         <>
+          <PrevenirGagnants personnes={parPersonne(c.gagnants, jourCourt)} />
           <h4 className="text-encre-3 text-[0.7rem] font-bold tracking-[0.12em] uppercase">
             Gagnants du lot du jour
           </h4>
@@ -34,15 +36,6 @@ export async function CarteConcours() {
               <Rang key={g.jour} ligne={g} jour={g.jour} libelle={jourCourt(g.jour)} />
             ))}
           </ol>
-          <PrevenirGagnants
-            gagnants={[...c.gagnants].reverse().map((g) => ({
-              jour: g.jour,
-              joueur: g.joueur,
-              pseudo: g.pseudo,
-              libelle: `manche du ${jourCourt(g.jour)}`,
-              prevenuLe: g.prevenuLe,
-            }))}
-          />
         </>
       )}
       <h4 className="text-encre-3 text-[0.7rem] font-bold tracking-[0.12em] uppercase">
@@ -59,6 +52,36 @@ export async function CarteConcours() {
       )}
     </Carte>
   )
+}
+
+/**
+ * Un même joueur peut gagner plusieurs manches : on le prévient une seule fois
+ * (par adresse e-mail), la plus récente d'abord. Il reste « à prévenir » tant
+ * qu'une de ses manches ne l'a pas été.
+ */
+function parPersonne(gagnants: Classement["gagnants"], jourCourt: (jour: string) => string) {
+  const personnes = new Map<
+    string,
+    { cle: string; pseudo: string; manches: { jour: string; joueur: string }[]; prevenuLe: number }
+  >()
+  for (const g of [...gagnants].reverse()) {
+    const cle = (g.email || g.joueur).trim().toLowerCase()
+    const p = personnes.get(cle)
+    if (p) {
+      p.manches.push({ jour: g.jour, joueur: g.joueur })
+      p.prevenuLe = Math.min(p.prevenuLe, g.prevenuLe)
+    } else
+      personnes.set(cle, {
+        cle,
+        pseudo: g.pseudo,
+        manches: [{ jour: g.jour, joueur: g.joueur }],
+        prevenuLe: g.prevenuLe,
+      })
+  }
+  return [...personnes.values()].map((p) => ({
+    ...p,
+    libelle: `${p.manches.length > 1 ? `${p.manches.length} manches gagnées : ` : "manche du "}${p.manches.map((m) => jourCourt(m.jour)).join(", ")}`,
+  }))
 }
 
 function Rang({ ligne: l, jour, libelle }: { ligne: Ligne; jour: string; libelle: string }) {

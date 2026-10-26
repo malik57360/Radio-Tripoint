@@ -71,20 +71,33 @@ async function dossier(client: ImapFlow, usage: "\\Sent" | "\\Drafts", repli: st
   )
 }
 
+/** « Reçus » : la boîte de réception ; « Envoyés » : tout ce qui est parti d'info@. */
+export type DossierMail = "recus" | "envoyes"
+
+async function ouvrirDossier(client: ImapFlow, d: DossierMail, lecture = false) {
+  const chemin = d === "envoyes" ? await dossier(client, "\\Sent", "sent|envoy") : "INBOX"
+  if (!chemin) throw new Error("dossier « Envoyés » introuvable sur le serveur")
+  return client.getMailboxLock(chemin, { readOnly: lecture })
+}
+
+const nomDe = (a?: { name?: string; address?: string }) => a?.name || a?.address || ""
+
 export interface ApercuMail {
   uid: number
   de: string
   adresse: string
+  /** Destinataire (le premier, « +2 » s'il y en a d'autres). */
+  pour: string
   sujet: string
   date: string | null
   lu: boolean
   repondu: boolean
 }
 
-/** Les derniers messages reçus, du plus récent au plus ancien. */
-export async function listerMails(nombre = 40): Promise<ApercuMail[]> {
+/** Les derniers messages du dossier, du plus récent au plus ancien. */
+export async function listerMails(nombre = 40, d: DossierMail = "recus"): Promise<ApercuMail[]> {
   return avecBoite(async (client) => {
-    const verrou = await client.getMailboxLock("INBOX")
+    const verrou = await ouvrirDossier(client, d, d === "envoyes")
     try {
       const total = typeof client.mailbox === "object" ? client.mailbox.exists : 0
       if (!total) return []
@@ -96,10 +109,12 @@ export async function listerMails(nombre = 40): Promise<ApercuMail[]> {
         flags: true,
       })) {
         const exp = m.envelope?.from?.[0]
+        const dest = m.envelope?.to ?? []
         mails.push({
           uid: m.uid,
           de: exp?.name || exp?.address || "Inconnu",
           adresse: exp?.address ?? "",
+          pour: `${nomDe(dest[0]) || "(sans destinataire)"}${dest.length > 1 ? ` +${dest.length - 1}` : ""}`,
           sujet: m.envelope?.subject || "(sans objet)",
           date: m.envelope?.date ? new Date(m.envelope.date).toISOString() : null,
           lu: m.flags?.has("\\Seen") ?? false,
@@ -115,6 +130,8 @@ export async function listerMails(nombre = 40): Promise<ApercuMail[]> {
 
 export interface Mail extends ApercuMail {
   a: string
+  /** Adresse du premier destinataire (pour réécrire à quelqu'un depuis « Envoyés »). */
+  adresseA: string
   texte: string
   messageId: string | null
   references: string[]
@@ -132,11 +149,14 @@ async function lireBrut(client: ImapFlow, uid: number): Promise<Mail | null> {
   const exp = p.from?.value[0]
   const repondreA = p.replyTo?.value[0]?.address || exp?.address || ""
   const refs = p.references ? (Array.isArray(p.references) ? p.references : [p.references]) : []
+  const dest = (Array.isArray(p.to) ? p.to : p.to ? [p.to] : []).flatMap((t) => t.value)
   return {
     uid,
     de: exp?.name || exp?.address || "Inconnu",
     adresse: exp?.address ?? "",
+    pour: `${nomDe(dest[0]) || "(sans destinataire)"}${dest.length > 1 ? ` +${dest.length - 1}` : ""}`,
     a: Array.isArray(p.to) ? p.to.map((t) => t.text).join(", ") : (p.to?.text ?? ""),
+    adresseA: dest[0]?.address ?? "",
     sujet: p.subject || "(sans objet)",
     date: p.date ? p.date.toISOString() : null,
     lu: m.flags?.has("\\Seen") ?? false,
@@ -149,9 +169,9 @@ async function lireBrut(client: ImapFlow, uid: number): Promise<Mail | null> {
 }
 
 /** Un message en entier (ne le marque pas comme lu). */
-export async function lireMail(uid: number) {
+export async function lireMail(uid: number, d: DossierMail = "recus") {
   return avecBoite(async (client) => {
-    const verrou = await client.getMailboxLock("INBOX", { readOnly: true })
+    const verrou = await ouvrirDossier(client, d, true)
     try {
       return await lireBrut(client, uid)
     } finally {

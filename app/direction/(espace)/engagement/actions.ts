@@ -38,15 +38,24 @@ export async function actionPrevenirGagnants(brut: {
   const c = await classementDirection(1)
   const envoyes: string[] = []
   const erreurs: string[] = []
-  for (const cible of (brut.cibles ?? []).slice(0, 50)) {
+  // Un même joueur peut avoir gagné plusieurs manches : un seul e-mail par adresse,
+  // et toutes ses manches marquées prévenues.
+  type Gagnant = NonNullable<typeof c>["gagnants"][number]
+  const parAdresse = new Map<string, Gagnant[]>()
+  for (const cible of (brut.cibles ?? []).slice(0, 100)) {
     const g = c?.gagnants.find((x) => x.jour === cible.jour && x.joueur === cible.joueur)
     if (!g || !g.email) {
       erreurs.push(`Gagnant introuvable (${cible.jour})`)
       continue
     }
+    const cle = g.email.trim().toLowerCase()
+    parAdresse.set(cle, [...(parAdresse.get(cle) ?? []), g])
+  }
+  for (const manches of parAdresse.values()) {
+    const g = manches[0]
     try {
       await envoyerNouveau(g.email, objet, message.replaceAll("{pseudo}", g.pseudo))
-      await marquerPrevenu(g.jour, g.joueur)
+      await Promise.all(manches.map((m) => marquerPrevenu(m.jour, m.joueur)))
       envoyes.push(g.pseudo)
     } catch (e) {
       erreurs.push(`${g.pseudo} : ${(e as Error).message}`)
