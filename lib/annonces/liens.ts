@@ -13,7 +13,7 @@ export const URL_ANNONCES = (
  * d'annonces.radio-tripoint-officiel.fr ne pointe pas vers Vercel : un lien
  * qui ne s'ouvre pas ferait plus de mal que pas de lien.
  */
-export const ANNONCES_OUVERTES = false
+export const ANNONCES_OUVERTES = true
 
 /** Chemin du site des annonces → adresse complète. */
 export const lienAnnonces = (chemin = "/") => `${URL_ANNONCES}${chemin === "/" ? "" : chemin}`
