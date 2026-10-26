@@ -448,6 +448,52 @@
   }
 }
 
+/* ───────────────────────── Mon espace ───────────────────────── */
+
+/* Cœur des favoris : il bat une fois quand on l'allume. */
+.bouton-coeur[aria-pressed="true"] .coeur,
+.btn[aria-pressed="true"] .coeur {
+  animation: coeur 0.45s var(--ressort);
+}
+@keyframes coeur {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.menu-plus > summary::-webkit-details-marker {
+  display: none;
+}
+.nav-espace ul {
+  scrollbar-width: none;
+}
+.nav-espace ul::-webkit-scrollbar {
+  display: none;
+}
+
+/* Reçu imprimé : rien que le reçu. */
+@media print {
+  body > header,
+  body > footer,
+  .espace-menu,
+  .espace > nav,
+  .skip-link {
+    display: none !important;
+  }
+  .espace {
+    padding: 0 !important;
+  }
+  .recu {
+    border: 0 !important;
+    padding: 0 !important;
+  }
+}
+
 /* Moins de mouvement : tout est à sa place, immédiatement. */
 @media (prefers-reduced-motion: reduce) {
   .ouverture-tripoint .trace,
@@ -457,7 +503,8 @@
   .apparait,
   .tampon,
   .etiquette-prix,
-  .etape-faite {
+  .etape-faite,
+  .coeur {
     animation: none !important;
   }
   .ouverture-tripoint .trace {

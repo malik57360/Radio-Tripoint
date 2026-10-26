@@ -14,6 +14,9 @@ import {
   teinte,
 } from "@/components/annonces/Vitrine"
 import { FilAnnonces } from "@/components/annonces/Chrome"
+import { CompteurVue } from "@/components/annonces/espace/CompteurVue"
+import { BoutonFavori } from "@/components/annonces/espace/Favoris"
+import { statsAnnonces } from "@/lib/annonces/espace"
 import { EtatVide } from "@/components/ui/EtatVide"
 import Link from "@/components/ui/Lien"
 import { ShareButtons } from "@/components/ui/ShareButtons"
@@ -96,9 +99,13 @@ export default async function PageAnnonce(props: Props) {
     "recent",
   ).slice(0, 4)
   const chemin = cheminAnnonce(a)
+  // L'annonceur sur sa propre annonce : ses chiffres et ses raccourcis, pas le formulaire de contact.
+  const sienne = compte ? (await lireAnnonce(a.id))?.compte === compte.id : false
+  const stats = sienne ? (await statsAnnonces([a.id])).parAnnonce.get(a.id) : undefined
 
   return (
     <>
+      <CompteurVue id={a.id} />
       <div className="conteneur pt-5 sm:pt-7">
         <FilAnnonces
           elements={[
@@ -106,11 +113,24 @@ export default async function PageAnnonce(props: Props) {
             { nom: a.titre, chemin },
           ]}
         />
+        {sienne && (
+          <p className="bg-nuit text-nuit-encre mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl px-4 py-2.5 text-sm lg:hidden">
+            <strong className="text-nuit-accent">Votre annonce</strong>
+            <span>
+              {stats?.vues ?? 0} vue{(stats?.vues ?? 0) > 1 ? "s" : ""} · {stats?.messages ?? 0}{" "}
+              message{(stats?.messages ?? 0) > 1 ? "s" : ""}
+            </span>
+            <Link href={`/mon-espace/annonces#a-${a.id}`} className="ml-auto font-bold underline">
+              Gérer
+            </Link>
+          </p>
+        )}
       </div>
       <article className="conteneur grid gap-8 pt-5 pb-14 lg:grid-cols-[1.4fr_1fr] lg:gap-12 lg:pt-8">
         <div className="min-w-0">
           {a.photos.length ? (
             <div className="relative">
+              {!sienne && <BoutonFavori id={a.id} className="absolute top-3 right-3 z-[4]" />}
               {prix && (
                 <span
                   className="etiquette-prix grande apparait"
@@ -292,19 +312,56 @@ export default async function PageAnnonce(props: Props) {
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <div className="border-trait-fort rounded-xl border-2 p-5">
-            <p className="text-lg font-extrabold">
-              Contacter {a.annonceur === "pro" ? "l'entreprise" : a.nom}
-            </p>
-            <div className="mt-3">
-              <FormulaireContact
-                annonce={a.id}
-                connecte={Boolean(compte)}
-                verifie={Boolean(compte?.emailVerifie)}
-                chemin={chemin}
-              />
+          {sienne ? (
+            <div className="bg-nuit text-nuit-encre rounded-xl p-5">
+              <p className="text-nuit-accent text-[0.75rem] font-extrabold tracking-[0.12em] uppercase">
+                Votre annonce
+              </p>
+              <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[0.95rem]">
+                <span>
+                  <strong className="tabular-nums">{stats?.vues ?? 0}</strong> vue
+                  {(stats?.vues ?? 0) > 1 ? "s" : ""}
+                </span>
+                <span>
+                  <strong className="tabular-nums">{stats?.messages ?? 0}</strong> message
+                  {(stats?.messages ?? 0) > 1 ? "s" : ""}
+                </span>
+                <span>
+                  <strong className="tabular-nums">{stats?.favoris ?? 0}</strong> favori
+                  {(stats?.favoris ?? 0) > 1 ? "s" : ""}
+                </span>
+              </p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link
+                  href={`/deposer?modifier=${a.id}`}
+                  className="btn btn-accent min-h-10 px-4 text-sm"
+                >
+                  Modifier
+                </Link>
+                <Link
+                  href={`/mon-espace/annonces?statut=en-ligne#a-${a.id}`}
+                  className="btn min-h-10 border border-white/30 px-4 text-sm text-white hover:bg-white/10"
+                >
+                  Booster ou gérer
+                </Link>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="border-trait-fort rounded-xl border-2 p-5">
+              <p className="text-lg font-extrabold">
+                Contacter {a.annonceur === "pro" ? "l'entreprise" : a.nom}
+              </p>
+              <div className="mt-3">
+                <FormulaireContact
+                  annonce={a.id}
+                  connecte={Boolean(compte)}
+                  verifie={Boolean(compte?.emailVerifie)}
+                  chemin={chemin}
+                />
+              </div>
+              <BoutonFavori id={a.id} grand className="mt-3" />
+            </div>
+          )}
           <EncadreArnaques />
           <Signalement annonce={a.id} connecte={Boolean(compte)} />
         </aside>

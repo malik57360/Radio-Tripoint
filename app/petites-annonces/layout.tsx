@@ -2,6 +2,7 @@ import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Archivo, Newsreader } from "next/font/google"
 import { EnTeteAnnonces, PiedAnnonces } from "@/components/annonces/Chrome"
+import { FavorisProvider } from "@/components/annonces/espace/Favoris"
 import { JsonLd } from "@/components/ui/JsonLd"
 import { site } from "@/config/site"
 import { URL_ANNONCES } from "@/lib/annonces/liens"
@@ -60,9 +61,11 @@ export default function LayoutAnnonces({ children }: { children: React.ReactNode
           Aller au contenu
         </a>
         <EnTeteAnnonces />
-        <main id="contenu" tabIndex={-1} className="outline-none">
-          {children}
-        </main>
+        <FavorisProvider>
+          <main id="contenu" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
+        </FavorisProvider>
         <PiedAnnonces />
         {/* Mesure d'audience Vercel : sans cookie ni donnée personnelle. */}
         <Analytics />

@@ -131,11 +131,17 @@ export default async function PageConditions() {
           (seulement sous forme chiffrée irréversible), les informations de votre entreprise si vous
           êtes professionnel, vos annonces et photos, l&apos;historique de vos commandes, ainsi
           qu&apos;une empreinte de votre adresse IP pour limiter les abus. Les messages envoyés aux
-          annonceurs leur sont transmis par e-mail et ne sont pas conservés par la radio. Le
-          paiement est traité par Stripe. Vos annonces terminées et leurs photos sont effacées
+          annonceurs leur sont transmis par e-mail ; une copie s&apos;affiche dans « Mon espace » de
+          l&apos;expéditeur et du destinataire pendant 90 jours, puis elle est effacée
+          (l&apos;adresse e-mail d&apos;un annonceur n&apos;est jamais montrée). Vos favoris et vos
+          alertes de recherche restent dans votre compte jusqu&apos;à ce que vous les supprimiez.
+          Les vues d&apos;une annonce sont comptées sans cookie : une empreinte du visiteur
+          n&apos;est gardée qu&apos;une demi-heure, pour ne pas compter deux fois la même personne.
+          Le paiement est traité par Stripe. Vos annonces terminées et leurs photos sont effacées
           progressivement ; les données de commande sont conservées le temps imposé par les
-          obligations comptables. Vous pouvez exercer vos droits (accès, rectification, effacement…)
-          en écrivant à {site.contact.email}. Voir aussi la{" "}
+          obligations comptables. Depuis « Mon espace », vous pouvez télécharger toutes vos données
+          et supprimer votre compte ; pour vos autres droits (rectification, opposition…), écrivez à{" "}
+          {site.contact.email}. Voir aussi la{" "}
           <Link href="/politique-confidentialite">politique de confidentialité</Link>.
         </p>
 

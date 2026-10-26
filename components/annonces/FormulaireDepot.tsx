@@ -158,14 +158,17 @@ export function FormulaireDepot({
   annonceur,
   paiementOuvert,
   existante,
+  modele,
 }: {
   categories: { slug: string; nom: string; accroche: string }[]
   offres: Offre[]
   annonceur: Annonceur
   paiementOuvert: boolean
   existante?: Existante
+  /** « Dupliquer » : le texte d'une ancienne annonce, sans ses photos (elles lui appartiennent). */
+  modele?: Omit<Existante["contenu"], "photos">
 }) {
-  const e = existante?.contenu
+  const e = existante?.contenu ?? (modele && { ...modele, photos: [] })
   const [categorie, setCategorie] = useState(e?.categorie ?? "")
   const [titre, setTitre] = useState(e?.titre ?? "")
   const [description, setDescription] = useState(e?.description ?? "")

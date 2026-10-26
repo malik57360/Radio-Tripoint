@@ -236,6 +236,12 @@ export async function fermerSession() {
   pot.delete(COOKIE_ANNONCES)
 }
 
+/** Appareils connectés (sessions ouvertes) du compte. */
+export async function nombreSessions(id: string) {
+  const r = await redis([["SCARD", SESSIONS_DU_COMPTE(id)]])
+  return Number(r?.[0] ?? 0) || 0
+}
+
 export async function revoquerSessions(id: string) {
   const r = await redis([["SMEMBERS", SESSIONS_DU_COMPTE(id)]])
   const liste = (r?.[0] as string[] | null) ?? []

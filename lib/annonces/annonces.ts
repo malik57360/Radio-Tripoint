@@ -12,6 +12,7 @@ import {
   type AnnoncePublique,
   type Statut,
 } from "./types"
+import { noterActivite, type TypeActivite } from "./espace"
 
 /**
  * Stockage des annonces (Redis).
@@ -36,6 +37,8 @@ const EMPREINTES = "rt:annonces:empreintes"
 const JOURNAL = "rt:annonces:journal"
 
 const JOUR = 24 * 3600 * 1000
+
+const sujet = (a: Annonce) => ({ id: a.id, titre: a.titre })
 
 const lireJson = <T>(v: unknown): T | null => {
   if (typeof v !== "string") return null
@@ -260,6 +263,7 @@ export async function creerAnnonce(
   ])
   if (!ok || ok[0] !== "OK") throw new Error("stockage indisponible")
   await journal("depot", { annonce: id, compte: a.compte, statut: a.statut })
+  await noterActivite(a.compte, { type: "depot", annonce: sujet(a) })
   return a
 }
 
@@ -288,6 +292,11 @@ export async function modifierAnnonce(a: Annonce, c: Contenu, doublonDe?: string
     ["HSET", EMPREINTES, a.empreinte, a.id],
   ])
   await journal("modification", { annonce: a.id, compte: a.compte, etaitEnLigne })
+  await noterActivite(a.compte, {
+    type: "modifiee",
+    annonce: sujet(a),
+    detail: etaitEnLigne ? "Elle est relue avant de réapparaître." : undefined,
+  })
   if (etaitEnLigne) rafraichir()
   return a
 }
@@ -300,6 +309,7 @@ export async function paiementDepotRecu(a: Annonce) {
   a.statut = "en_attente"
   await enregistrer(a)
   await journal("paiement-depot", { annonce: a.id })
+  await noterActivite(a.compte, { type: "paiement", annonce: sujet(a) })
   return a
 }
 
@@ -343,6 +353,11 @@ export async function appliquerOptions(a: Annonce, cfg: Config, codes: CodeOffre
   for (const c of codes) appliquerOffre(a, cfg, c)
   await enregistrer(a)
   await journal("options", { annonce: a.id, options: codes })
+  await noterActivite(a.compte, {
+    type: "options",
+    annonce: sujet(a),
+    detail: codes.map((c) => cfg.offres.find((o) => o.code === c)?.nom ?? c).join(", "),
+  })
   rafraichir()
   return a
 }
@@ -367,6 +382,10 @@ export async function publierAnnonce(a: Annonce, cfg: Config) {
   } else if ((a.expireLe ?? 0) < Date.now()) a.statut = "expiree"
   await enregistrer(a)
   await journal(reprise ? "republication" : "publication", { annonce: a.id })
+  await noterActivite(a.compte, {
+    type: a.statut === "publiee" ? "publiee" : "expiree",
+    annonce: sujet(a),
+  })
   rafraichir()
   return a
 }
@@ -381,6 +400,23 @@ export async function changerStatut(
   a.motif = motif?.trim() || undefined
   await enregistrer(a)
   await journal(statut, { annonce: a.id, par, ...(a.motif ? { motif: a.motif } : {}) })
+  const type: TypeActivite | null =
+    statut === "retiree" && a.vendueLe
+      ? "vendue"
+      : statut === "refusee" ||
+          statut === "retiree" ||
+          statut === "expiree" ||
+          statut === "signalee"
+        ? statut
+        : statut === "publiee"
+          ? "publiee"
+          : null
+  if (type)
+    await noterActivite(a.compte, {
+      type,
+      annonce: sujet(a),
+      detail: type === "vendue" ? undefined : a.motif,
+    })
   rafraichir()
   return a
 }
@@ -393,6 +429,7 @@ export async function compterSignalement(a: Annonce, cfg: Config) {
   await enregistrer(a)
   if (masquer) {
     await journal("masquee", { annonce: a.id, signalements: a.signalements })
+    await noterActivite(a.compte, { type: "signalee", annonce: sujet(a) })
     rafraichir()
   }
   return masquer

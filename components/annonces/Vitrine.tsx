@@ -17,13 +17,10 @@ import {
 } from "lucide-react"
 import { ViewTransition } from "react"
 import Link from "@/components/ui/Lien"
+import { prixAffiche } from "@/lib/annonces/prix"
+import { BoutonFavori } from "./espace/Favoris"
 import { PAYS, type Pays } from "@/lib/annonces/categories"
-import {
-  LIBELLES_MENTION,
-  cheminAnnonce,
-  misEnAvant,
-  type AnnoncePublique,
-} from "@/lib/annonces/types"
+import { cheminAnnonce, misEnAvant, type AnnoncePublique } from "@/lib/annonces/types"
 import { cn } from "@/lib/utils/cn"
 
 /** Briques d'affichage des Petites annonces (cartes, vignettes, encadrés). */
@@ -70,15 +67,7 @@ export function IconeCategorie({
 }
 export const teinte = (slug: string) => TEINTES[slug] ?? TEINTES.divers
 
-export function prixAffiche(a: Pick<AnnoncePublique, "prix" | "mention" | "details">) {
-  if (a.mention === "don") return "À donner"
-  if (a.prix !== null) {
-    const p = `${(a.prix / 100).toLocaleString("fr-FR", { maximumFractionDigits: a.prix % 100 ? 2 : 0, minimumFractionDigits: a.prix % 100 ? 2 : 0 })} €`
-    return a.mention ? `${p} · ${LIBELLES_MENTION[a.mention].toLowerCase()}` : p
-  }
-  if (a.mention) return LIBELLES_MENTION[a.mention]
-  return a.details.salaire ?? null
-}
+export { prixAffiche }
 
 const fuseau = { timeZone: "Europe/Paris" } as const
 export function quand(ms: number) {
@@ -225,6 +214,7 @@ export function CarteAnnonce({ a, categorie }: { a: AnnoncePublique; categorie?:
             {prix}
           </span>
         )}
+        <BoutonFavori id={a.id} className="absolute top-2 right-2 z-[4]" />
         {misEnAvant(a) && (
           <span className="ruban" title="Mise en avant payée par l'annonceur">
             <Sparkles className="size-3" aria-hidden />

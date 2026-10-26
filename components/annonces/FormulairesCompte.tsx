@@ -6,6 +6,7 @@ import { useActionState, useState } from "react"
 import {
   actionChangerMotDePasse,
   actionConnexion,
+  actionDeconnecterAutres,
   actionInscription,
   actionMotDePasseOublie,
   actionNouveauMotDePasse,
@@ -455,6 +456,27 @@ export function FormulaireSuppression() {
         {enCours && <Loader2 className="size-4 animate-spin" aria-hidden />}
         Supprimer mon compte
       </button>
+    </form>
+  )
+}
+
+/** Ferme les sessions ouvertes ailleurs (téléphone perdu, ordinateur partagé). */
+export function FormulaireDeconnecterAutres({ appareils }: { appareils: number }) {
+  const [etat, action, enCours] = useActionState(actionDeconnecterAutres, null)
+  return (
+    <form action={action} className="space-y-3">
+      <p className="text-encre-2 text-[0.9rem]">
+        {appareils > 1
+          ? `Votre compte est ouvert sur ${appareils} appareils ou navigateurs.`
+          : "Votre compte n'est ouvert que sur cet appareil."}
+      </p>
+      <Retour etat={etat} />
+      {appareils > 1 && (
+        <button type="submit" disabled={enCours} className="btn btn-trait min-h-11">
+          {enCours && <Loader2 className="size-4 animate-spin" aria-hidden />}
+          Déconnecter les autres appareils
+        </button>
+      )}
     </form>
   )
 }
