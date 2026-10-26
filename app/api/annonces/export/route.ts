@@ -1,6 +1,7 @@
 import { annoncesDuCompte } from "@/lib/annonces/annonces"
 import { listerCommandes } from "@/lib/annonces/commandes"
 import { compteConnecte } from "@/lib/annonces/comptes"
+import { exporterDiscussions } from "@/lib/annonces/discussions"
 import { idsFavoris, lireActivite, lireAlertes, lireBoite } from "@/lib/annonces/espace"
 import { autoriser } from "@/lib/annonces/limiteur"
 
@@ -18,14 +19,16 @@ export async function GET() {
     return new Response("Réessayez dans une heure.", { status: 429 })
   const { hache: _hache, ...compte } = c
   void _hache
-  const [annonces, commandes, favoris, messages, alertes, activite] = await Promise.all([
-    annoncesDuCompte(c.id),
-    listerCommandes(2000).then((l) => l.filter((x) => x.compte === c.id)),
-    idsFavoris(c.id),
-    lireBoite(c.id),
-    lireAlertes(c.id),
-    lireActivite(c.id, 100),
-  ])
+  const [annonces, commandes, favoris, discussions, ancienneBoite, alertes, activite] =
+    await Promise.all([
+      annoncesDuCompte(c.id),
+      listerCommandes(2000).then((l) => l.filter((x) => x.compte === c.id)),
+      idsFavoris(c.id),
+      exporterDiscussions(c.id),
+      lireBoite(c.id),
+      lireAlertes(c.id),
+      lireActivite(c.id, 100),
+    ])
   const donnees = {
     exporteLe: new Date().toISOString(),
     service: "Les Petites Annonces du Tripoint · Radio Tripoint",
@@ -33,7 +36,8 @@ export async function GET() {
     annonces,
     paiements: commandes,
     favoris,
-    messages,
+    discussions,
+    ...(ancienneBoite.length ? { ancienneBoite } : {}),
     alertes,
     activite,
   }

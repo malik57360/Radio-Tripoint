@@ -7,13 +7,15 @@ import { useEffect, useSyncExternalStore } from "react"
 import { cn } from "@/lib/utils/cn"
 
 /**
- * Messages non lus, partagés par l'en-tête et le menu de « Mon espace ».
- * Les mises en page ne se redessinent pas d'une page à l'autre : le chiffre
- * se relit à chaque changement de page et quand on revient sur l'onglet.
+ * Messages non lus de la messagerie, pour la pastille de l'onglet Messages.
+ * L'en-tête ne se redessine pas d'une page à l'autre : le chiffre se relit
+ * à chaque changement de page, quand on revient sur l'onglet, et quand une
+ * discussion ouverte vient d'être lue.
  */
 let valeur: number | null = null
 let cheminVu: string | null = null
 let enCours = false
+let encore = false
 const abonnes = new Set<() => void>()
 const prevenir = () => abonnes.forEach((f) => f())
 const abonner = (f: () => void) => {
@@ -23,8 +25,12 @@ const abonner = (f: () => void) => {
   }
 }
 
-function rafraichir() {
-  if (enCours) return
+export function rafraichirNonLus() {
+  // Une demande pendant une autre : on relira une fois la première revenue.
+  if (enCours) {
+    encore = true
+    return
+  }
   enCours = true
   fetch("/api/annonces/messages", { cache: "no-store" })
     .then((r) => (r.ok ? r.json() : null))
@@ -36,6 +42,10 @@ function rafraichir() {
     .catch(() => {})
     .finally(() => {
       enCours = false
+      if (encore) {
+        encore = false
+        rafraichirNonLus()
+      }
     })
 }
 
@@ -51,16 +61,12 @@ export function useNonLus(initial: number, connecte = true) {
     if (!connecte || cheminVu === chemin) return
     const premiereVisite = cheminVu === null
     cheminVu = chemin
-    // La boîte de réception ouverte marque les messages comme lus.
-    if (chemin === "/mon-espace/messages" && !location.search.includes("boite=envoyes")) {
-      valeur = 0
-      prevenir()
-    } else if (!premiereVisite) rafraichir()
+    if (!premiereVisite) rafraichirNonLus()
   }, [chemin, connecte])
 
   useEffect(() => {
     if (!connecte) return
-    const auRetour = () => document.visibilityState === "visible" && rafraichir()
+    const auRetour = () => document.visibilityState === "visible" && rafraichirNonLus()
     document.addEventListener("visibilitychange", auRetour)
     return () => document.removeEventListener("visibilitychange", auRetour)
   }, [connecte])
@@ -84,12 +90,12 @@ export function Pastille({ n, className }: { n: number; className?: string }) {
   )
 }
 
-/** L'onglet « Messages » de l'en-tête : la boîte en un geste, depuis n'importe quelle page. */
+/** L'onglet « Messages » de l'en-tête : la messagerie en un geste, depuis n'importe quelle page. */
 export function OngletMessages({ connecte, initial }: { connecte: boolean; initial: number }) {
   const n = useNonLus(initial, connecte)
   return (
     <Link
-      href={connecte ? "/mon-espace/messages" : "/connexion?suite=/mon-espace/messages"}
+      href={connecte ? "/messages" : "/connexion?suite=/messages"}
       aria-label={n > 0 ? `Messages, ${n} non lu${n > 1 ? "s" : ""}` : "Messages"}
       className="hover:bg-nuit-2 inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-1.5 text-sm font-bold md:px-3"
     >

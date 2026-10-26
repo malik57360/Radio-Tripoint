@@ -13,7 +13,7 @@ import type { Filtres } from "./recherche"
  * - rt:annonces:vues:AAAA-MM-JJ      id → vues du jour (40 jours)
  * - rt:annonces:nb-favoris           id → nombre de comptes qui l'ont en favori
  * - rt:annonces:favoris:<compte>     annonces mises de côté (date d'ajout)
- * - rt:annonces:boite:<compte>       messages reçus et envoyés (90 jours)
+ * - rt:annonces:boite:<compte>       ancienne boîte (avant la messagerie) : lue pour l'export
  * - rt:annonces:alertes:<compte>     recherches enregistrées
  * - rt:annonces:comptes-alertes      comptes qui reçoivent des alertes par e-mail
  * - rt:annonces:activite:<compte>    ce qui est arrivé à ses annonces (100 derniers)
@@ -158,7 +158,7 @@ export async function basculerFavori(compte: string, id: string, voulu?: boolean
   return cible
 }
 
-/* ───────────────────────── Messages ───────────────────────── */
+/* ─────────────── Ancienne boîte (avant la messagerie) : lue pour l'export ─────────────── */
 
 export interface Message {
   id: string
@@ -169,49 +169,6 @@ export interface Message {
   texte: string
   le: number
   lu?: number
-}
-
-/**
- * Un message d'acheteur : rangé dans la boîte de l'annonceur (avec
- * l'adresse de l'acheteur, qu'il reçoit déjà en « Répondre à ») et dans les
- * envoyés de l'acheteur (sans l'adresse de l'annonceur, qui reste privée).
- */
-export async function rangerMessage(m: {
-  annonceur: string
-  acheteur: { id: string; nom: string; email: string }
-  annonce: Message["annonce"]
-  nomAnnonceur: string
-  texte: string
-}) {
-  const le = Date.now()
-  const recu: Message = {
-    id: randomBytes(6).toString("hex"),
-    sens: "recu",
-    annonce: m.annonce,
-    avec: { nom: m.acheteur.nom, email: m.acheteur.email },
-    texte: m.texte,
-    le,
-  }
-  const envoye: Message = {
-    id: randomBytes(6).toString("hex"),
-    sens: "envoye",
-    annonce: m.annonce,
-    avec: { nom: m.nomAnnonceur },
-    texte: m.texte,
-    le,
-    lu: le,
-  }
-  const ttl = DUREE_MESSAGES_JOURS * 24 * 3600
-  await redis([
-    ["HSET", BOITE(m.annonceur), recu.id, JSON.stringify(recu)],
-    ["ZADD", BOITE_ORDRE(m.annonceur), le, recu.id],
-    ["EXPIRE", BOITE(m.annonceur), ttl],
-    ["EXPIRE", BOITE_ORDRE(m.annonceur), ttl],
-    ["HSET", BOITE(m.acheteur.id), envoye.id, JSON.stringify(envoye)],
-    ["ZADD", BOITE_ORDRE(m.acheteur.id), le, envoye.id],
-    ["EXPIRE", BOITE(m.acheteur.id), ttl],
-    ["EXPIRE", BOITE_ORDRE(m.acheteur.id), ttl],
-  ])
 }
 
 /** La boîte, les plus récents d'abord ; les messages de plus de 90 jours sont effacés au passage. */
@@ -232,26 +189,6 @@ export async function lireBoite(compte: string): Promise<Message[]> {
     if (m && m.le >= limite) liste.push(m)
   }
   return liste.sort((a, b) => b.le - a.le)
-}
-
-export async function nonLus(compte: string) {
-  return (await lireBoite(compte)).filter((m) => m.sens === "recu" && !m.lu).length
-}
-
-export async function marquerLus(compte: string, messages: Message[]) {
-  const lus = messages.filter((m) => m.sens === "recu" && !m.lu)
-  if (!lus.length) return
-  const le = Date.now()
-  await redis([
-    ["HSET", BOITE(compte), ...lus.flatMap((m) => [m.id, JSON.stringify({ ...m, lu: le })])],
-  ])
-}
-
-export async function supprimerMessage(compte: string, id: string) {
-  await redis([
-    ["HDEL", BOITE(compte), id],
-    ["ZREM", BOITE_ORDRE(compte), id],
-  ])
 }
 
 /* ───────────────────────── Alertes ───────────────────────── */

@@ -2,7 +2,7 @@ import "server-only"
 import { cache } from "react"
 import { annoncesDuCompte, annoncesPubliques } from "./annonces"
 import { compteConnecte } from "./comptes"
-import { idsFavoris, lireAlertes, lireBoite } from "./espace"
+import { idsFavoris, lireAlertes } from "./espace"
 import { filtrer } from "./recherche"
 import { STATUTS_ACTIFS } from "./types"
 
@@ -13,7 +13,6 @@ import { STATUTS_ACTIFS } from "./types"
  */
 export const compteEspace = cache(compteConnecte)
 export const mesAnnonces = cache((compte: string) => annoncesDuCompte(compte))
-export const maBoite = cache((compte: string) => lireBoite(compte))
 export const mesFavoris = cache((compte: string) => idsFavoris(compte))
 export const enLigne = cache(() => annoncesPubliques())
 
@@ -31,15 +30,13 @@ export const mesAlertes = cache(async (compte: string) => {
 })
 
 export const compteurs = cache(async (compte: string) => {
-  const [annonces, boite, favoris, alertes] = await Promise.all([
+  const [annonces, favoris, alertes] = await Promise.all([
     mesAnnonces(compte),
-    maBoite(compte),
     mesFavoris(compte),
     mesAlertes(compte),
   ])
   return {
     annonces: annonces.filter((a) => STATUTS_ACTIFS.includes(a.statut)).length,
-    messages: boite.filter((m) => m.sens === "recu" && !m.lu).length,
     favoris: favoris.length,
     alertes: alertes.reduce((n, a) => n + a.nouvelles, 0),
   }

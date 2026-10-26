@@ -219,27 +219,34 @@ ${lien(ESPACE)}`,
 
 /* ───────────────────────── Contact et alertes ───────────────────────── */
 
-export const mailContact = (o: {
-  nomAnnonceur: string
-  a: Annonce
+/**
+ * Un message attend dans la messagerie du site. Aucune adresse n'est
+ * échangée : on répond sur le site, pas à cet e-mail (qui arriverait à la radio).
+ */
+export const mailNouveauMessage = (o: {
+  nomDestinataire: string
   nomExpediteur: string
-  message: string
-}) => ({
-  objet: `Message pour votre annonce « ${o.a.titre} »`,
-  texte: `Bonjour ${o.nomAnnonceur},
+  titre: string
+  texte: string
+  discussion: string
+}) => {
+  const extrait = o.texte.length > 600 ? `${o.texte.slice(0, 600).trimEnd()}…` : o.texte
+  return {
+    objet: `${o.nomExpediteur} vous a écrit · « ${o.titre} »`,
+    texte: `Bonjour ${o.nomDestinataire},
 
-${o.nomExpediteur} vous écrit au sujet de votre annonce « ${o.a.titre} » :
+${o.nomExpediteur} vous a écrit au sujet de l'annonce « ${o.titre} » :
 
 ----------
-${o.message}
+${extrait}
 ----------
 
-Pour lui répondre, répondez simplement à cet e-mail : votre réponse lui arrive directement, et lui donne votre adresse.
+Pour répondre, ouvrez la discussion sur le site (ne répondez pas à cet e-mail : il ne lui parviendrait pas) :
+${lien(`/messages/${o.discussion}`)}
 
-Prudence : ne communiquez jamais vos codes bancaires, ne payez rien à l'avance et méfiez-vous des « transporteurs », des coupons et des liens de paiement reçus par message. Un message suspect ? Transférez-le à ${site.contact.email}.
-
-L'annonce : ${lien(cheminAnnonce(o.a))}`,
-})
+Prudence : restez sur la messagerie du site, ne payez jamais à l'avance et méfiez-vous des « transporteurs », des coupons et des liens de paiement. Un message suspect ? Écrivez à ${site.contact.email}.`,
+  }
+}
 
 /** Alerte pour la radio : une annonce attend la modération. */
 export const alerteModeration = (a: Annonce, motif: "depot" | "modification" | "signalement") => ({

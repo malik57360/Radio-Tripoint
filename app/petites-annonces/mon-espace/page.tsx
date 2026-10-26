@@ -17,14 +17,9 @@ import { Carte, Courbe, EnTete, Tuile, qualite } from "@/components/annonces/esp
 import { RenvoyerVerification } from "@/components/annonces/FormulairesCompte"
 import { Vignette } from "@/components/annonces/Vitrine"
 import Link from "@/components/ui/Lien"
+import { mesDiscussions } from "@/lib/annonces/discussions"
 import { lireActivite, statsAnnonces } from "@/lib/annonces/espace"
-import {
-  compteEspace,
-  maBoite,
-  mesAlertes,
-  mesAnnonces,
-  mesFavoris,
-} from "@/lib/annonces/espace-donnees"
+import { compteEspace, mesAlertes, mesAnnonces, mesFavoris } from "@/lib/annonces/espace-donnees"
 import { metaAnnonces } from "@/lib/annonces/seo"
 
 export const generateMetadata = () =>
@@ -94,9 +89,9 @@ export default async function TableauDeBord(props: PageProps<"/petites-annonces/
             ? "Activée"
             : null
 
-  const [annonces, boite, favoris, alertes, activite] = await Promise.all([
+  const [annonces, discussions, favoris, alertes, activite] = await Promise.all([
     mesAnnonces(c.id),
-    maBoite(c.id),
+    mesDiscussions(c.id),
     mesFavoris(c.id),
     mesAlertes(c.id),
     lireActivite(c.id, 12),
@@ -106,9 +101,9 @@ export default async function TableauDeBord(props: PageProps<"/petites-annonces/
     annonces.reduce((t, a) => t + (parAnnonce.get(a.id)?.[k] ?? 0), 0)
   const enLigne = annonces.filter((a) => a.statut === "publiee")
   const enVerif = annonces.filter((a) => a.statut === "en_attente").length
-  const recus = boite.filter((m) => m.sens === "recu")
-  const recus30 = recus.filter((m) => recent(m.le, 30)).length
-  const nonLus = recus.filter((m) => !m.lu).length
+  // Les personnes qui ont écrit au sujet de ses annonces (la messagerie, elle, est à part).
+  const contacts30 = discussions.filter((d) => d.vendeur === c.id && recent(d.creeLe, 30)).length
+  const nonLus = discussions.reduce((n, d) => n + d.nonLus, 0)
   const nouvellesAlertes = alertes.reduce((n, a) => n + a.nouvelles, 0)
   const vendues = annonces.filter((a) => a.vendueLe).length
 
@@ -138,8 +133,8 @@ export default async function TableauDeBord(props: PageProps<"/petites-annonces/
   if (nonLus)
     aFaire.push({
       icone: MessageCircle,
-      texte: `${pluriel(nonLus, "message")} non ${nonLus > 1 ? "lus" : "lu"}.`,
-      href: "/mon-espace/messages",
+      texte: `${pluriel(nonLus, "message")} non ${nonLus > 1 ? "lus" : "lu"} dans la messagerie.`,
+      href: "/messages",
       bouton: "Lire",
     })
   if (c.type === "pro" && !c.pro)
@@ -218,11 +213,15 @@ export default async function TableauDeBord(props: PageProps<"/petites-annonces/
           icone={Eye}
         />
         <Tuile
-          libelle="Messages reçus"
-          valeur={recus30}
-          detail={nonLus ? `${nonLus} non ${nonLus > 1 ? "lus" : "lu"}` : "sur 30 jours"}
+          libelle="Contacts (30 jours)"
+          valeur={contacts30}
+          detail={
+            nonLus
+              ? `${nonLus} message${nonLus > 1 ? "s" : ""} à lire`
+              : "personnes qui vous ont écrit"
+          }
           icone={MessageCircle}
-          href="/mon-espace/messages"
+          href="/messages"
           accent={nonLus > 0}
         />
         <Tuile

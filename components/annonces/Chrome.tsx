@@ -5,7 +5,7 @@ import { Logo } from "@/components/marque/Logo"
 import { site } from "@/config/site"
 import { OngletMessages } from "@/components/annonces/espace/NonLus"
 import { compteConnecte } from "@/lib/annonces/comptes"
-import { nonLus } from "@/lib/annonces/espace"
+import { totalNonLus } from "@/lib/annonces/discussions"
 import { lienAnnonces } from "@/lib/annonces/liens"
 import { cn } from "@/lib/utils/cn"
 
@@ -50,7 +50,7 @@ export async function EnTeteAnnonces() {
           Déposer
         </Link>
         <div className="-mr-1 flex flex-none items-center sm:mr-0 sm:gap-1">
-          <OngletMessages connecte={!!compte} initial={compte ? await nonLus(compte.id) : 0} />
+          <OngletMessages connecte={!!compte} initial={compte ? await totalNonLus(compte.id) : 0} />
           <Link
             href={compte ? "/mon-espace" : "/connexion"}
             className="hover:bg-nuit-2 inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-1.5 text-sm font-bold sm:px-3"

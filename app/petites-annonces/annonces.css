@@ -494,6 +494,20 @@
   }
 }
 
+/* Fiche au téléphone : la barre « Écrire » est fixée en bas, la page lui laisse sa place. */
+@media (max-width: 63.99rem) {
+  body:has(.barre-ecrire) {
+    padding-bottom: calc(4.6rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Messagerie au téléphone : plein écran, comme une appli ; le pied de page s'efface. */
+@media (max-width: 63.99rem) {
+  body:has(.messagerie) > footer {
+    display: none;
+  }
+}
+
 /* Moins de mouvement : tout est à sa place, immédiatement. */
 @media (prefers-reduced-motion: reduce) {
   .ouverture-tripoint .trace,

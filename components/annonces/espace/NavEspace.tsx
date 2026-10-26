@@ -1,29 +1,18 @@
 "use client"
 
-import {
-  Bell,
-  Heart,
-  LayoutGrid,
-  MessageCircle,
-  Receipt,
-  Settings2,
-  Tag,
-  type LucideIcon,
-} from "lucide-react"
+import { Bell, Heart, LayoutGrid, Receipt, Settings2, Tag, type LucideIcon } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils/cn"
-import { useNonLus } from "./NonLus"
 
 /**
  * Menu de « Mon espace » : colonne à gauche sur ordinateur, bande qui
  * défile sous l'en-tête au téléphone. Un chiffre jaune signale ce qui
- * attend (messages non lus, nouvelles annonces d'une alerte).
+ * attend (nouvelles annonces d'une alerte).
  */
 const ENTREES: { href: string; nom: string; icone: LucideIcon; cle?: keyof Compteurs }[] = [
   { href: "/mon-espace", nom: "Tableau de bord", icone: LayoutGrid },
   { href: "/mon-espace/annonces", nom: "Mes annonces", icone: Tag, cle: "annonces" },
-  { href: "/mon-espace/messages", nom: "Messages", icone: MessageCircle, cle: "messages" },
   { href: "/mon-espace/favoris", nom: "Favoris", icone: Heart, cle: "favoris" },
   { href: "/mon-espace/alertes", nom: "Alertes", icone: Bell, cle: "alertes" },
   { href: "/mon-espace/paiements", nom: "Paiements", icone: Receipt },
@@ -32,25 +21,22 @@ const ENTREES: { href: string; nom: string; icone: LucideIcon; cle?: keyof Compt
 
 export interface Compteurs {
   annonces: number
-  messages: number
   favoris: number
   alertes: number
 }
 
 /** Ce qui demande l'attention : en jaune. Le reste : un total discret. */
-const ATTENTION: (keyof Compteurs)[] = ["messages", "alertes"]
+const ATTENTION: (keyof Compteurs)[] = ["alertes"]
 
 export function NavEspace({ compteurs }: { compteurs: Compteurs }) {
   const chemin = usePathname().replace(/^\/petites-annonces/, "") || "/"
-  // Les messages non lus se relisent d'une page à l'autre (le cadre, lui, ne se redessine pas).
-  const messages = useNonLus(compteurs.messages)
   const actif = (href: string) =>
     href === "/mon-espace" ? chemin === href : chemin === href || chemin.startsWith(`${href}/`)
   return (
     <nav aria-label="Mon espace" className="nav-espace">
       <ul className="flex gap-1.5 overflow-x-auto pb-1 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:pb-0">
         {ENTREES.map(({ href, nom, icone: Icone, cle }) => {
-          const n = cle === "messages" ? messages : cle ? compteurs[cle] : 0
+          const n = cle ? compteurs[cle] : 0
           const on = actif(href)
           return (
             <li key={href} className="flex-none">

@@ -6,6 +6,7 @@ import {
   Eye,
   Flag,
   Loader2,
+  MessageCircle,
   MoreHorizontal,
   PartyPopper,
   PencilLine,
@@ -50,14 +51,29 @@ export function FormulaireContact({
   connecte,
   verifie,
   chemin,
+  discussion,
 }: {
   annonce: string
   connecte: boolean
   verifie: boolean
   chemin: string
+  /** Discussion déjà ouverte avec l'annonceur : on y retourne. */
+  discussion?: string
 }) {
   const [etat, action, enCours] = useActionState(actionContacter, null)
   if (etat?.ok) return <Retour etat={etat} />
+  if (discussion)
+    return (
+      <div className="space-y-3">
+        <p className="text-encre-2 text-[0.9rem] leading-snug">
+          Vous êtes déjà en discussion au sujet de cette annonce.
+        </p>
+        <Link href={`/messages/${discussion}`} className="btn btn-plein w-full">
+          <MessageCircle className="size-4" aria-hidden />
+          Ouvrir la discussion
+        </Link>
+      </div>
+    )
   if (connecte && !verifie)
     return (
       <p className="text-encre-2 text-[0.9rem] leading-snug">
@@ -111,8 +127,8 @@ export function FormulaireContact({
         placeholder="Bonjour, votre annonce m'intéresse. Est-elle toujours disponible ?"
       />
       <p className="text-encre-3 text-xs leading-snug">
-        Votre message lui est transmis par e-mail avec votre adresse, pour qu&apos;il puisse vous
-        répondre. La sienne reste privée.
+        Votre message arrive dans sa messagerie, et la discussion continue sur le site. Vos adresses
+        e-mail restent privées, des deux côtés.
       </p>
       <Retour etat={etat} />
       <button type="submit" disabled={enCours} className="btn btn-plein w-full">

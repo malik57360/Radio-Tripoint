@@ -2,6 +2,7 @@
 
 import { randomBytes } from "node:crypto"
 import { redirect } from "next/navigation"
+import { after } from "next/server"
 import { verifierOrganisation } from "@/lib/agenda/propositions"
 import { site } from "@/config/site"
 import { redis } from "@/lib/direction/redis"
@@ -56,8 +57,8 @@ import { autoriser, ipVisiteur } from "@/lib/annonces/limiteur"
 import {
   alerteModeration,
   envoyerSansEchec,
-  mailContact,
   mailDepotRecu,
+  mailNouveauMessage,
   mailReinitialisation,
   mailVerification,
   mailsActifs,
@@ -84,14 +85,26 @@ import {
 } from "@/lib/annonces/schemas"
 import { cheminAnnonce, idAnnonceValide, type Annonce } from "@/lib/annonces/types"
 import {
+  autreParticipant,
+  ecrire,
+  effacerDiscussions,
+  idDiscussion,
+  idDiscussionValide,
+  lireDiscussion,
+  MAX_MESSAGE,
+  participe,
+  prevenirParEmail,
+  type Discussion,
+  type MessageDiscussion,
+} from "@/lib/annonces/discussions"
+import { prixAffiche } from "@/lib/annonces/prix"
+import {
   basculerFavori,
   creerAlerte,
   effacerEspace,
   modifierAlerte,
   noterActivite,
-  rangerMessage,
   supprimerAlerte,
-  supprimerMessage,
 } from "@/lib/annonces/espace"
 import { lireFiltres, type Filtres } from "@/lib/annonces/recherche"
 import { revalidatePath } from "next/cache"
@@ -315,6 +328,7 @@ export async function actionSupprimerCompte(_e: Etat, fd: FormData): Promise<Eta
     return { erreur: "Mot de passe incorrect." }
   for (const a of await annoncesDuCompte(c.id)) await retirerParAnnonceur(a, "Compte supprimé")
   await effacerEspace(c.id)
+  await effacerDiscussions(c.id)
   await supprimerCompte(c)
   await journal("suppression-compte", { compte: c.id })
   await fermerSession()
@@ -617,55 +631,130 @@ export async function actionOptions(
 
 /* ───────────────────────── Contact et signalement ───────────────────────── */
 
+const LIEN = /\b(?:https?:\/\/|www\.)\S+/i
+
+function messageInvalide(texte: string) {
+  if (!texte) return "Écrivez votre message."
+  if (texte.length > MAX_MESSAGE) return "2 000 caractères au plus."
+  if (LIEN.test(texte))
+    return "Pas de lien dans les messages : c'est la technique n° 1 des arnaques."
+  return null
+}
+
+/** Prévient l'autre personne par e-mail (aucune adresse échangée), sauf si elle a la discussion ouverte. */
+async function prevenir(d: Discussion, de: Compte, texte: string) {
+  const id = autreParticipant(d, de.id)
+  const autre = await lireCompte(id)
+  if (!autre || autre.bloque || !autre.emailVerifie) return
+  if (!(await prevenirParEmail(d, id))) return
+  await envoyerSansEchec({
+    a: autre.email,
+    ...mailNouveauMessage({
+      nomDestinataire: autre.nom,
+      nomExpediteur: nomPublic(de),
+      titre: d.annonce.titre,
+      texte,
+      discussion: d.id,
+    }),
+  })
+}
+
+/**
+ * Premier message depuis la fiche (ou nouveau message si la discussion
+ * existe déjà) : il part dans la messagerie, puis on y emmène l'acheteur.
+ */
 export async function actionContacter(_e: Etat, fd: FormData): Promise<Etat> {
   if (champ(fd, "site_web")) return { ok: "Message envoyé." }
   const c = await garde()
   if (typeof c === "string") return { erreur: c }
   const id = champ(fd, "annonce", 20)
-  const message = champ(fd, "message", 2500).trim()
-  if (message.length < 10) return { erreur: "Votre message est trop court." }
-  if (message.length > 2000) return { erreur: "2 000 caractères au plus." }
-  if (/\b(?:https?:\/\/|www\.)\S+/i.test(message))
-    return { erreur: "Pas de lien dans le message : c'est la technique n° 1 des arnaques." }
+  const texte = champ(fd, "message", MAX_MESSAGE + 100).trim()
+  const invalide = messageInvalide(texte)
+  if (invalide) return { erreur: invalide }
+  if (texte.length < 10) return { erreur: "Votre message est trop court." }
   const ip = await ipVisiteur()
   if (
     !(await autoriser("contact", c.id, 15, 3600)) ||
     !(await autoriser("contact-ip", ip, 30, 3600))
   )
     return { erreur: "Beaucoup de messages en peu de temps. Réessayez dans une heure." }
-  if (!(await autoriser(`contact-${id}`, c.id, 3, 24 * 3600)))
-    return { erreur: "Vous avez déjà écrit plusieurs fois à cet annonceur aujourd'hui." }
   const a = idAnnonceValide(id) ? await lireAnnonce(id) : null
   if (!a || a.statut !== "publiee") return { erreur: "Cette annonce n'est plus en ligne." }
   if (a.compte === c.id) return { erreur: "C'est votre propre annonce." }
   const annonceur = await lireCompte(a.compte)
   if (!annonceur || annonceur.bloque) return { erreur: "Cette annonce n'est plus en ligne." }
-  const parti = await envoyerSansEchec({
-    a: annonceur.email,
-    repondreA: c.email,
-    ...mailContact({ nomAnnonceur: annonceur.nom, a, nomExpediteur: c.nom, message }),
-  })
-  if (!parti) return { erreur: "Le message n'a pas pu partir. Réessayez plus tard." }
-  await redis([["HINCRBY", "rt:annonces:contacts", a.id, 1]])
-  // Copie dans « Mon espace » des deux côtés (90 jours) : l'e-mail reste le canal de réponse.
-  await rangerMessage({
-    annonceur: annonceur.id,
-    acheteur: { id: c.id, nom: c.nom, email: c.email },
-    annonce: {
-      id: a.id,
-      titre: a.titre,
-      chemin: cheminAnnonce(a),
-      vignette: a.photos[0]?.vignette,
-    },
-    nomAnnonceur: nomPublic(annonceur),
-    texte: message,
-  }).catch((e) => console.error("[annonces] boîte :", (e as Error).message))
-  await noterActivite(annonceur.id, {
-    type: "message",
-    annonce: { id: a.id, titre: a.titre },
-    detail: `De ${c.nom}`,
-  })
-  return { ok: "Message envoyé ! L'annonceur vous répondra directement par e-mail." }
+  const idd = idDiscussion(a.id, c.id)
+  const existante = await lireDiscussion(idd)
+  if (!existante && !(await autoriser("contact-nouveaux", c.id, 20, 24 * 3600)))
+    return { erreur: "Vous avez contacté beaucoup d'annonceurs aujourd'hui. Réessayez demain." }
+  try {
+    await ecrire({
+      id: idd,
+      de: c.id,
+      texte,
+      creation: existante
+        ? undefined
+        : {
+            annonce: {
+              id: a.id,
+              titre: a.titre,
+              chemin: cheminAnnonce(a),
+              vignette: a.photos[0]?.vignette,
+              prix: prixAffiche(a),
+            },
+            vendeur: annonceur.id,
+            acheteur: c.id,
+            noms: { [annonceur.id]: nomPublic(annonceur), [c.id]: nomPublic(c) },
+            pros: [annonceur, c].filter((x) => x.type === "pro").map((x) => x.id),
+          },
+    })
+  } catch (e) {
+    console.error("[annonces] messagerie :", (e as Error).message)
+    return { erreur: "Le message n'a pas pu partir. Réessayez dans un instant." }
+  }
+  const d = existante ?? (await lireDiscussion(idd))
+  if (!existante) {
+    await redis([["HINCRBY", "rt:annonces:contacts", a.id, 1]])
+    await noterActivite(annonceur.id, {
+      type: "message",
+      annonce: { id: a.id, titre: a.titre },
+      detail: `De ${nomPublic(c)}`,
+    })
+  }
+  if (d) after(() => prevenir(d, c, texte))
+  redirect(`/messages/${idd}`)
+}
+
+/** Réponse dans une discussion ouverte (appelée par le fil, sans rechargement). */
+export async function actionRepondre(
+  id: string,
+  brut: string,
+): Promise<{ ok: true; message: MessageDiscussion } | { ok: false; erreur: string }> {
+  const c = await garde()
+  if (typeof c === "string") return { ok: false, erreur: c }
+  const texte = String(brut ?? "")
+    .slice(0, MAX_MESSAGE + 100)
+    .trim()
+  const invalide = messageInvalide(texte)
+  if (invalide) return { ok: false, erreur: invalide }
+  const d = idDiscussionValide(String(id)) ? await lireDiscussion(String(id)) : null
+  if (!d || !participe(d, c.id)) return { ok: false, erreur: "Discussion introuvable." }
+  const autre = await lireCompte(autreParticipant(d, c.id))
+  if (!autre || autre.bloque) return { ok: false, erreur: "Cette personne n'est plus joignable." }
+  const ip = await ipVisiteur()
+  if (
+    !(await autoriser("message", c.id, 60, 3600)) ||
+    !(await autoriser("message-ip", ip, 120, 3600))
+  )
+    return { ok: false, erreur: "Beaucoup de messages en peu de temps. Patientez un peu." }
+  try {
+    const message = await ecrire({ id: d.id, de: c.id, texte })
+    after(() => prevenir(d, c, texte))
+    return { ok: true, message }
+  } catch (e) {
+    console.error("[annonces] messagerie :", (e as Error).message)
+    return { ok: false, erreur: "Le message n'a pas pu partir. Réessayez." }
+  }
 }
 
 const MOTIFS_SIGNALEMENT = {
@@ -815,13 +904,6 @@ export async function actionSupprimerAlerte(id: string) {
   const c = await compteConnecte()
   if (!c || !/^[a-f0-9]{12}$/.test(id)) return
   await supprimerAlerte(c.id, id)
-  revalidatePath("/petites-annonces/mon-espace", "layout")
-}
-
-export async function actionSupprimerMessage(id: string) {
-  const c = await compteConnecte()
-  if (!c || !/^[a-f0-9]{12}$/.test(id)) return
-  await supprimerMessage(c.id, id)
   revalidatePath("/petites-annonces/mon-espace", "layout")
 }
 

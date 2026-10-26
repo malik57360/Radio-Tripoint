@@ -43,8 +43,9 @@ export default async function PageRegles() {
               moment depuis <Link href="/mon-espace">Mon espace</Link>.
             </li>
             <li>
-              Les personnes intéressées vous écrivent par le formulaire de l&apos;annonce : leur
-              message arrive dans votre boîte mail, et vous leur répondez directement.
+              Les personnes intéressées vous écrivent depuis l&apos;annonce : la discussion
+              s&apos;ouvre dans votre <Link href="/messages">messagerie</Link>, un e-mail vous
+              prévient, et vous répondez sur le site. Vos adresses e-mail restent privées.
             </li>
           </ul>
 

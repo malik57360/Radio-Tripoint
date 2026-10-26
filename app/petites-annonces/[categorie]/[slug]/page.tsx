@@ -1,4 +1,4 @@
-import { Building2, CalendarClock, ExternalLink, MapPin, Phone } from "lucide-react"
+import { Building2, CalendarClock, ExternalLink, MapPin, MessageCircle, Phone } from "lucide-react"
 import { notFound, permanentRedirect } from "next/navigation"
 import { ViewTransition } from "react"
 import { FormulaireContact, Signalement } from "@/components/annonces/Interactions"
@@ -24,6 +24,7 @@ import { annoncePublique, annoncesPubliques, lireAnnonce } from "@/lib/annonces/
 import { PAYS, defCategorie } from "@/lib/annonces/categories"
 import { compteConnecte } from "@/lib/annonces/comptes"
 import { configPublique, nomCategorie } from "@/lib/annonces/config"
+import { idDiscussion, lireDiscussion } from "@/lib/annonces/discussions"
 import { trier } from "@/lib/annonces/recherche"
 import { metaAnnonces } from "@/lib/annonces/seo"
 import { cheminAnnonce, idDuSlug, misEnAvant } from "@/lib/annonces/types"
@@ -102,6 +103,9 @@ export default async function PageAnnonce(props: Props) {
   // L'annonceur sur sa propre annonce : ses chiffres et ses raccourcis, pas le formulaire de contact.
   const sienne = compte ? (await lireAnnonce(a.id))?.compte === compte.id : false
   const stats = sienne ? (await statsAnnonces([a.id])).parAnnonce.get(a.id) : undefined
+  // Déjà en discussion avec l'annonceur : on y retourne au lieu de réécrire depuis zéro.
+  const discussion = compte && !sienne ? await lireDiscussion(idDiscussion(a.id, compte.id)) : null
+  const ecrire = discussion ? `/messages/${discussion.id}` : "#contact"
 
   return (
     <>
@@ -347,9 +351,9 @@ export default async function PageAnnonce(props: Props) {
               </div>
             </div>
           ) : (
-            <div className="border-trait-fort rounded-xl border-2 p-5">
+            <div id="contact" className="border-trait-fort scroll-mt-24 rounded-xl border-2 p-5">
               <p className="text-lg font-extrabold">
-                Contacter {a.annonceur === "pro" ? "l'entreprise" : a.nom}
+                Écrire à {a.annonceur === "pro" ? "l'entreprise" : a.nom}
               </p>
               <div className="mt-3">
                 <FormulaireContact
@@ -357,6 +361,7 @@ export default async function PageAnnonce(props: Props) {
                   connecte={Boolean(compte)}
                   verifie={Boolean(compte?.emailVerifie)}
                   chemin={chemin}
+                  discussion={discussion?.id}
                 />
               </div>
               <BoutonFavori id={a.id} grand className="mt-3" />
@@ -366,6 +371,18 @@ export default async function PageAnnonce(props: Props) {
           <Signalement annonce={a.id} connecte={Boolean(compte)} />
         </aside>
       </article>
+
+      {/* Au téléphone, « Écrire » reste sous le pouce, comme sur les applis de vente. */}
+      {!sienne && (
+        <div className="barre-ecrire bg-papier/95 border-trait fixed inset-x-0 bottom-0 z-30 border-t px-4 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+          <Link href={ecrire} className="btn btn-plein min-h-12 w-full">
+            <MessageCircle className="size-5" aria-hidden />
+            {discussion
+              ? "Ouvrir la discussion"
+              : `Écrire à ${a.annonceur === "pro" ? "l'entreprise" : a.nom}`}
+          </Link>
+        </div>
+      )}
 
       {proches.length > 0 && (
         <section className="conteneur pb-16" aria-labelledby="t-proches">
