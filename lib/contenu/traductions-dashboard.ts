@@ -25,7 +25,7 @@ export interface TraductionsArticle {
   langues: Partial<Record<LangueTraduite, TradArticle>>
   /** Dernière traduction réussie (ms). */
   le: number
-  /** Tentatives automatiques ratées pour cette empreinte (on s'arrête à 3). */
+  /** Ancien compteur d'échecs : les échecs vivent désormais par langue (rt:articles:trad-echecs). */
   echecs?: number
 }
 

@@ -17,7 +17,7 @@ import type { Article } from "@/types/article"
 
 export const metadata = { title: "Articles — Direction Radio Tripoint" }
 // La traduction d'un article (quatre langues en parallèle) prend jusqu'à une minute.
-export const maxDuration = 120
+export const maxDuration = 300
 
 /** Articles publiés depuis le tableau de bord, lus sans cache (état exact). */
 async function publies(): Promise<Article[]> {

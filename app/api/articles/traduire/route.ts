@@ -12,7 +12,7 @@ import { autoriser } from "@/lib/formulaires/limiteur"
  * déjà pour cette version (verrou et plafond d'échecs dans traduireArticle).
  */
 export const dynamic = "force-dynamic"
-export const maxDuration = 120
+export const maxDuration = 300
 
 export async function POST(request: Request) {
   const corps = (await request.json().catch(() => null)) as { slug?: unknown } | null
