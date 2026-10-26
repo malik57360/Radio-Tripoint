@@ -1,5 +1,5 @@
 import { sansLangue, type Trad } from "@/lib/i18n/langues"
-import { URL_ANNONCES } from "@/lib/annonces/liens"
+import { ANNONCES_OUVERTES, URL_ANNONCES } from "@/lib/annonces/liens"
 
 export interface LienNav {
   libelle: Trad
@@ -32,17 +32,21 @@ export const navPrincipale: LienNav[] = [
     libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
     href: "/agenda",
   },
-  {
-    libelle: {
-      fr: "Annonces",
-      de: "Kleinanzeigen",
-      lb: "Annoncen",
-      en: "Classifieds",
-      es: "Anuncios",
-    },
-    href: URL_ANNONCES,
-    large: true,
-  },
+  ...(ANNONCES_OUVERTES
+    ? [
+        {
+          libelle: {
+            fr: "Annonces",
+            de: "Kleinanzeigen",
+            lb: "Annoncen",
+            en: "Classifieds",
+            es: "Anuncios",
+          },
+          href: URL_ANNONCES,
+          large: true,
+        },
+      ]
+    : []),
   {
     libelle: { fr: "Culture", de: "Kultur", lb: "Kultur", en: "Culture", es: "Cultura" },
     href: "/art-culture",

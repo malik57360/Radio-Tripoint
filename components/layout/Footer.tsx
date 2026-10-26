@@ -9,7 +9,7 @@ import { Tripoint } from "@/components/marque/Tripoint"
 import type { Trad } from "@/lib/i18n/langues"
 import { traducteur } from "@/lib/i18n/serveur"
 import { ThemeToggle } from "./ThemeToggle"
-import { URL_ANNONCES } from "@/lib/annonces/liens"
+import { ANNONCES_OUVERTES, URL_ANNONCES } from "@/lib/annonces/liens"
 
 const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
   {
@@ -55,16 +55,20 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
         libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
         href: "/agenda",
       },
-      {
-        libelle: {
-          fr: "Petites annonces",
-          de: "Kleinanzeigen",
-          lb: "Kleng Annoncen",
-          en: "Classifieds",
-          es: "Anuncios clasificados",
-        },
-        href: URL_ANNONCES,
-      },
+      ...(ANNONCES_OUVERTES
+        ? [
+            {
+              libelle: {
+                fr: "Petites annonces",
+                de: "Kleinanzeigen",
+                lb: "Kleng Annoncen",
+                en: "Classifieds",
+                es: "Anuncios clasificados",
+              },
+              href: URL_ANNONCES,
+            },
+          ]
+        : []),
       {
         libelle: {
           fr: "Nous soutenir",
