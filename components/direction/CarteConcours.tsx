@@ -1,4 +1,5 @@
 import { retirerDuConcours } from "@/app/direction/(espace)/engagement/actions"
+import { PrevenirGagnants } from "@/components/direction/PrevenirGagnants"
 import { Carte, date, nombre } from "@/components/direction/ui"
 import { site } from "@/config/site"
 import { REPONSE_MIN_MS } from "@/lib/concours/jeu"
@@ -28,11 +29,20 @@ export async function CarteConcours() {
           <h4 className="text-encre-3 text-[0.7rem] font-bold tracking-[0.12em] uppercase">
             Gagnants du lot du jour
           </h4>
-          <ol className="divide-trait mb-5 divide-y text-sm">
+          <ol className="divide-trait mb-4 divide-y text-sm">
             {[...c.gagnants].reverse().map((g) => (
               <Rang key={g.jour} ligne={g} jour={g.jour} libelle={jourCourt(g.jour)} />
             ))}
           </ol>
+          <PrevenirGagnants
+            gagnants={[...c.gagnants].reverse().map((g) => ({
+              jour: g.jour,
+              joueur: g.joueur,
+              pseudo: g.pseudo,
+              libelle: `manche du ${jourCourt(g.jour)}`,
+              prevenuLe: g.prevenuLe,
+            }))}
+          />
         </>
       )}
       <h4 className="text-encre-3 text-[0.7rem] font-bold tracking-[0.12em] uppercase">

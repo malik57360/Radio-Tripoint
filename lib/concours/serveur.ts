@@ -41,6 +41,8 @@ const cleScores = (jour: string) =>
 const cleFiches = (jour: string) =>
   jour === PREMIERE_MANCHE ? `${BASE}:joueurs` : `${BASE}:manche:${jour}:joueurs`
 const clePartie = (id: string) => `${BASE}:partie:${id}`
+/** Gagnants prévenus par e-mail depuis le tableau de bord : « manche:joueur » → date d'envoi. */
+const CLE_PREVENUS = `${BASE}:prevenus`
 
 /** Le rang combine points et précocité : points × 10⁹ + (10⁹ − secondes depuis le 1ᵉʳ octobre). */
 const REPERE = Date.UTC(2026, 9, 1)
@@ -263,8 +265,28 @@ export async function classementPublic(n = 10) {
 
 /** Tableau de bord : la manche en cours et les gagnants, avec l'e-mail pour les prévenir. */
 export async function classementDirection(n = 30) {
-  const [c, gagnants] = await Promise.all([lireManche(mancheCourante(), n), lireGagnants()])
-  return c && { ...c, gagnants }
+  const [c, gagnants, prevenus] = await Promise.all([
+    lireManche(mancheCourante(), n),
+    lireGagnants(),
+    redis([["HGETALL", CLE_PREVENUS]]),
+  ])
+  const quand = new Map<string, number>()
+  const brut = (prevenus?.[0] as string[] | null) ?? []
+  for (let i = 0; i < brut.length; i += 2) quand.set(brut[i], Number(brut[i + 1]) || 0)
+  return (
+    c && {
+      ...c,
+      gagnants: gagnants.map((g) => ({ ...g, prevenuLe: quand.get(`${g.jour}:${g.joueur}`) ?? 0 })),
+    }
+  )
+}
+
+/** Note qu'un gagnant a été prévenu (le bouton ne le recoche plus par défaut). */
+export async function marquerPrevenu(jour: string, joueur: string) {
+  await redis([
+    ["HSET", CLE_PREVENUS, `${jour}:${joueur}`, Date.now()],
+    ["EXPIREAT", CLE_PREVENUS, EFFACEMENT],
+  ])
 }
 
 /** Retire un joueur d'une manche (triche, pseudo déplacé) : le suivant prend sa place. */
