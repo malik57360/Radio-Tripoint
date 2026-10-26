@@ -9,11 +9,11 @@ export const URL_ANNONCES = (
 ).replace(/\/$/, "")
 
 /**
- * Lien « Annonces » du site de la radio. Reste caché tant que le DNS
- * d'annonces.radio-tripoint-officiel.fr ne pointe pas vers Vercel : un lien
- * qui ne s'ouvre pas ferait plus de mal que pas de lien.
+ * Lien « Annonces » du menu, du menu mobile et du pied de page du site de la
+ * radio. Masqué à la demande de la direction : le site des annonces reste
+ * en ligne et joignable par son adresse, seul le lien disparaît.
  */
-export const ANNONCES_OUVERTES = true
+export const ANNONCES_OUVERTES = false
 
 /** Chemin du site des annonces → adresse complète. */
 export const lienAnnonces = (chemin = "/") => `${URL_ANNONCES}${chemin === "/" ? "" : chemin}`
