@@ -461,3 +461,71 @@ export async function viderPhotos(a: Annonce) {
   a.photos = []
   await enregistrer(a)
 }
+
+/* ───────────────────────── Interventions de la direction ───────────────────────── */
+
+/**
+ * Correction par la direction (faute, prix, catégorie) : l'annonce garde
+ * son statut — pas de nouvelle vérification, c'est la modération qui écrit.
+ */
+export async function corrigerParModeration(
+  a: Annonce,
+  c: Pick<Annonce, "titre" | "description" | "prix" | "ville" | "categorie">,
+) {
+  const ancienne = a.empreinte
+  Object.assign(a, c)
+  a.slug = slugAnnonce(c.titre, c.ville, a.id)
+  a.empreinte = empreinteTexte(c.titre, c.description)
+  await enregistrer(a)
+  await redis([
+    ["HDEL", EMPREINTES, ancienne],
+    ["HSET", EMPREINTES, a.empreinte, a.id],
+  ])
+  await journal("correction", { annonce: a.id, par: "direction" })
+  rafraichir()
+  return a
+}
+
+export type Cadeau = "prolongation" | "remontee" | "accueil" | "categorie" | "renforcee"
+const NOMS_CADEAUX: Record<Cadeau, string> = {
+  prolongation: "Prolongation",
+  remontee: "Remontée en tête de liste",
+  accueil: "À la une de l'accueil",
+  categorie: "Mise en avant dans sa catégorie",
+  renforcee: "Visibilité renforcée",
+}
+
+/** Un coup de pouce offert par la radio (geste commercial, concours, partenaire…). */
+export async function offrirParModeration(a: Annonce, cadeau: Cadeau, jours: number) {
+  switch (cadeau) {
+    case "prolongation":
+      if (a.statut === "expiree" || (a.expireLe ?? 0) < Date.now()) {
+        a.expireLe = Date.now() + jours * JOUR
+        a.remonteeLe = Date.now()
+        if (a.statut === "expiree") a.statut = "publiee"
+      } else a.expireLe = (a.expireLe ?? Date.now()) + jours * JOUR
+      a.avertiExpiration = undefined
+      break
+    case "remontee":
+      a.remonteeLe = Date.now()
+      break
+    case "accueil":
+      a.accueilJusqu = plusTard(a.accueilJusqu, jours)
+      break
+    case "categorie":
+      a.categorieJusqu = plusTard(a.categorieJusqu, jours)
+      break
+    case "renforcee":
+      a.renforceeJusqu = plusTard(a.renforceeJusqu, jours)
+      break
+  }
+  await enregistrer(a)
+  await journal("cadeau", { annonce: a.id, cadeau, jours })
+  await noterActivite(a.compte, {
+    type: "options",
+    annonce: sujet(a),
+    detail: `${NOMS_CADEAUX[cadeau]}${cadeau === "remontee" ? "" : ` (${jours} j)`}, offerte par Radio Tripoint`,
+  })
+  rafraichir()
+  return a
+}

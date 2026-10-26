@@ -92,8 +92,11 @@ import {
   idDiscussionValide,
   lireDiscussion,
   MAX_MESSAGE,
+  MOTIFS_DISCUSSION,
   participe,
   prevenirParEmail,
+  signalerDiscussion,
+  type MotifDiscussion,
   type Discussion,
   type MessageDiscussion,
 } from "@/lib/annonces/discussions"
@@ -169,6 +172,8 @@ async function envoyerVerification(c: Compte) {
 
 export async function actionInscription(_e: Etat, fd: FormData): Promise<Etat> {
   if (champ(fd, "site_web")) return { ok: "Compte créé." } // champ piège : un robot l'a rempli
+  const fermees = await ferme("inscriptions")
+  if (fermees) return { erreur: fermees }
   const ip = await ipVisiteur()
   if (!(await autoriser("inscription", ip, 5, 3600)))
     return { erreur: "Trop d'inscriptions depuis cette connexion. Réessayez dans une heure." }
@@ -344,6 +349,17 @@ async function garde(): Promise<Compte | string> {
   return c
 }
 
+/** Pilotage depuis le tableau de bord : site en pause, inscriptions ou messagerie fermées. */
+async function ferme(quoi: "site" | "inscriptions" | "messagerie"): Promise<string | null> {
+  const { site } = await lireConfig()
+  if (!site.ouvert) return "Le site fait une courte pause. Réessayez un peu plus tard."
+  if (quoi === "inscriptions" && !site.inscriptionsOuvertes)
+    return "Les inscriptions sont momentanément fermées. Réessayez plus tard."
+  if (quoi === "messagerie" && !site.messagerieOuverte)
+    return "La messagerie est en pause pour le moment. Réessayez plus tard."
+  return null
+}
+
 /** Contenu commun au dépôt et à la modification ; renvoie l'erreur à afficher ou le contenu propre. */
 async function contenuValide(
   brut: unknown,
@@ -409,7 +425,7 @@ export async function actionDeposer(brut: DonneesDepot): Promise<Resultat> {
   const c = await garde()
   if (typeof c === "string") return { ok: false, erreur: c }
   const cfg = await lireConfig()
-  if (!cfg.depotsOuverts)
+  if (!cfg.site.ouvert || !cfg.depotsOuverts)
     return { ok: false, erreur: "Les dépôts sont momentanément fermés. Réessayez plus tard." }
   const r = schemaDepot.safeParse(brut)
   if (!r.success)
@@ -667,6 +683,8 @@ export async function actionContacter(_e: Etat, fd: FormData): Promise<Etat> {
   if (champ(fd, "site_web")) return { ok: "Message envoyé." }
   const c = await garde()
   if (typeof c === "string") return { erreur: c }
+  const fermee = await ferme("messagerie")
+  if (fermee) return { erreur: fermee }
   const id = champ(fd, "annonce", 20)
   const texte = champ(fd, "message", MAX_MESSAGE + 100).trim()
   const invalide = messageInvalide(texte)
@@ -732,6 +750,8 @@ export async function actionRepondre(
 ): Promise<{ ok: true; message: MessageDiscussion } | { ok: false; erreur: string }> {
   const c = await garde()
   if (typeof c === "string") return { ok: false, erreur: c }
+  const fermee = await ferme("messagerie")
+  if (fermee) return { ok: false, erreur: fermee }
   const texte = String(brut ?? "")
     .slice(0, MAX_MESSAGE + 100)
     .trim()
@@ -920,4 +940,35 @@ export async function actionDeconnecterAutres(): Promise<Etat> {
 /** « Retirer des favoris » depuis la page Favoris (formulaire, sans JavaScript). */
 export async function actionRetirerFavori(id: string) {
   await actionFavori(id, false)
+}
+
+/** Signaler une discussion (arnaque, insultes…) : la modération lit ses derniers messages. */
+export async function actionSignalerDiscussion(
+  id: string,
+  motif: string,
+  explication: string,
+): Promise<{ ok: true } | { ok: false; erreur: string }> {
+  const c = await garde()
+  if (typeof c === "string") return { ok: false, erreur: c }
+  if (!(motif in MOTIFS_DISCUSSION)) return { ok: false, erreur: "Choisissez une raison." }
+  const d = idDiscussionValide(String(id)) ? await lireDiscussion(String(id)) : null
+  if (!d || !participe(d, c.id)) return { ok: false, erreur: "Discussion introuvable." }
+  if (!(await autoriser("signaler-discussion", c.id, 5, 24 * 3600)))
+    return { ok: false, erreur: "Vous avez déjà signalé plusieurs discussions aujourd'hui." }
+  await signalerDiscussion(
+    d,
+    c.id,
+    motif as MotifDiscussion,
+    String(explication ?? "")
+      .trim()
+      .slice(0, 1000),
+  )
+  await envoyerSansEchec({
+    a: ALERTES(),
+    objet: `[Annonces] Discussion signalée : ${MOTIFS_DISCUSSION[motif as MotifDiscussion]}`,
+    texte: `Une discussion au sujet de « ${d.annonce.titre} » vient d'être signalée par l'un de ses participants.
+
+À examiner dans le tableau de bord : Petites annonces › Signalements.`,
+  })
+  return { ok: true }
 }

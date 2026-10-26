@@ -52,6 +52,7 @@ export function FormulaireContact({
   verifie,
   chemin,
   discussion,
+  ouverte = true,
 }: {
   annonce: string
   connecte: boolean
@@ -59,9 +60,17 @@ export function FormulaireContact({
   chemin: string
   /** Discussion déjà ouverte avec l'annonceur : on y retourne. */
   discussion?: string
+  /** Messagerie mise en pause depuis le tableau de bord. */
+  ouverte?: boolean
 }) {
   const [etat, action, enCours] = useActionState(actionContacter, null)
   if (etat?.ok) return <Retour etat={etat} />
+  if (!ouverte && !discussion)
+    return (
+      <p className="bg-papier-2 text-encre-2 rounded-xl p-3 text-[0.9rem] leading-snug font-semibold">
+        La messagerie est en pause pour le moment. Revenez très vite pour écrire à l&apos;annonceur.
+      </p>
+    )
   if (discussion)
     return (
       <div className="space-y-3">

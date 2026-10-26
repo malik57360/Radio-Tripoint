@@ -362,6 +362,7 @@ export default async function PageAnnonce(props: Props) {
                   verifie={Boolean(compte?.emailVerifie)}
                   chemin={chemin}
                   discussion={discussion?.id}
+                  ouverte={cfg.site.messagerieOuverte}
                 />
               </div>
               <BoutonFavori id={a.id} grand className="mt-3" />

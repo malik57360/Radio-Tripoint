@@ -10,10 +10,12 @@ export const URL_ANNONCES = (
 
 /**
  * Lien « Annonces » du menu, du menu mobile et du pied de page du site de la
- * radio. Masqué à la demande de la direction : le site des annonces reste
- * en ligne et joignable par son adresse, seul le lien disparaît.
+ * radio : affiché ou masqué depuis le tableau de bord (Petites annonces ›
+ * Pilotage), sans redéployer. Masqué, le site des annonces reste joignable
+ * par son adresse.
  */
-export const ANNONCES_OUVERTES = false
+export const avecAnnonces = <T extends { href: string }>(liste: T[], visible: boolean) =>
+  visible ? liste : liste.filter((l) => l.href !== URL_ANNONCES)
 
 /** Chemin du site des annonces → adresse complète. */
 export const lienAnnonces = (chemin = "/") => `${URL_ANNONCES}${chemin === "/" ? "" : chemin}`

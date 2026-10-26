@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Check,
   CheckCheck,
+  Flag,
   Loader2,
   RotateCcw,
   SendHorizontal,
@@ -11,7 +12,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
-import { actionRepondre } from "@/app/petites-annonces/actions"
+import { actionRepondre, actionSignalerDiscussion } from "@/app/petites-annonces/actions"
 import { rafraichirNonLus } from "@/components/annonces/espace/NonLus"
 import type { BulleDiscussion } from "@/lib/annonces/discussions"
 import { cn } from "@/lib/utils/cn"
@@ -37,17 +38,21 @@ export function Fil({
   annonce,
   initiaux,
   luAutreInitial,
+  ouverte = true,
 }: {
   id: string
   avec: { nom: string; pro: boolean }
   annonce: { titre: string; chemin: string; vignette?: string; prix?: string; etat: string | null }
   initiaux: BulleDiscussion[]
   luAutreInitial: number
+  /** Messagerie mise en pause depuis le tableau de bord : on lit, on n'écrit pas. */
+  ouverte?: boolean
 }) {
   const [bulles, setBulles] = useState<Bulle[]>(initiaux)
   const [luAutre, setLuAutre] = useState(luAutreInitial)
   const [texte, setTexte] = useState("")
   const [erreur, setErreur] = useState<string | null>(null)
+  const [signaler, setSignaler] = useState(false)
   const zone = useRef<HTMLDivElement>(null)
   const saisie = useRef<HTMLTextAreaElement>(null)
   const dernierLe = useRef(initiaux.at(-1)?.le ?? 0)
@@ -180,7 +185,18 @@ export function Fil({
             {avec.pro ? "Professionnel" : "Particulier"}
           </p>
         </div>
+        <button
+          type="button"
+          onClick={() => setSignaler((x) => !x)}
+          aria-expanded={signaler}
+          className="text-encre-2 hover:bg-papier-2 ml-auto inline-flex min-h-10 items-center gap-1.5 rounded-full px-3 text-[0.82rem] font-bold"
+        >
+          <Flag className="size-4" aria-hidden />
+          <span className="hidden sm:inline">Signaler</span>
+          <span className="sr-only sm:hidden">Signaler la discussion</span>
+        </button>
       </header>
+      {signaler && <Signaler id={id} fermer={() => setSignaler(false)} />}
 
       {/* L'annonce dont on parle, toujours sous les yeux. */}
       {(() => {
@@ -317,52 +333,152 @@ export function Fil({
         </ol>
       </div>
 
-      <form
-        onSubmit={soumettre}
-        className="border-trait bg-surface border-t px-3 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] lg:px-5"
-      >
-        {erreur && (
-          <p role="alert" className="text-alerte mb-2 text-[0.82rem] font-semibold">
-            {erreur}
-          </p>
-        )}
-        <div className="flex items-end gap-2">
-          <label htmlFor="fil-saisie" className="sr-only">
-            Votre message
-          </label>
-          <textarea
-            id="fil-saisie"
-            ref={saisie}
-            value={texte}
-            rows={1}
-            maxLength={MAX}
-            enterKeyHint="send"
-            placeholder="Écrire un message…"
-            onChange={(e) => {
-              setTexte(e.target.value)
-              const t = e.target
-              t.style.height = ""
-              t.style.height = `${Math.min(t.scrollHeight, 140)}px`
-            }}
-            onKeyDown={(e) => {
-              // Sur ordinateur, Entrée envoie (Maj + Entrée pour aller à la ligne).
-              if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && POINTER_FIN()) {
-                e.preventDefault()
-                soumettre()
-              }
-            }}
-            className="champ max-h-[140px] min-h-11 flex-1 resize-none rounded-[1.4rem] py-2.5 leading-snug"
-          />
-          <button
-            type="submit"
-            disabled={!texte.trim()}
-            aria-label="Envoyer"
-            className="bg-accent text-sur-accent grid size-11 flex-none place-items-center rounded-full transition hover:brightness-95 disabled:opacity-40"
-          >
-            <SendHorizontal className="size-5" aria-hidden />
-          </button>
-        </div>
-      </form>
+      {!ouverte ? (
+        <p className="border-trait bg-papier-2 text-encre-2 border-t px-4 py-4 text-center text-[0.9rem] font-semibold">
+          La messagerie est en pause pour le moment : vous pourrez répondre très vite.
+        </p>
+      ) : (
+        <form
+          onSubmit={soumettre}
+          className="border-trait bg-surface border-t px-3 pt-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] lg:px-5"
+        >
+          {erreur && (
+            <p role="alert" className="text-alerte mb-2 text-[0.82rem] font-semibold">
+              {erreur}
+            </p>
+          )}
+          <div className="flex items-end gap-2">
+            <label htmlFor="fil-saisie" className="sr-only">
+              Votre message
+            </label>
+            <textarea
+              id="fil-saisie"
+              ref={saisie}
+              value={texte}
+              rows={1}
+              maxLength={MAX}
+              enterKeyHint="send"
+              placeholder="Écrire un message…"
+              onChange={(e) => {
+                setTexte(e.target.value)
+                const t = e.target
+                t.style.height = ""
+                t.style.height = `${Math.min(t.scrollHeight, 140)}px`
+              }}
+              onKeyDown={(e) => {
+                // Sur ordinateur, Entrée envoie (Maj + Entrée pour aller à la ligne).
+                if (
+                  e.key === "Enter" &&
+                  !e.shiftKey &&
+                  !e.nativeEvent.isComposing &&
+                  POINTER_FIN()
+                ) {
+                  e.preventDefault()
+                  soumettre()
+                }
+              }}
+              className="champ max-h-[140px] min-h-11 flex-1 resize-none rounded-[1.4rem] py-2.5 leading-snug"
+            />
+            <button
+              type="submit"
+              disabled={!texte.trim()}
+              aria-label="Envoyer"
+              className="bg-accent text-sur-accent grid size-11 flex-none place-items-center rounded-full transition hover:brightness-95 disabled:opacity-40"
+            >
+              <SendHorizontal className="size-5" aria-hidden />
+            </button>
+          </div>
+        </form>
+      )}
     </section>
+  )
+}
+
+const MOTIFS: [string, string][] = [
+  ["arnaque", "Arnaque ou demande de paiement suspecte"],
+  ["insultes", "Propos insultants ou menaçants"],
+  ["spam", "Publicité ou messages en masse"],
+  ["autre", "Autre raison"],
+]
+
+/** Signaler la discussion : l'équipe de la radio lit alors ses derniers messages. */
+function Signaler({ id, fermer }: { id: string; fermer: () => void }) {
+  const [motif, setMotif] = useState("arnaque")
+  const [explication, setExplication] = useState("")
+  const [etat, setEtat] = useState<"saisie" | "envoi" | "fait">("saisie")
+  const [erreur, setErreur] = useState<string | null>(null)
+  if (etat === "fait")
+    return (
+      <div className="border-trait bg-papier-2 flex items-start gap-3 border-b px-4 py-3 text-[0.88rem]">
+        <ShieldCheck className="text-succes mt-0.5 size-4 flex-none" aria-hidden />
+        <p className="flex-1">
+          Merci. L&apos;équipe de Radio Tripoint va regarder. En attendant, ne payez rien et ne
+          donnez aucun code.
+        </p>
+        <button type="button" onClick={fermer} className="font-bold underline">
+          Fermer
+        </button>
+      </div>
+    )
+  return (
+    <form
+      className="border-trait bg-papier-2 space-y-2.5 border-b px-4 py-3"
+      onSubmit={async (e) => {
+        e.preventDefault()
+        setEtat("envoi")
+        setErreur(null)
+        const r = await actionSignalerDiscussion(id, motif, explication)
+        if (r.ok) setEtat("fait")
+        else {
+          setErreur(r.erreur)
+          setEtat("saisie")
+        }
+      }}
+    >
+      <p className="text-[0.9rem] font-extrabold">Signaler cette discussion</p>
+      <select
+        className="champ"
+        value={motif}
+        onChange={(e) => setMotif(e.target.value)}
+        aria-label="Raison du signalement"
+      >
+        {MOTIFS.map(([k, t]) => (
+          <option key={k} value={k}>
+            {t}
+          </option>
+        ))}
+      </select>
+      <textarea
+        className="champ"
+        rows={2}
+        maxLength={1000}
+        placeholder="Ce qui s'est passé (facultatif)"
+        value={explication}
+        onChange={(e) => setExplication(e.target.value)}
+        aria-label="Explication"
+      />
+      <p className="text-encre-3 text-[0.75rem] leading-snug">
+        L&apos;équipe de la radio pourra lire les derniers messages de cette discussion pour
+        décider.
+      </p>
+      {erreur && <p className="text-alerte text-[0.82rem] font-semibold">{erreur}</p>}
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={etat === "envoi"}
+          className="btn btn-plein min-h-10 px-4 text-sm"
+        >
+          {etat === "envoi" ? (
+            <Loader2 className="size-4 animate-spin" aria-hidden />
+          ) : (
+            <Flag className="size-4" aria-hidden />
+          )}
+          Envoyer le signalement
+        </button>
+        <button type="button" onClick={fermer} className="btn btn-trait min-h-10 px-4 text-sm">
+          Annuler
+        </button>
+      </div>
+    </form>
   )
 }

@@ -135,7 +135,9 @@ export default async function PageConditions() {
           personnes de la discussion ; aucune adresse e-mail n&apos;est échangée. Un e-mail vous
           prévient quand un message vous attend (il en reprend le début). Une discussion est effacée
           90 jours après son dernier message, et toutes vos discussions disparaissent si vous
-          supprimez votre compte. Vos favoris et vos alertes de recherche restent dans votre compte
+          supprimez votre compte. Si l&apos;une des deux personnes signale une discussion (arnaque,
+          insultes…), l&apos;équipe de la radio en lit les derniers messages pour décider, et
+          seulement dans ce cas. Vos favoris et vos alertes de recherche restent dans votre compte
           jusqu&apos;à ce que vous les supprimiez. Les vues d&apos;une annonce sont comptées sans
           cookie : une empreinte du visiteur n&apos;est gardée qu&apos;une demi-heure, pour ne pas
           compter deux fois la même personne. Le paiement est traité par Stripe. Vos annonces

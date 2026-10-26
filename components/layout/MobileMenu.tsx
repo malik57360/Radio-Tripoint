@@ -15,7 +15,7 @@ import { Logo } from "@/components/marque/Logo"
 import { Tripoint } from "@/components/marque/Tripoint"
 import { cn } from "@/lib/utils/cn"
 import { Dialogue } from "./Dialogue"
-import { ANNONCES_OUVERTES, URL_ANNONCES } from "@/lib/annonces/liens"
+import { URL_ANNONCES, avecAnnonces } from "@/lib/annonces/liens"
 
 const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
   {
@@ -68,41 +68,41 @@ const essentiels: { libelle: Trad; href: string; detail: Trad }[] = [
       es: "Salir por la región",
     },
   },
-  ...(ANNONCES_OUVERTES
-    ? [
-        {
-          libelle: {
-            fr: "Petites annonces",
-            de: "Kleinanzeigen",
-            lb: "Kleng Annoncen",
-            en: "Classifieds",
-            es: "Anuncios clasificados",
-          },
-          href: URL_ANNONCES,
-          detail: {
-            fr: "Acheter, vendre, recruter près de chez vous",
-            de: "Kaufen, verkaufen, Stellen anbieten (auf Französisch)",
-            lb: "Kafen, verkafen, Leit astellen (op Franséisch)",
-            en: "Buy, sell, hire locally (in French)",
-            es: "Comprar, vender, contratar cerca (en francés)",
-          },
-        },
-      ]
-    : []),
+  {
+    libelle: {
+      fr: "Petites annonces",
+      de: "Kleinanzeigen",
+      lb: "Kleng Annoncen",
+      en: "Classifieds",
+      es: "Anuncios clasificados",
+    },
+    href: URL_ANNONCES,
+    detail: {
+      fr: "Acheter, vendre, recruter près de chez vous",
+      de: "Kaufen, verkaufen, Stellen anbieten (auf Französisch)",
+      lb: "Kafen, verkafen, Leit astellen (op Franséisch)",
+      en: "Buy, sell, hire locally (in French)",
+      es: "Comprar, vender, contratar cerca (en francés)",
+    },
+  },
 ]
 
 export function MobileMenu({
   ouvert,
   fermer,
   ouvrirRecherche,
+  annonces = false,
 }: {
   ouvert: boolean
   fermer: () => void
+  /** Lien « Petites annonces » affiché (réglé depuis le tableau de bord). */
+  annonces?: boolean
   ouvrirRecherche: () => void
 }) {
   const pathname = usePathname()
   const t = useT()
   const reseaux = reseauxActifs()
+  const premiers = avecAnnonces(essentiels, annonces)
 
   return (
     <Dialogue
@@ -181,7 +181,7 @@ export function MobileMenu({
             className="mt-8"
           >
             <ul className="border-nuit-trait border-t">
-              {essentiels.map((l) => (
+              {premiers.map((l) => (
                 <li key={l.href} className="border-nuit-trait border-b">
                   <Link
                     href={l.href}
@@ -215,7 +215,7 @@ export function MobileMenu({
             </p>
             <ul className="mt-3 grid grid-cols-2 gap-x-4">
               {navRubriques
-                .filter((l) => !essentiels.some((e) => e.href === l.href))
+                .filter((l) => !premiers.some((e) => e.href === l.href))
                 .map((l) => (
                   <li key={l.href}>
                     <Link

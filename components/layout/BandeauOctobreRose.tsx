@@ -9,7 +9,7 @@ export async function BandeauOctobreRose() {
   return (
     <div
       role="note"
-      className="flex items-center bg-[#d6246e] justify-center gap-2 px-4 py-1.5 text-center text-xs font-bold text-white"
+      className="flex items-center justify-center gap-2 bg-[#d6246e] px-4 py-1.5 text-center text-xs font-bold text-white"
     >
       <RubanRose className="h-4 w-auto flex-none [&_path]:fill-white [&_path]:stroke-transparent" />
       <span>

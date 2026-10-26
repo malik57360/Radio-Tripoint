@@ -1,4 +1,4 @@
-import { ChevronRight, CircleUserRound, Plus } from "lucide-react"
+import { ChevronRight, CircleUserRound, Info, Plus } from "lucide-react"
 import Link from "next/link"
 import { JsonLd } from "@/components/ui/JsonLd"
 import { Logo } from "@/components/marque/Logo"
@@ -62,6 +62,48 @@ export async function EnTeteAnnonces() {
         </div>
       </div>
     </header>
+  )
+}
+
+/** Bandeau d'information réglé depuis le tableau de bord (Petites annonces › Pilotage). */
+export function BandeauInfo({ texte, lien }: { texte: string; lien?: string }) {
+  const sur = lien && /^https:\/\/[^\s]+$/.test(lien) ? lien : null
+  return (
+    <div role="status" className="bg-accent text-sur-accent">
+      <p className="conteneur flex items-center justify-center gap-2 py-2 text-center text-[0.88rem] leading-snug font-bold">
+        <Info className="size-4 flex-none" aria-hidden />
+        <span>
+          {texte}
+          {sur && (
+            <>
+              {" "}
+              <a href={sur} className="underline underline-offset-2">
+                En savoir plus
+              </a>
+            </>
+          )}
+        </span>
+      </p>
+    </div>
+  )
+}
+
+/** Site en pause (réglé depuis le tableau de bord) : une seule page, sobre, pour tout le site. */
+export function PauseAnnonces({ message }: { message: string }) {
+  return (
+    <main className="bg-nuit text-nuit-encre grid min-h-dvh place-items-center px-6 py-16 text-center">
+      <div className="max-w-md">
+        <Logo sombre taille={88} className="mx-auto size-22" />
+        <p className="text-nuit-accent mt-6 text-sm font-extrabold tracking-[0.14em] uppercase">
+          Les Petites Annonces du Tripoint
+        </p>
+        <h1 className="titre-affiche mt-3 text-[clamp(2.4rem,1.8rem+3vw,3.6rem)]">Petite pause</h1>
+        <p className="text-nuit-encre-2 mt-4 text-[1.05rem] leading-relaxed">{message}</p>
+        <a href={site.url} className="btn btn-accent mt-8">
+          Écouter Radio Tripoint
+        </a>
+      </div>
+    </main>
   )
 }
 

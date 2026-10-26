@@ -1,6 +1,7 @@
 import "server-only"
 import { createHash, randomBytes } from "node:crypto"
 import { redis } from "@/lib/direction/redis"
+import { jourParis } from "./espace"
 
 /**
  * La messagerie des Petites annonces, comme sur les sites de vente entre
@@ -15,12 +16,16 @@ import { redis } from "@/lib/direction/redis"
  * - rt:annonces:non-lus:<compte>   discussion → messages non lus
  *
  * Une discussion s'efface 90 jours après son dernier message.
+ * - rt:annonces:disc-signalements  discussions signalées par l'un des deux
+ *                                  participants, avec leurs derniers messages
+ *                                  (pour la modération, et seulement dans ce cas)
  */
 const DISC = (id: string) => `rt:annonces:disc:${id}`
 const FIL = (id: string) => `rt:annonces:disc:${id}:fil`
 const DISCS = (c: string) => `rt:annonces:discs:${c}`
 const NON_LUS = (c: string) => `rt:annonces:non-lus:${c}`
 const NOTIFIE = (id: string, c: string) => `rt:annonces:disc-notif:${id}:${c}`
+export const STATS_JOUR = (j: string) => `rt:annonces:stats:${j}`
 
 export const DUREE_DISCUSSION_JOURS = 90
 const TTL = DUREE_DISCUSSION_JOURS * 24 * 3600
@@ -154,6 +159,10 @@ export async function ecrire(o: {
     ["HINCRBY", NON_LUS(autre), o.id, 1],
     ["EXPIRE", NON_LUS(autre), TTL],
     ["HDEL", NON_LUS(o.de), o.id],
+    // Statistiques du tableau de bord (des nombres, aucun contenu).
+    ["HINCRBY", STATS_JOUR(jourParis(le)), "messages", 1],
+    ...(o.creation ? [["HINCRBY", STATS_JOUR(jourParis(le)), "discussions", 1]] : []),
+    ["EXPIRE", STATS_JOUR(jourParis(le)), 400 * 24 * 3600],
   ])
   if (!r) throw new Error("messagerie indisponible")
   return m
@@ -298,3 +307,81 @@ export const pourFil = (m: MessageDiscussion, moi: string): BulleDiscussion => (
   texte: m.texte,
   le: m.le,
 })
+
+/* ───────────────────────── Signalements (modération) ───────────────────────── */
+
+const SIGNALEMENTS = "rt:annonces:disc-signalements"
+
+export const MOTIFS_DISCUSSION = {
+  arnaque: "Arnaque ou demande de paiement suspecte",
+  insultes: "Propos insultants ou menaçants",
+  spam: "Publicité ou messages en masse",
+  autre: "Autre raison",
+} as const
+export type MotifDiscussion = keyof typeof MOTIFS_DISCUSSION
+
+export interface SignalementDiscussion {
+  id: string
+  discussion: string
+  /** Compte qui signale (l'un des deux participants). */
+  par: string
+  motif: MotifDiscussion
+  explication: string
+  le: number
+  annonce: string
+  noms: Record<string, string>
+  participants: [string, string]
+  /** Les 30 derniers messages au moment du signalement : ce que la modération lit. */
+  extrait: { de: string; texte: string; le: number }[]
+}
+
+/** L'un des deux participants signale : la modération reçoit les derniers messages. */
+export async function signalerDiscussion(
+  d: Discussion,
+  par: string,
+  motif: MotifDiscussion,
+  explication: string,
+) {
+  const fil = await lireFil(d.id)
+  const s: SignalementDiscussion = {
+    id: `${Date.now().toString(36)}${randomBytes(3).toString("hex")}`,
+    discussion: d.id,
+    par,
+    motif,
+    explication,
+    le: Date.now(),
+    annonce: d.annonce.titre,
+    noms: d.noms,
+    participants: [d.vendeur, d.acheteur],
+    extrait: fil.slice(-30).map((m) => ({ de: m.de, texte: m.texte, le: m.le })),
+  }
+  await redis([["HSET", SIGNALEMENTS, s.id, JSON.stringify(s)]])
+  return s
+}
+
+export async function lireSignalementsDiscussions() {
+  const r = await redis([["HVALS", SIGNALEMENTS]])
+  return ((r?.[0] as string[] | null) ?? [])
+    .map((x) => lireJson<SignalementDiscussion>(x))
+    .filter((x): x is SignalementDiscussion => !!x)
+    .sort((a, b) => b.le - a.le)
+}
+
+/** Signalement traité : il quitte la liste (le journal garde la décision). */
+export async function classerSignalementDiscussion(id: string) {
+  await redis([["HDEL", SIGNALEMENTS, id]])
+}
+
+/** Supprimer une discussion pour les deux participants (abus avéré). */
+export async function supprimerDiscussion(id: string) {
+  const d = await lireDiscussion(id)
+  if (!d) return
+  await redis([
+    ["DEL", DISC(id)],
+    ["DEL", FIL(id)],
+    ["ZREM", DISCS(d.vendeur), id],
+    ["ZREM", DISCS(d.acheteur), id],
+    ["HDEL", NON_LUS(d.vendeur), id],
+    ["HDEL", NON_LUS(d.acheteur), id],
+  ])
+}

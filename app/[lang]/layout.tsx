@@ -9,6 +9,7 @@ import { BandeauOctobreRose } from "@/components/layout/BandeauOctobreRose"
 import { EtatAntenne } from "@/components/motion/EtatAntenne"
 import { Footer } from "@/components/layout/Footer"
 import { Header } from "@/components/layout/Header"
+import { configPublique } from "@/lib/annonces/config"
 import { scriptTheme } from "@/components/layout/ThemeToggle"
 import { DirectAuto } from "@/components/radio/DirectAuto"
 import { Guide } from "@/components/guide/Guide"
@@ -137,7 +138,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
           <BandeauDemo />
           <BandeauOctobreRose />
           <BandeauHalloween />
-          <Header />
+          <Header annonces={(await configPublique()).site.lienRadio} />
           <main id="contenu" tabIndex={-1} className="outline-none">
             {children}
           </main>

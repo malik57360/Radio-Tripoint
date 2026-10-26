@@ -1,10 +1,16 @@
 import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Archivo, Newsreader } from "next/font/google"
-import { EnTeteAnnonces, PiedAnnonces } from "@/components/annonces/Chrome"
+import {
+  BandeauInfo,
+  EnTeteAnnonces,
+  PauseAnnonces,
+  PiedAnnonces,
+} from "@/components/annonces/Chrome"
 import { FavorisProvider } from "@/components/annonces/espace/Favoris"
 import { JsonLd } from "@/components/ui/JsonLd"
 import { site } from "@/config/site"
+import { configPublique } from "@/lib/annonces/config"
 import { URL_ANNONCES } from "@/lib/annonces/liens"
 import "../globals.css"
 import "./annonces.css"
@@ -50,7 +56,21 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 }
 
-export default function LayoutAnnonces({ children }: { children: React.ReactNode }) {
+export default async function LayoutAnnonces({ children }: { children: React.ReactNode }) {
+  // Pilotage depuis le tableau de bord : pause du site, bandeau d'information.
+  const pilotage = (await configPublique()).site
+  if (!pilotage.ouvert)
+    return (
+      <html
+        lang="fr"
+        data-theme="annonces"
+        className={`${archivo.variable} ${newsreader.variable}`}
+      >
+        <body>
+          <PauseAnnonces message={pilotage.messagePause} />
+        </body>
+      </html>
+    )
   return (
     <html lang="fr" data-theme="annonces" className={`${archivo.variable} ${newsreader.variable}`}>
       <body>
@@ -60,6 +80,9 @@ export default function LayoutAnnonces({ children }: { children: React.ReactNode
         >
           Aller au contenu
         </a>
+        {pilotage.bandeau.actif && pilotage.bandeau.texte && (
+          <BandeauInfo texte={pilotage.bandeau.texte} lien={pilotage.bandeau.lien} />
+        )}
         <EnTeteAnnonces />
         <FavorisProvider>
           <main id="contenu" tabIndex={-1} className="outline-none">

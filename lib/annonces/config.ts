@@ -28,7 +28,32 @@ export interface Config {
   limites: Limites
   /** Interrupteur général : fermé, personne ne peut déposer (les annonces en ligne restent). */
   depotsOuverts: boolean
+  site: PilotageSite
   maj?: number
+}
+
+/** Pilotage du site des annonces depuis le tableau de bord, sans redéployer. */
+export interface PilotageSite {
+  /** Fermé : chaque page du site affiche le message de pause (le tableau de bord, lui, reste ouvert). */
+  ouvert: boolean
+  messagePause: string
+  inscriptionsOuvertes: boolean
+  /** Fermée : ni nouvelle discussion ni réponse ; les discussions restent lisibles. */
+  messagerieOuverte: boolean
+  /** Lien « Annonces » dans le menu et le pied de page du site de la radio. */
+  lienRadio: boolean
+  /** Bandeau d'information en haut de chaque page du site des annonces. */
+  bandeau: { actif: boolean; texte: string; lien: string }
+}
+
+export const PILOTAGE_DEPART: PilotageSite = {
+  ouvert: true,
+  messagePause:
+    "Le site des Petites annonces fait une courte pause pour s'améliorer. Revenez très vite !",
+  inscriptionsOuvertes: true,
+  messagerieOuverte: true,
+  lienRadio: false,
+  bandeau: { actif: false, texte: "", lien: "" },
 }
 
 export const LIMITES_DEPART: Limites = {
@@ -49,6 +74,7 @@ export function configDepart(): Config {
     })),
     limites: { ...LIMITES_DEPART },
     depotsOuverts: true,
+    site: { ...PILOTAGE_DEPART, bandeau: { ...PILOTAGE_DEPART.bandeau } },
   }
 }
 
@@ -90,6 +116,11 @@ function completer(brut: Partial<Config> | null): Config {
     categories,
     limites: { ...depart.limites, ...brut.limites },
     depotsOuverts: brut.depotsOuverts ?? true,
+    site: {
+      ...depart.site,
+      ...brut.site,
+      bandeau: { ...depart.site.bandeau, ...brut.site?.bandeau },
+    },
     maj: brut.maj,
   }
 }

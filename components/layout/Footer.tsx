@@ -9,7 +9,8 @@ import { Tripoint } from "@/components/marque/Tripoint"
 import type { Trad } from "@/lib/i18n/langues"
 import { traducteur } from "@/lib/i18n/serveur"
 import { ThemeToggle } from "./ThemeToggle"
-import { ANNONCES_OUVERTES, URL_ANNONCES } from "@/lib/annonces/liens"
+import { configPublique } from "@/lib/annonces/config"
+import { URL_ANNONCES, avecAnnonces } from "@/lib/annonces/liens"
 
 const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
   {
@@ -55,20 +56,16 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
         libelle: { fr: "Agenda", de: "Agenda", lb: "Agenda", en: "Events", es: "Agenda" },
         href: "/agenda",
       },
-      ...(ANNONCES_OUVERTES
-        ? [
-            {
-              libelle: {
-                fr: "Petites annonces",
-                de: "Kleinanzeigen",
-                lb: "Kleng Annoncen",
-                en: "Classifieds",
-                es: "Anuncios clasificados",
-              },
-              href: URL_ANNONCES,
-            },
-          ]
-        : []),
+      {
+        libelle: {
+          fr: "Petites annonces",
+          de: "Kleinanzeigen",
+          lb: "Kleng Annoncen",
+          en: "Classifieds",
+          es: "Anuncios clasificados",
+        },
+        href: URL_ANNONCES,
+      },
       {
         libelle: {
           fr: "Nous soutenir",
@@ -229,6 +226,7 @@ const colonnes: { titre: Trad; liens: { libelle: Trad; href: string }[] }[] = [
 
 export async function Footer() {
   const t = await traducteur()
+  const pilotage = (await configPublique()).site
   const reseaux = reseauxActifs()
   const a = site.contact.adresse
   return (
@@ -281,23 +279,25 @@ export async function Footer() {
           </div>
 
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
-            {colonnes.map((c) => (
-              <nav key={c.titre.fr} aria-label={t(c.titre)}>
-                <p className="surtitre text-nuit-encre-2">{t(c.titre)}</p>
-                <ul className="mt-4 space-y-2.5">
-                  {c.liens.map((l) => (
-                    <li key={l.href}>
-                      <Link
-                        href={l.href}
-                        className="text-nuit-encre/90 hover:text-nuit-accent text-[0.95rem] transition-colors"
-                      >
-                        {t(l.libelle)}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ))}
+            {colonnes
+              .map((c) => ({ ...c, liens: avecAnnonces(c.liens, pilotage.lienRadio) }))
+              .map((c) => (
+                <nav key={c.titre.fr} aria-label={t(c.titre)}>
+                  <p className="surtitre text-nuit-encre-2">{t(c.titre)}</p>
+                  <ul className="mt-4 space-y-2.5">
+                    {c.liens.map((l) => (
+                      <li key={l.href}>
+                        <Link
+                          href={l.href}
+                          className="text-nuit-encre/90 hover:text-nuit-accent text-[0.95rem] transition-colors"
+                        >
+                          {t(l.libelle)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              ))}
             <div className="col-span-2 sm:col-span-1">
               <p className="surtitre text-nuit-encre-2">
                 {t({ fr: "Contact", de: "Kontakt", lb: "Kontakt", en: "Contact", es: "Contacto" })}

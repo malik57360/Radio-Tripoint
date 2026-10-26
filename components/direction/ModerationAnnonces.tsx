@@ -4,7 +4,9 @@ import { Check, Loader2, X } from "lucide-react"
 import { useState, useTransition } from "react"
 import {
   actionBloquer,
+  actionClasserDiscussion,
   actionDebloquer,
+  actionSupprimerDiscussion,
   actionPublier,
   actionRefuser,
   actionRembourser,
@@ -232,5 +234,43 @@ export function BoutonRembourser({ commande, montant }: { commande: string; mont
     >
       Rembourser
     </button>
+  )
+}
+
+/** Discussion signalée : classer (rien à faire) ou supprimer pour les deux participants. */
+export function ActionsDiscussionSignalee({
+  signalement,
+  discussion,
+}: {
+  signalement: string
+  discussion: string
+}) {
+  const { enCours, lancer } = useAction()
+  return (
+    <div className="flex flex-wrap gap-2">
+      <button
+        type="button"
+        disabled={enCours}
+        className={cn(bouton, "border-trait")}
+        onClick={() => lancer(() => actionClasserDiscussion(signalement))}
+      >
+        <Check className="size-4" aria-hidden />
+        Classer (rien d&apos;anormal)
+      </button>
+      <button
+        type="button"
+        disabled={enCours}
+        className={cn(bouton, "border-alerte text-alerte")}
+        onClick={() =>
+          lancer(
+            () => actionSupprimerDiscussion(signalement, discussion),
+            "Supprimer cette discussion pour les deux participants ?",
+          )
+        }
+      >
+        <X className="size-4" aria-hidden />
+        Supprimer la discussion
+      </button>
+    </div>
   )
 }

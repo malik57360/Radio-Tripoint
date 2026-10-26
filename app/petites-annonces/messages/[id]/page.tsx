@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation"
 import { Fil } from "@/components/annonces/messagerie/Fil"
 import { lireAnnonce } from "@/lib/annonces/annonces"
 import { compteConnecte } from "@/lib/annonces/comptes"
+import { configPublique } from "@/lib/annonces/config"
 import {
   autreParticipant,
   lireDiscussion,
@@ -26,7 +27,11 @@ export default async function PageDiscussion(props: PageProps<"/petites-annonces
   if (!c) redirect(`/connexion?suite=/messages/${id}`)
   const d = await lireDiscussion(id)
   if (!d || !participe(d, c.id)) notFound()
-  const [fil, a] = await Promise.all([lireFil(d.id), lireAnnonce(d.annonce.id)])
+  const [fil, a, cfg] = await Promise.all([
+    lireFil(d.id),
+    lireAnnonce(d.annonce.id),
+    configPublique(),
+  ])
   const autre = autreParticipant(d, c.id)
   // L'annonce n'est plus en ligne : on le dit, sans lien qui mènerait à une page vide.
   const etat = !a
@@ -44,6 +49,7 @@ export default async function PageDiscussion(props: PageProps<"/petites-annonces
       annonce={{ ...d.annonce, etat }}
       initiaux={fil.map((m) => pourFil(m, c.id))}
       luAutreInitial={d.lu[autre] ?? 0}
+      ouverte={cfg.site.messagerieOuverte}
     />
   )
 }

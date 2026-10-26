@@ -5,6 +5,7 @@ import Link from "@/components/ui/Lien"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { estActif, navPlus, navPrincipale, navSoutenir } from "@/config/navigation"
+import { avecAnnonces } from "@/lib/annonces/liens"
 import { useT } from "@/components/i18n/Langue"
 import { SelecteurLangue } from "@/components/i18n/SelecteurLangue"
 import { BoutonDirect } from "@/components/radio/BoutonDirect"
@@ -14,8 +15,10 @@ import { EVENEMENT_MENU } from "./BarreOnglets"
 import { MobileMenu } from "./MobileMenu"
 import { SearchDialog } from "./SearchDialog"
 
-export function Header() {
+export function Header({ annonces = false }: { annonces?: boolean }) {
   const pathname = usePathname()
+  // Le lien « Annonces » se règle depuis le tableau de bord (Petites annonces › Pilotage).
+  const principale = avecAnnonces(navPrincipale, annonces)
   const t = useT()
   const [compact, setCompact] = useState(false)
   const [menuOuvert, setMenuOuvert] = useState(false)
@@ -126,7 +129,7 @@ export function Header() {
             className="ml-4 hidden flex-1 items-center lg:flex xl:ml-8"
           >
             <ul className="flex items-center gap-0.5 xl:gap-1">
-              {navPrincipale.map((l) => {
+              {principale.map((l) => {
                 const actif = estActif(pathname, l.href)
                 return (
                   <li
@@ -181,7 +184,7 @@ export function Header() {
                         {t(navSoutenir.libelle)}
                       </Link>
                     </li>
-                    {navPrincipale
+                    {principale
                       .filter((l) => l.large)
                       .map((l) => (
                         <li key={l.href} className="min-[1440px]:hidden">
@@ -252,6 +255,7 @@ export function Header() {
         ouvert={menuOuvert}
         fermer={() => setMenuOuvert(false)}
         ouvrirRecherche={() => setRechercheOuverte(true)}
+        annonces={annonces}
       />
       <SearchDialog ouvert={rechercheOuverte} fermer={() => setRechercheOuverte(false)} />
     </>

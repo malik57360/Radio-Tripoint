@@ -3,12 +3,23 @@
 import { revalidatePath, revalidateTag } from "next/cache"
 import {
   changerStatut,
+  corrigerParModeration,
+  effacerAnnonce,
   journal,
   lireAnnonce,
+  offrirParModeration,
   publierAnnonce,
   rafraichir,
   annoncesDuCompte,
+  viderPhotos,
+  type Cadeau,
 } from "@/lib/annonces/annonces"
+import {
+  classerSignalementDiscussion,
+  effacerDiscussions,
+  supprimerDiscussion,
+} from "@/lib/annonces/discussions"
+import { effacerEspace } from "@/lib/annonces/espace"
 import {
   annulerCommande,
   commandesDeLAnnonce,
@@ -17,14 +28,25 @@ import {
   rembourserAnnonce,
 } from "@/lib/annonces/commandes"
 import {
+  creerJeton,
   enregistrerCompte,
   idCompteValide,
   lireCompte,
   revoquerSessions,
+  supprimerCompte,
 } from "@/lib/annonces/comptes"
-import { TAG_CONFIG, enregistrerConfig, lireConfig, type Config } from "@/lib/annonces/config"
 import {
+  PILOTAGE_DEPART,
+  TAG_CONFIG,
+  enregistrerConfig,
+  lireConfig,
+  type Config,
+  type PilotageSite,
+} from "@/lib/annonces/config"
+import {
+  envoyerMail,
   envoyerSansEchec,
+  mailReinitialisation,
   mailPubliee,
   mailRefusee,
   mailRetireeModeration,
@@ -239,5 +261,209 @@ export async function actionReglages(brut: {
     revalidateTag(TAG_CONFIG, { expire: 0 })
     rafraichir()
     return "Réglages enregistrés : ils s'appliquent tout de suite."
+  })
+}
+
+/**
+ * Pilotage du site des annonces : pause, inscriptions, messagerie, bandeau,
+ * lien sur le site de la radio. Appliqué tout de suite, sans redéployer.
+ */
+export async function actionPilotage(brut: PilotageSite) {
+  return garde(async () => {
+    const cfg = await lireConfig()
+    const lien = texte(brut.bandeau?.lien, 300)
+    if (lien && !/^https:\/\/\S+$/.test(lien))
+      throw new Error("Le lien du bandeau doit commencer par https://")
+    const bandeau = texte(brut.bandeau?.texte, 200)
+    const avant = cfg.site
+    cfg.site = {
+      ouvert: Boolean(brut.ouvert),
+      messagePause: texte(brut.messagePause, 300) || PILOTAGE_DEPART.messagePause,
+      inscriptionsOuvertes: Boolean(brut.inscriptionsOuvertes),
+      messagerieOuverte: Boolean(brut.messagerieOuverte),
+      lienRadio: Boolean(brut.lienRadio),
+      bandeau: { actif: Boolean(brut.bandeau?.actif) && bandeau.length > 0, texte: bandeau, lien },
+    }
+    await enregistrerConfig(cfg)
+    const changes = (Object.keys(cfg.site) as (keyof PilotageSite)[]).filter(
+      (k) => JSON.stringify(cfg.site[k]) !== JSON.stringify(avant[k]),
+    )
+    await journal("pilotage", { changes })
+    revalidateTag(TAG_CONFIG, { expire: 0 })
+    rafraichir()
+    // Le lien « Annonces » vit dans le menu du site de la radio.
+    if (avant.lienRadio !== cfg.site.lienRadio) revalidatePath("/[lang]", "layout")
+    return changes.length ? "Enregistré : c'est appliqué tout de suite." : "Rien n'a changé."
+  })
+}
+
+/* ───────────────────────── Fiche annonce : interventions directes ───────────────────────── */
+
+/** Corriger une annonce (faute, prix, catégorie) sans la renvoyer en vérification. */
+export async function actionCorriger(
+  id: string,
+  brut: { titre: string; description: string; prix: string; ville: string; categorie: string },
+) {
+  return garde(async () => {
+    const a = await annonce(id)
+    const cfg = await lireConfig()
+    const titre = texte(brut.titre, 80)
+    const description = texte(brut.description, 4000)
+    const ville = texte(brut.ville, 60)
+    if (titre.length < 5) throw new Error("Titre trop court (5 caractères au moins).")
+    if (description.length < 20)
+      throw new Error("Description trop courte (20 caractères au moins).")
+    if (ville.length < 2) throw new Error("Indiquez la ville.")
+    if (!cfg.categories.some((c) => c.slug === brut.categorie))
+      throw new Error("Catégorie inconnue.")
+    const p = String(brut.prix ?? "")
+      .replace(/\s/g, "")
+      .replace(",", ".")
+    const prix = p === "" ? null : Math.round(Number(p) * 100)
+    if (prix !== null && (!Number.isFinite(prix) || prix < 0 || prix > 1_000_000_000))
+      throw new Error("Prix invalide.")
+    await corrigerParModeration(a, { titre, description, prix, ville, categorie: brut.categorie })
+    return "Annonce corrigée : c'est en ligne tout de suite."
+  })
+}
+
+/** Offrir un coup de pouce (prolongation, remontée, à la une, mise en avant). */
+export async function actionOffrir(id: string, cadeau: Cadeau, jours: number) {
+  return garde(async () => {
+    const a = await annonce(id)
+    if (!["prolongation", "remontee", "accueil", "categorie", "renforcee"].includes(cadeau))
+      throw new Error("Option inconnue.")
+    if (!["publiee", "expiree"].includes(a.statut))
+      throw new Error(
+        "Seule une annonce en ligne (ou expirée, pour la prolonger) peut en profiter.",
+      )
+    if (a.statut === "expiree" && cadeau !== "prolongation")
+      throw new Error("Prolongez d'abord l'annonce : elle n'est plus en ligne.")
+    await offrirParModeration(a, cadeau, entier(jours, cadeau === "remontee" ? 0 : 1, 365))
+    return "C'est fait : l'annonce en profite tout de suite."
+  })
+}
+
+export async function actionVendueDirection(id: string) {
+  return garde(async () => {
+    const a = await annonce(id)
+    if (!["publiee", "signalee", "expiree"].includes(a.statut))
+      throw new Error("Cette annonce ne peut pas être marquée vendue.")
+    a.vendueLe = Date.now()
+    await changerStatut(a, "retiree", "Vendue", "direction")
+    return "Annonce marquée vendue et retirée du site."
+  })
+}
+
+/** Suppression définitive (photos comprises) : pour une annonce illicite ou en double. */
+export async function actionSupprimerAnnonce(id: string, confirmation: string) {
+  return garde(async () => {
+    if (confirmation.trim().toUpperCase() !== "SUPPRIMER")
+      throw new Error("Tapez SUPPRIMER pour confirmer.")
+    const a = await annonce(id)
+    await viderPhotos(a).catch((e) => console.error("[annonces] photos :", (e as Error).message))
+    await effacerAnnonce(a)
+    await journal("suppression-annonce", { annonce: a.id, compte: a.compte, titre: a.titre })
+    rafraichir()
+    return "Annonce supprimée définitivement."
+  })
+}
+
+/* ───────────────────────── Fiche compte : interventions directes ───────────────────────── */
+
+async function compteValide(id: string) {
+  const c = idCompteValide(id) ? await lireCompte(id) : null
+  if (!c) throw new Error("Compte introuvable.")
+  return c
+}
+
+export async function actionConfirmerEmail(id: string) {
+  return garde(async () => {
+    const c = await compteValide(id)
+    if (c.emailVerifie) return "L'adresse était déjà confirmée."
+    c.emailVerifie = Date.now()
+    await enregistrerCompte(c)
+    await journal("email-confirme", { compte: c.id, par: "direction" })
+    return "Adresse confirmée à la main."
+  })
+}
+
+export async function actionLienMotDePasse(id: string) {
+  return garde(async () => {
+    const c = await compteValide(id)
+    if (c.bloque) throw new Error("Compte suspendu : débloquez-le d'abord.")
+    const jeton = await creerJeton("reinitialisation", c.id)
+    await envoyerMail({ a: c.email, ...mailReinitialisation(c.nom, jeton) })
+    await journal("lien-mot-de-passe", { compte: c.id, par: "direction" })
+    return "Lien envoyé (valable 1 heure)."
+  })
+}
+
+export async function actionDeconnecterCompte(id: string) {
+  return garde(async () => {
+    const c = await compteValide(id)
+    await revoquerSessions(c.id)
+    await journal("deconnexion", { compte: c.id, par: "direction" })
+    return "Toutes ses sessions sont fermées."
+  })
+}
+
+/** Un e-mail écrit à la main par la radio, envoyé depuis info@ (signé « L'équipe Radio Tripoint »). */
+export async function actionEcrireCompte(id: string, objet: string, message: string) {
+  return garde(async () => {
+    const c = await compteValide(id)
+    const o = texte(objet, 150)
+    const m = texte(message, 5000)
+    if (o.length < 3) throw new Error("Indiquez un objet.")
+    if (m.length < 10) throw new Error("Le message est trop court.")
+    await envoyerMail({ a: c.email, objet: o, texte: `Bonjour ${c.nom},\n\n${m}` })
+    await journal("email-direction", { compte: c.id, objet: o })
+    return "E-mail envoyé."
+  })
+}
+
+/** Suppression du compte par la radio : annonces retirées, paiements non consommés remboursés. */
+export async function actionSupprimerCompteDirection(id: string, confirmation: string) {
+  return garde(async () => {
+    if (confirmation.trim().toUpperCase() !== "SUPPRIMER")
+      throw new Error("Tapez SUPPRIMER pour confirmer.")
+    const c = await compteValide(id)
+    for (const a of await annoncesDuCompte(c.id)) {
+      if (a.statut === "retiree" || a.statut === "refusee") continue
+      if (a.commande) {
+        const cmd = await lireCommande(a.commande)
+        if (cmd?.statut === "attente") await annulerCommande(cmd)
+        if (cmd?.statut === "payee" && !a.publieeLe)
+          await rembourser(cmd, "Compte supprimé avant publication").catch((e) =>
+            console.error("[annonces] remboursement :", (e as Error).message),
+          )
+      }
+      await changerStatut(a, "retiree", "Compte supprimé", "direction")
+    }
+    await effacerEspace(c.id)
+    await effacerDiscussions(c.id)
+    await supprimerCompte(c)
+    await journal("suppression-compte", { compte: c.id, par: "direction" })
+    return "Compte supprimé."
+  })
+}
+
+/* ───────────────────────── Discussions signalées ───────────────────────── */
+
+export async function actionClasserDiscussion(signalement: string) {
+  return garde(async () => {
+    await classerSignalementDiscussion(signalement)
+    await journal("discussion-classee", { signalement })
+    return "Signalement classé."
+  })
+}
+
+/** Abus avéré : la discussion disparaît pour les deux participants. */
+export async function actionSupprimerDiscussion(signalement: string, discussion: string) {
+  return garde(async () => {
+    await supprimerDiscussion(discussion)
+    await classerSignalementDiscussion(signalement)
+    await journal("discussion-supprimee", { discussion })
+    return "Discussion supprimée pour les deux participants."
   })
 }

@@ -1,12 +1,16 @@
-import { ExternalLink } from "lucide-react"
+import { Download, ExternalLink, Search } from "lucide-react"
 import Link from "next/link"
 import { connection } from "next/server"
 import {
   ActionsCompte,
+  ActionsDiscussionSignalee,
   BoutonRembourser,
   ModerationAnnonce,
 } from "@/components/direction/ModerationAnnonces"
+import { PilotageAnnonces } from "@/components/direction/PilotageAnnonces"
 import { ReglagesAnnonces } from "@/components/direction/ReglagesAnnonces"
+import { RechercheAnnonces } from "@/components/direction/RechercheAnnonces"
+import { StatsAnnonces } from "@/components/direction/StatsAnnonces"
 import { AActiver, Carte, date, EnTetePage, Etat, Section, Tuile } from "@/components/direction/ui"
 import { prixAffiche } from "@/components/annonces/Vitrine"
 import { lireJournal, listerAnnonces } from "@/lib/annonces/annonces"
@@ -18,6 +22,8 @@ import { mailsActifs } from "@/lib/annonces/mails"
 import { euros } from "@/lib/annonces/offres"
 import { URL_ANNONCES, lienAnnonces } from "@/lib/annonces/liens"
 import { LIBELLES_STATUT, cheminAnnonce, type Annonce } from "@/lib/annonces/types"
+import { MOTIFS_DISCUSSION, lireSignalementsDiscussions } from "@/lib/annonces/discussions"
+import { statsDirection } from "@/lib/annonces/stats"
 import { redis, redisActif } from "@/lib/direction/redis"
 import { cn } from "@/lib/utils/cn"
 
@@ -29,6 +35,8 @@ const VUES = [
   ["en-ligne", "En ligne"],
   ["comptes", "Comptes"],
   ["commandes", "Paiements"],
+  ["stats", "Statistiques"],
+  ["pilotage", "Pilotage du site"],
   ["reglages", "Tarifs & réglages"],
   ["journal", "Journal"],
 ] as const
@@ -87,7 +95,11 @@ function Dossier({
             {LIBELLES_STATUT[a.statut]}
             {a.publieeLe ? " · déjà publiée une fois (modifiée)" : ""}
           </p>
-          <h3 className="mt-1 text-lg leading-snug font-extrabold">{a.titre}</h3>
+          <h3 className="mt-1 text-lg leading-snug font-extrabold">
+            <Link href={`/direction/annonces/annonce/${a.id}`} className="hover:underline">
+              {a.titre}
+            </Link>
+          </h3>
           <p className="text-encre-2 text-sm font-semibold">
             {prix ? `${prix} · ` : ""}
             {a.ville} ({a.codePostal}, {a.pays})
@@ -131,7 +143,12 @@ function Dossier({
             {compte ? (
               <>
                 <p className="mt-1 font-bold">
-                  {compte.type === "pro" && compte.pro ? compte.pro.raisonSociale : compte.nom}{" "}
+                  <Link
+                    href={`/direction/annonces/compte/${compte.id}`}
+                    className="hover:underline"
+                  >
+                    {compte.type === "pro" && compte.pro ? compte.pro.raisonSociale : compte.nom}
+                  </Link>{" "}
                   <span className="text-encre-3 font-normal">
                     ({compte.type === "pro" ? "pro" : "particulier"})
                   </span>
@@ -259,12 +276,14 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
     )
   const sp = await props.searchParams
   const vue: Vue = VUES.some(([v]) => v === sp.vue) ? (sp.vue as Vue) : "moderation"
-  const [annonces, comptes, commandes, cfg, sigBrut] = await Promise.all([
+  const q = typeof sp.q === "string" ? sp.q.trim().slice(0, 100) : ""
+  const [annonces, comptes, commandes, cfg, sigBrut, discussionsSignalees] = await Promise.all([
     listerAnnonces(2000),
     listerComptes(2000),
     listerCommandes(2000),
     lireConfig(),
     redis([["LRANGE", "rt:annonces:signalements", 0, 499]]),
+    lireSignalementsDiscussions(),
   ])
   const signalements = ((sigBrut?.[0] as string[] | null) ?? []).flatMap((s) => {
     try {
@@ -301,7 +320,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
     v === "moderation"
       ? aVerifier.length
       : v === "signalements"
-        ? signalees.length
+        ? signalees.length + discussionsSignalees.length
         : v === "en-ligne"
           ? enLigne.length
           : v === "comptes"
@@ -319,10 +338,54 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
           target="_blank"
           className="border-trait inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold"
         >
-          Voir la rubrique
+          Voir le site
           <ExternalLink className="size-4" aria-hidden />
         </a>
       </EnTetePage>
+
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <form
+          action="/direction/annonces"
+          className="relative min-w-0 flex-1 basis-72"
+          role="search"
+        >
+          <Search
+            className="text-encre-3 pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2"
+            aria-hidden
+          />
+          <input
+            name="q"
+            type="search"
+            defaultValue={q}
+            placeholder="Chercher une annonce, un compte, un e-mail, un paiement…"
+            aria-label="Chercher dans les annonces, les comptes et les paiements"
+            className="border-trait bg-carte focus:border-accent min-h-11 w-full rounded-full border pr-4 pl-10 text-sm outline-none"
+          />
+        </form>
+        <details className="relative">
+          <summary className="border-trait inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-full border px-4 text-sm font-bold">
+            <Download className="size-4" aria-hidden />
+            Exporter
+          </summary>
+          <div className="bg-carte border-trait absolute right-0 z-20 mt-2 w-60 rounded-xl border p-1.5 shadow-lg">
+            {(
+              [
+                ["annonces", "Annonces (CSV)"],
+                ["comptes", "Comptes (CSV)"],
+                ["paiements", "Paiements (CSV)"],
+              ] as const
+            ).map(([k, t]) => (
+              <a
+                key={k}
+                href={`/direction/annonces/export?quoi=${k}`}
+                className="hover:bg-carte-2 block rounded-lg px-3 py-2 text-sm font-semibold"
+              >
+                {t}
+              </a>
+            ))}
+          </div>
+        </details>
+      </div>
 
       <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Tuile
@@ -357,6 +420,12 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
           {mailsActifs() ? "E-mails envoyés depuis info@" : "Boîte mail non branchée"}
         </Etat>
         <Etat ok={cfg.depotsOuverts}>{cfg.depotsOuverts ? "Dépôts ouverts" : "Dépôts fermés"}</Etat>
+        <Etat ok={cfg.site.ouvert}>{cfg.site.ouvert ? "Site ouvert" : "Site en pause"}</Etat>
+        {!cfg.site.messagerieOuverte && <Etat ok={false}>Messagerie en pause</Etat>}
+        {!cfg.site.inscriptionsOuvertes && <Etat ok={false}>Inscriptions fermées</Etat>}
+        <Etat ok={cfg.site.lienRadio}>
+          {cfg.site.lienRadio ? "Lien sur le site radio" : "Lien radio masqué"}
+        </Etat>
       </div>
 
       <nav aria-label="Vues" className="mb-6 flex gap-1.5 overflow-x-auto pb-1">
@@ -376,7 +445,27 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         ))}
       </nav>
 
-      {vue === "moderation" && (
+      {q ? (
+        <RechercheAnnonces q={q} annonces={annonces} comptes={comptes} commandes={commandes} />
+      ) : null}
+
+      {!q && vue === "stats" && (
+        <Section id="stats" titre="Statistiques" sousTitre="30 derniers jours, heure de Paris">
+          <StatsAnnonces s={await statsDirection({ annonces, comptes, commandes })} cfg={cfg} />
+        </Section>
+      )}
+
+      {!q && vue === "pilotage" && (
+        <Section
+          id="pilotage"
+          titre="Pilotage du site"
+          sousTitre="Appliqué tout de suite, sans redéployer"
+        >
+          <PilotageAnnonces initial={cfg.site} />
+        </Section>
+      )}
+
+      {!q && vue === "moderation" && (
         <Section
           id="a-verifier"
           titre={`À vérifier (${aVerifier.length})`}
@@ -404,8 +493,64 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         </Section>
       )}
 
-      {vue === "signalements" && (
+      {!q && vue === "signalements" && (
         <div className="space-y-10">
+          <Section
+            id="discussions"
+            titre={`Discussions signalées (${discussionsSignalees.length})`}
+            sousTitre="Lues seulement parce qu'un participant les a signalées"
+          >
+            {discussionsSignalees.length ? (
+              <div className="space-y-4">
+                {discussionsSignalees.map((x) => {
+                  const [p1, p2] = x.participants
+                  return (
+                    <Carte key={x.id}>
+                      <p className="text-encre-3 text-xs">
+                        {quand(x.le)} · « {x.annonce} » · signalée par{" "}
+                        <strong>{x.noms[x.par] ?? "?"}</strong>
+                      </p>
+                      <p className="mt-1 font-bold">{MOTIFS_DISCUSSION[x.motif]}</p>
+                      {x.explication && (
+                        <p className="text-encre-2 mt-1 text-sm">« {x.explication} »</p>
+                      )}
+                      <ol className="border-trait mt-3 max-h-80 space-y-1.5 overflow-y-auto rounded-xl border p-3 text-sm">
+                        {x.extrait.map((m, i) => (
+                          <li key={i}>
+                            <span className="text-encre-3 text-xs">{quand(m.le)} · </span>
+                            <strong>{x.noms[m.de] ?? "?"}</strong> : {m.texte}
+                          </li>
+                        ))}
+                        {!x.extrait.length && <li className="text-encre-3">Aucun message.</li>}
+                      </ol>
+                      <p className="mt-3 text-sm">
+                        Comptes :{" "}
+                        {[p1, p2].map((id, i) => (
+                          <span key={id}>
+                            {i > 0 && " · "}
+                            <Link
+                              href={`/direction/annonces/compte/${id}`}
+                              className="text-accent font-bold"
+                            >
+                              {x.noms[id] ?? id}
+                            </Link>
+                          </span>
+                        ))}{" "}
+                        <span className="text-encre-3">(pour le suspendre au besoin)</span>
+                      </p>
+                      <div className="mt-3">
+                        <ActionsDiscussionSignalee signalement={x.id} discussion={x.discussion} />
+                      </div>
+                    </Carte>
+                  )
+                })}
+              </div>
+            ) : (
+              <Carte>
+                <p className="text-encre-2 text-sm">Aucune discussion signalée.</p>
+              </Carte>
+            )}
+          </Section>
           <Section id="masquees" titre={`Masquées après signalements (${signalees.length})`}>
             {signalees.length ? (
               <div className="space-y-4">
@@ -469,7 +614,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         </div>
       )}
 
-      {vue === "en-ligne" && (
+      {!q && vue === "en-ligne" && (
         <Section id="en-ligne" titre={`En ligne (${enLigne.length})`}>
           <Carte>
             {enLigne.length ? (
@@ -479,13 +624,12 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
                   .map((a) => (
                     <li key={a.id} className="space-y-2 py-3 first:pt-0">
                       <p>
-                        <a
-                          href={lienAnnonces(cheminAnnonce(a))}
-                          target="_blank"
+                        <Link
+                          href={`/direction/annonces/annonce/${a.id}`}
                           className="font-bold hover:underline"
                         >
                           {a.titre}
-                        </a>{" "}
+                        </Link>{" "}
                         <span className="text-encre-3">
                           · {a.ville} · {compte(a.compte)?.email ?? "?"} · jusqu&apos;au{" "}
                           {date(a.expireLe ?? 0, { day: "numeric", month: "short" })}
@@ -503,7 +647,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         </Section>
       )}
 
-      {vue === "comptes" && (
+      {!q && vue === "comptes" && (
         <Section id="comptes" titre={`Comptes (${comptes.length})`}>
           <Carte>
             <ul className="divide-trait divide-y text-sm">
@@ -512,9 +656,12 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
                 return (
                   <li key={c.id} className="space-y-2 py-3 first:pt-0">
                     <p>
-                      <span className="font-bold">
+                      <Link
+                        href={`/direction/annonces/compte/${c.id}`}
+                        className="font-bold hover:underline"
+                      >
                         {c.type === "pro" && c.pro ? c.pro.raisonSociale : c.nom}
-                      </span>{" "}
+                      </Link>{" "}
                       <span className="text-encre-3">
                         · {c.email} · {c.type} · {siennes.length} annonce(s) · créé le{" "}
                         {date(c.creeLe, { day: "numeric", month: "short", year: "numeric" })}
@@ -554,7 +701,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         </Section>
       )}
 
-      {vue === "commandes" && (
+      {!q && vue === "commandes" && (
         <div className="space-y-8">
           <Section id="revenus" titre="Revenus par offre">
             <Carte>
@@ -611,7 +758,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         </div>
       )}
 
-      {vue === "reglages" && (
+      {!q && vue === "reglages" && (
         <Section
           id="reglages"
           titre="Tarifs & réglages"
@@ -621,7 +768,7 @@ export default async function PageAnnoncesDirection(props: PageProps<"/direction
         </Section>
       )}
 
-      {vue === "journal" && (
+      {!q && vue === "journal" && (
         <Section id="journal" titre="Journal des actions">
           <Carte>
             <ul className="divide-trait divide-y text-sm">
