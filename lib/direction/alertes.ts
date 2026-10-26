@@ -10,6 +10,7 @@ import {
   technique,
   type Periode,
 } from "./donnees"
+import { creditEpuiseDepuis } from "./credit-ia"
 
 /**
  * Chargements mis en commun le temps d'une requête : le cadre (pour le
@@ -29,7 +30,14 @@ export const chargerAlertes = cache(async () => {
     chargerEngagement(),
   ])
   const perdus = eng && !eng.erreur ? eng.totaux.formPerdu30 : 0
-  return alertes(tech, rad, perdus)
+  const liste = alertes(tech, rad, perdus)
+  if (await creditEpuiseDepuis())
+    liste.unshift({
+      texte:
+        "Le crédit de l'IA (Anthropic) est épuisé : les traductions des articles sont en pause. Rechargez-le sur console.anthropic.com (Plans & Billing) ; elles repartiront toutes seules.",
+      page: "articles",
+    })
+  return liste
 })
 
 export const compterAlertes = async () => (await chargerAlertes()).length

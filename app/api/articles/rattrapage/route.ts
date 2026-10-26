@@ -2,9 +2,10 @@ import { articlesATraduire, traduireArticle } from "@/lib/direction/traduction-a
 
 /**
  * Filet de sécurité quotidien (vercel.json) : tout article du tableau de bord
- * à qui il manque une langue est retraduit, les plus récents d'abord, sans
- * attendre la pause qui suit un échec. Un article commencé va jusqu'au bout ;
- * on n'en commence plus quand il reste moins de deux minutes.
+ * à qui il manque une langue est retraduit, les plus récents d'abord (une
+ * langue en échec l'est de nouveau après sa pause, 6 h au plus). Un article
+ * commencé va jusqu'au bout ; on n'en commence plus quand il reste moins de
+ * deux minutes.
  */
 export const dynamic = "force-dynamic"
 export const maxDuration = 300
@@ -19,7 +20,7 @@ export async function GET(request: Request) {
   for (const slug of await articlesATraduire()) {
     if (Date.now() > fin) break
     try {
-      const r = await traduireArticle(slug, true)
+      const r = await traduireArticle(slug)
       bilan[slug] = r.echecs.length ? `${r.statut} (échec : ${r.echecs.join(", ")})` : r.statut
     } catch (e) {
       bilan[slug] = "erreur"

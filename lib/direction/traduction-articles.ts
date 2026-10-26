@@ -13,6 +13,7 @@ import {
   type TraductionsArticle,
 } from "@/lib/contenu/traductions-dashboard"
 import type { Article } from "@/types/article"
+import { creditRetabli, estCreditEpuise, noterCreditEpuise } from "./credit-ia"
 import { redis } from "./redis"
 
 /**
@@ -305,12 +306,15 @@ export async function traduireArticle(slug: string, force = false): Promise<Resu
         if (!actuel || empreinte(actuel) !== version) return
         if (!(await enregistrer(slug, version, l, t))) throw new Error("enregistrement impossible")
         faites.push(l)
-        await redis([["HDEL", CLE_ECHECS, `${slug}:${l}`]])
+        await Promise.all([redis([["HDEL", CLE_ECHECS, `${slug}:${l}`]]), creditRetabli()])
         revalidateTag(TAG_ARTICLES, { expire: 0 })
       } catch (e) {
         ratees.push(l)
         console.error(`[traduction] ${slug} (${l}) :`, (e as Error)?.message)
-        await noterEchec(slug, version, l, echecs[l])
+        await Promise.all([
+          noterEchec(slug, version, l, echecs[l]),
+          estCreditEpuise(e) ? noterCreditEpuise() : null,
+        ])
       } finally {
         await redis([["DEL", VERROU(slug, version, l)]])
       }
