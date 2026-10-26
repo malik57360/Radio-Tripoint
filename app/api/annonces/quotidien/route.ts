@@ -1,5 +1,6 @@
 import {
   changerStatut,
+  annoncesPubliques,
   listerAnnonces,
   noterAvertissement,
   viderPhotos,
@@ -7,7 +8,11 @@ import {
 import { annulerCommande, lireCommande } from "@/lib/annonces/commandes"
 import { lireCompte } from "@/lib/annonces/comptes"
 import { lireConfig } from "@/lib/annonces/config"
-import { envoyerSansEchec, mailExpiree, mailExpireBientot } from "@/lib/annonces/mails"
+import { envoyerSansEchec, mailAlertes, mailExpiree, mailExpireBientot } from "@/lib/annonces/mails"
+import { prixAffiche } from "@/lib/annonces/prix"
+import { comptesAvecAlertes, lireAlertes, modifierAlerte } from "@/lib/annonces/espace"
+import { filtrer, trier } from "@/lib/annonces/recherche"
+import { cheminAnnonce } from "@/lib/annonces/types"
 
 /**
  * Tâche quotidienne des Petites annonces (vercel.json) :
@@ -32,7 +37,7 @@ export async function GET(request: Request) {
     cfg.offres.find((o) => o.code === (pro ? "prolongation_pro" : "prolongation"))?.prixCentimes ??
     0
   const maintenant = Date.now()
-  const bilan = { averties: 0, expirees: 0, abandonnees: 0, photos: 0 }
+  const bilan = { averties: 0, expirees: 0, abandonnees: 0, photos: 0, alertes: 0 }
 
   for (const a of await listerAnnonces(5000)) {
     try {
@@ -72,5 +77,47 @@ export async function GET(request: Request) {
       console.error("[annonces] tâche quotidienne :", a.id, (e as Error).message)
     }
   }
+  bilan.alertes = await envoyerAlertes()
   return Response.json({ ok: true, ...bilan })
+}
+
+/** E-mails d'alerte : une fois par jour au plus, et seulement s'il y a du neuf. */
+async function envoyerAlertes() {
+  let envoyes = 0
+  const liste = await annoncesPubliques()
+  for (const id of await comptesAvecAlertes()) {
+    try {
+      const c = await lireCompte(id)
+      if (!c || c.bloque || !c.emailVerifie) continue
+      const groupes = []
+      const vues: string[] = []
+      for (const al of (await lireAlertes(id)).filter((x) => x.email)) {
+        const neuves = trier(
+          filtrer(liste, al.filtres).filter((x) => x.publieeLe > al.envoyeLe),
+          "recent",
+        )
+        vues.push(al.id)
+        if (!neuves.length) continue
+        groupes.push({
+          nom: al.nom,
+          total: neuves.length,
+          annonces: neuves.slice(0, 10).map((x) => ({
+            titre: x.titre,
+            prix: prixAffiche(x),
+            ville: x.ville,
+            chemin: cheminAnnonce(x),
+          })),
+        })
+      }
+      if (!groupes.length) continue
+      const parti = await envoyerSansEchec({ a: c.email, ...mailAlertes(c.nom, groupes) })
+      if (!parti) continue
+      envoyes++
+      const le = Date.now()
+      for (const al of vues) await modifierAlerte(id, al, { envoyeLe: le })
+    } catch (e) {
+      console.error("[annonces] alertes :", id, (e as Error).message)
+    }
+  }
+  return envoyes
 }

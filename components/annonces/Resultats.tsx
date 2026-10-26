@@ -1,4 +1,6 @@
 import { SlidersHorizontal } from "lucide-react"
+import { Suspense } from "react"
+import { BoutonAlerte } from "./espace/BoutonAlerte"
 import Link from "@/components/ui/Lien"
 import { Pagination } from "@/components/ui/Pagination"
 import { EtatVide } from "@/components/ui/EtatVide"
@@ -166,11 +168,16 @@ export function Resultats({
       <div className="hidden lg:block">{formulaire("")}</div>
 
       <section aria-label="Résultats">
-        <p className="text-encre-2 font-semibold" role="status">
-          {total === 0 ? "Aucune annonce" : `${total} annonce${total > 1 ? "s" : ""}`}
-          {filtres.q && ` pour « ${filtres.q} »`}
-          {filtres.lieu && ` à ${filtres.lieu}`}
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="text-encre-2 font-semibold" role="status">
+            {total === 0 ? "Aucune annonce" : `${total} annonce${total > 1 ? "s" : ""}`}
+            {filtres.q && ` pour « ${filtres.q} »`}
+            {filtres.lieu && ` à ${filtres.lieu}`}
+          </p>
+          <Suspense>
+            <BoutonAlerte categorie={categorieFixe} />
+          </Suspense>
+        </div>
         {total === 0 ? (
           <EtatVide
             className="mt-6"

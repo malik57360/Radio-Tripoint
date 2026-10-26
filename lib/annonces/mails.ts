@@ -252,3 +252,35 @@ export const alerteModeration = (a: Annonce, motif: "depot" | "modification" | "
 
 Tableau de bord : ${site.url}/direction/annonces`,
 })
+
+/* ───────────────────────── Alertes de recherche ───────────────────────── */
+
+/**
+ * E-mail du matin : les nouvelles annonces de chaque alerte (dix au plus par
+ * alerte). Demandé par la personne (elle a créé l'alerte, l'e-mail est
+ * coupable d'un clic dans « Mon espace »).
+ */
+export const mailAlertes = (
+  nom: string,
+  groupes: {
+    nom: string
+    annonces: { titre: string; prix: string | null; ville: string; chemin: string }[]
+    total: number
+  }[],
+) => {
+  const total = groupes.reduce((n, g) => n + g.total, 0)
+  return {
+    objet: `${total} nouvelle${total > 1 ? "s" : ""} annonce${total > 1 ? "s" : ""} pour vos alertes`,
+    texte: `Bonjour ${nom},
+
+${groupes
+  .map(
+    (g) => `« ${g.nom} » : ${g.total} nouvelle${g.total > 1 ? "s" : ""}
+${g.annonces.map((a) => `- ${a.titre}${a.prix ? ` · ${a.prix}` : ""} · ${a.ville}\n  ${lien(a.chemin)}`).join("\n")}${g.total > g.annonces.length ? `\n…et ${g.total - g.annonces.length} autre${g.total - g.annonces.length > 1 ? "s" : ""}.` : ""}`,
+  )
+  .join("\n\n")}
+
+Gérer vos alertes, ou couper ces e-mails :
+${lien(`${ESPACE}/alertes`)}`,
+  }
+}

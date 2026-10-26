@@ -42,6 +42,7 @@ import {
   lireCompte,
   motDePasseAcceptable,
   motDePasseCorrect,
+  nomPublic,
   normaliserEmail,
   ouvrirSession,
   perdreDuTemps,
@@ -81,7 +82,19 @@ import {
   verifierDetails,
   type DonneesDepot,
 } from "@/lib/annonces/schemas"
-import { idAnnonceValide, type Annonce } from "@/lib/annonces/types"
+import { cheminAnnonce, idAnnonceValide, type Annonce } from "@/lib/annonces/types"
+import {
+  basculerFavori,
+  creerAlerte,
+  effacerEspace,
+  modifierAlerte,
+  noterActivite,
+  rangerMessage,
+  supprimerAlerte,
+  supprimerMessage,
+} from "@/lib/annonces/espace"
+import { lireFiltres, type Filtres } from "@/lib/annonces/recherche"
+import { revalidatePath } from "next/cache"
 
 /**
  * Actions des Petites annonces côté public. Chaque action revérifie tout
@@ -301,6 +314,7 @@ export async function actionSupprimerCompte(_e: Etat, fd: FormData): Promise<Eta
   if (!(await motDePasseCorrect(champ(fd, "mot_de_passe", 200), c.hache)))
     return { erreur: "Mot de passe incorrect." }
   for (const a of await annoncesDuCompte(c.id)) await retirerParAnnonceur(a, "Compte supprimé")
+  await effacerEspace(c.id)
   await supprimerCompte(c)
   await journal("suppression-compte", { compte: c.id })
   await fermerSession()
@@ -633,6 +647,24 @@ export async function actionContacter(_e: Etat, fd: FormData): Promise<Etat> {
   })
   if (!parti) return { erreur: "Le message n'a pas pu partir. Réessayez plus tard." }
   await redis([["HINCRBY", "rt:annonces:contacts", a.id, 1]])
+  // Copie dans « Mon espace » des deux côtés (90 jours) : l'e-mail reste le canal de réponse.
+  await rangerMessage({
+    annonceur: annonceur.id,
+    acheteur: { id: c.id, nom: c.nom, email: c.email },
+    annonce: {
+      id: a.id,
+      titre: a.titre,
+      chemin: cheminAnnonce(a),
+      vignette: a.photos[0]?.vignette,
+    },
+    nomAnnonceur: nomPublic(annonceur),
+    texte: message,
+  }).catch((e) => console.error("[annonces] boîte :", (e as Error).message))
+  await noterActivite(annonceur.id, {
+    type: "message",
+    annonce: { id: a.id, titre: a.titre },
+    detail: `De ${c.nom}`,
+  })
   return { ok: "Message envoyé ! L'annonceur vous répondra directement par e-mail." }
 }
 
@@ -695,4 +727,115 @@ export async function actionSignaler(_e: Etat, fd: FormData): Promise<Etat> {
   }
   await journal("signalement", { annonce: a.id, motif })
   return { ok: "Merci, signalement reçu. L'équipe de modération va l'examiner." }
+}
+
+/* ───────────────────────── Mon espace ───────────────────────── */
+
+export type ResultatFavori =
+  { ok: true; favori: boolean } | { ok: false; erreur: string; connexion?: boolean }
+
+/** Cœur d'une annonce : ajoute ou retire des favoris. */
+export async function actionFavori(id: string, voulu?: boolean): Promise<ResultatFavori> {
+  const c = await compteConnecte()
+  if (!c) return { ok: false, erreur: "Connectez-vous pour garder vos favoris.", connexion: true }
+  if (!idAnnonceValide(id)) return { ok: false, erreur: "Annonce introuvable." }
+  if (!(await autoriser("favori", c.id, 120, 3600)))
+    return { ok: false, erreur: "Doucement : réessayez dans un instant." }
+  try {
+    const favori = await basculerFavori(c.id, id, voulu)
+    revalidatePath("/petites-annonces/mon-espace", "layout")
+    return { ok: true, favori }
+  } catch (e) {
+    return { ok: false, erreur: (e as Error).message }
+  }
+}
+
+/** « Vendue » : l'annonce quitte le site, et compte parmi les ventes de l'annonceur. */
+export async function actionVendue(id: string): Promise<Resultat> {
+  const c = await compteConnecte()
+  if (!c) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
+  const a = await miennePourModifier(id, c)
+  if (!a || !["publiee", "signalee", "expiree"].includes(a.statut))
+    return { ok: false, erreur: "Cette annonce ne peut pas être marquée vendue." }
+  a.vendueLe = Date.now()
+  await retirerParAnnonceur(a, "Vendue")
+  return { ok: true, url: `${ESPACE}/annonces?statut=terminees&vendue=1` }
+}
+
+/** Nom lisible d'une recherche : « vélo · Thionville · Loisirs & Sport ». */
+function nomRecherche(f: Filtres, categories: { slug: string; nom: string }[]) {
+  const morceaux = [
+    f.q,
+    f.lieu,
+    f.categorie && categories.find((x) => x.slug === f.categorie)?.nom,
+    f.pays,
+    f.prixMax !== undefined && `≤ ${f.prixMax} €`,
+    f.prixMin !== undefined && `≥ ${f.prixMin} €`,
+    f.etat,
+    f.annonceur === "pro"
+      ? "Professionnels"
+      : f.annonceur === "particulier"
+        ? "Particuliers"
+        : undefined,
+  ].filter(Boolean)
+  return morceaux.length ? morceaux.join(" · ") : "Toutes les annonces"
+}
+
+/** Enregistre la recherche affichée comme alerte (paramètres de l'adresse). */
+export async function actionCreerAlerte(
+  params: Record<string, string>,
+  categorieFixe?: string,
+): Promise<{ ok: true; message: string } | { ok: false; erreur: string; connexion?: boolean }> {
+  const c = await compteConnecte()
+  if (!c) return { ok: false, erreur: "Connectez-vous pour créer une alerte.", connexion: true }
+  if (!(await autoriser("alerte", c.id, 20, 3600)))
+    return { ok: false, erreur: "Trop d'alertes créées d'un coup. Réessayez plus tard." }
+  const f = lireFiltres(params)
+  if (categorieFixe) f.categorie = categorieFixe
+  if (f.categorie && !defCategorie(f.categorie)) f.categorie = undefined
+  delete f.tri
+  const cfg = await lireConfig()
+  try {
+    await creerAlerte(c.id, nomRecherche(f, cfg.categories), f)
+  } catch (e) {
+    return { ok: false, erreur: (e as Error).message }
+  }
+  revalidatePath("/petites-annonces/mon-espace", "layout")
+  return { ok: true, message: "Alerte créée : vous recevrez les nouvelles annonces par e-mail." }
+}
+
+export async function actionAlerteEmail(id: string, email: boolean) {
+  const c = await compteConnecte()
+  if (!c || !/^[a-f0-9]{12}$/.test(id)) return
+  await modifierAlerte(c.id, id, { email })
+  revalidatePath("/petites-annonces/mon-espace", "layout")
+}
+
+export async function actionSupprimerAlerte(id: string) {
+  const c = await compteConnecte()
+  if (!c || !/^[a-f0-9]{12}$/.test(id)) return
+  await supprimerAlerte(c.id, id)
+  revalidatePath("/petites-annonces/mon-espace", "layout")
+}
+
+export async function actionSupprimerMessage(id: string) {
+  const c = await compteConnecte()
+  if (!c || !/^[a-f0-9]{12}$/.test(id)) return
+  await supprimerMessage(c.id, id)
+  revalidatePath("/petites-annonces/mon-espace", "layout")
+}
+
+/** Sécurité : ferme les sessions des autres appareils, garde celle-ci. */
+export async function actionDeconnecterAutres(): Promise<Etat> {
+  const c = await compteConnecte()
+  if (!c) return { erreur: "Session expirée : reconnectez-vous." }
+  await revoquerSessions(c.id)
+  await ouvrirSession(c)
+  revalidatePath("/petites-annonces/mon-espace", "layout")
+  return { ok: "Les autres appareils sont déconnectés." }
+}
+
+/** « Retirer des favoris » depuis la page Favoris (formulaire, sans JavaScript). */
+export async function actionRetirerFavori(id: string) {
+  await actionFavori(id, false)
 }

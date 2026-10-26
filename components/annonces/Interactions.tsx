@@ -1,14 +1,27 @@
 "use client"
 
 import Link from "@/components/ui/Lien"
-import { Flag, Loader2, Send } from "lucide-react"
-import { useActionState, useState, useTransition } from "react"
+import {
+  Copy,
+  Eye,
+  Flag,
+  Loader2,
+  MoreHorizontal,
+  PartyPopper,
+  PencilLine,
+  Rocket,
+  Send,
+  Share2,
+  Undo2,
+} from "lucide-react"
+import { useActionState, useEffect, useRef, useState, useTransition } from "react"
 import {
   actionContacter,
   actionOptions,
   actionPayer,
   actionRetirer,
   actionSignaler,
+  actionVendue,
 } from "@/app/petites-annonces/actions"
 import { euros, type Offre } from "@/lib/annonces/offres"
 import { cn } from "@/lib/utils/cn"
@@ -211,26 +224,47 @@ export function Signalement({ annonce, connecte }: { annonce: string; connecte: 
   )
 }
 
-/** Boutons d'une annonce dans « Mes annonces ». */
+/**
+ * Boutons d'une annonce dans « Mes annonces » : l'action qui compte selon
+ * l'état (régler, booster, remettre en ligne), puis modifier, voir,
+ * partager, et le reste dans « Plus » (dupliquer, vendue, retirer).
+ */
 export function ActionsMonAnnonce({
   id,
   statut,
   modifiable,
   options,
   particulier,
+  lien,
+  titre,
 }: {
   id: string
   statut: string
   modifiable: boolean
   options: Pick<Offre, "code" | "nom" | "description" | "prixCentimes" | "effet">[]
   particulier: boolean
+  /** Adresse publique, si l'annonce est en ligne. */
+  lien?: string
+  titre: string
 }) {
   const [enCours, demarrer] = useTransition()
   const [erreur, setErreur] = useState<string | null>(null)
   const [choix, setChoix] = useState<string[]>([])
   const [execution, setExecution] = useState(false)
-  const [confirmer, setConfirmer] = useState(false)
+  const [confirmer, setConfirmer] = useState<"retirer" | "vendue" | null>(null)
   const [ouvrirOptions, setOuvrirOptions] = useState(false)
+  const [copie, setCopie] = useState(false)
+  const menu = useRef<HTMLDetailsElement>(null)
+  const fermerMenu = () => menu.current?.removeAttribute("open")
+
+  // Le menu « Plus » se referme quand on touche ailleurs.
+  useEffect(() => {
+    const ailleurs = (e: PointerEvent) => {
+      if (menu.current?.open && !menu.current.contains(e.target as Node)) fermerMenu()
+    }
+    document.addEventListener("pointerdown", ailleurs)
+    return () => document.removeEventListener("pointerdown", ailleurs)
+  }, [])
 
   const lancer = (f: () => Promise<{ ok: true; url: string } | { ok: false; erreur: string }>) =>
     demarrer(async () => {
@@ -240,60 +274,147 @@ export function ActionsMonAnnonce({
       window.location.assign(r.url)
     })
 
+  const partager = async () => {
+    if (!lien) return
+    try {
+      if (navigator.share) await navigator.share({ title: titre, url: lien })
+      else {
+        await navigator.clipboard.writeText(lien)
+        setCopie(true)
+        setTimeout(() => setCopie(false), 2200)
+      }
+    } catch {
+      /* partage annulé */
+    }
+  }
+
   const aPayer = options
     .filter((o) => choix.includes(o.code))
     .reduce((n, o) => n + o.prixCentimes, 0)
+  const vendable = ["publiee", "signalee", "expiree"].includes(statut)
+  const retirable = !["retiree", "refusee"].includes(statut)
 
   return (
-    <div className="mt-3 space-y-3">
-      <div className="flex flex-wrap gap-2">
+    <div className="mt-3.5 space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
         {statut === "attente_paiement" && (
           <button
             type="button"
             disabled={enCours}
             onClick={() => lancer(() => actionPayer(id))}
-            className="btn btn-accent min-h-10 text-sm"
+            className="btn btn-accent min-h-10 px-4 text-sm"
           >
             Régler maintenant
           </button>
-        )}
-        {modifiable && (
-          <Link href={`/deposer?modifier=${id}`} className="btn btn-trait min-h-10 text-sm">
-            Modifier
-          </Link>
         )}
         {options.length > 0 && (
           <button
             type="button"
             onClick={() => setOuvrirOptions((v) => !v)}
             aria-expanded={ouvrirOptions}
-            className="btn btn-trait min-h-10 text-sm"
+            className="btn btn-accent min-h-10 px-4 text-sm"
           >
+            <Rocket className="size-4" aria-hidden />
             {statut === "expiree" ? "Remettre en ligne" : "Booster"}
           </button>
         )}
-        {!["retiree", "refusee"].includes(statut) &&
-          (confirmer ? (
+        {modifiable && (
+          <Link href={`/deposer?modifier=${id}`} className="btn btn-trait min-h-10 px-3.5 text-sm">
+            <PencilLine className="size-4" aria-hidden />
+            Modifier
+          </Link>
+        )}
+        {lien && (
+          <>
+            <Link href={lien} className="btn btn-trait min-h-10 px-3.5 text-sm">
+              <Eye className="size-4" aria-hidden />
+              Voir
+            </Link>
             <button
               type="button"
-              disabled={enCours}
-              onClick={() => lancer(() => actionRetirer(id))}
-              className="btn btn-plein min-h-10 text-sm"
+              onClick={partager}
+              className="btn btn-trait min-h-10 px-3.5 text-sm"
             >
-              Confirmer le retrait
+              <Share2 className="size-4" aria-hidden />
+              {copie ? "Lien copié" : "Partager"}
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setConfirmer(true)}
-              className="btn btn-trait min-h-10 text-sm"
+          </>
+        )}
+        <details ref={menu} className="menu-plus relative">
+          <summary
+            className="btn btn-trait min-h-10 cursor-pointer list-none px-3 text-sm"
+            aria-label="Plus d'actions"
+          >
+            <MoreHorizontal className="size-4" aria-hidden />
+          </summary>
+          <div className="bg-surface border-trait absolute right-0 z-30 mt-2 w-60 rounded-xl border p-1.5 shadow-xl sm:right-auto sm:left-0">
+            <Link
+              href={`/deposer?copier=${id}`}
+              className="hover:bg-papier-2 flex min-h-10 items-center gap-2.5 rounded-lg px-3 text-sm font-semibold"
             >
-              Retirer
-            </button>
-          ))}
+              <Copy className="size-4" aria-hidden />
+              Dupliquer (nouvelle annonce)
+            </Link>
+            {vendable && (
+              <button
+                type="button"
+                onClick={() => {
+                  fermerMenu()
+                  setConfirmer("vendue")
+                }}
+                className="hover:bg-papier-2 flex min-h-10 w-full items-center gap-2.5 rounded-lg px-3 text-left text-sm font-semibold"
+              >
+                <PartyPopper className="size-4" aria-hidden />
+                Marquer comme vendue
+              </button>
+            )}
+            {retirable && (
+              <button
+                type="button"
+                onClick={() => {
+                  fermerMenu()
+                  setConfirmer("retirer")
+                }}
+                className="hover:bg-papier-2 flex min-h-10 w-full items-center gap-2.5 rounded-lg px-3 text-left text-sm font-semibold"
+              >
+                <Undo2 className="size-4" aria-hidden />
+                Retirer du site
+              </button>
+            )}
+          </div>
+        </details>
       </div>
+
+      {confirmer && (
+        <div className="bg-papier-2 flex flex-wrap items-center gap-2 rounded-xl p-3 text-sm">
+          <p className="min-w-0 flex-1 font-semibold">
+            {confirmer === "vendue"
+              ? "Bravo ! L'annonce quitte le site et compte parmi vos ventes."
+              : "L'annonce quitte le site. Vous pourrez toujours la dupliquer."}
+          </p>
+          <button
+            type="button"
+            disabled={enCours}
+            onClick={() =>
+              lancer(() => (confirmer === "vendue" ? actionVendue(id) : actionRetirer(id)))
+            }
+            className="btn btn-plein min-h-9 px-3.5 text-sm"
+          >
+            {enCours && <Loader2 className="size-4 animate-spin" aria-hidden />}
+            {confirmer === "vendue" ? "Oui, c'est vendu" : "Retirer"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setConfirmer(null)}
+            className="btn btn-trait min-h-9 px-3.5 text-sm"
+          >
+            Annuler
+          </button>
+        </div>
+      )}
+
       {ouvrirOptions && (
-        <div className="border-trait space-y-2 rounded-lg border p-3">
+        <div className="border-trait space-y-2 rounded-xl border p-3">
           {options.map((o) => {
             const coche = choix.includes(o.code)
             return (

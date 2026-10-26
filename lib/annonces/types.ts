@@ -103,6 +103,8 @@ export interface Annonce extends Omit<AnnoncePublique, "publieeLe" | "remonteeLe
   commande?: string
   signalements?: number
   avertiExpiration?: number
+  /** Retirée parce que vendue (ou pourvue), selon l'annonceur. */
+  vendueLe?: number
 }
 
 /** La mise en avant est-elle en cours ? */

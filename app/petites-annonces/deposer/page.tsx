@@ -29,6 +29,7 @@ const ETAPES = [
 export default async function PageDeposer(props: PageProps<"/petites-annonces/deposer">) {
   const sp = await props.searchParams
   const modifier = typeof sp.modifier === "string" ? sp.modifier : undefined
+  const copier = typeof sp.copier === "string" ? sp.copier : undefined
   const c = await compteConnecte()
   if (!c)
     redirect(
@@ -73,7 +74,7 @@ export default async function PageDeposer(props: PageProps<"/petites-annonces/de
       <EtatVide
         titre="Il manque les informations de votre entreprise"
         actions={
-          <Link href="/mon-espace#compte" className="btn btn-plein">
+          <Link href="/mon-espace/compte" className="btn btn-plein">
             Compléter mon compte
           </Link>
         }
@@ -135,12 +136,31 @@ export default async function PageDeposer(props: PageProps<"/petites-annonces/de
         Retirez une annonce vendue pour en déposer une nouvelle.
       </EtatVide>,
     )
+  // « Dupliquer » une de ses annonces : le texte repart, les photos sont à remettre.
+  const origine = copier && idAnnonceValide(copier) ? await lireAnnonce(copier) : null
+  const modele =
+    origine && origine.compte === c.id
+      ? {
+          categorie: categoriesOuvertes(cfg).some((x) => x.slug === origine.categorie)
+            ? origine.categorie
+            : "",
+          titre: origine.titre,
+          description: origine.description,
+          prix: origine.prix,
+          mention: origine.mention,
+          pays: origine.pays,
+          ville: origine.ville,
+          codePostal: origine.codePostal,
+          details: origine.details,
+        }
+      : undefined
   return cadre(
     <FormulaireDepot
       categories={categoriesOuvertes(cfg)}
       offres={cfg.offres}
       annonceur={c.type}
       paiementOuvert={stripeActif()}
+      modele={modele}
     />,
   )
 }
