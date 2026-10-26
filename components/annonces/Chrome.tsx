@@ -3,7 +3,9 @@ import Link from "next/link"
 import { JsonLd } from "@/components/ui/JsonLd"
 import { Logo } from "@/components/marque/Logo"
 import { site } from "@/config/site"
+import { OngletMessages } from "@/components/annonces/espace/NonLus"
 import { compteConnecte } from "@/lib/annonces/comptes"
+import { nonLus } from "@/lib/annonces/espace"
 import { lienAnnonces } from "@/lib/annonces/liens"
 import { cn } from "@/lib/utils/cn"
 
@@ -26,8 +28,10 @@ export async function EnTeteAnnonces() {
           aria-label="Les Petites Annonces du Tripoint — accueil"
         >
           <Logo sombre taille={44} className="size-10 flex-none sm:size-11" />
-          {/* Trop étroit pour le nom : le logo seul, plutôt qu'un nom qui passe sous « Déposer ». */}
-          <span className="min-w-0 leading-none @max-[17rem]:hidden">
+          {/* Trop étroit pour le nom : le logo seul, plutôt qu'un nom qui passe sous « Déposer ».
+              Et si la police tarde (la police de secours est plus large), le nom est
+              coupé au bord plutôt que de déborder. */}
+          <span className="min-w-0 overflow-x-clip leading-none @max-[20rem]:hidden">
             <span className="text-nuit-accent hidden text-[0.62rem] font-extrabold tracking-[0.14em] uppercase sm:block">
               Radio Tripoint
             </span>
@@ -45,14 +49,17 @@ export async function EnTeteAnnonces() {
           <Plus className="size-4" aria-hidden />
           Déposer
         </Link>
-        <Link
-          href={compte ? "/mon-espace" : "/connexion"}
-          className="hover:bg-nuit-2 -mr-1 inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-1.5 text-sm font-bold sm:mr-0 sm:px-3"
-          aria-label={compte ? "Mon espace" : "Se connecter"}
-        >
-          <CircleUserRound className="size-6" aria-hidden />
-          <span className="hidden sm:inline">{compte ? "Mon espace" : "Se connecter"}</span>
-        </Link>
+        <div className="-mr-1 flex flex-none items-center sm:mr-0 sm:gap-1">
+          <OngletMessages connecte={!!compte} initial={compte ? await nonLus(compte.id) : 0} />
+          <Link
+            href={compte ? "/mon-espace" : "/connexion"}
+            className="hover:bg-nuit-2 inline-flex min-h-10 flex-none items-center gap-1.5 rounded-full px-1.5 text-sm font-bold sm:px-3"
+            aria-label={compte ? "Mon espace" : "Se connecter"}
+          >
+            <CircleUserRound className="size-6" aria-hidden />
+            <span className="hidden sm:inline">{compte ? "Mon espace" : "Se connecter"}</span>
+          </Link>
+        </div>
       </div>
     </header>
   )

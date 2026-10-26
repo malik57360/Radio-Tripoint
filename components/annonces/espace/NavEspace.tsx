@@ -13,6 +13,7 @@ import {
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils/cn"
+import { useNonLus } from "./NonLus"
 
 /**
  * Menu de « Mon espace » : colonne à gauche sur ordinateur, bande qui
@@ -41,13 +42,15 @@ const ATTENTION: (keyof Compteurs)[] = ["messages", "alertes"]
 
 export function NavEspace({ compteurs }: { compteurs: Compteurs }) {
   const chemin = usePathname().replace(/^\/petites-annonces/, "") || "/"
+  // Les messages non lus se relisent d'une page à l'autre (le cadre, lui, ne se redessine pas).
+  const messages = useNonLus(compteurs.messages)
   const actif = (href: string) =>
     href === "/mon-espace" ? chemin === href : chemin === href || chemin.startsWith(`${href}/`)
   return (
     <nav aria-label="Mon espace" className="nav-espace">
       <ul className="flex gap-1.5 overflow-x-auto pb-1 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:pb-0">
         {ENTREES.map(({ href, nom, icone: Icone, cle }) => {
-          const n = cle ? compteurs[cle] : 0
+          const n = cle === "messages" ? messages : cle ? compteurs[cle] : 0
           const on = actif(href)
           return (
             <li key={href} className="flex-none">
