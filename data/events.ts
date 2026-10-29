@@ -974,4 +974,61 @@ export const evenements: Evenement[] = [
       lieu: "Place de la Liberté, Thionville",
     },
   },
+  {
+    slug: "rallye-halloween-thionville-2026",
+    titre: "Rallye d'Halloween",
+    description:
+      "Pays Thionvillois Tourisme propose un rallye pour découvrir Thionville sous le signe d'Halloween. Départ à 15 h de l'office de tourisme. Réservation obligatoire.",
+    debut: "2026-10-31T15:00:00+01:00",
+    lieu: "Office de tourisme du Pays Thionvillois",
+    adresse: "31 place Anne Grommerch, 57100 Thionville",
+    ville: "Thionville",
+    pays: "FR",
+    organisateur: "Pays Thionvillois Tourisme",
+    lienExterne: "https://www.info-lux.com/?p=1700594",
+    flyer: {
+      titre: "Rallye d'Halloween",
+      accroche: "Thionville à découvrir, sur réservation",
+      lieu: "Office de tourisme, Thionville",
+    },
+  },
+  {
+    slug: "cine-culte-halloween-poltergeist-thionville-2026",
+    titre: "Ciné-Culte spécial Halloween : Poltergeist",
+    description:
+      "Séance Ciné-Culte spéciale Halloween : projection de Poltergeist, de Tobe Hooper (1982), en version française. Tarif annoncé : 7 €.",
+    debut: "2026-10-31T18:00:00+01:00",
+    fin: "2026-10-31T20:00:00+01:00",
+    lieu: "Cinéma La Scala",
+    adresse: "63 boulevard Foch, 57100 Thionville",
+    ville: "Thionville",
+    pays: "FR",
+    lienExterne:
+      "https://www.jds.fr/thionville/manifestations/halloween/cine-culte-special-halloween-1687061_A",
+    flyer: {
+      titre: "Ciné-Culte : Poltergeist",
+      accroche: "Le classique de 1982 en VF, spécial Halloween",
+      tarif: "7 €",
+      lieu: "La Scala, Thionville",
+    },
+  },
+  {
+    slug: "rocky-horror-picture-show-halloween-thionville-2026",
+    titre: "Soirée spéciale Halloween : The Rocky Horror Picture Show",
+    description:
+      "Projection de The Rocky Horror Picture Show (1975), présentée par les drag queens de l'association Osmose Thionville.",
+    debut: "2026-10-31T20:30:00+01:00",
+    fin: "2026-10-31T23:00:00+01:00",
+    lieu: "Cinéma La Scala",
+    adresse: "63 boulevard Foch, 57100 Thionville",
+    ville: "Thionville",
+    pays: "FR",
+    lienExterne:
+      "https://www.jds.fr/thionville/manifestations/halloween/soiree-speciale-halloween-1687076_A",
+    flyer: {
+      titre: "Rocky Horror Picture Show",
+      accroche: "Présenté par les drag queens d'Osmose Thionville",
+      lieu: "La Scala, Thionville",
+    },
+  },
 ]
