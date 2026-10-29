@@ -25,6 +25,19 @@ const SITE_ANNONCES = (
 const HOTE_ANNONCES = new URL(SITE_ANNONCES).hostname
 const DOSSIER_ANNONCES = "/petites-annonces"
 
+/**
+ * Le site de Zaza Riviera Herbs, servi depuis app/zaza : à son propre domaine
+ * (zaza-riviera-herbs.com, une fois ses DNS chez Gandi pointés vers Vercel),
+ * à un sous-domaine de la radio, et en attendant à une adresse vercel.app.
+ */
+const HOTES_ZAZA = new Set([
+  new URL(process.env.NEXT_PUBLIC_ZAZA_URL ?? "https://zaza.radio-tripoint-officiel.fr").hostname,
+  "zaza-riviera-herbs.com",
+  "www.zaza-riviera-herbs.com",
+  "zaza-riviera-herbs.vercel.app",
+])
+const DOSSIER_ZAZA = "/zaza"
+
 export function proxy(request: NextRequest) {
   const hote = (request.headers.get("host") ?? "").split(":")[0].toLowerCase()
   if (HOTES_TRIPO.test(hote)) {
@@ -44,6 +57,17 @@ export function proxy(request: NextRequest) {
     }
     const url = request.nextUrl.clone()
     url.pathname = `${DOSSIER_ANNONCES}${pathname === "/" ? "" : pathname}`
+    return NextResponse.rewrite(url)
+  }
+
+  if (HOTES_ZAZA.has(hote)) {
+    if (pathname === DOSSIER_ZAZA || pathname.startsWith(`${DOSSIER_ZAZA}/`)) {
+      const url = request.nextUrl.clone()
+      url.pathname = pathname.slice(DOSSIER_ZAZA.length) || "/"
+      return NextResponse.redirect(url, 308)
+    }
+    const url = request.nextUrl.clone()
+    url.pathname = `${DOSSIER_ZAZA}${pathname === "/" ? "" : pathname}`
     return NextResponse.rewrite(url)
   }
 

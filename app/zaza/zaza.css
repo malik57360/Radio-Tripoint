@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/*
+ * ZAZA RIVIERA HERBS — système visuel
+ * ─────────────────────────────────────────────────────────────────────────
+ * Concept : LA DEVANTURE DE LA RIVIERA. Pas de photos (pas encore) : le site
+ * se dessine comme une boutique d'apothicaire en bord de mer.
+ *
+ * Couleurs : celles du logo de Giorgio. Le NOIR du médaillon, le VERT
+ * CHANVRE de la feuille, et le dégradé des palmes (TURQUOISE → MENTHE →
+ * SABLE), posés sur un fond crème.
+ *
+ * Trois signatures, et elles seules :
+ *  1. Le store rayé à festons (.store) — noir et crème, comme l'auvent
+ *     d'une boutique. Il ouvre chaque grande partie.
+ *  2. Les étiquettes numérotées (.etiquette) — chaque produit est présenté
+ *     comme une étiquette de flacon : filet de couleur de son univers,
+ *     numéro, dessin au trait. Elles remplacent les photos.
+ *  3. Le médaillon sur le soleil — le logo posé sur un soleil couchant aux
+ *     couleurs des palmes. Seule animation d'entrée.
+ *
+ * Règles :
+ *  - Toutes les couleurs passent par les jetons ci-dessous.
+ *  - Le vert chanvre et le turquoise sont des lumières (points, filets,
+ *    soleil) : jamais en texte sur le crème, où ils sont illisibles.
+ *  - Les teintes d'univers (--t-*) ne servent qu'aux filets et aux dessins.
+ */
+
+@theme {
+  --color-creme: #f4eee2;
+  --color-creme-2: #ebe1cc;
+  --color-papier: #fbf8f1;
+  --color-nuit: #0e100f;
+  --color-nuit-2: #1d211e;
+  --color-chanvre: #98e36b;
+  --color-turquoise: #94f1f5;
+  --color-menthe: #b7e3b8;
+  --color-or: #c9a443;
+  --color-or-clair: #e2cb77;
+  --color-encre: #141714;
+  --color-encre-2: #4f5650;
+  --color-filet: #d9cdb5;
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+  --t-fleurs: #3f7a52;
+  --t-huiles: #b5842c;
+  --t-preroules: #96683f;
+  --t-vapes: #2f6a72;
+  --t-gummies: #964060;
+  --t-soins: #ad6a57;
+  --t-parfum: #69588c;
+  --t-maison: #a3672e;
+  --t-packs: #3e5b7e;
+  --t-boissons: #2d7a69;
+  --t-sport: #7d5c33;
+  --t-animaux: #6f6a4a;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--color-creme);
+  color: var(--color-encre);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  text-rendering: geometricPrecision;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-or);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── 1. Le store rayé ─────────────────────────────────────────────────── */
+
+.store {
+  --raie: 28px;
+  position: relative;
+  height: 16px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-nuit) 0 var(--raie),
+    var(--color-papier) var(--raie) calc(2 * var(--raie))
+  );
+}
+
+/* Les festons : un demi-disque par raie, de la couleur de sa raie. */
+.store::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 auto;
+  height: calc(var(--raie) / 2);
+  background: inherit;
+  mask: radial-gradient(
+      circle at calc(var(--raie) / 2) 0,
+      #000 calc(var(--raie) / 2 - 0.5px),
+      transparent calc(var(--raie) / 2)
+    )
+    0 0 / var(--raie) calc(var(--raie) / 2) repeat-x;
+}
+
+.store-or {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-or) 0 var(--raie),
+    var(--color-papier) var(--raie) calc(2 * var(--raie))
+  );
+}
+
+/* ── 2. Les étiquettes ────────────────────────────────────────────────── */
+
+.etiquette {
+  position: relative;
+  background: var(--color-papier);
+  border: 1px solid var(--color-filet);
+  border-radius: 10px;
+  box-shadow:
+    0 1px 0 rgb(21 33 27 / 0.04),
+    0 14px 30px -18px rgb(21 33 27 / 0.35);
+}
+
+/* Le filet intérieur, à la couleur de l'univers. */
+.etiquette::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid var(--teinte, var(--color-nuit));
+  border-radius: 6px;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.lien-etiquette .etiquette {
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.35s;
+}
+
+.lien-etiquette:hover .etiquette {
+  transform: translateY(-4px) rotate(-0.6deg);
+  box-shadow:
+    0 1px 0 rgb(21 33 27 / 0.04),
+    0 22px 40px -20px rgb(21 33 27 / 0.45);
+}
+
+.a-completer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  border: 1px dashed var(--color-or);
+  border-radius: 999px;
+  padding: 0.15em 0.6em;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #8a6420;
+  background: rgb(236 202 127 / 0.18);
+}
+
+/* ── 3. Le soleil et la feuille ───────────────────────────────────────── */
+
+.soleil {
+  animation: leve 1.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.medaillon {
+  animation: pose 1.2s 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  filter: drop-shadow(0 24px 30px rgb(14 16 15 / 0.35));
+}
+
+.trace path,
+.trace line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: trace 1.6s cubic-bezier(0.6, 0.1, 0.2, 1) forwards;
+  animation-delay: calc(0.35s + var(--i, 0) * 0.09s);
+}
+
+@keyframes leve {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92);
+  }
+}
+
+@keyframes pose {
+  from {
+    opacity: 0;
+    transform: scale(0.9) rotate(-8deg);
+  }
+}
+
+@keyframes trace {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Tiroir du panier */
+.tiroir {
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.voile {
+  transition: opacity 0.35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .soleil,
+  .medaillon,
+  .trace path,
+  .trace line {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .tiroir,
+  .voile,
+  .lien-etiquette .etiquette {
+    transition: none;
+  }
+}
+
+/* Défilement horizontal sans barre (univers sur téléphone) */
+.sans-barre {
+  scrollbar-width: none;
+}
+.sans-barre::-webkit-scrollbar {
+  display: none;
+}

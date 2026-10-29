@@ -78,6 +78,8 @@ const nextConfig: NextConfig = {
         hostname: "*.public.blob.vercel-storage.com",
         pathname: "/articles/**",
       },
+      // Site de Zaza : photos de l'ancienne boutique en ligne de Giorgio (WiziShop).
+      { protocol: "https", hostname: "media.cdnws.com", pathname: "/_i/330385/**" },
     ],
     formats: ["image/avif", "image/webp"],
   },
