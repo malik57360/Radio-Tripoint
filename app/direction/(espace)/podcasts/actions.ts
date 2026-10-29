@@ -9,7 +9,7 @@ import { listerEmissions } from "@/lib/contenu/emissions"
 import { CLE_PODCASTS, TAG_PODCASTS, type EpisodeDashboard } from "@/lib/contenu/podcasts-dashboard"
 import { estConnecte } from "@/lib/direction/acces"
 import { isoParis, URL_AUDIO } from "@/lib/direction/podcasts"
-import { redis } from "@/lib/direction/redis"
+import { erreurRedis, redis } from "@/lib/direction/redis"
 import { traduireEpisode } from "@/lib/direction/traduction-podcasts"
 import { versSlug } from "@/lib/utils/texte"
 import type { ThemePodcast } from "@/types/podcast"
@@ -119,7 +119,7 @@ export async function actionPublierPodcast(donnees: DonneesPodcast): Promise<Res
     .replace(/-+$/, "")
   if (base.length < 4) return { ok: false, erreur: "Titre invalide." }
   const cles = await redis([["HKEYS", CLE_PODCASTS]])
-  if (!cles) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!cles) return { ok: false, erreur: erreurRedis() }
   const pris = new Set([...episodesDepot.map((e) => e.slug), ...((cles[0] as string[]) ?? [])])
   let slug = base
   for (let i = 2; pris.has(slug); i++) slug = `${base}-${i}`
@@ -135,7 +135,7 @@ export async function actionPublierPodcast(donnees: DonneesPodcast): Promise<Res
     audioUrl: d.audio.url,
   }
   const r = await redis([["HSET", CLE_PODCASTS, slug, JSON.stringify(episode)]])
-  if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!r || r[0] === null) return { ok: false, erreur: erreurRedis() }
   rafraichir()
   traduirePlusTard(slug)
   return {
@@ -155,8 +155,7 @@ export async function actionModifierPodcast(
   if ("erreur" in v) return { ok: false, erreur: v.erreur }
   const { d, publieLe } = v
   const ancien = await lire(slug)
-  if (ancien === "injoignable")
-    return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (ancien === "injoignable") return { ok: false, erreur: erreurRedis() }
   if (!ancien) return { ok: false, erreur: "Podcast introuvable : il a peut-être été retiré." }
 
   const episode: EpisodeDashboard = {
@@ -172,7 +171,7 @@ export async function actionModifierPodcast(
     ...(ancien.traductions ? { traductions: ancien.traductions } : {}),
   }
   const r = await redis([["HSET", CLE_PODCASTS, slug, JSON.stringify(episode)]])
-  if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!r || r[0] === null) return { ok: false, erreur: erreurRedis() }
   rafraichir()
   if (episode.audioUrl !== ancien.audioUrl) supprimerPlusTard(ancien.audioUrl)
   traduirePlusTard(slug)
@@ -183,11 +182,10 @@ export async function actionRetirerPodcast(slug: unknown): Promise<Resultat> {
   if (!(await estConnecte())) return { ok: false, erreur: "Session expirée : reconnectez-vous." }
   if (!slugValide(slug)) return { ok: false, erreur: "Podcast invalide." }
   const ancien = await lire(slug)
-  if (ancien === "injoignable")
-    return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (ancien === "injoignable") return { ok: false, erreur: erreurRedis() }
   if (!ancien) return { ok: false, erreur: "Podcast introuvable." }
   const r = await redis([["HDEL", CLE_PODCASTS, slug]])
-  if (!r) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!r) return { ok: false, erreur: erreurRedis() }
   rafraichir()
   supprimerPlusTard(ancien.audioUrl)
   return { ok: true, message: "Podcast retiré du site." }

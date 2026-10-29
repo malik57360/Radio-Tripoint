@@ -8,7 +8,7 @@ import { categories } from "@/data/categories"
 import { CLE_ARTICLES, TAG_ARTICLES } from "@/lib/contenu/articles-dashboard"
 import { slugsArticles } from "@/lib/contenu/articles"
 import { estConnecte } from "@/lib/direction/acces"
-import { redis } from "@/lib/direction/redis"
+import { erreurRedis, redis } from "@/lib/direction/redis"
 import { oublierTraductions, traduireArticle } from "@/lib/direction/traduction-articles"
 import { versSlug } from "@/lib/utils/texte"
 import type { Article } from "@/types/article"
@@ -211,7 +211,7 @@ export async function actionPublierArticle(donnees: DonneesArticle): Promise<Res
 
   const article = construire(slug, d, maintenantParis())
   const r = await redis([["HSET", CLE_ARTICLES, slug, JSON.stringify(article)]])
-  if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!r || r[0] === null) return { ok: false, erreur: erreurRedis() }
   revalidateTag(TAG_ARTICLES, { expire: 0 })
   revalidatePath("/direction/articles")
   traduirePlusTard(slug)
@@ -236,7 +236,7 @@ export async function actionModifierArticle(
   const v = schema.safeParse(donnees)
   if (!v.success) return { ok: false, erreur: v.error.issues[0]?.message ?? "Formulaire invalide." }
   const lu = await redis([["HGET", CLE_ARTICLES, slug]])
-  if (!lu) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!lu) return { ok: false, erreur: erreurRedis() }
   if (typeof lu[0] !== "string")
     return { ok: false, erreur: "Article introuvable : il a peut-être été retiré." }
   let ancien: Article
@@ -251,7 +251,7 @@ export async function actionModifierArticle(
     modifieLe: maintenantParis(),
   }
   const r = await redis([["HSET", CLE_ARTICLES, slug, JSON.stringify(article)]])
-  if (!r || r[0] === null) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!r || r[0] === null) return { ok: false, erreur: erreurRedis() }
   revalidateTag(TAG_ARTICLES, { expire: 0 })
   revalidatePath("/direction/articles")
   const gardees = new Set(photosDe(article))
@@ -271,7 +271,7 @@ export async function actionRetirerArticle(slug: unknown): Promise<Resultat> {
   const lu = await redis([["HGET", CLE_ARTICLES, slug]])
   if (!lu || typeof lu[0] !== "string") return { ok: false, erreur: "Article introuvable." }
   const r = await redis([["HDEL", CLE_ARTICLES, slug]])
-  if (!r) return { ok: false, erreur: "Base de données injoignable : réessayez." }
+  if (!r) return { ok: false, erreur: erreurRedis() }
   await oublierTraductions(slug).catch(() => {})
   revalidateTag(TAG_ARTICLES, { expire: 0 })
   revalidatePath("/direction/articles")

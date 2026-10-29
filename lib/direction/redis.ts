@@ -19,10 +19,36 @@ export const redisActif = () => acces() !== null
 /** URL et jeton REST, pour les lectures mises en cache par Next (GET + tags). */
 export const accesRedis = acces
 
+/**
+ * Raison du dernier refus de Redis (statut HTTP et texte d'Upstash, jamais
+ * le jeton), pour que le tableau de bord dise pourquoi au lieu de « réessayez ».
+ */
+let dernierRefus: string | null = null
+
+function refus(raison: string) {
+  dernierRefus = raison.slice(0, 200)
+  console.error("[redis]", dernierRefus)
+}
+
+/** Message d'échec d'écriture pour le tableau de bord, avec la cause quand elle est connue. */
+export function erreurRedis() {
+  const r = dernierRefus ?? ""
+  if (/limit/i.test(r))
+    return "Base de données saturée : le quota mensuel de requêtes Upstash est atteint."
+  if (/variables/.test(r)) return "Base de données non branchée : variables Redis absentes."
+  return r
+    ? `Base de données injoignable (${r}) : réessayez.`
+    : "Base de données injoignable : réessayez."
+}
+
 /** Exécute un lot de commandes ; null si Redis n'est pas branché ou ne répond pas. */
 export async function redis(commandes: Commande[]): Promise<unknown[] | null> {
   const a = acces()
-  if (!a || commandes.length === 0) return null
+  if (commandes.length === 0) return null
+  if (!a) {
+    refus("variables Redis absentes")
+    return null
+  }
   try {
     const r = await fetch(`${a.url}/pipeline`, {
       method: "POST",
@@ -31,10 +57,16 @@ export async function redis(commandes: Commande[]): Promise<unknown[] | null> {
       cache: "no-store",
       signal: AbortSignal.timeout(3000),
     })
-    if (!r.ok) return null
+    if (!r.ok) {
+      refus(`HTTP ${r.status} ${(await r.text().catch(() => "")).trim()}`)
+      return null
+    }
     const lignes = (await r.json()) as { result?: unknown; error?: string }[]
+    const erreur = lignes.find((l) => l.error)?.error
+    if (erreur) refus(erreur)
     return lignes.map((l) => (l.error ? null : (l.result ?? null)))
-  } catch {
+  } catch (e) {
+    refus((e as Error).name === "TimeoutError" ? "délai de 3 s dépassé" : (e as Error).message)
     return null
   }
 }
