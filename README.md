@@ -35,6 +35,11 @@ sur le disque, qui se remplit vite dans le conteneur.
 | --- | --- | --- |
 | `TripoWeekend` | `src/agenda/TripoWeekend.tsx` | `python3 son/son_weekend.py son/bande.wav` |
 | `GenZPolitique` | `src/reportage/GenZPolitique.tsx` | `python3 son/son_genz_politique.py <parole.wav> son/genz-politique.wav` |
+| `Decouverte1` à `5` | `src/decouverte/Decouverte.tsx` | le son du clip (`./rendre-decouvertes.sh`) |
+
+Découverte musicale du week-end : le clip recadré depuis l'enregistrement
+d'écran YouTube (sans pubs ni boutons), en carte sur sa propre image
+floutée ; artiste, titre, infos vérifiées (sinon rien) et chaîne YouTube.
 
 Habillage des reportages : `src/reportage/habillage.tsx` (titre Anton
 blanc et or, cartouche « Reportage · Radio Tripoint », nom à l'écran,
