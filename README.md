@@ -36,6 +36,16 @@ sur le disque, qui se remplit vite dans le conteneur.
 | `TripoWeekend` | `src/agenda/TripoWeekend.tsx` | `python3 son/son_weekend.py son/bande.wav` |
 | `GenZPolitique` | `src/reportage/GenZPolitique.tsx` | `python3 son/son_genz_politique.py <parole.wav> son/genz-politique.wav` |
 | `Decouverte1` à `5` | `src/decouverte/Decouverte.tsx` | le son du clip (`./rendre-decouvertes.sh`) |
+| `Decouvertes5` | `src/compil/Decouvertes5.tsx` | voix de Giorgio (`public/compil/voix-giorgio.wav`) puis les extraits |
+
+**Les 5 découvertes musicales du week-end** (`Decouvertes5`, chaque vendredi) :
+le format habituel, repris de la vidéo modèle. 22 s d'ouverture sur la voix
+de Giorgio (les 22 premières secondes du modèle : « Salut à toutes et à
+tous… C'est parti ! »), compte à rebours de 5 à 1 (8 s par titre, extrait
+le plus fort du clip), récapitulatif « La musique n'a pas de frontières ! ».
+Pour une nouvelle semaine : remplacer `TITRES` et `GENRES`, déposer les
+clips recadrés et leurs sons dans `public/decouvertes/`. La voix n'est pas
+dans ce dépôt public : elle vit dans le dépôt privé.
 
 Découverte musicale du week-end : le clip recadré depuis l'enregistrement
 d'écran YouTube (sans pubs ni boutons), en carte sur sa propre image

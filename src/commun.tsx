@@ -31,6 +31,9 @@ const POLICES: [string, string, string, string][] = [
   ["Montserrat", "montserrat-latin-600-italic.woff", "600", "italic"],
   ["Montserrat", "montserrat-latin-ext-800-normal.woff", "800", "normal"],
   ["Montserrat", "montserrat-latin-ext-900-normal.woff", "900", "normal"],
+  ["Montserrat", "montserrat-latin-ext-700-normal.woff", "700", "normal"],
+  ["Montserrat", "montserrat-latin-800-italic.woff", "800", "italic"],
+  ["Montserrat", "montserrat-latin-ext-800-italic.woff", "800", "italic"],
   // Titres des reportages : capitales étroites.
   ["Anton", "anton-latin-400-normal.woff", "400", "normal"],
   ["Anton", "anton-latin-ext-400-normal.woff", "400", "normal"],
