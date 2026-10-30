@@ -9,6 +9,7 @@ musique. Ramené à -14 LUFS.
   python3 son/son_zapping.py <dossier-sons> <sortie.wav>
 """
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -164,5 +165,11 @@ with tempfile.TemporaryDirectory() as d:
         w.setsampwidth(2)
         w.setframerate(TAUX)
         w.writeframes((np.clip(mix / max(1e-9, np.abs(mix).max()) * 0.9, -1, 1) * 32767).astype("<i2").tobytes())
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", brut, "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-ar", str(TAUX), "-ac", "2", sortie], check=True)
+    # Deux passes : loudnorm seul reste trop bas sur un montage si contrasté.
+    mesure = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", brut, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr
+    sonie = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", mesure)[-1])
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-y", "-i", brut, "-af", f"volume={-14 - sonie:.2f}dB,alimiter=limit=0.84:attack=1:release=60:level=false", "-ar", str(TAUX), "-ac", "2", sortie],
+        check=True,
+    )
 print("durée", round(total / FPS, 2), "s")

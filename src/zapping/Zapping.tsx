@@ -307,9 +307,10 @@ const Allumage: React.FC = () => {
         <AbsoluteFill style={{ background: `radial-gradient(ellipse 70% 50% at 50% 50%, rgba(133,70,194,0.55), rgba(0,0,0,0.9))`, opacity: prog(f, 16, 26) }} />
         <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", transform: `translateX(${secoue}px)` }}>
           <Img src={staticFile("logo.png")} style={{ width: 200, height: 200, borderRadius: 999, opacity: titre, marginBottom: 40 }} />
-          <div style={{ position: "relative", ...etroit(230), opacity: titre, transform: `scale(${1.8 - 0.8 * titre}) rotate(-4deg)` }}>
-            <span style={{ position: "absolute", left: 8, top: 0, color: "#ff2d6f", opacity: 0.8 }}>Le zapping</span>
-            <span style={{ position: "absolute", left: -8, top: 0, color: "#2de0ff", opacity: 0.8 }}>Le zapping</span>
+          <div style={{ position: "relative", ...etroit(200), whiteSpace: "nowrap", opacity: titre, transform: `scale(${1.8 - 0.8 * titre}) rotate(-4deg)` }}>
+            {/* Les deux copies décalées, rouge et cyan : l'image qui décroche. */}
+            <span style={{ position: "absolute", inset: 0, transform: "translate(9px, 3px)", color: "#ff2d6f", opacity: 0.8 }}>Le zapping</span>
+            <span style={{ position: "absolute", inset: 0, transform: "translate(-9px, -3px)", color: "#2de0ff", opacity: 0.8 }}>Le zapping</span>
             <span style={{ position: "relative" }}>Le zapping</span>
           </div>
           <div
