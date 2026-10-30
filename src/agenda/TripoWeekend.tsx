@@ -7,14 +7,21 @@
  * Nuit d'automne : fond violet nuit, lune orangée, brume qui glisse ; le
  * jaune de la radio pour les dates et les puces, l'orange pour Halloween.
  */
+import { useAudioData, visualizeAudio } from "@remotion/media-utils"
 import React from "react"
 import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion"
+import minutage from "../../public/agenda-voix/minutage.json"
 import { C, EXPO, Grain, SORTIE, prog, texte, titre } from "../commun"
 import { Mascotte } from "../Mascotte"
 
-export const INTRO = 120
-export const CARTE = 132
-export const OUTRO = 150
+/**
+ * Minutage écrit par son/son_agenda_voix.py : chaque scène dure le temps de
+ * la réplique de Tripo (voix tirée du modèle de heytripo.fr, outils/voix_tripo.py).
+ */
+export const INTRO = minutage.intro
+export const CARTES = minutage.cartes
+export const OUTRO = minutage.outro
+const VOIX = minutage.voix
 
 type Pays = "FR" | "DE"
 type Sortie = {
@@ -84,8 +91,9 @@ const SORTIES: Sortie[] = [
 /** Taille du titre d'une carte : le mot le plus long doit tenir sur 920 px. */
 const tailleTitre = (t: string) => Math.min(128, Math.floor(920 / (Math.max(...t.split(" ").map((m) => m.length)) * 0.74)))
 
-export const DUREE_TRIPO_WEEKEND = INTRO + SORTIES.length * CARTE + OUTRO
-const DEBUT_OUTRO = INTRO + SORTIES.length * CARTE
+const DEBUTS = CARTES.map((_, k) => INTRO + CARTES.slice(0, k).reduce((a, b) => a + b, 0))
+const DEBUT_OUTRO = INTRO + CARTES.reduce((a, b) => a + b, 0)
+export const DUREE_TRIPO_WEEKEND = DEBUT_OUTRO + OUTRO
 
 /* ─── Le décor ──────────────────────────────────────────────────────────── */
 
@@ -128,14 +136,27 @@ const Ciel: React.FC = () => {
   )
 }
 
-/** Tripo qui respire et cligne des yeux. */
-const Tripo: React.FC<{ taille: number; decalage?: number }> = ({ taille, decalage = 0 }) => {
+/** Force de la voix de Tripo (0 → 1) à l'image f de la vidéo, pour la réplique n. */
+const useParole = (n: number) => {
+  const f = useCurrentFrame()
+  const { fps } = useVideoConfig()
+  const v = VOIX.find((x) => x.n === n)
+  const donnees = useAudioData(staticFile(`agenda-voix/v${n}.wav`))
+  if (!v || !donnees) return 0
+  const local = f - v.image
+  if (local < 0 || local > donnees.durationInSeconds * fps) return 0
+  const niveaux = visualizeAudio({ fps, frame: local, audioData: donnees, numberOfSamples: 16 })
+  return Math.min(1, (niveaux.slice(0, 6).reduce((a, b) => a + b, 0) / 6) * 6)
+}
+
+/** Tripo qui respire, cligne des yeux, et sautille quand il parle. */
+const Tripo: React.FC<{ taille: number; decalage?: number; parole?: number }> = ({ taille, decalage = 0, parole = 0 }) => {
   const f = useCurrentFrame() + decalage
-  const souffle = Math.sin(f / 9) * 0.018
+  const souffle = Math.sin(f / 9) * 0.018 + parole * 0.06
   const cycle = f % 96
   const ouverture = cycle < 3 ? 1 - cycle / 3 : cycle < 6 ? (cycle - 3) / 3 : 1
   return (
-    <div style={{ width: taille, transform: `translateY(${Math.sin(f / 14) * 10}px) scale(${1 + souffle}, ${1 - souffle})`, transformOrigin: "50% 100%" }}>
+    <div style={{ width: taille, transform: `translateY(${Math.sin(f / 14) * 10 - parole * 18}px) scale(${1 - souffle * 0.5}, ${1 + souffle})`, transformOrigin: "50% 100%" }}>
       <Mascotte ouverture={ouverture} />
     </div>
   )
@@ -234,6 +255,7 @@ const Ouverture: React.FC = () => {
   const bulle = prog(f, 22, 34)
   const ligne = (k: number) => prog(f, 40 + k * 7, 40 + k * 7 + 16)
   const sortie = prog(f, INTRO - 10, INTRO, SORTIE)
+  const parole = useParole(0)
   return (
     <AbsoluteFill style={{ opacity: 1 - sortie, transform: `translateY(${-sortie * 80}px)` }}>
       <div style={{ position: "absolute", left: 80, top: 330 }}>
@@ -262,7 +284,7 @@ const Ouverture: React.FC = () => {
         </div>
       </div>
       <div style={{ position: "absolute", left: 120, bottom: 230, transform: `translateY(${(1 - arrivee) * 700}px)` }}>
-        <Tripo taille={430} />
+        <Tripo taille={430} parole={parole} />
       </div>
       <div style={{ position: "absolute", left: 480, bottom: 650 }}>
         <Bulle texte="Salut ! Voici le programme." p={bulle} />
@@ -271,11 +293,12 @@ const Ouverture: React.FC = () => {
   )
 }
 
-const Carte: React.FC<{ s: Sortie; i: number }> = ({ s, i }) => {
+const Carte: React.FC<{ s: Sortie; i: number; duree: number }> = ({ s, i, duree }) => {
   const f = useCurrentFrame()
+  const parole = useParole(i + 1)
   const entree = prog(f, 0, 16)
   const el = (k: number) => prog(f, 6 + k * 5, 6 + k * 5 + 16)
-  const sortie = prog(f, CARTE - 10, CARTE, SORTIE)
+  const sortie = prog(f, duree - 10, duree, SORTIE)
   const affiche = s.affiche ? prog(f, 18, 36) : 0
   return (
     <AbsoluteFill style={{ opacity: 1 - sortie, transform: `translateX(${-sortie * 120}px)` }}>
@@ -344,7 +367,7 @@ const Carte: React.FC<{ s: Sortie; i: number }> = ({ s, i }) => {
       )}
       {!s.affiche && (
         <div style={{ position: "absolute", left: 70, bottom: 250, opacity: el(4) }}>
-          <Tripo taille={230} decalage={i * 17} />
+          <Tripo taille={230} decalage={i * 17} parole={parole} />
         </div>
       )}
     </AbsoluteFill>
@@ -360,7 +383,7 @@ const Fin: React.FC = () => {
   return (
     <AbsoluteFill style={{ alignItems: "center", opacity: 1 - fondu }}>
       <div style={{ marginTop: 300, transform: `scale(${0.5 + 0.5 * saut})` }}>
-        <Tripo taille={380} decalage={40} />
+        <Tripo taille={380} decalage={40} parole={useParole(6)} />
       </div>
       <div style={{ marginTop: -40 }}>
         <Bulle texte="Bon week-end !" p={prog(f, 14, 26)} queue="droite" />
@@ -389,8 +412,8 @@ export const TripoWeekend: React.FC = () => {
         <Ouverture />
       </Sequence>
       {SORTIES.map((s, i) => (
-        <Sequence key={s.titre} from={INTRO + i * CARTE} durationInFrames={CARTE}>
-          <Carte s={s} i={i} />
+        <Sequence key={s.titre} from={DEBUTS[i]} durationInFrames={CARTES[i]}>
+          <Carte s={s} i={i} duree={CARTES[i]} />
         </Sequence>
       ))}
       <Sequence from={DEBUT_OUTRO} durationInFrames={OUTRO}>

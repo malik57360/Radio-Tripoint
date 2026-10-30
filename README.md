@@ -33,7 +33,7 @@ sur le disque, qui se remplit vite dans le conteneur.
 
 | Composition | Fichier | Son |
 | --- | --- | --- |
-| `TripoWeekend` | `src/agenda/TripoWeekend.tsx` | `python3 son/son_weekend.py son/bande.wav` |
+| `TripoWeekend` | `src/agenda/TripoWeekend.tsx` | `python3 son/son_agenda_voix.py son/agenda-voix.wav` (voix de Tripo) |
 | `GenZPolitique` | `src/reportage/GenZPolitique.tsx` | `python3 son/son_genz_politique.py <parole.wav> son/genz-politique.wav` |
 | `Decouverte1` à `5` | `src/decouverte/Decouverte.tsx` | le son du clip (`./rendre-decouvertes.sh`) |
 | `Decouvertes5` | `src/compil/Decouvertes5.tsx` | voix de Giorgio (`public/compil/voix-giorgio.wav`) puis les extraits |
@@ -70,6 +70,16 @@ ffmpeg -ss <début> -t <durée> -i rush.mov -vn \
 
 Génération Z : jeunes de 15-17 ans, filmés sans visage, jamais nommés.
 Autorisation parentale avant toute publication d'un mineur reconnaissable.
+
+## Voix de Tripo
+
+`outils/voix_tripo.py public/agenda-voix/repliques.json public/agenda-voix`
+avec sherpa-onnx **1.13.8** (la version du site, dans un venv : la 2.x n'a
+plus le phonétiseur) et le modèle du dépôt du site (`api/voix`, Piper SIWIS,
+CC BY 4.0). Écrire les noms difficiles en phonétique dans les répliques
+(« Sierque-les-Bains », « Poltergaïste », « drag kouinnes ») et vérifier à
+l'oreille avec la transcription. `son/son_agenda_voix.py` cale ensuite le
+minutage sur la longueur des répliques (`minutage.json`).
 
 ## Transcription
 
