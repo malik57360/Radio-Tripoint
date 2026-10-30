@@ -1,0 +1,13 @@
+node_modules/
+out/
+apercu/
+npm.log
+# Jamais de rushes ni de sons tirés des rushes dans ce dépôt public
+# (mineurs à l'image ou au micro) : ils vivent dans le dépôt privé.
+*.mov
+*.MOV
+*.mp4
+*.wav
+public/genz-*/
+public/rushes/
+asr/

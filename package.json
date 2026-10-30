@@ -1,0 +1,16 @@
+{
+  "name": "atelier-video-radio-tripoint",
+  "private": true,
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.532",
+    "@types/react": "^19.3.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "remotion": "^4.0.532",
+    "typescript": "^5.9.3"
+  }
+}
