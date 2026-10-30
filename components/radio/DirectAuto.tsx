@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { demarrerDirectAuto, ecouterDirect, lire } from "@/lib/radio/moteur"
+import { quandPret } from "@/lib/utils/pret"
 
 /**
  * Lance le direct dès l'arrivée sur le site. Si le navigateur refuse le son
@@ -36,14 +37,19 @@ export function DirectAuto() {
       }
     }
 
-    void demarrerDirectAuto().then((r) => {
-      if (actif && r === "bloque") {
-        GESTES.forEach((g) => document.addEventListener(g, surGeste, true))
-      }
+    // Le flux ne part qu'une fois la page prête : il ne dispute pas le
+    // réseau et le processeur au lancement (lib/utils/pret.ts).
+    const annuler = quandPret(() => {
+      void demarrerDirectAuto().then((r) => {
+        if (actif && r === "bloque") {
+          GESTES.forEach((g) => document.addEventListener(g, surGeste, true))
+        }
+      })
     })
 
     return () => {
       actif = false
+      annuler()
       retirer()
     }
   }, [])

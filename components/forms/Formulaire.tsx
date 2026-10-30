@@ -4,7 +4,7 @@ import { AlertCircle, CheckCircle2, Loader2, Mail } from "lucide-react"
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react"
 import { useT } from "@/components/i18n/Langue"
 import { site } from "@/config/site"
-import { creerSchemas, objetsMail, type TypeFormulaire } from "@/lib/formulaires/schemas"
+import type { TypeFormulaire } from "@/lib/formulaires/schemas"
 import { cn } from "@/lib/utils/cn"
 
 type Etat =
@@ -48,7 +48,11 @@ export function Formulaire({
     debut.current = Date.now()
   }, [])
 
-  const mailto = (donnees: FormData) => {
+  // Les module de validation (Zod, plus de 100 Ko) ne sont chargées qu'au
+  // moment de s'en servir : pas au lancement de chaque page qui a un formulaire.
+  const regles = () => import("@/lib/formulaires/schemas")
+
+  const mailto = (donnees: FormData, objet: string) => {
     const lignes = [...donnees.entries()]
       .filter(
         ([k, v]) =>
@@ -59,8 +63,20 @@ export function Formulaire({
           k !== "consentement",
       )
       .map(([k, v]) => `${k} : ${v}`)
-    return `mailto:${site.contact.email}?subject=${encodeURIComponent(objetsMail[type])}&body=${encodeURIComponent(lignes.join("\n"))}`
+    return `mailto:${site.contact.email}?subject=${encodeURIComponent(objet)}&body=${encodeURIComponent(lignes.join("\n"))}`
   }
+
+  const horsLigne = () =>
+    setEtat({
+      s: "erreur",
+      message: t({
+        fr: "Pas de connexion. Vérifiez votre réseau et réessayez.",
+        de: "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
+        lb: "Keng Verbindung. Kontrolléiert Äert Netz a probéiert nach eng Kéier.",
+        en: "No connection. Check your network and try again.",
+        es: "Sin conexión. Compruebe su red y vuelva a intentarlo.",
+      }),
+    })
 
   const envoyer = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -72,6 +88,9 @@ export function Formulaire({
     for (const [k, v] of donnees.entries())
       if (typeof v === "string" && !k.startsWith("_") && k !== "site_web") brut[k] = v
 
+    const charge = await regles().catch(() => null)
+    if (!charge) return horsLigne()
+    const { creerSchemas, objetsMail } = charge
     const r = creerSchemas(t.langue)[type].safeParse(brut)
     if (!r.success) {
       const champs: Record<string, string> = {}
@@ -100,7 +119,7 @@ export function Formulaire({
         setErreurs(d.champs)
         setEtat({ s: "repos" })
       } else if (d.statut === "non-configure") {
-        setEtat({ s: "non-configure", mailto: mailto(donnees) })
+        setEtat({ s: "non-configure", mailto: mailto(donnees, objetsMail[type]) })
       } else {
         setEtat({
           s: "erreur",
@@ -116,16 +135,7 @@ export function Formulaire({
         })
       }
     } catch {
-      setEtat({
-        s: "erreur",
-        message: t({
-          fr: "Pas de connexion. Vérifiez votre réseau et réessayez.",
-          de: "Keine Verbindung. Prüfen Sie Ihr Netzwerk und versuchen Sie es erneut.",
-          lb: "Keng Verbindung. Kontrolléiert Äert Netz a probéiert nach eng Kéier.",
-          en: "No connection. Check your network and try again.",
-          es: "Sin conexión. Compruebe su red y vuelva a intentarlo.",
-        }),
-      })
+      horsLigne()
     }
   }
 
@@ -158,7 +168,13 @@ export function Formulaire({
   const nbErreurs = Object.keys(erreurs).length
   return (
     <ContexteErreurs.Provider value={erreurs}>
-      <form onSubmit={envoyer} noValidate className={className} encType="multipart/form-data">
+      <form
+        onSubmit={envoyer}
+        onFocus={() => void regles()}
+        noValidate
+        className={className}
+        encType="multipart/form-data"
+      >
         {nbErreurs > 0 && !compact && (
           <p
             role="alert"

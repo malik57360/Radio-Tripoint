@@ -10,6 +10,7 @@ import { EtatAntenne } from "@/components/motion/EtatAntenne"
 import { Footer } from "@/components/layout/Footer"
 import { Header } from "@/components/layout/Header"
 import { scriptTheme } from "@/components/layout/ThemeToggle"
+import { scriptPret } from "@/lib/utils/pret"
 import { DirectAuto } from "@/components/radio/DirectAuto"
 import { Guide } from "@/components/guide/Guide"
 import { LecteurBarre } from "@/components/radio/LecteurBarre"
@@ -116,6 +117,7 @@ export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: scriptTheme }} />
+        <script dangerouslySetInnerHTML={{ __html: scriptPret }} />
       </head>
       <body>
         <FournisseurLangue langue={l}>

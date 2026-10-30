@@ -227,6 +227,23 @@
 /* ─── Composants ───────────────────────────────────────────────────────── */
 
 @layer components {
+  /* Le Tripoint (components/motion/Tripoint.tsx) : un carré, des calques
+     empilés. En couche « components » : les classes de placement passées
+     au composant (absolute, size-…, h-…) restent prioritaires. */
+  .tripoint {
+    display: block;
+    position: relative;
+    aspect-ratio: 1;
+  }
+  .tripoint > * {
+    position: absolute;
+  }
+  .tripoint > svg {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
   .conteneur {
     width: 100%;
     max-width: 84rem;
@@ -474,7 +491,9 @@
     width: 3px;
     background: currentColor;
     border-radius: 1px;
-    height: 30%;
+    height: 100%;
+    transform: scaleY(0.3);
+    transform-origin: 50% 100%;
   }
   .egaliseur[data-actif="true"] i {
     animation: barre 900ms ease-in-out infinite alternate;
@@ -487,10 +506,10 @@
   }
   @keyframes barre {
     from {
-      height: 25%;
+      transform: scaleY(0.25);
     }
     to {
-      height: 100%;
+      transform: scaleY(1);
     }
   }
 
@@ -803,35 +822,39 @@
   }
 }
 
-/* Cadran : l'aiguille cherche la station, les stations s'allument au passage. */
+/* Cadran : l'aiguille cherche la station, les stations s'allument au passage.
+   La piste couvre tout le cadran : ses pourcentages de translation sont ceux
+   du cadran. Transform seulement, jamais left ni margin (sinon la page entière
+   recalcule sa mise en page à chaque image). */
+.aiguille-piste {
+  animation: aiguille-cherche 2400ms var(--ease-sortie) both;
+}
 .aiguille {
-  animation:
-    aiguille-cherche 2400ms var(--ease-sortie) both,
-    aiguille-vit 3.6s 2400ms ease-in-out infinite alternate;
+  animation: aiguille-vit 3.6s 2400ms ease-in-out infinite alternate;
 }
 @keyframes aiguille-cherche {
   0% {
-    left: 4%;
+    transform: translateX(-46%);
   }
   30% {
-    left: 18%;
+    transform: translateX(-32%);
   }
   58% {
-    left: 90%;
+    transform: translateX(40%);
   }
   80% {
-    left: 46%;
+    transform: translateX(-4%);
   }
   100% {
-    left: 50%;
+    transform: translateX(0);
   }
 }
 @keyframes aiguille-vit {
   from {
-    margin-left: -2px;
+    transform: translateX(-2px);
   }
   to {
-    margin-left: 2px;
+    transform: translateX(2px);
   }
 }
 .station {
@@ -841,7 +864,6 @@
 @keyframes station {
   50% {
     transform: scaleY(1.45);
-    box-shadow: 0 0 18px var(--nuit-accent);
   }
 }
 
@@ -857,15 +879,23 @@
   z-index: -1;
   border-radius: inherit;
   pointer-events: none;
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--direct) 50%, transparent);
   animation: appel-direct 2.8s var(--ease-sortie) infinite;
 }
+/* Départ invisible : tant que l'appel attend la fin du lancement (classe
+   « lancement »), l'anneau ne reste pas figé autour du bouton. */
 @keyframes appel-direct {
   0% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--direct) 55%, transparent);
+    transform: scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
   }
   70%,
   100% {
-    box-shadow: 0 0 0 16px transparent;
+    transform: scale(1.1, 1.35);
+    opacity: 0;
   }
 }
 
@@ -931,6 +961,34 @@
   }
 }
 
+/* ─── Lancement en douceur (lib/utils/pret.ts) ─────────────────────────────
+   Tant que <html> a la classe « lancement », les animations d'ambiance
+   attendent : au lancement ne jouent que les entrées (titre, tracé, cadran). */
+:root.lancement
+  :is(
+    .tripoint-orbite,
+    .tripoint-onde,
+    .aiguille,
+    .hw-chauve-souris,
+    .hw-ailes,
+    .hw-etoiles,
+    .hw-brume,
+    .hero-lumiere,
+    .citrouille-bougie,
+    .mascotte-anime .mascotte-corps,
+    .mascotte-anime .mascotte-yeux,
+    .tr-halo,
+    .concours-picto,
+    .concours-vapeur
+  ),
+:root.lancement .btn-direct[aria-pressed="false"]::after {
+  animation-play-state: paused;
+}
+/* Le point du tripoint apparaît tout de suite ; seul son battement attend. */
+:root.lancement .tripoint-point {
+  animation-play-state: running, paused;
+}
+
 /* ─── Signature : le Tripoint (components/motion/Tripoint.tsx) ─────────── */
 .hero-tripoint {
   position: absolute;
@@ -974,14 +1032,26 @@
     opacity: 0;
   }
 }
+/* Le point et les ondes partent du tripoint : 330 × 300 sur 600, soit 55 % et 50 %. */
 .tripoint-point {
+  left: 55%;
+  top: 50%;
+  width: 7.333%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--direct) 0 49%,
+    color-mix(in srgb, var(--direct) 18%, transparent) 51%
+  );
   animation:
     point-apparait 800ms 1350ms cubic-bezier(0.34, 1.56, 0.64, 1) both,
     point-bat 2.4s 2.2s ease-in-out infinite;
 }
 @keyframes point-apparait {
   from {
-    transform: scale(0);
+    scale: 0;
   }
 }
 @keyframes point-bat {
@@ -990,6 +1060,13 @@
   }
 }
 .tripoint-onde {
+  left: 55%;
+  top: 50%;
+  width: 13.333%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
   opacity: 0;
   animation: onde-tripoint 3.6s ease-out infinite;
 }
@@ -1010,7 +1087,14 @@
   animation-duration: 800ms, 0.75s;
 }
 .tripoint-orbite {
-  animation: orbite 80s linear infinite;
+  transform-origin: 55% 50%;
+}
+/* L'orbite ne tourne que sur grand écran. Sur téléphone, à cette opacité, une
+   rotation de 4,5° par seconde ne se voit pas, et elle coûtait un tiers des images. */
+@media (min-width: 64rem) {
+  .tripoint-orbite {
+    animation: orbite 80s linear infinite;
+  }
 }
 @keyframes orbite {
   to {
@@ -1550,8 +1634,14 @@
 .citrouille-logo {
   filter: drop-shadow(0 2px 6px rgb(255 122 26 / 0.55));
 }
+/* Quelques vacillements, puis la bougie se tient tranquille (le logo est sur toutes les pages). */
 .citrouille-bougie {
-  animation: bougie 2.6s ease-in-out infinite;
+  animation: bougie 2.6s ease-in-out 3;
+}
+/* Pas dans le bandeau défilant : chaque vacillement y redessinerait toute la
+   piste (deux douzaines de citrouilles dans un calque très large). */
+.defilant .citrouille-bougie {
+  animation: none;
 }
 @keyframes bougie {
   0%,
@@ -1585,6 +1675,10 @@
 .hero-halloween .hero-tripoint {
   color: var(--citrouille);
   opacity: 0.42;
+}
+/* La lueur sur le dessin fixe seulement : posée sur tout le Tripoint, elle
+   serait recalculée à chaque image de l'orbite et des ondes. */
+.hero-halloween .tripoint-dessin {
   filter: drop-shadow(0 0 5px rgb(255 122 26 / 0.65));
 }
 .hero-halloween-bouton {
@@ -1688,20 +1782,25 @@
 /* Chauves-souris : silhouettes noires, ourlées de clair de lune. */
 .hw-chauve-souris {
   position: absolute;
+  display: block;
   color: var(--hw-ombre);
-  filter: drop-shadow(0 0 1px rgb(255 217 106 / 0.55));
   width: 2.6rem;
+  will-change: transform;
 }
-.hw-chauve-souris .aile {
-  transform-origin: 32px 12px;
+.hw-ailes {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform-origin: 50% 40%;
   animation: battement 0.32s ease-in-out infinite alternate;
 }
-.hw-chauve-souris .aile-d {
-  animation-delay: 0.02s;
+.hw-chauve-souris path {
+  stroke: rgb(255 217 106 / 0.45);
+  stroke-width: 0.8px;
 }
 @keyframes battement {
   to {
-    transform: scaleY(0.35);
+    transform: scaleY(0.55);
   }
 }
 .hw-vol-1 {
@@ -1857,7 +1956,7 @@
   animation: concours-flotte 5s ease-in-out infinite;
 }
 .concours-vapeur {
-  animation: concours-vapeur 2.8s ease-in-out infinite;
+  animation: concours-vapeur 2.8s ease-in-out 4;
 }
 @keyframes concours-flotte {
   0%,
@@ -2128,7 +2227,7 @@
   .citrouille-bougie,
   .hw-etoiles,
   .hw-chauve-souris,
-  .hw-chauve-souris .aile,
+  .hw-ailes,
   .hw-brume,
   .concours-picto,
   .concours-vapeur,

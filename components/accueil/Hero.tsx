@@ -208,7 +208,9 @@ function Cadran({ pays }: { pays: string[] }) {
         </div>
       ))}
       {/* L'aiguille balaie le cadran comme on cherche une station, puis se cale sur le direct. */}
-      <span className="aiguille bg-direct absolute -top-6 left-1/2 h-12 w-0.5 -translate-x-1/2 shadow-[0_0_14px_var(--direct)]" />
+      <span className="aiguille-piste absolute inset-x-0 -top-6 h-12">
+        <span className="aiguille bg-direct absolute top-0 left-1/2 h-full w-0.5 -translate-x-1/2 shadow-[0_0_14px_var(--direct)]" />
+      </span>
     </div>
   )
 }

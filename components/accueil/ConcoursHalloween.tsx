@@ -356,28 +356,32 @@ function PictoGaufrier() {
 
 function PictoTasse() {
   return (
-    <svg viewBox="0 0 64 64" className="size-full" aria-hidden>
-      {/* Vapeur */}
-      <g
-        className="concours-vapeur"
-        stroke="var(--citrouille)"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <path d="M23 15c-2.5-2.5 2.5-4.5 0-7" />
-        <path d="M31 15c-2.5-2.5 2.5-4.5 0-7" />
-        <path d="M39 15c-2.5-2.5 2.5-4.5 0-7" />
-      </g>
-      <path d="M46 26h3.5a7 7 0 0 1 0 14H46" fill="none" stroke="var(--hw-os)" strokeWidth="4.5" />
-      <path d="M13 20h34v26a8 8 0 0 1-8 8H21a8 8 0 0 1-8-8Z" fill="var(--hw-os)" />
-      <ellipse cx="30" cy="20" rx="17" ry="2.6" fill="#d9cfc0" />
-      {/* Chauves-souris du décor */}
-      <g fill="#17101e">
-        <path d="M24 31c-1.6-2-4-2.8-6.5-2.4.7.6 1 1.4.6 2.1-1-.4-2.4-.3-3.3.3 1 .3 1.6 1 1.7 2 .7-.7 2-1 3-.7.6-1 2.3-1.4 4.5-1.3Zm0 0c1.6-2 4-2.8 6.5-2.4-.7.6-1 1.4-.6 2.1 1-.4 2.4-.3 3.3.3-1 .3-1.6 1-1.7 2-.7-.7-2-1-3-.7-.6-1-2.3-1.4-4.5-1.3Z" />
-        <path d="M37 41c-1.2-1.5-3-2.1-4.9-1.8.5.5.8 1 .5 1.6-.8-.3-1.8-.2-2.5.2.8.2 1.2.8 1.3 1.5.5-.5 1.5-.7 2.3-.5.5-.8 1.7-1 3.3-1Zm0 0c1.2-1.5 3-2.1 4.9-1.8-.5.5-.8 1-.5 1.6.8-.3 1.8-.2 2.5.2-.8.2-1.2.8-1.3 1.5-.5-.5-1.5-.7-2.3-.5-.5-.8-1.7-1-3.3-1Z" />
-      </g>
-    </svg>
+    <span className="relative block size-full">
+      {/* Vapeur : un dessin à part, pour qu'elle monte sans redessiner la tasse
+          (animée dans le SVG, elle recalculait sa mise en page à chaque image). */}
+      <svg viewBox="0 0 64 64" className="concours-vapeur absolute inset-0 size-full" aria-hidden>
+        <g stroke="var(--citrouille)" strokeWidth="2.2" strokeLinecap="round" fill="none">
+          <path d="M23 15c-2.5-2.5 2.5-4.5 0-7" />
+          <path d="M31 15c-2.5-2.5 2.5-4.5 0-7" />
+          <path d="M39 15c-2.5-2.5 2.5-4.5 0-7" />
+        </g>
+      </svg>
+      <svg viewBox="0 0 64 64" className="relative size-full" aria-hidden>
+        <path
+          d="M46 26h3.5a7 7 0 0 1 0 14H46"
+          fill="none"
+          stroke="var(--hw-os)"
+          strokeWidth="4.5"
+        />
+        <path d="M13 20h34v26a8 8 0 0 1-8 8H21a8 8 0 0 1-8-8Z" fill="var(--hw-os)" />
+        <ellipse cx="30" cy="20" rx="17" ry="2.6" fill="#d9cfc0" />
+        {/* Chauves-souris du décor */}
+        <g fill="#17101e">
+          <path d="M24 31c-1.6-2-4-2.8-6.5-2.4.7.6 1 1.4.6 2.1-1-.4-2.4-.3-3.3.3 1 .3 1.6 1 1.7 2 .7-.7 2-1 3-.7.6-1 2.3-1.4 4.5-1.3Zm0 0c1.6-2 4-2.8 6.5-2.4-.7.6-1 1.4-.6 2.1 1-.4 2.4-.3 3.3.3-1 .3-1.6 1-1.7 2-.7-.7-2-1-3-.7-.6-1-2.3-1.4-4.5-1.3Z" />
+          <path d="M37 41c-1.2-1.5-3-2.1-4.9-1.8.5.5.8 1 .5 1.6-.8-.3-1.8-.2-2.5.2.8.2 1.2.8 1.3 1.5.5-.5 1.5-.7 2.3-.5.5-.8 1.7-1 3.3-1Zm0 0c1.2-1.5 3-2.1 4.9-1.8-.5.5-.8 1-.5 1.6.8-.3 1.8-.2 2.5.2-.8.2-1.2.8-1.3 1.5-.5-.5-1.5-.7-2.3-.5-.5-.8-1.7-1-3.3-1Z" />
+        </g>
+      </svg>
+    </span>
   )
 }
 

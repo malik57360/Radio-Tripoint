@@ -6,22 +6,27 @@
  * demande moins d'animations.
  */
 
-/** Une chauve-souris : les ailes battent (CSS), le corps suit sa trajectoire. */
+/**
+ * Une chauve-souris : l'enveloppe suit sa trajectoire, le dessin bat des
+ * ailes (CSS). Deux calques animés par transform : rien n'est redessiné.
+ */
 function ChauveSouris({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <svg viewBox="0 0 64 28" className={className} style={style} aria-hidden>
-      <g fill="currentColor">
-        <path
-          className="aile aile-g"
-          d="M32 12C27 6 20 3 12 4c2 2 3 4 2 6-3-1-7-1-10 1 3 1 5 3 5 6 2-2 6-3 9-2 2-3 7-4 12-3Z"
-        />
-        <path
-          className="aile aile-d"
-          d="M32 12c5-6 12-9 20-8-2 2-3 4-2 6 3-1 7-1 10 1-3 1-5 3-5 6-2-2-6-3-9-2-2-3-7-4-12-3Z"
-        />
-        <path d="M29 9.5 30 6l1.5 2.4h1L34 6l1 3.5c1.2 1.5 1.3 4.6 0 6.5-1 1.6-5 1.6-6 0-1.3-1.9-1.2-5 0-6.5Z" />
-      </g>
-    </svg>
+    <span className={className} style={style} aria-hidden>
+      <svg viewBox="0 0 64 28" className="hw-ailes">
+        <g fill="currentColor">
+          <path
+            className="aile aile-g"
+            d="M32 12C27 6 20 3 12 4c2 2 3 4 2 6-3-1-7-1-10 1 3 1 5 3 5 6 2-2 6-3 9-2 2-3 7-4 12-3Z"
+          />
+          <path
+            className="aile aile-d"
+            d="M32 12c5-6 12-9 20-8-2 2-3 4-2 6 3-1 7-1 10 1-3 1-5 3-5 6-2-2-6-3-9-2-2-3-7-4-12-3Z"
+          />
+          <path d="M29 9.5 30 6l1.5 2.4h1L34 6l1 3.5c1.2 1.5 1.3 4.6 0 6.5-1 1.6-5 1.6-6 0-1.3-1.9-1.2-5 0-6.5Z" />
+        </g>
+      </svg>
+    </span>
   )
 }
 
