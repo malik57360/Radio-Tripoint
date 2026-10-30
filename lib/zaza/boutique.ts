@@ -29,9 +29,9 @@ export const BOUTIQUE = {
 
 export const LIENS = [
   { href: "/boutique", nom: "La sélection" },
-  { href: "/#univers", nom: "Les univers" },
-  { href: "/#boutique", nom: "Nous trouver" },
-  { href: "/#questions", nom: "Questions" },
+  { href: "/apercu#univers", nom: "Les univers" },
+  { href: "/apercu#boutique", nom: "Nous trouver" },
+  { href: "/apercu#questions", nom: "Questions" },
 ]
 
 /** Lundi = 1 … dimanche = 7 (ISO). Minutes depuis minuit ; `null` = fermé. */

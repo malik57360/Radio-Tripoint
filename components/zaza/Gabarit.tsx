@@ -10,7 +10,7 @@ import { MenuMobile } from "./Vivants"
 export function Logo({ clair = false }: { clair?: boolean }) {
   return (
     <Link
-      href="/"
+      href="/apercu"
       className={`group flex items-center gap-2.5 leading-none ${clair ? "text-papier" : "text-nuit"}`}
       aria-label="Zaza Riviera Herbs, accueil"
     >
