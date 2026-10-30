@@ -13,6 +13,7 @@ import { prixAffiche } from "@/lib/annonces/prix"
 import { comptesAvecAlertes, lireAlertes, modifierAlerte } from "@/lib/annonces/espace"
 import { filtrer, trier } from "@/lib/annonces/recherche"
 import { cheminAnnonce } from "@/lib/annonces/types"
+import { cronAutorise } from "@/lib/direction/acces"
 
 /**
  * Tâche quotidienne des Petites annonces (vercel.json) :
@@ -28,9 +29,7 @@ export const maxDuration = 60
 const JOUR = 24 * 3600 * 1000
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET
-  if (secret && request.headers.get("authorization") !== `Bearer ${secret}`)
-    return Response.json({ ok: false }, { status: 401 })
+  if (!cronAutorise(request)) return Response.json({ ok: false }, { status: 401 })
 
   const cfg = await lireConfig()
   const prix = (pro: boolean) =>

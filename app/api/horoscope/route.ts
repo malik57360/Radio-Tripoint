@@ -3,6 +3,7 @@ import { revalidateTag } from "next/cache"
 import { after } from "next/server"
 import { autoriser } from "@/lib/formulaires/limiteur"
 import { genererHoroscope, TAG_HOROSCOPE } from "@/lib/horoscope"
+import { cronAutorise } from "@/lib/direction/acces"
 
 /**
  * Rédaction de l'horoscope du jour.
@@ -22,16 +23,18 @@ async function rediger() {
 }
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET
-  if (secret && request.headers.get("authorization") !== `Bearer ${secret}`)
-    return Response.json({ ok: false }, { status: 401 })
+  if (!cronAutorise(request)) return Response.json({ ok: false }, { status: 401 })
   return Response.json({ ok: true, statut: await rediger() })
 }
 
 export async function POST(request: Request) {
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`horoscope:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(cle, 5, 10 * 60 * 1000)) return Response.json({ ok: false }, { status: 429 })
+  if (
+    !(await autoriser(cle, 5, 10 * 60 * 1000)) ||
+    !(await autoriser("horoscope:tous", 12, 3600 * 1000))
+  )
+    return Response.json({ ok: false }, { status: 429 })
   after(async () => {
     try {
       await rediger()

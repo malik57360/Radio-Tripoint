@@ -27,6 +27,16 @@ export function motDePasseValide(saisie: string) {
   return accesConfigure() && egal(signer(saisie), signer(motDePasse()))
 }
 
+/**
+ * Tâches planifiées de vercel.json : Vercel les appelle avec l'en-tête
+ * « Authorization: Bearer CRON_SECRET ». Sans secret posé, la porte reste
+ * fermée : personne d'autre ne déclenche une tâche qui coûte (IA, e-mails).
+ */
+export function cronAutorise(request: Request) {
+  const secret = process.env.CRON_SECRET ?? ""
+  return secret.length >= 16 && egal(request.headers.get("authorization") ?? "", `Bearer ${secret}`)
+}
+
 /** Jeton des tâches internes (tâche du matin qui se relance elle-même). */
 export const jetonInterne = (valeur: string) => signer(`interne:${valeur}`)
 export const jetonInterneValide = (valeur: string, jeton: string) =>

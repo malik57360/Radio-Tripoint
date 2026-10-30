@@ -136,9 +136,15 @@ export async function POST(request: Request) {
 
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`guide:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(cle, 20, 10 * 60 * 1000)) return json({ erreur: "debit" }, 429)
+  if (!(await autoriser(cle, 20, 10 * 60 * 1000))) return json({ erreur: "debit" }, 429)
   // Une photo coûte bien plus qu'un message : 8 par tranche de 10 minutes.
-  if (image && !autoriser(`${cle}:img`, 8, 10 * 60 * 1000)) return json({ erreur: "debit" }, 429)
+  if (image && !(await autoriser(`${cle}:img`, 8, 10 * 60 * 1000)))
+    return json({ erreur: "debit" }, 429)
+  // Plafond tous visiteurs confondus : même avec des milliers d'adresses IP,
+  // personne ne vide le crédit Anthropic (300 messages et 60 photos par heure).
+  if (!(await autoriser("guide:tous", 300, 3600 * 1000))) return json({ erreur: "debit" }, 429)
+  if (image && !(await autoriser("guide:tous:img", 60, 3600 * 1000)))
+    return json({ erreur: "debit" }, 429)
 
   const cible = acces(request)
   if (!cible) return json({ erreur: "non-configure" }, 503)

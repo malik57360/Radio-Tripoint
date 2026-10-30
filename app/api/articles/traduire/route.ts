@@ -22,7 +22,10 @@ export async function POST(request: Request) {
 
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`traduction:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(cle, 10, 10 * 60 * 1000)) return Response.json({ ok: false }, { status: 429 })
+  if (!(await autoriser(cle, 10, 10 * 60 * 1000)))
+    return Response.json({ ok: false }, { status: 429 })
+  if (!(await autoriser("traduction:tous", 60, 3600 * 1000)))
+    return Response.json({ ok: false }, { status: 429 })
 
   after(async () => {
     try {

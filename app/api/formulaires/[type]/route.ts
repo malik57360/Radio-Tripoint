@@ -57,7 +57,11 @@ export async function POST(request: Request, ctx: { params: Promise<{ type: stri
   // 2. Débit : 5 envois / 10 min / IP / formulaire. L'IP est hachée.
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`${t}:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(cle, 5, 10 * 60 * 1000)) {
+  // Et 60 envois par heure et par formulaire, tous visiteurs confondus.
+  if (
+    !(await autoriser(cle, 5, 10 * 60 * 1000)) ||
+    !(await autoriser(`${t}:tous`, 60, 3600 * 1000))
+  ) {
     return json(
       {
         statut: "erreur",

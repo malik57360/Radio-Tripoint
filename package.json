@@ -17,13 +17,13 @@
     "@vercel/blob": "^2.8.1",
     "imapflow": "^2.2.1",
     "lucide-react": "^1.48.0",
-    "mailparser": "^3.9.33",
-    "next": "16.3.4",
-    "nodemailer": "^10.0.13",
+    "mailparser": "3.9.47",
+    "next": "16.4.3",
+    "nodemailer": "10.1.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
-    "zod": "^4.5.4"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -32,10 +32,15 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.4",
+    "eslint-config-next": "16.4.3",
     "prettier": "^3",
     "prettier-plugin-tailwindcss": "^0.6",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@vercel/cli-config": {
+      "zod": "$zod"
+    }
   }
 }

@@ -31,7 +31,10 @@ export async function POST(request: Request) {
   // Chaque seconde de voix se paie : 30 messages vocaux / 10 min / IP.
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const id = createHash("sha256").update(`vocal:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(id, 30, 10 * 60 * 1000)) return Response.json({ erreur: "debit" }, { status: 429 })
+  if (!(await autoriser(id, 30, 10 * 60 * 1000))) return Response.json({ erreur: "debit" }, { status: 429 })
+  // Et 600 par heure tous visiteurs confondus, pour le crédit ElevenLabs.
+  if (!(await autoriser("vocal:tous", 600, 3600 * 1000)))
+    return Response.json({ erreur: "debit" }, { status: 429 })
 
   const voix = (process.env.ELEVENLABS_VOICE_ID ?? "").trim() || VOIX_PAR_DEFAUT
   const r = await fetch(

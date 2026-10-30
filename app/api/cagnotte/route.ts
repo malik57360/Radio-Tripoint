@@ -21,7 +21,11 @@ export async function POST(request: Request) {
 
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`cagnotte:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(cle, 10, 10 * 60 * 1000)) return Response.redirect(pageCagnotte(l, "trop"), 303)
+  if (!(await autoriser(cle, 10, 10 * 60 * 1000)))
+    return Response.redirect(pageCagnotte(l, "trop"), 303)
+  // Chaque envoi ouvre une session Stripe : 120 par heure au plus, tous visiteurs confondus.
+  if (!(await autoriser("cagnotte:tous", 120, 3600 * 1000)))
+    return Response.redirect(pageCagnotte(l, "trop"), 303)
 
   if (!stripeActif()) return Response.redirect(pageCagnotte(l, "bientot"), 303)
   try {

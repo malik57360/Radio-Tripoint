@@ -1,4 +1,6 @@
+import { createHash } from "node:crypto"
 import { jourParis, redis, trancheParis } from "@/lib/direction/redis"
+import { autoriserIci } from "@/lib/formulaires/limiteur"
 
 /**
  * Présence en direct, pour le tableau de bord de la direction.
@@ -35,6 +37,17 @@ function ville(brut: string | null) {
 export async function POST(request: Request) {
   const ua = request.headers.get("user-agent") ?? ""
   if (ROBOT.test(ua)) return vide()
+  // Un onglet écrit toutes les 20 s : au-delà de 60 par minute et par IP,
+  // ce n'est plus un visiteur (le compteur reste en mémoire, sans Redis).
+  const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
+  if (
+    !autoriserIci(
+      createHash("sha256").update(`presence:${ip}`).digest("hex").slice(0, 24),
+      60,
+      60 * 1000,
+    )
+  )
+    return vide()
 
   let corps: Record<string, unknown>
   try {

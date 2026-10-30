@@ -1,5 +1,5 @@
 import { after } from "next/server"
-import { jetonInterne, jetonInterneValide } from "@/lib/direction/acces"
+import { cronAutorise, jetonInterne, jetonInterneValide } from "@/lib/direction/acces"
 import { preparerUneEtape, selectionnerDuJour } from "@/lib/direction/conseils"
 import { jourParis } from "@/lib/direction/redis"
 
@@ -8,8 +8,8 @@ import { jourParis } from "@/lib/direction/redis"
  * prépare les mails par étapes de moins d'une minute, en se relançant
  * elle-même tant qu'il reste du travail. Rien n'est envoyé ici : l'envoi se
  * fait depuis la page Prospection, d'un clic de Giorgio.
- * Sans CRON_SECRET, la tâche reste appelable sans risque : une seule
- * sélection par jour et 30 recherches IA au plus.
+ * Appelable seulement par Vercel (CRON_SECRET) ou par elle-même (jeton
+ * interne du jour).
  */
 export const dynamic = "force-dynamic"
 export const maxDuration = 60
@@ -17,8 +17,7 @@ export const maxDuration = 60
 export async function GET(request: Request) {
   const jour = jourParis()
   const url = new URL(request.url)
-  const secret = process.env.CRON_SECRET
-  const parCron = !secret || request.headers.get("authorization") === `Bearer ${secret}`
+  const parCron = cronAutorise(request)
   const parSuite = jetonInterneValide(jour, url.searchParams.get("t") ?? "")
   if (!parCron && !parSuite) return Response.json({ ok: false }, { status: 401 })
 

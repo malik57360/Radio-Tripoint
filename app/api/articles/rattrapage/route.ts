@@ -1,4 +1,5 @@
 import { articlesATraduire, traduireArticle } from "@/lib/direction/traduction-articles"
+import { cronAutorise } from "@/lib/direction/acces"
 
 /**
  * Filet de sécurité quotidien (vercel.json) : tout article du tableau de bord
@@ -11,9 +12,7 @@ export const dynamic = "force-dynamic"
 export const maxDuration = 300
 
 export async function GET(request: Request) {
-  const secret = process.env.CRON_SECRET
-  if (secret && request.headers.get("authorization") !== `Bearer ${secret}`)
-    return Response.json({ ok: false }, { status: 401 })
+  if (!cronAutorise(request)) return Response.json({ ok: false }, { status: 401 })
 
   const fin = Date.now() + (maxDuration - 120) * 1000
   const bilan: Record<string, string> = {}

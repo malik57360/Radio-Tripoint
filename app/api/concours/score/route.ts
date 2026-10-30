@@ -23,7 +23,8 @@ const Corps = z.object({
 export async function POST(request: Request) {
   const ip = (request.headers.get("x-forwarded-for") ?? "").split(",")[0].trim() || "inconnue"
   const cle = createHash("sha256").update(`concours-score:${ip}`).digest("hex").slice(0, 24)
-  if (!autoriser(cle, 30, 10 * 60 * 1000)) return Response.json({ erreur: "trop" }, { status: 429 })
+  if (!(await autoriser(cle, 30, 10 * 60 * 1000)))
+    return Response.json({ erreur: "trop" }, { status: 429 })
 
   const lu = Corps.safeParse(await request.json().catch(() => null))
   if (!lu.success) {

@@ -106,6 +106,11 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "Content-Security-Policy", value: csp() },
           { key: "X-Content-Type-Options", value: "nosniff" },
+          // frame-ancestors 'none' (CSP) suffit aux navigateurs récents ; X-Frame-Options
+          // couvre les anciens. COOP isole l'onglet des fenêtres ouvertes par un autre site.
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Permissions-Policy",
