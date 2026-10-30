@@ -2,6 +2,7 @@ import React from "react"
 import { Composition } from "remotion"
 import { DUREE_TRIPO_WEEKEND, TripoWeekend } from "./agenda/TripoWeekend"
 import { chargerPolices } from "./commun"
+import { DUREE_ZAPPING, Zapping } from "./zapping/Zapping"
 import { DUREE_PASSAGE, OuvertureWeekend, PassageDecouvertes } from "./compil/Compil"
 import { Decouvertes5, DUREE_DECOUVERTES5 } from "./compil/Decouvertes5"
 import { Decouverte, DECOUVERTES } from "./decouverte/Decouverte"
@@ -17,6 +18,7 @@ export const RemotionRoot: React.FC = () => (
     {DECOUVERTES.map((d) => (
       <Composition key={d.n} id={`Decouverte${d.n}`} component={Decouverte} durationInFrames={d.images} defaultProps={d} {...story} />
     ))}
+    <Composition id="Zapping" component={Zapping} durationInFrames={DUREE_ZAPPING} {...story} />
     <Composition id="Decouvertes5" component={Decouvertes5} durationInFrames={DUREE_DECOUVERTES5} {...story} />
     <Composition id="PassageDecouvertes" component={PassageDecouvertes} durationInFrames={DUREE_PASSAGE} {...story} />
     <Composition

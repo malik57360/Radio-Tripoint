@@ -1,0 +1,232 @@
+[
+ {
+  "nom": "bienvenue",
+  "images": 42,
+  "chaine": "CH 01 · Halloween",
+  "legende": null,
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« Bienvenue ! »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "squelette",
+  "images": 54,
+  "chaine": "CH 01 · Halloween",
+  "legende": "Ambiance : posée.",
+  "sous_titres": [],
+  "effet": null
+ },
+ {
+  "nom": "cornemuse",
+  "images": 90,
+  "chaine": "CH 02 · Cornemuse",
+  "legende": "Ça souffle fort ce week-end",
+  "sous_titres": [],
+  "effet": null
+ },
+ {
+  "nom": "piano",
+  "images": 75,
+  "chaine": "CH 03 · Piano bar",
+  "legende": "Pendant ce temps…",
+  "sous_titres": [],
+  "effet": null
+ },
+ {
+  "nom": "essai1",
+  "images": 75,
+  "chaine": "CH 04 · Sport",
+  "legende": "Essai n° 1…",
+  "sous_titres": [],
+  "effet": "rate"
+ },
+ {
+  "nom": "avance",
+  "images": 30,
+  "chaine": "CH 04 · Sport",
+  "legende": null,
+  "sous_titres": [],
+  "effet": "avance"
+ },
+ {
+  "nom": "essai2",
+  "images": 52,
+  "chaine": "CH 04 · Sport",
+  "legende": "Essai n° 2…",
+  "sous_titres": [],
+  "effet": null
+ },
+ {
+  "nom": "ralenti",
+  "images": 71,
+  "chaine": "Ralenti",
+  "legende": null,
+  "sous_titres": [],
+  "effet": "panier"
+ },
+ {
+  "nom": "joie",
+  "images": 90,
+  "chaine": "CH 04 · Sport",
+  "legende": "La joie.",
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« Ouais ! »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "fier",
+  "images": 60,
+  "chaine": "CH 04 · Sport",
+  "legende": "Fier ? Très fier.",
+  "sous_titres": [],
+  "effet": "zoom"
+ },
+ {
+  "nom": "cygne",
+  "images": 90,
+  "chaine": "CH 05 · Nature",
+  "legende": "Invité surprise : le cygne noir",
+  "sous_titres": [],
+  "effet": null
+ },
+ {
+  "nom": "maillot",
+  "images": 150,
+  "chaine": "CH 06 · Interview",
+  "legende": "Il attend sa question",
+  "sous_titres": [
+   {
+    "t": 1.7,
+    "texte": "« Je pensais qu'il y avait une question »"
+   },
+   {
+    "t": 3.15,
+    "texte": "« Vidéo, mon gars. »"
+   },
+   {
+    "t": 4.05,
+    "texte": "« Ah, une vidéo ! »"
+   }
+  ],
+  "effet": "fige_son"
+ },
+ {
+  "nom": "heron",
+  "images": 81,
+  "chaine": "CH 07 · Nature",
+  "legende": "Le héron : zéro stress",
+  "sous_titres": [],
+  "effet": null
+ },
+ {
+  "nom": "ecureuil",
+  "images": 120,
+  "chaine": "CH 07 · Nature",
+  "legende": "(Cherchez bien.)",
+  "sous_titres": [
+   {
+    "t": 0.2,
+    "texte": "« Viens voir l'écureuil ! »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "nuit1",
+  "images": 45,
+  "chaine": "CH 08 · En direct",
+  "legende": null,
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« Micro test, c'est bon ? »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "nuit2",
+  "images": 108,
+  "chaine": "CH 08 · En direct",
+  "legende": null,
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« Alors franchement, vous avez fait un travail incroyable. »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "nuit3",
+  "images": 103,
+  "chaine": "CH 08 · En direct",
+  "legende": "Cadeau !",
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« Radio Tripoint a décidé de vous offrir deux places de cinéma. »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "nuit4",
+  "images": 48,
+  "chaine": "CH 08 · En direct",
+  "legende": null,
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« Merci beaucoup ! »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "nuit5",
+  "images": 89,
+  "chaine": "CH 08 · En direct",
+  "legende": null,
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« En plus, il y a un nouveau film qui est sorti… »"
+   }
+  ],
+  "effet": null
+ },
+ {
+  "nom": "nuit6",
+  "images": 138,
+  "chaine": "CH 08 · En direct",
+  "legende": null,
+  "sous_titres": [
+   {
+    "t": 0.0,
+    "texte": "« On va pas faire la pub… »"
+   },
+   {
+    "t": 1.6,
+    "texte": "« On coupe, on coupe, on coupe ! »"
+   }
+  ],
+  "effet": "coupe"
+ },
+ {
+  "nom": "brouillard",
+  "images": 60,
+  "chaine": null,
+  "legende": null,
+  "sous_titres": [],
+  "effet": "fin"
+ }
+]
