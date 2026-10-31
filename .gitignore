@@ -1,6 +1,7 @@
 node_modules/
 out/
 apercu/
+apercu-*/
 npm.log
 # Jamais de rushes ni de sons tirés des rushes dans ce dépôt public
 # (mineurs à l'image ou au micro) : ils vivent dans le dépôt privé.

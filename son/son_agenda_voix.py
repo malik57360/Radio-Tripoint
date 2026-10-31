@@ -5,7 +5,8 @@ minutage.json, que TripoWeekend.tsx relit ; puis le morceau d'Halloween de
 son_weekend.py (la mineur, 104 BPM), baissé de 12 dB sous la voix, des
 souffles sur chaque carte et la voix de Tripo par-dessus. Ramené à -14 LUFS.
 
-  python3 son/son_agenda_voix.py <sortie.wav>
+  python3 son/son_agenda_voix.py <sortie.wav> [public/agenda-voix-de]
+Le second argument choisit le dossier des répliques (version allemande).
 """
 import json
 import math
@@ -18,7 +19,7 @@ import numpy as np
 
 TAUX = 44100
 FPS = 30
-DOSSIER = "public/agenda-voix"
+DOSSIER = sys.argv[2] if len(sys.argv) > 2 else "public/agenda-voix"
 durees = json.load(open(f"{DOSSIER}/duree.json"))
 N_CARTES = 5
 

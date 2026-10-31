@@ -3,6 +3,8 @@
  * dimanche 1er novembre 2026, spécial Halloween. Les cinq sorties viennent
  * de data/events.ts du site (dates, heures, lieux, tarifs publiés) ; rien
  * n'est ajouté. Tripo, la mascotte du guide, ouvre, accompagne et ferme.
+ * Deux versions : française (TripoWeekend) et allemande (TripoWeekendDE,
+ * publiée le samedi : seules les sorties du samedi sont annoncées).
  *
  * Nuit d'automne : fond violet nuit, lune orangée, brume qui glisse ; le
  * jaune de la radio pour les dates et les puces, l'orange pour Halloween.
@@ -10,18 +12,10 @@
 import { useAudioData, visualizeAudio } from "@remotion/media-utils"
 import React from "react"
 import { AbsoluteFill, Img, Sequence, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion"
-import minutage from "../../public/agenda-voix/minutage.json"
+import minutageDe from "../../public/agenda-voix-de/minutage.json"
+import minutageFr from "../../public/agenda-voix/minutage.json"
 import { C, EXPO, Grain, SORTIE, prog, texte, titre } from "../commun"
 import { Mascotte } from "../Mascotte"
-
-/**
- * Minutage écrit par son/son_agenda_voix.py : chaque scène dure le temps de
- * la réplique de Tripo (voix tirée du modèle de heytripo.fr, outils/voix_tripo.py).
- */
-export const INTRO = minutage.intro
-export const CARTES = minutage.cartes
-export const OUTRO = minutage.outro
-const VOIX = minutage.voix
 
 type Pays = "FR" | "DE"
 type Sortie = {
@@ -37,7 +31,7 @@ type Sortie = {
 }
 
 /** data/events.ts, week-end du 30 octobre au 1er novembre 2026, dans l'ordre des horaires. */
-const SORTIES: Sortie[] = [
+const SORTIES_FR: Sortie[] = [
   {
     jour: "Ven. 30 & sam. 31 · à la nuit tombée",
     titre: "Loup-Garou au château",
@@ -88,17 +82,120 @@ const SORTIES: Sortie[] = [
   },
 ]
 
+/** Les mêmes sorties en allemand (vidéo du samedi 31 : le Loup-Garou y est annoncé pour le samedi soir). */
+const SORTIES_DE: Sortie[] = [
+  {
+    jour: "Sa. 31. · bei Einbruch der Dunkelheit",
+    titre: "Werwolf im Schloss",
+    accroche: "Rollenspiel in Lebensgröße zu Halloween, ab 16 Jahren",
+    lieu: "Schloss Sierck",
+    ville: "Sierck-les-Bains",
+    pays: "FR",
+    tarif: "16 €",
+    icone: "lune",
+  },
+  {
+    jour: "Sa. 31. · 15 Uhr",
+    titre: "Halloween-Rallye",
+    accroche: "Thionville entdecken, nur mit Anmeldung",
+    lieu: "Tourismusbüro",
+    ville: "Thionville",
+    pays: "FR",
+    icone: "carte",
+  },
+  {
+    jour: "Sa. 31. · 18 Uhr",
+    titre: "Kultkino: Poltergeist",
+    accroche: "Der Klassiker von 1982 auf Französisch, Halloween-Spezial",
+    lieu: "La Scala",
+    ville: "Thionville",
+    pays: "FR",
+    tarif: "7 €",
+    icone: "film",
+  },
+  {
+    jour: "Sa. 31. · 18 Uhr → Mitternacht",
+    titre: "Halloweenparty",
+    accroche: "Von 18 Uhr bis Mitternacht, ab 14 Jahren",
+    lieu: "Vereinshaus",
+    ville: "Perl",
+    pays: "DE",
+    affiche: "affiches/halloweenparty-vereinshaus-perl-2026.jpg",
+    icone: "fete",
+  },
+  {
+    jour: "Sa. 31. · 20.30 Uhr",
+    titre: "Rocky Horror Picture Show",
+    accroche: "Präsentiert von den Dragqueens von Osmose Thionville",
+    lieu: "La Scala",
+    ville: "Thionville",
+    pays: "FR",
+    icone: "levres",
+  },
+]
+
+/**
+ * Minutage écrit par son/son_agenda_voix.py : chaque scène dure le temps de
+ * la réplique de Tripo (voix tirée du modèle de heytripo.fr, outils/voix_tripo.py ;
+ * en allemand, voix Thorsten, CC0, avec le même traitement).
+ */
+const minutages = (m: typeof minutageFr) => {
+  const debuts = m.cartes.map((_, k) => m.intro + m.cartes.slice(0, k).reduce((a, b) => a + b, 0))
+  const debutOutro = m.intro + m.cartes.reduce((a, b) => a + b, 0)
+  return { intro: m.intro, cartes: m.cartes, outro: m.outro, voix: m.voix, debuts, debutOutro, duree: debutOutro + m.outro }
+}
+
+const VERSIONS = {
+  fr: {
+    m: minutages(minutageFr),
+    voix: "agenda-voix",
+    sorties: SORTIES_FR,
+    special: "Spécial Halloween",
+    lignes: ["Ce", "week-end"],
+    taillesLignes: [130, 168],
+    region: "dans les Trois Frontières",
+    dates: "Ven. 30 oct. → dim. 1er nov.",
+    bonjour: "Salut ! Voici le programme.",
+    affiche: "L'affiche",
+    auRevoir: "Bon week-end !",
+    toutAgenda: "Tout l'agenda",
+    adresse: "radio-tripoint-officiel.fr/agenda",
+    devise: "Le Média des trois frontières",
+    bandeau: "L'agenda du week-end",
+  },
+  de: {
+    m: minutages(minutageDe),
+    voix: "agenda-voix-de",
+    sorties: SORTIES_DE,
+    special: "Halloween-Spezial",
+    lignes: ["Dieses", "Wochenende"],
+    taillesLignes: [130, 128],
+    region: "im Dreiländereck",
+    dates: "Samstag, 31. Oktober",
+    bonjour: "Hallo! Hier ist das Programm.",
+    affiche: "Das Plakat",
+    auRevoir: "Schönes Wochenende!",
+    toutAgenda: "Alle Termine",
+    adresse: "radio-tripoint-officiel.fr/de/agenda",
+    devise: "Das Medium des Dreiländerecks",
+    bandeau: "Dein Wochenende",
+  },
+}
+type Version = (typeof VERSIONS)["fr"]
+const Langue = React.createContext<Version>(VERSIONS.fr)
+const useVersion = () => React.useContext(Langue)
+
+export const DUREE_TRIPO_WEEKEND = VERSIONS.fr.m.duree
+export const DUREE_TRIPO_WEEKEND_DE = VERSIONS.de.m.duree
+
 /** Taille du titre d'une carte : le mot le plus long doit tenir sur 920 px. */
 const tailleTitre = (t: string) => Math.min(128, Math.floor(920 / (Math.max(...t.split(" ").map((m) => m.length)) * 0.74)))
-
-const DEBUTS = CARTES.map((_, k) => INTRO + CARTES.slice(0, k).reduce((a, b) => a + b, 0))
-const DEBUT_OUTRO = INTRO + CARTES.reduce((a, b) => a + b, 0)
-export const DUREE_TRIPO_WEEKEND = DEBUT_OUTRO + OUTRO
 
 /* ─── Le décor ──────────────────────────────────────────────────────────── */
 
 const Ciel: React.FC = () => {
   const f = useCurrentFrame()
+  const DEBUT_OUTRO = useVersion().m.debutOutro
   const brume = (k: number) => ((f * (0.6 + k * 0.25)) % 1600) - 400
   return (
     <AbsoluteFill style={{ background: `radial-gradient(ellipse 120% 80% at 50% 20%, #2a1240 0%, ${C.nuit2} 45%, ${C.nuit} 100%)` }}>
@@ -140,8 +237,9 @@ const Ciel: React.FC = () => {
 const useParole = (n: number) => {
   const f = useCurrentFrame()
   const { fps } = useVideoConfig()
-  const v = VOIX.find((x) => x.n === n)
-  const donnees = useAudioData(staticFile(`agenda-voix/v${n}.wav`))
+  const { m, voix } = useVersion()
+  const v = m.voix.find((x) => x.n === n)
+  const donnees = useAudioData(staticFile(`${voix}/v${n}.wav`))
   if (!v || !donnees) return 0
   const local = f - v.image
   if (local < 0 || local > donnees.durationInSeconds * fps) return 0
@@ -251,6 +349,8 @@ const Drapeau: React.FC<{ pays: Pays }> = ({ pays }) => {
 const Ouverture: React.FC = () => {
   const f = useCurrentFrame()
   const { fps } = useVideoConfig()
+  const t = useVersion()
+  const INTRO = t.m.intro
   const arrivee = spring({ frame: f - 4, fps, config: { damping: 12, mass: 0.8 } })
   const bulle = prog(f, 22, 34)
   const ligne = (k: number) => prog(f, 40 + k * 7, 40 + k * 7 + 16)
@@ -259,14 +359,14 @@ const Ouverture: React.FC = () => {
   return (
     <AbsoluteFill style={{ opacity: 1 - sortie, transform: `translateY(${-sortie * 80}px)` }}>
       <div style={{ position: "absolute", left: 80, top: 330 }}>
-        <div style={{ ...titre(46, C.orange), letterSpacing: "0.32em", opacity: ligne(0) }}>Spécial Halloween</div>
-        {["Ce", "week-end"].map((mot, k) => (
+        <div style={{ ...titre(46, C.orange), letterSpacing: "0.32em", opacity: ligne(0) }}>{t.special}</div>
+        {t.lignes.map((mot, k) => (
           <div key={mot} style={{ overflow: "hidden" }}>
-            <div style={{ ...titre(k ? 168 : 130, k ? C.jaune : C.blanc), whiteSpace: "nowrap", transform: `translateY(${(1 - ligne(k + 1)) * 110}%)` }}>{mot}</div>
+            <div style={{ ...titre(t.taillesLignes[k], k ? C.jaune : C.blanc), whiteSpace: "nowrap", transform: `translateY(${(1 - ligne(k + 1)) * 110}%)` }}>{mot}</div>
           </div>
         ))}
         <div style={{ ...texte(56, C.blanc, 800), marginTop: 22, opacity: ligne(3), transform: `translateX(${(1 - ligne(3)) * -40}px)` }}>
-          dans les Trois Frontières
+          {t.region}
         </div>
         <div
           style={{
@@ -280,14 +380,14 @@ const Ouverture: React.FC = () => {
             opacity: ligne(4),
           }}
         >
-          Ven. 30 oct. → dim. 1er nov.
+          {t.dates}
         </div>
       </div>
       <div style={{ position: "absolute", left: 120, bottom: 230, transform: `translateY(${(1 - arrivee) * 700}px)` }}>
         <Tripo taille={430} parole={parole} />
       </div>
       <div style={{ position: "absolute", left: 480, bottom: 650 }}>
-        <Bulle texte="Salut ! Voici le programme." p={bulle} />
+        <Bulle texte={t.bonjour} p={bulle} />
       </div>
     </AbsoluteFill>
   )
@@ -295,6 +395,7 @@ const Ouverture: React.FC = () => {
 
 const Carte: React.FC<{ s: Sortie; i: number; duree: number }> = ({ s, i, duree }) => {
   const f = useCurrentFrame()
+  const t = useVersion()
   const parole = useParole(i + 1)
   const entree = prog(f, 0, 16)
   const el = (k: number) => prog(f, 6 + k * 5, 6 + k * 5 + 16)
@@ -315,7 +416,7 @@ const Carte: React.FC<{ s: Sortie; i: number; duree: number }> = ({ s, i, duree 
       <div style={{ position: "absolute", left: 80, right: 80, top: 250, opacity: entree }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ ...texte(34, C.gris, 800), letterSpacing: "0.2em" }}>
-            {String(i + 1).padStart(2, "0")} <span style={{ opacity: 0.5 }}>/ {String(SORTIES.length).padStart(2, "0")}</span>
+            {String(i + 1).padStart(2, "0")} <span style={{ opacity: 0.5 }}>/ {String(t.sorties.length).padStart(2, "0")}</span>
           </div>
           <div style={{ transform: `rotate(${(1 - el(0)) * -40}deg) scale(${0.6 + 0.4 * el(0)})`, opacity: el(0) }}>
             <Icone nom={s.icone} taille={130} />
@@ -362,7 +463,7 @@ const Carte: React.FC<{ s: Sortie; i: number; duree: number }> = ({ s, i, duree 
           }}
         >
           <Img src={staticFile(s.affiche)} style={{ width: "100%", display: "block", borderRadius: 3 }} />
-          <div style={{ ...texte(26, "#3b2c4a", 800), textAlign: "center", marginTop: 12 }}>L'affiche</div>
+          <div style={{ ...texte(26, "#3b2c4a", 800), textAlign: "center", marginTop: 12 }}>{t.affiche}</div>
         </div>
       )}
       {!s.affiche && (
@@ -377,6 +478,8 @@ const Carte: React.FC<{ s: Sortie; i: number; duree: number }> = ({ s, i, duree 
 const Fin: React.FC = () => {
   const f = useCurrentFrame()
   const { fps } = useVideoConfig()
+  const t = useVersion()
+  const OUTRO = t.m.outro
   const saut = spring({ frame: f - 2, fps, config: { damping: 10 } })
   const el = (k: number) => prog(f, 8 + k * 7, 8 + k * 7 + 18)
   const fondu = prog(f, OUTRO - 14, OUTRO, SORTIE)
@@ -386,32 +489,34 @@ const Fin: React.FC = () => {
         <Tripo taille={380} decalage={40} parole={useParole(6)} />
       </div>
       <div style={{ marginTop: -40 }}>
-        <Bulle texte="Bon week-end !" p={prog(f, 14, 26)} queue="droite" />
+        <Bulle texte={t.auRevoir} p={prog(f, 14, 26)} queue="droite" />
       </div>
-      <div style={{ ...titre(120, C.jaune), marginTop: 70, opacity: el(1), transform: `translateY(${(1 - el(1)) * 40}px)` }}>Tout l'agenda</div>
+      <div style={{ ...titre(120, C.jaune), marginTop: 70, opacity: el(1), transform: `translateY(${(1 - el(1)) * 40}px)` }}>{t.toutAgenda}</div>
       <div style={{ marginTop: 26, padding: "14px 28px", borderRadius: 16, background: C.blanc, ...texte(42, C.nuit, 900), opacity: el(2) }}>
-        radio-tripoint-officiel.fr/agenda
+        {t.adresse}
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 24, marginTop: 90, opacity: el(3) }}>
         <Img src={staticFile("logo.png")} style={{ width: 130, height: 130, borderRadius: 999, boxShadow: "0 0 70px rgba(249,184,0,0.35)" }} />
         <div>
           <div style={titre(64)}>Radio Tripoint</div>
-          <div style={{ ...texte(34, C.jaune, 800), marginTop: 8 }}>Le Média des trois frontières</div>
+          <div style={{ ...texte(34, C.jaune, 800), marginTop: 8 }}>{t.devise}</div>
         </div>
       </div>
     </AbsoluteFill>
   )
 }
 
-export const TripoWeekend: React.FC = () => {
+const Agenda: React.FC = () => {
   const f = useCurrentFrame()
+  const t = useVersion()
+  const { intro: INTRO, cartes: CARTES, outro: OUTRO, debuts: DEBUTS, debutOutro: DEBUT_OUTRO } = t.m
   return (
     <AbsoluteFill style={{ background: C.nuit }}>
       <Ciel />
       <Sequence durationInFrames={INTRO}>
         <Ouverture />
       </Sequence>
-      {SORTIES.map((s, i) => (
+      {t.sorties.map((s, i) => (
         <Sequence key={s.titre} from={DEBUTS[i]} durationInFrames={CARTES[i]}>
           <Carte s={s} i={i} duree={CARTES[i]} />
         </Sequence>
@@ -432,7 +537,7 @@ export const TripoWeekend: React.FC = () => {
           opacity: prog(f, INTRO - 6, INTRO + 8) * (1 - prog(f, DEBUT_OUTRO - 8, DEBUT_OUTRO + 4)),
         }}
       >
-        <div style={{ ...titre(40, C.nuit), background: C.jaune, padding: "10px 18px 8px", borderRadius: 10, transform: "rotate(-2deg)" }}>L'agenda du week-end</div>
+        <div style={{ ...titre(40, C.nuit), background: C.jaune, padding: "10px 18px 8px", borderRadius: 10, transform: "rotate(-2deg)" }}>{t.bandeau}</div>
         <Img src={staticFile("logo.png")} style={{ width: 84, height: 84, borderRadius: 999 }} />
       </div>
       <Grain />
@@ -440,3 +545,15 @@ export const TripoWeekend: React.FC = () => {
     </AbsoluteFill>
   )
 }
+
+export const TripoWeekend: React.FC = () => (
+  <Langue.Provider value={VERSIONS.fr}>
+    <Agenda />
+  </Langue.Provider>
+)
+
+export const TripoWeekendDE: React.FC = () => (
+  <Langue.Provider value={VERSIONS.de}>
+    <Agenda />
+  </Langue.Provider>
+)

@@ -34,6 +34,7 @@ sur le disque, qui se remplit vite dans le conteneur.
 | Composition | Fichier | Son |
 | --- | --- | --- |
 | `TripoWeekend` | `src/agenda/TripoWeekend.tsx` | `python3 son/son_agenda_voix.py son/agenda-voix.wav` (voix de Tripo) |
+| `TripoWeekendDE` | `src/agenda/TripoWeekend.tsx` (version allemande) | `python3 son/son_agenda_voix.py son/agenda-voix-de.wav public/agenda-voix-de` |
 | `GenZPolitique` | `src/reportage/GenZPolitique.tsx` | `python3 son/son_genz_politique.py <parole.wav> son/genz-politique.wav` |
 | `Decouverte1` à `5` | `src/decouverte/Decouverte.tsx` | le son du clip (`./rendre-decouvertes.sh`) |
 | `Decouvertes5` | `src/compil/Decouvertes5.tsx` | voix de Giorgio (`public/compil/voix-giorgio.wav`) puis les extraits |
@@ -80,6 +81,21 @@ CC BY 4.0). Écrire les noms difficiles en phonétique dans les répliques
 (« Sierque-les-Bains », « Poltergaïste », « drag kouinnes ») et vérifier à
 l'oreille avec la transcription. `son/son_agenda_voix.py` cale ensuite le
 minutage sur la longueur des répliques (`minutage.json`).
+
+### Tripo en allemand
+
+Modèle Piper `de_DE-thorsten-medium` (voix Thorsten, CC0), archive
+`vits-piper-de_DE-thorsten-medium` des tts-models de sherpa-onnx (k2-fsa) ;
+même traitement Tripo :
+
+```sh
+VOIX_MODELE=<dossier du modèle> venv/bin/python outils/voix_tripo.py \
+  public/agenda-voix-de/repliques.json public/agenda-voix-de
+```
+
+Noms français en phonétique allemande : « Tiongwil » (Thionville),
+« Sirk » (Sierck), « Skala », « Offissjell ». Pour vérifier à la
+transcription, ralentir d'abord la voix (`asetrate=44100/1.28`).
 
 ## Transcription
 

@@ -1,6 +1,6 @@
 import React from "react"
 import { Composition } from "remotion"
-import { DUREE_TRIPO_WEEKEND, TripoWeekend } from "./agenda/TripoWeekend"
+import { DUREE_TRIPO_WEEKEND, DUREE_TRIPO_WEEKEND_DE, TripoWeekend, TripoWeekendDE } from "./agenda/TripoWeekend"
 import { chargerPolices } from "./commun"
 import { DUREE_ZAPPING, Zapping } from "./zapping/Zapping"
 import { DUREE_PASSAGE, OuvertureWeekend, PassageDecouvertes } from "./compil/Compil"
@@ -15,6 +15,7 @@ const story = { width: 1080, height: 1920, fps: 30 } as const
 export const RemotionRoot: React.FC = () => (
   <>
     <Composition id="TripoWeekend" component={TripoWeekend} durationInFrames={DUREE_TRIPO_WEEKEND} {...story} />
+    <Composition id="TripoWeekendDE" component={TripoWeekendDE} durationInFrames={DUREE_TRIPO_WEEKEND_DE} {...story} />
     {DECOUVERTES.map((d) => (
       <Composition key={d.n} id={`Decouverte${d.n}`} component={Decouverte} durationInFrames={d.images} defaultProps={d} {...story} />
     ))}
