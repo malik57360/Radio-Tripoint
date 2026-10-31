@@ -2,6 +2,11 @@
 
 import { estConnecte } from "@/lib/direction/acces"
 import {
+  estCreditEpuise,
+  MESSAGE_CREDIT_EPUISE,
+  noterCreditEpuise,
+} from "@/lib/direction/credit-ia"
+import {
   ecrireBrouillon,
   lireConseils,
   oublierBrouillon,
@@ -74,6 +79,10 @@ export async function actionTrouverCoordonnees(fiche: {
     return { ok: true, coordonnees }
   } catch (e) {
     console.error("[prospection] coordonnées", (e as Error).message)
+    if (estCreditEpuise(e)) {
+      await noterCreditEpuise().catch(() => {})
+      return { ok: false, erreur: MESSAGE_CREDIT_EPUISE }
+    }
     return { ok: false, erreur: "Recherche impossible pour le moment : réessayez." }
   }
 }
@@ -92,6 +101,10 @@ export async function actionPreparer(): Promise<
     return { ok: true, reste: etat.reste }
   } catch (e) {
     console.error("[conseils] préparation :", (e as Error).message)
+    if (estCreditEpuise(e)) {
+      await noterCreditEpuise().catch(() => {})
+      return { ok: false, erreur: MESSAGE_CREDIT_EPUISE }
+    }
     return {
       ok: false,
       erreur: "Préparation interrompue : elle reprendra à la prochaine ouverture.",

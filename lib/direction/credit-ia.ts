@@ -12,6 +12,10 @@ const CLE = "rt:ia:credit-epuise"
 export const estCreditEpuise = (e: unknown) =>
   /credit balance is too low/i.test(String((e as Error)?.message ?? e))
 
+/** Ce que voit l'équipe à la place de l'erreur brute de l'API (en anglais). */
+export const MESSAGE_CREDIT_EPUISE =
+  "Plus de crédit pour l'IA (Anthropic) : elle ne peut plus rédiger. Rechargez-le sur console.anthropic.com (Plans & Billing). En attendant, un mail écrit à la main part toujours."
+
 export async function noterCreditEpuise() {
   await redis([["SET", CLE, String(Date.now()), "EX", 30 * 24 * 3600]])
 }

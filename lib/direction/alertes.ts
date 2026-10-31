@@ -34,7 +34,7 @@ export const chargerAlertes = cache(async () => {
   if (await creditEpuiseDepuis())
     liste.unshift({
       texte:
-        "Le crédit de l'IA (Anthropic) est épuisé : les traductions des articles sont en pause. Rechargez-le sur console.anthropic.com (Plans & Billing) ; elles repartiront toutes seules.",
+        "Le crédit de l'IA (Anthropic) est épuisé : traductions des articles, réponses proposées aux mails et messages de prospection sont en pause. Rechargez-le sur console.anthropic.com (Plans & Billing) ; tout repartira seul.",
       page: "articles",
     })
   return liste

@@ -2,6 +2,11 @@
 
 import { estConnecte } from "@/lib/direction/acces"
 import {
+  estCreditEpuise,
+  MESSAGE_CREDIT_EPUISE,
+  noterCreditEpuise,
+} from "@/lib/direction/credit-ia"
+import {
   enregistrerBrouillon,
   envoyerNouveau,
   envoyerReponse,
@@ -43,6 +48,10 @@ async function garde<T>(travail: () => Promise<T>): Promise<T | Resultat> {
     return await travail()
   } catch (e) {
     console.error("[mails]", (e as Error).message)
+    if (estCreditEpuise(e)) {
+      await noterCreditEpuise().catch(() => {})
+      return { ok: false, erreur: MESSAGE_CREDIT_EPUISE }
+    }
     return { ok: false, erreur: (e as Error).message || "Erreur inattendue." }
   }
 }
